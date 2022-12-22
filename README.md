@@ -1,3 +1,5 @@
+<p align="center"><img src="https://i.imgur.com/mJI5w8w.jpeg"></p>
+
 <p align="center">https://discord.gg/jSHHJSUWdY</p>
 
 **...**
