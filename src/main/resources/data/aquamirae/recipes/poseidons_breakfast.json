@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "poseidons_breakfast",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:ink_sac"
+    },
+    {
+      "item": "minecraft:sea_pickle"
+    },
+    {
+      "item": "minecraft:nautilus_shell"
+    },
+    {
+      "item": "minecraft:tropical_fish"
+    },
+    {
+      "item": "minecraft:enchanted_golden_apple"
+    },
+    {
+      "item": "minecraft:pufferfish"
+    },
+    {
+      "item": "aquamirae:sea_stew"
+    }
+  ],
+  "result": {
+    "item": "aquamirae:poseidons_breakfast",
+    "count": 1
+  }
+}

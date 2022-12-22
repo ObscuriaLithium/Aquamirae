@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:fin"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "aquamirae:terrible_helmet",
+      "aquamirae:terrible_chestplate",
+      "aquamirae:terrible_leggings",
+      "aquamirae:terrible_boots",
+      "aquamirae:fin_cutter",
+      "aquamirae:sea_stew"
+    ]
+  }
+}

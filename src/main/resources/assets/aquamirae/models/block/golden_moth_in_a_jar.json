@@ -1,0 +1,9 @@
+{
+  "parent": "aquamirae:block/custom/jar",
+  "textures": {
+    "all": "aquamirae:block/jar",
+    "particle": "aquamirae:block/jar",
+    "jar": "aquamirae:block/jar"
+  },
+  "render_type": "cutout_mipped"
+}

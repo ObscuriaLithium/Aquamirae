@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "treasure_pouch",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "aquamirae:pirate_pouch"
+    },
+    {
+      "item": "aquamirae:pirate_pouch"
+    },
+    {
+      "item": "aquamirae:pirate_pouch"
+    },
+    {
+      "item": "aquamirae:ship_graveyard_echo"
+    },
+    {
+      "item": "aquamirae:pirate_pouch"
+    },
+    {
+      "item": "aquamirae:pirate_pouch"
+    }
+  ],
+  "result": {
+    "item": "aquamirae:treasure_pouch",
+    "count": 1
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "terrible_leggings",
+  "category": "equipment",
+  "pattern": [
+    "012",
+    "3 5",
+    "6 8"
+  ],
+  "key": {
+    "0": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "1": {
+      "item": "minecraft:iron_ingot"
+    },
+    "2": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "3": {
+      "item": "aquamirae:fin"
+    },
+    "5": {
+      "item": "aquamirae:fin"
+    },
+    "6": {
+      "item": "minecraft:iron_ingot"
+    },
+    "8": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "aquamirae:terrible_leggings",
+    "count": 1
+  }
+}

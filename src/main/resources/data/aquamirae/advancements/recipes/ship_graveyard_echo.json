@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:ship_graveyard_echo"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "aquamirae:abyssal_amethyst",
+      "aquamirae:terrible_sword",
+      "aquamirae:fin_cutter",
+      "aquamirae:divider",
+      "aquamirae:whisper_of_the_abyss",
+      "aquamirae:treasure_pouch"
+    ]
+  }
+}

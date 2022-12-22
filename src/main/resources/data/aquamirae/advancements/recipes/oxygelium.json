@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:oxygelium"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "aquamirae:oxygen_tank",
+      "aquamirae:luminescent_bubble",
+      "aquamirae:luminescent_lamp",
+      "aquamirae:sea_casserole",
+      "aquamirae:sea_stew",
+      "aquamirae:stick_from_oxygelium"
+    ]
+  }
+}

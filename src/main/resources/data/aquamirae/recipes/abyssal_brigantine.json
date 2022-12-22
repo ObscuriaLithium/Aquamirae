@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "abyssal_brigantine",
+  "category": "equipment",
+  "pattern": [
+    "0 2",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "2": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "3": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "4": {
+      "item": "obscure_api:astral_dust"
+    },
+    "5": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "6": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "7": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "8": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "result": {
+    "item": "aquamirae:abyssal_brigantine",
+    "count": 1
+  }
+}

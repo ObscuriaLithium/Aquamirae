@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "cyan_dye",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "aquamirae:elodea"
+    }
+  ],
+  "result": {
+    "item": "minecraft:cyan_dye",
+    "count": 2
+  }
+}

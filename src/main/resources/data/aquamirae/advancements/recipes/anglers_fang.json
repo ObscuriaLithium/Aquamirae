@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:anglers_fang"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "aquamirae:terrible_helmet",
+      "aquamirae:terrible_chestplate",
+      "aquamirae:terrible_leggings",
+      "aquamirae:terrible_boots",
+      "aquamirae:terrible_sword",
+      "aquamirae:poisoned_blade",
+      "aquamirae:poisoned_chakra",
+      "aquamirae:bone_meal_from_anglers_fang"
+    ]
+  }
+}

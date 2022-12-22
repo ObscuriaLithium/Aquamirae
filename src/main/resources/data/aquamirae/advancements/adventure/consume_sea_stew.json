@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "item": "aquamirae:sea_stew"
+    },
+    "title": {
+      "translate": "advancements.aquamirae.consume_sea_stew.title"
+    },
+    "description": {
+      "translate": "advancements.aquamirae.consume_sea_stew.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "sea_stew": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "aquamirae:sea_stew"
+          ]
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 5
+  },
+  "parent": "aquamirae:adventure/obtain_esca"
+}

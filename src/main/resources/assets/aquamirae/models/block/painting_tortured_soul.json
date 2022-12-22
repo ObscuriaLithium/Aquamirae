@@ -1,0 +1,9 @@
+{
+  "parent": "aquamirae:block/custom/collectible_painting",
+  "textures": {
+    "all": "aquamirae:block/painting_tortured_soul",
+    "particle": "aquamirae:block/painting_tortured_soul",
+    "texture": "aquamirae:block/painting_tortured_soul"
+  },
+  "render_type": "solid"
+}

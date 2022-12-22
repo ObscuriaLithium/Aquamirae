@@ -1,0 +1,9 @@
+{
+  "parent": "aquamirae:block/custom/wide_plant",
+  "textures": {
+    "all": "aquamirae:block/wisteria_upper",
+    "particle": "aquamirae:block/wisteria_upper",
+    "0": "aquamirae:block/wisteria_upper"
+  },
+  "render_type": "cutout_mipped"
+}

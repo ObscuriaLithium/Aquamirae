@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "aquamirae:golden_moth_in_a_jar"
+    },
+    "title": {
+      "translate": "advancements.aquamirae.catch_golden_moth.title"
+    },
+    "description": {
+      "translate": "advancements.aquamirae.catch_golden_moth.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "golden_moth_in_a_jar": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:golden_moth_in_a_jar"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 10
+  },
+  "parent": "aquamirae:adventure/find_ice_maze"
+}

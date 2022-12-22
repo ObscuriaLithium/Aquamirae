@@ -1,0 +1,37 @@
+{
+  "display": {
+    "background": "aquamirae:textures/screens/aquamirae_adv.png",
+    "icon": {
+      "item": "aquamirae:rune_of_the_storm"
+    },
+    "title": {
+      "translate": "advancements.aquamirae.root.title"
+    },
+    "description": {
+      "translate": "advancements.aquamirae.root.descr"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "crafting_table": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:crafting_table"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "obscure_api:obscure_book"
+    ]
+  }
+}

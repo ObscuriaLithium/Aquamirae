@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "abyssal_leggings",
+  "category": "equipment",
+  "pattern": [
+    "012",
+    "3 5",
+    "6 8"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "1": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "2": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "3": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "5": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "6": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "8": {
+      "item": "aquamirae:abyssal_amethyst"
+    }
+  },
+  "result": {
+    "item": "aquamirae:abyssal_leggings",
+    "count": 1
+  }
+}

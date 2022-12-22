@@ -1,0 +1,9 @@
+{
+  "parent": "aquamirae:block/custom/collectible_painting",
+  "textures": {
+    "all": "aquamirae:block/painting_aurora",
+    "particle": "aquamirae:block/painting_aurora",
+    "texture": "aquamirae:block/painting_aurora"
+  },
+  "render_type": "solid"
+}

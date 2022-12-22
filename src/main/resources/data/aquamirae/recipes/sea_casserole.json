@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "sea_casserole",
+  "category": "misc",
+  "pattern": [
+    " 1 ",
+    "345",
+    "678"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:sweet_berries"
+    },
+    "3": {
+      "item": "aquamirae:oxygelium"
+    },
+    "4": {
+      "item": "minecraft:wheat"
+    },
+    "5": {
+      "item": "aquamirae:esca"
+    },
+    "6": {
+      "item": "minecraft:egg"
+    },
+    "7": {
+      "item": "minecraft:milk_bucket"
+    },
+    "8": {
+      "item": "minecraft:egg"
+    }
+  },
+  "result": {
+    "item": "aquamirae:sea_casserole",
+    "count": 2
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "aquamirae:fin"
+    },
+    "title": {
+      "translate": "advancements.aquamirae.obtain_fin.title"
+    },
+    "description": {
+      "translate": "advancements.aquamirae.obtain_fin.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "fin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:fin"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 5
+  },
+  "parent": "aquamirae:adventure/find_ice_maze"
+}

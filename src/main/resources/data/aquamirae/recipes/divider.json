@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "divider",
+  "category": "equipment",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "aquamirae:ship_graveyard_echo"
+    },
+    "1": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "2": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "3": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "4": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "5": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "6": {
+      "item": "minecraft:stick"
+    },
+    "7": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "8": {
+      "item": "aquamirae:ship_graveyard_echo"
+    }
+  },
+  "result": {
+    "item": "aquamirae:divider",
+    "count": 1
+  }
+}

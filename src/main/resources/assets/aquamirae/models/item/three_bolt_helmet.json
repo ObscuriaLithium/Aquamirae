@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "aquamirae:item/three_bolt_helmet"
+  }
+}

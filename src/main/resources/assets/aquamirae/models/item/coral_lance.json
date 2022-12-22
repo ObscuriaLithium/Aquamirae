@@ -1,0 +1,6 @@
+{
+  "parent": "aquamirae:item/custom/lance",
+  "textures": {
+    "layer0": "aquamirae:item/coral_lance"
+  }
+}
