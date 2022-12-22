@@ -6,20 +6,20 @@
 
 -----------------
 
-##### Distribution Rules
+#### Distribution Rules
 
 **You are allowed:**
 
-> - Use this mod in your modpacks and monetize modpacks with this mod.
-> - Use this mod on your servers and monetize servers with this mod.
-> - Use this mod in your videos and monetize videos with this mod.
-> - Repost this mod to other sites and services with a link to this page.
-> - Сreate addons for this mod.
+- Use this mod in your modpacks and monetize modpacks with this mod.
+- Use this mod on your servers and monetize servers with this mod.
+- Use this mod in your videos and monetize videos with this mod.
+- Repost this mod to other sites and services with a link to this page.
+- Сreate addons for this mod.
 
 **You are not allowed:**
 
-> - Distribute modified mod files (Use them on public servers, add them to public modpacks or upload them to websites).
-> - Use mod assets for your projects. All resources are protected by copyright.
+- Distribute modified mod files (Use them on public servers, add them to public modpacks or upload them to websites).
+- Use mod assets for your projects. All resources are protected by copyright.
 
 -----------------
 
