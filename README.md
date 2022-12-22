@@ -6,7 +6,7 @@
 
 -----------------
 
-#### Distribution Rules
+### Distribution Rules
 
 **You are allowed:**
 
