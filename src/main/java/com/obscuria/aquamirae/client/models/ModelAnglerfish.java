@@ -3,10 +3,7 @@ package com.obscuria.aquamirae.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.client.animations.AnimatedPart;
-import com.obscuria.obscureapi.client.animations.HekateLib;
-import com.obscuria.obscureapi.client.animations.IHekateProvider;
-import com.obscuria.obscureapi.client.animations.KeyFrame;
+import com.obscuria.obscureapi.client.animations.*;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -143,8 +140,14 @@ public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
 		HekateLib.m(tail6, 0, 0, 20F, 0, 0, 0, speed2, -0.3F, limbSwing, move);
 		HekateLib.m(leftFin, 0, 0, 15F, -40F, 0, -30F, speed2, -0.1F, limbSwing, move);
 		HekateLib.m(rightFin, 0, 0, -15F, 40F, 0, 30F, speed2, -0.1F, limbSwing, move);
+		HekateLib.m(lamp1, 2F, -5F, 0, 0, 0, 0, speed2, 0F, ageInTicks, move);
+		HekateLib.m(lamp2, 4F, -10F, 0, 0, 0, 0, speed2, -0.05F, ageInTicks, move);
+		HekateLib.m(lamp3, 6F, -30F, 0, 0, 0, 0, speed2, -0.1F, ageInTicks, move);
+		HekateLib.m(lamp4, 8F, -50F, 0, 0, 0, 0, speed2, -0.15F, ageInTicks, move);
+		HekateLib.m(lamp5, 10F, -30F, 0, 0, 0, 0, speed2, -0.2F, ageInTicks, move);
 
-		if (entity instanceof IHekateProvider iHekateProvider) this.main.y = 5F + 5F * iHekateProvider.getHekateProvider().getModifier("onGround1");
+		if (entity instanceof IHekateProvider iHekateProvider)
+			this.main.y = 5F + 5F * iHekateProvider.getHekateProvider().getModifier("onGround1");
 		HekateLib.render.animation(entity, "onGround", ageInTicks,
 				new KeyFrame(20, 0, 5F, 5F,
 						new AnimatedPart(main, 0, 0, 90),
@@ -155,6 +158,31 @@ public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(tail4, 0, 0, 6F, 6F, 0, 0, speed2, -0.2F),
 						new AnimatedPart(tail5, 0, 0, 7F, 7F, 0, 0, speed2, -0.25F),
 						new AnimatedPart(tail6, 0, 0, 8F, 8F, 0, 0, speed2, -0.3F)));
+		HekateLib.render.animation(entity, "attack", ageInTicks,
+				new KeyFrame(30, 10, 5F, 18F,
+						new AnimatedPart(headTop, 1F, 15F, 0, 0, 0, 0, speed2 * 4, 0F),
+						new AnimatedPart(headBottom, -1F, -15F, 0, 0, 0, 0, speed2 * 4, 0F),
+						new AnimatedPart(body, 0, 0, 10F, 0, 0, 0, speed2, 0F),
+						new AnimatedPart(tail1, 0, 0, 15F, 0, 0, 0, speed2, -0.05F),
+						new AnimatedPart(tail2, 0, 0, 20F, 0, 0, 0, speed2, -0.1F),
+						new AnimatedPart(tail3, 0, 0, 25F, 0, 0, 0, speed2, -0.15F),
+						new AnimatedPart(tail4, 0, 0, 30F, 0, 0, 0, speed2, -0.2F),
+						new AnimatedPart(tail5, 0, 0, 35F, 0, 0, 0, speed2, -0.25F),
+						new AnimatedPart(tail6, 0, 0, 40F, 0, 0, 0, speed2, -0.3F)),
+				new KeyFrame(10, 0, 18F, 4F,
+						new AnimatedPart(headTop, -25F, 0, 0),
+						new AnimatedPart(headBottom, 25F, 0, 0),
+						new AnimatedPart(body, 0, 0, 5F, 0, 0, 0, speed2, 0F),
+						new AnimatedPart(tail1, 0, 0, 10F, 0, 0, 0, speed2, -0.05F),
+						new AnimatedPart(tail2, 0, 0, 15F, 0, 0, 0, speed2, -0.1F),
+						new AnimatedPart(tail3, 0, 0, 20F, 0, 0, 0, speed2, -0.15F),
+						new AnimatedPart(tail4, 0, 0, 25F, 0, 0, 0, speed2, -0.2F),
+						new AnimatedPart(tail5, 0, 0, 25F, 0, 0, 0, speed2, -0.25F),
+						new AnimatedPart(tail6, 0, 0, 25F, 0, 0, 0, speed2, -0.3F)));
+		final float headMod = entity instanceof IHekateProvider provider ? 1F - provider.getHekateProvider().getModifier("onGround1") : 1F;
+		this.main.xRot += HekateLib.render.headYaw(headPitch, headMod);
+		this.main.yRot += HekateLib.render.headYaw(netHeadYaw, headMod);
+		this.main.xRot += HekateLib.render.headYaw(netHeadYaw, 1F - headMod);
 
 		/*
 		HekateLegacy.updateRenderer(entity);

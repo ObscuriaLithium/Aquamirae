@@ -6,11 +6,14 @@ import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
 import com.obscuria.obscureapi.client.animations.IHekateProvider;
+import com.obscuria.obscureapi.world.ai.MeleeAttackGoal;
+import com.obscuria.obscureapi.world.ai.attack.SimpleMeleeAttack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,7 +24,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -106,11 +108,8 @@ public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekate
 
 	@Override protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false) {
-			@Override protected double getAttackReachSqr(@NotNull LivingEntity entity) {
-				return 4.0 + entity.getBbWidth() * entity.getBbWidth();
-			}
-		});
+		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false,
+				new SimpleMeleeAttack("attack", 30, 9, 10, 30, 4, 3.5)));
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
 		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Animal.class, false, false));
@@ -161,8 +160,15 @@ public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekate
 	}
 
 	@Override public void baseTick() {
+		ANIMATIONS.playSound("attack", 24, "aquamirae:entity.eel.bite", SoundSource.HOSTILE, 1F, 1F);
 		if (this.isInWater()) this.setDeltaMovement(this.getDeltaMovement().add(0, -0.001F, 0));
 		else if (ANIMATIONS.getTick("onGround") <= 2 && this.tickCount > 1) ANIMATIONS.play("onGround", 20);
+		if (ANIMATIONS.isPlaying("attack")) {
+			if (this.getTarget() != null) this.lookControl.setLookAt(this.getTarget());
+			if (ANIMATIONS.getTick("attack") > 12) this.setDeltaMovement(this.getDeltaMovement().scale(0.9F));
+			if (ANIMATIONS.getTick("attack") == 12 && this.getTarget() != null) this.setDeltaMovement(this.getDeltaMovement()
+					.add(this.getPosition(1F).vectorTo(this.getTarget().getPosition(1F)).scale(0.4F)));
+		}
 		super.baseTick();
 	}
 

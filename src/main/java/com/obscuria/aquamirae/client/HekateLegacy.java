@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.client.legacy;
+package com.obscuria.aquamirae.client;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.LivingEntity;
