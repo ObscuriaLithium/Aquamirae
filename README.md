@@ -6,7 +6,7 @@
 
 -----------------
 
-**Distribution Rules**
+<p align="center">**Distribution Rules**</p>
 
 **You are allowed:**
 
