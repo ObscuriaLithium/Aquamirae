@@ -1,45 +1,34 @@
 package com.obscuria.aquamirae.client.models;
 
-import com.obscuria.aquamirae.AquamiraeMod;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.EntityModel;
-
-import com.obscuria.aquamirae.client.HekateLegacy;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.obscureapi.client.animations.AnimatedPart;
+import com.obscuria.obscureapi.client.animations.HekateLib;
+import com.obscuria.obscureapi.client.animations.KeyFrame;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 public class ModelMaw<T extends Entity> extends EntityModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "maw"), "main");
-	public final ModelPart main;
-	public final ModelPart head;
-	public final ModelPart head_top;
-	public final ModelPart head_bottom;
-	public final ModelPart body;
-	public final ModelPart body2;
-	public final ModelPart body3;
-	public final ModelPart right_fin;
-	public final ModelPart left_fin;
+	public final ModelPart main, head, headTop, headBottom, body, body2, body3, rightFin, leftFin;
 
 	public ModelMaw(ModelPart root) {
 		this.main = root.getChild("main");
 		this.head = main.getChild("head");
-		this.head_top = head.getChild("headtop");
-		this.head_bottom = head.getChild("headbottom");
+		this.headTop = head.getChild("headtop");
+		this.headBottom = head.getChild("headbottom");
 		this.body = main.getChild("body");
 		this.body2 = body.getChild("body2");
 		this.body3 = body2.getChild("body3");
-		this.right_fin = body.getChild("right_fin");
-		this.left_fin = body.getChild("left_fin");
+		this.rightFin = body.getChild("right_fin");
+		this.leftFin = body.getChild("left_fin");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -86,57 +75,39 @@ public class ModelMaw<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-			float blue, float alpha) {
+	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
+							   float blue, float alpha) {
 		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		HekateLegacy.updateRenderer(entity);
-		float i = HekateLegacy.setIdleModifier(limbSwingAmount, 5F);
-		float m = HekateLegacy.setMoveModifier(limbSwingAmount, 5F);
-		float a1 = HekateLegacy.getFrame(entity, "[attack]", 0.3, 15, 30);
-		float a1i = 1F - a1;
-		//IDLE
-		float iHeadTX = HekateLegacy.idle(5F, 0F, 0.06F, 0F, ageInTicks, i);
-		float iBody2X = HekateLegacy.idle(8F, 8F, 0.03F, 0.1F, ageInTicks, i);
-		float iBody2Y = HekateLegacy.idle(10F, 0F, 0.06F, 0.1F, ageInTicks, i);
-		float iBody2Z = HekateLegacy.idle(4F, 0F, 0.03F, 0.1F, ageInTicks, i);
-		float iBody3X = HekateLegacy.idle(8F, 8F, 0.03F, 0F, ageInTicks, i);
-		float iBody3Y = HekateLegacy.idle(10F, 0F, 0.06F, 0F, ageInTicks, i);
-		float iBody3Z = HekateLegacy.idle(4F, 0F, 0.03F, 0F, ageInTicks, i);
-		//MOVE
-		float mMainZ = HekateLegacy.move(false, 4F, 0F, 0.8F, 0.1F, limbSwing, m);
-		float mHeadTX = HekateLegacy.move(false, 4F, -12F, 0.8F, 0.2F, limbSwing, m);
-		float mBodyY = HekateLegacy.move(false, 12F, 0F, 0.8F, 0.2F, limbSwing, m);
-		float mBody2Y = HekateLegacy.move(false, 12F, 0F, 0.8F, 0.1F, limbSwing, m);
-		float mBody3Y = HekateLegacy.move(false, 12F, 0F, 0.8F, 0F, limbSwing, m);
-		float mRFinY = HekateLegacy.move(true, 30F, 0F, 0.8F, 0.1F, limbSwing, m);
-		float mRFinZ = HekateLegacy.move(false, 12F, 10F, 0.8F, 0.3F, limbSwing, m);
-		float mLFinY = HekateLegacy.move(true, 30F, 0F, 0.8F, 0.1F, limbSwing, m);
-		float mLFinZ = HekateLegacy.move(true, 12F, -10F, 0.8F, 0.8F, limbSwing, m);
-		//ATTACK
-		float a1HeadTX = HekateLegacy.fixed(20F, a1);
-		float a1HeadX = HekateLegacy.fixed(10F, a1);
-		float a1Body2X = HekateLegacy.fixed(-15F, a1);
-		float a1Body3X = HekateLegacy.fixed(-25F, a1);
-		float a1RFinZ = HekateLegacy.fixed(-30F, a1);
-		float a1LFinZ = HekateLegacy.fixed(30F, a1);
-		//APPLYING PRESETS TO A MODEL
-		this.main.zRot = mMainZ;
-		this.head.xRot = a1HeadX;
-		this.head.yRot = HekateLegacy.getHeadYaw(netHeadYaw, 0.3F);
-		this.head_top.xRot = (iHeadTX + mHeadTX) * a1i + a1HeadTX;
-		this.body.yRot = mBodyY;
-		this.body2.xRot = (iBody2X) * a1i + a1Body2X;
-		this.body2.yRot = iBody2Y + mBody2Y;
-		this.body2.zRot = iBody2Z;
-		this.body3.xRot = (iBody3X) * a1i + a1Body3X;
-		this.body3.yRot = iBody3Y + mBody3Y;
-		this.body3.zRot = iBody3Z;
-		this.right_fin.yRot = mRFinY;
-		this.right_fin.zRot = (mRFinZ) * a1i + a1RFinZ;
-		this.left_fin.yRot = mLFinY;
-		this.left_fin.zRot = (mLFinZ) * a1i + a1LFinZ;
+	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		final float idle = HekateLib.mod.idle(limbSwingAmount, 5F);
+		final float move = HekateLib.mod.move(limbSwingAmount, 5F);
+		final float speed1 = 0.03F;
+		final float speed2 = 0.6F;
+
+		HekateLib.render.tick(entity);
+		HekateLib.render.prepare(main, head, headTop, headBottom, body, body2, body3, rightFin, leftFin);
+
+		HekateLib.i(headTop, -5F, 0, 0, 0, 0, 0, speed1 * 2, 0F, ageInTicks, idle);
+		HekateLib.i(body2, -8F, -8F, 0, 0, 4F, 0, speed1, 0F, ageInTicks, idle);
+		HekateLib.i(body2, 0, 0, -10F, 0, 0, 0, speed1 * 2, 0F, ageInTicks, idle);
+		HekateLib.i(body3, -8F, -8F, 0, 0, 4F, 0, speed1, -0.1F, ageInTicks, idle);
+		HekateLib.i(body3, 0, 0, -10F, 0, 0, 0, speed1 * 2, -0.1F, ageInTicks, idle);
+
+		HekateLib.m(main, 0, 0, 0, 0, -4F, 0, speed2, 0F, limbSwing, move);
+		HekateLib.m(headTop, -4F, 12F, 0, 0, 0, 0, speed2, 0F, limbSwing, move);
+		HekateLib.m(body, 0, 0, -12F, 0, 0, 0, speed2, 0F, limbSwing, move);
+		HekateLib.m(body2, 0, 0, -12F, 0, 0, 0, speed2, -0.1F, limbSwing, move);
+		HekateLib.m(body3, 0, 0, -12F, 0, 0, 0, speed2, -0.2F, limbSwing, move);
+		HekateLib.m(rightFin, 0, 0, 40F, 0, 0, 0, speed2, 0F, limbSwing, move);
+		HekateLib.m(leftFin, 0, 0, 40F, 0, 0, 0, speed2, 0F, limbSwing, move);
+		HekateLib.m(rightFin, 0, 0, 0, 0, 12F, 10F, speed2, -0.3F, limbSwing, move);
+		HekateLib.m(leftFin, 0, 0, 0, 0, 12F, -10F, speed2, -0.3F, limbSwing, move);
+
+		HekateLib.render.animation(entity, "attack", ageInTicks,
+				new KeyFrame(20, 0, 20F, 5F,
+						new AnimatedPart(head, 10F, 0, 0),
+						new AnimatedPart(headTop, -22F, 0, 0)));
 	}
 }

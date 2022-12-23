@@ -2,9 +2,11 @@ package com.obscuria.aquamirae.world.events;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
+import com.obscuria.aquamirae.world.entities.IShipGraveyardEntity;
 import com.obscuria.aquamirae.world.items.armor.AbyssalArmorItem;
 import com.obscuria.aquamirae.world.items.armor.TerribleArmorItem;
 import com.obscuria.aquamirae.world.items.armor.ThreeBoltArmorItem;
+import com.obscuria.aquamirae.world.items.weapon.CoralLanceItem;
 import com.obscuria.aquamirae.world.items.weapon.FinCutterItem;
 import com.obscuria.aquamirae.world.items.weapon.RemnantsSaberItem;
 import net.minecraft.core.BlockPos;
@@ -59,8 +61,12 @@ public class AquamiraeEvents {
     public static void onEntityHurt(LivingHurtEvent event) {
         //Remnants Saber
         if (event.getSource().getEntity() instanceof LivingEntity source && source.isInWater()
-                && source.getMainHandItem().getItem() instanceof RemnantsSaberItem item) {
-            event.setAmount(event.getAmount() + event.getAmount() * (item.ABILITY.getAmount(source, 0) * 0.01F));
+                && source.getMainHandItem().getItem() instanceof RemnantsSaberItem item)
+            event.setAmount(event.getAmount() * (1F + item.ABILITY.getAmount(source, 0) * 0.01F));
+        //Coral Lance
+        if (event.getSource().getEntity() instanceof LivingEntity source && source.getMainHandItem().getItem() instanceof CoralLanceItem item
+                && event.getEntity() instanceof IShipGraveyardEntity) {
+            event.setAmount(event.getAmount() * (1F + item.ABILITY.getAmount(source, 0) * 0.01F));
         }
     }
 

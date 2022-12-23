@@ -1,7 +1,7 @@
 package com.obscuria.aquamirae.world.events;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.network.DeadSeaScrollMessage;
+import com.obscuria.aquamirae.network.ScrollMessage;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.world.entities.Eel;
@@ -48,7 +48,7 @@ public class ScrollEffects {
     private void effect() {
         final int type = (int) Math.round(7.0 * Math.random());
         if (PLAYER instanceof ServerPlayer player)
-            AquamiraeMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new DeadSeaScrollMessage(type));
+            AquamiraeMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ScrollMessage(type));
         switch (type) {
             default -> PLAYER.drop(Items.DIAMOND.getDefaultInstance(), false);
             case 1 -> abyss();

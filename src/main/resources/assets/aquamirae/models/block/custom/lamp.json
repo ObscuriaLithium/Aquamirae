@@ -1,5 +1,4 @@
 {
-  "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
   "ambientocclusion": false,
   "display": {
     "gui": {
@@ -120,7 +119,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             15.5,
@@ -129,7 +128,7 @@
           ]
         },
         "east": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             15.5,
@@ -138,7 +137,7 @@
           ]
         },
         "south": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             15.5,
@@ -147,7 +146,7 @@
           ]
         },
         "west": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             15.5,
@@ -156,7 +155,7 @@
           ]
         },
         "up": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             13,
@@ -165,7 +164,7 @@
           ]
         },
         "down": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             13,
@@ -189,7 +188,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             6.5,
             0,
@@ -198,7 +197,7 @@
           ]
         },
         "east": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             6.5,
             0,
@@ -207,7 +206,7 @@
           ]
         },
         "south": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             6.5,
             0,
@@ -216,7 +215,7 @@
           ]
         },
         "west": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             6.5,
             0,
@@ -240,7 +239,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             4.5,
             0,
@@ -249,7 +248,7 @@
           ]
         },
         "east": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             3,
             0,
@@ -258,7 +257,7 @@
           ]
         },
         "south": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             1.5,
             0,
@@ -267,7 +266,7 @@
           ]
         },
         "west": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             0,
             0,
@@ -291,7 +290,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             0,
@@ -300,7 +299,7 @@
           ]
         },
         "east": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             0,
@@ -309,7 +308,7 @@
           ]
         },
         "south": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             0,
@@ -318,7 +317,7 @@
           ]
         },
         "west": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             0,
@@ -327,7 +326,7 @@
           ]
         },
         "up": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             12.5,
             0,
@@ -336,7 +335,7 @@
           ]
         },
         "down": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             13,
             3,
@@ -361,7 +360,7 @@
       "shade": false,
       "faces": {
         "north": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             11,
             0,
@@ -370,7 +369,7 @@
           ]
         },
         "east": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             11,
             0,
@@ -379,7 +378,7 @@
           ]
         },
         "south": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             11,
             0,
@@ -388,7 +387,7 @@
           ]
         },
         "west": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             11,
             0,
@@ -397,7 +396,7 @@
           ]
         },
         "up": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             11,
             3,
@@ -406,7 +405,7 @@
           ]
         },
         "down": {
-          "texture": "#luminescent_lamp",
+          "texture": "#texture",
           "uv": [
             11,
             3,

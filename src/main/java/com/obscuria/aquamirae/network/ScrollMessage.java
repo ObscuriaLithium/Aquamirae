@@ -11,22 +11,22 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DeadSeaScrollMessage {
+public class ScrollMessage {
     int type;
 
-    public DeadSeaScrollMessage(int type) {
+    public ScrollMessage(int type) {
         this.type = type;
     }
 
-    public DeadSeaScrollMessage(FriendlyByteBuf buffer) {
+    public ScrollMessage(FriendlyByteBuf buffer) {
         this.type = buffer.readInt();
     }
 
-    public static void buffer(DeadSeaScrollMessage message, FriendlyByteBuf buffer) {
+    public static void buffer(ScrollMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
     }
 
-    public static void handler(DeadSeaScrollMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handler(ScrollMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> ScrollClient.effect(message.type));
         context.setPacketHandled(true);
@@ -34,6 +34,6 @@ public class DeadSeaScrollMessage {
 
     @SubscribeEvent
     public static void registerMessage(FMLCommonSetupEvent event) {
-        AquamiraeMod.addNetworkMessage(DeadSeaScrollMessage.class, DeadSeaScrollMessage::buffer, DeadSeaScrollMessage::new, DeadSeaScrollMessage::handler);
+        AquamiraeMod.addNetworkMessage(ScrollMessage.class, ScrollMessage::buffer, ScrollMessage::new, ScrollMessage::handler);
     }
 }

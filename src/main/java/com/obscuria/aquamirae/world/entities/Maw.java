@@ -5,6 +5,8 @@ import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
+import com.obscuria.obscureapi.client.animations.HekateProvider;
+import com.obscuria.obscureapi.client.animations.IHekateProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -33,7 +35,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class Maw extends Monster implements IShipGraveyardEntity {
+public class Maw extends Monster implements IShipGraveyardEntity, IHekateProvider {
+
+	private final HekateProvider ANIMATIONS = new HekateProvider(this);
+
 	public Maw(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.MAW.get(), world);
 	}
@@ -57,6 +62,10 @@ public class Maw extends Monster implements IShipGraveyardEntity {
 		this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
 		this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
 		this.goalSelector.addGoal(7, new FloatGoal(this));
+	}
+
+	@Override public HekateProvider getHekateProvider() {
+		return this.ANIMATIONS;
 	}
 
 	@Override public @NotNull MobType getMobType() {
@@ -84,8 +93,13 @@ public class Maw extends Monster implements IShipGraveyardEntity {
 		return super.hurt(source, amount);
 	}
 
+	@Override public boolean doHurtTarget(@NotNull Entity entity) {
+		ANIMATIONS.play("attack", 5);
+		return super.doHurtTarget(entity);
+	}
+
 	@Override public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason,
-										@Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
+												  @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
 		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.mawSwimSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.mawSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.mawMaxHealth.get());

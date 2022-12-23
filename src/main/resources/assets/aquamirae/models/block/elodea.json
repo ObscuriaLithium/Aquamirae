@@ -3,7 +3,7 @@
   "textures": {
     "all": "aquamirae:block/elodea",
     "particle": "aquamirae:block/elodea",
-    "elodea": "aquamirae:block/elodea"
+    "texture": "aquamirae:block/elodea"
   },
   "render_type": "cutout_mipped"
 }

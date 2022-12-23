@@ -282,9 +282,9 @@ public class ModelCaptainCornelia<T extends Entity> extends EntityModel<T> {
 		HekateLib.m(this.ten3_2, -14F, -12F, 0F, 0F, 0F, 0F, s2, 0.15F, limbSwing, move);
 		HekateLib.m(this.ten3_3, -14F, -6F, 0F, 0F, 0F, 0F, s2, 0.10F, limbSwing, move);
 		HekateLib.m(this.ten3_4, -14F, -6F, 0F, 0F, 0F, 0F, s2, 0.05F, limbSwing, move);
-		//ATTACK
+
 		HekateLib.render.animation(entity, "attack", ageInTicks,
-				//1
+
 				new KeyFrame(60, 50, 8F, 6F, new AnimatedPart(this.main, 2F, 0F, 0F), new AnimatedPart(this.bodyTop, 0F, -17.5F, 0F),
 						new AnimatedPart(this.bodyTop2, 0F, -32.5F, 0F), new AnimatedPart(this.head, -10F, 46F, -3.5F),
 						new AnimatedPart(this.leftArm, 30F, 35F, -32F), new AnimatedPart(this.leftArmBottom, 25F, 0F, 0F),
@@ -299,7 +299,7 @@ public class ModelCaptainCornelia<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(this.item, -50F, 0F, 0F), new AnimatedPart(this.bodyBottom, -22.5F, 0F, 0F),
 						new AnimatedPart(this.rightLeg, 25F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -70F, 0F, 0F),
 						new AnimatedPart(this.leftLeg, -2.5F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -17.5F, 0F, 0F)),
-				//2
+
 				new KeyFrame(40, 28, 6F, 20F, new AnimatedPart(this.main, 2.5F, 0F, 0F), new AnimatedPart(this.bodyTop, -14F, 42F, -2F),
 						new AnimatedPart(this.bodyTop2, 0F, 25F, 0F), new AnimatedPart(this.head, 3F, -56F, -8F),
 						new AnimatedPart(this.leftArm, -21F, 12F, -18.5F), new AnimatedPart(this.leftArmBottom, 70F, 0F, 0F),
@@ -314,7 +314,7 @@ public class ModelCaptainCornelia<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(this.item, -82F, 0F, 0F), new AnimatedPart(this.bodyBottom, -32F, 2F, -4F),
 						new AnimatedPart(this.rightLeg, 57F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -90F, 0F, 0F),
 						new AnimatedPart(this.leftLeg, -2.5F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -17.5F, 0F, 0F)),
-				//3
+
 				new KeyFrame(20, 8, 6F, 20F, new AnimatedPart(this.main, 2.5F, 0F, 0F), new AnimatedPart(this.bodyTop, 0F, -17.5F, 0F),
 						new AnimatedPart(this.bodyTop2, 0F, -27.5F, 0F), new AnimatedPart(this.head, -22F, 42F, -9F),
 						new AnimatedPart(this.leftArm, 33.5F, 12F, -18.5F), new AnimatedPart(this.leftArmBottom, 67F, 0F, 0F),
@@ -330,8 +330,8 @@ public class ModelCaptainCornelia<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(this.rightLeg, 57F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -90F, 0F, 0F),
 						new AnimatedPart(this.leftLeg, -2.5F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -17.5F, 0F, 0F)));
 
-		this.head.yRot += HekateLib.render.headYaw(netHeadYaw, 0.33F);
-		this.bodyTop.yRot += HekateLib.render.headYaw(netHeadYaw, 0.33F);
-		this.bodyTop2.yRot += HekateLib.render.headYaw(netHeadYaw, 0.33F);
+		this.head.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
+		this.bodyTop.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
+		this.bodyTop2.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
 	}
 }

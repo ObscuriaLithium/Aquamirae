@@ -1,10 +1,10 @@
 {
-  "parent": "aquamirae:block/custom/locked_chest",
+  "parent": "aquamirae:block/custom/frozen_chest",
   "textures": {
     "all": "aquamirae:block/normal",
     "particle": "aquamirae:block/normal",
     "normal": "aquamirae:block/normal",
-    "frozen_chest": "aquamirae:block/frozen_chest"
+    "texture": "aquamirae:block/frozen_chest"
   },
   "render_type": "cutout_mipped"
 }

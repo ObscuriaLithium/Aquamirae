@@ -3,7 +3,7 @@
   "textures": {
     "all": "aquamirae:block/luminescent_bubble",
     "particle": "aquamirae:block/luminescent_bubble",
-    "luminescent_bubble": "aquamirae:block/luminescent_bubble"
+    "texture": "aquamirae:block/luminescent_bubble"
   },
   "render_type": "cutout_mipped"
 }

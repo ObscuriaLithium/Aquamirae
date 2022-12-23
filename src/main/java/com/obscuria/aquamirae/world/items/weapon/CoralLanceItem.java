@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class CoralLanceItem extends SwordItem implements IClassItem, IBonusItem {
+public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityItem, IBonusItem {
 	public CoralLanceItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -54,7 +54,12 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IBonusItem 
 		}, 3, -2.8f, new Item.Properties().fireResistant().rarity(ObscureRarity.MYTHIC));
 	}
 
-	public final ObscureBonus BONUS = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 100);
+	public final ObscureAbility ABILITY = new ObscureAbility(this, "coral_lance", ObscureAbility.Cost.NONE, 0, 50);
+	public final ObscureBonus BONUS = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.ARMOR, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 50);
+
+	public List<ObscureAbility> getObscureAbilities() {
+		return Collections.singletonList(ABILITY);
+	}
 
 	public List<ObscureBonus> getObscureBonuses() {
 		return Collections.singletonList(BONUS);

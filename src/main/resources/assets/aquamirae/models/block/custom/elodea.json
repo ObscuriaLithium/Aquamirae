@@ -1,5 +1,4 @@
 {
-  "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
   "ambientocclusion": false,
   "display": {
     "gui": {
@@ -130,7 +129,7 @@
       },
       "faces": {
         "north": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -139,7 +138,7 @@
           ]
         },
         "south": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -173,7 +172,7 @@
       },
       "faces": {
         "north": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -182,7 +181,7 @@
           ]
         },
         "south": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -216,7 +215,7 @@
       },
       "faces": {
         "east": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -225,7 +224,7 @@
           ]
         },
         "west": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -259,7 +258,7 @@
       },
       "faces": {
         "east": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -268,7 +267,7 @@
           ]
         },
         "west": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -302,7 +301,7 @@
       },
       "faces": {
         "north": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -311,7 +310,7 @@
           ]
         },
         "south": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -345,7 +344,7 @@
       },
       "faces": {
         "north": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,
@@ -354,7 +353,7 @@
           ]
         },
         "south": {
-          "texture": "#elodea",
+          "texture": "#texture",
           "uv": [
             0,
             2,

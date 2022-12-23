@@ -293,7 +293,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             3.5,
             3.5,
@@ -302,7 +302,7 @@
           ]
         },
         "east": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             0,
             3.5,
@@ -311,7 +311,7 @@
           ]
         },
         "south": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             10.5,
             3.5,
@@ -320,7 +320,7 @@
           ]
         },
         "west": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             7,
             3.5,
@@ -329,7 +329,7 @@
           ]
         },
         "up": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             3.5,
             0,
@@ -339,7 +339,7 @@
           "rotation": 180
         },
         "down": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             3.5,
             7,
@@ -364,7 +364,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1,
             1.5,
@@ -373,7 +373,7 @@
           ]
         },
         "east": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1,
             2.25,
@@ -382,7 +382,7 @@
           ]
         },
         "west": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             2,
             1.5,
@@ -391,7 +391,7 @@
           ]
         },
         "up": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1,
             1.5,
@@ -400,7 +400,7 @@
           ]
         },
         "down": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1,
             2.2,
@@ -424,7 +424,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.25,
             2.25,
@@ -433,7 +433,7 @@
           ]
         },
         "east": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.25,
             2.25,
@@ -442,7 +442,7 @@
           ]
         },
         "west": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.75,
             2.25,
@@ -451,7 +451,7 @@
           ]
         },
         "down": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.25,
             2.25,
@@ -476,7 +476,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.25,
             1,
@@ -485,7 +485,7 @@
           ]
         },
         "east": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.25,
             1,
@@ -494,7 +494,7 @@
           ]
         },
         "west": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.25,
             1,
@@ -503,7 +503,7 @@
           ]
         },
         "up": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.25,
             1,
@@ -527,7 +527,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.75,
             1,
@@ -536,7 +536,7 @@
           ]
         },
         "east": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.75,
             1,
@@ -545,7 +545,7 @@
           ]
         },
         "west": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.75,
             1,
@@ -554,7 +554,7 @@
           ]
         },
         "up": {
-          "texture": "#frozen_chest",
+          "texture": "#texture",
           "uv": [
             1.75,
             1,

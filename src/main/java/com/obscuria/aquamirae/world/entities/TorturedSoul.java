@@ -4,6 +4,8 @@ package com.obscuria.aquamirae.world.entities;
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
+import com.obscuria.obscureapi.client.animations.HekateProvider;
+import com.obscuria.obscureapi.client.animations.IHekateProvider;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -33,7 +35,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class TorturedSoul extends Monster implements IShipGraveyardEntity {
+public class TorturedSoul extends Monster implements IShipGraveyardEntity, IHekateProvider {
+	private final HekateProvider ANIMATIONS = new HekateProvider(this);
 	public TorturedSoul(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.TORTURED_SOUL.get(), world);
 	}
@@ -60,6 +63,10 @@ public class TorturedSoul extends Monster implements IShipGraveyardEntity {
 		this.targetSelector.addGoal(9, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
 	}
 
+	@Override public HekateProvider getHekateProvider() {
+		return this.ANIMATIONS;
+	}
+
 	@Override public @NotNull MobType getMobType() {
 		return MobType.ILLAGER;
 	}
@@ -80,6 +87,11 @@ public class TorturedSoul extends Monster implements IShipGraveyardEntity {
 		if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud) return false;
 		if (source == DamageSource.DROWN) return false;
 		return super.hurt(source, amount);
+	}
+
+	@Override public boolean doHurtTarget(@NotNull Entity entity) {
+		ANIMATIONS.play("attack", 5);
+		return super.doHurtTarget(entity);
 	}
 
 	@Override

@@ -1,5 +1,4 @@
 {
-  "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
   "ambientocclusion": false,
   "display": {
     "gui": {
@@ -103,7 +102,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             0,
             5,
@@ -112,7 +111,7 @@
           ]
         },
         "east": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             0,
             5,
@@ -121,7 +120,7 @@
           ]
         },
         "south": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             0,
             5,
@@ -130,7 +129,7 @@
           ]
         },
         "west": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             0,
             5,
@@ -139,7 +138,7 @@
           ]
         },
         "up": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             0,
             0,
@@ -148,7 +147,7 @@
           ]
         },
         "down": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             0,
             0,
@@ -172,7 +171,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             5,
             4,
@@ -181,7 +180,7 @@
           ]
         },
         "east": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             5,
             4,
@@ -190,7 +189,7 @@
           ]
         },
         "south": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             5,
             4,
@@ -199,7 +198,7 @@
           ]
         },
         "west": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             5,
             4,
@@ -208,7 +207,7 @@
           ]
         },
         "up": {
-          "texture": "#jar",
+          "texture": "#texture",
           "uv": [
             5,
             0,

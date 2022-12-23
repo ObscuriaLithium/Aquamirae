@@ -92,8 +92,8 @@ public class MazeMother extends Monster implements IShipGraveyardEntity {
 		return super.getBoundingBoxForCulling().inflate(10F);
 	}
 
-	@Override public boolean removeWhenFarAway(double d0) {
-		return d0 > 180D;
+	@Override public boolean removeWhenFarAway(double distance) {
+		return distance > 200;
 	}
 
 	@Override protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
@@ -148,11 +148,19 @@ public class MazeMother extends Monster implements IShipGraveyardEntity {
 		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
 		final Vec3 center = this.getPosition(1F);
-		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(128), e -> true).stream()
+		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 		if (AquamiraeConfig.Common.notifications.get()) players.forEach(player -> EventHelper.sendMessage(player,
 				Component.translatable("icon.info").getString() + Component.translatable("info.maze_mother_spawn").getString()));
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
+	}
+
+	@Override protected void updateNoActionTime() {
+		final Vec3 center = this.getPosition(1F);
+		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(128), e -> true).stream()
+				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
+		if (!players.isEmpty()) this.setNoActionTime(0);
+		super.updateNoActionTime();
 	}
 
 	@Override public void baseTick() {

@@ -53,6 +53,7 @@
   "ability.three_bolt_armor_full": "Эффект комплекта>Защищает вас от холода>в водах Ледяного Лабиринта.",
   "ability.three_bolt_armor_half": "Эффект полусета>Работает только со шлемом и>костюмом: костюм обеспечивает>вас кислородом под водой.",
   "ability.whisper_of_the_abyss": "Перфорация>Снижает броню цели>на 10% на #1с§7.>Суммируется до 5 раз.",
+  "ability.coral_lance": "Усмирение>Вы наносите на #1%§7>больше урона существам>с Кладбища Кораблей.",
 
   "tooltip.lore.frozen_key": "Открывает сундук, спрятанный>в глубинах Ледяного Лабиринта.",
   "tooltip.lore.golden_moth_in_a_jar": "Некоторые сокровища могут>иметь собственную душу, а>не только пожирать чужие...",
@@ -193,11 +194,17 @@
   "entity.aquamirae.spinefish": "Хребеточник",
 
   "effect.aquamirae.abyss_blindness": "Ослепление",
+  "effect.aquamirae.abyss_blindness.description": "Эффект брони Ослепляющей бездны. Уменьшает скорость передвижения.",
   "effect.aquamirae.armor_decrease": "§cПерфорация",
+  "effect.aquamirae.armor_decrease.description": "Эффект Шёпота бездны. Уменьшает показатель брони.",
   "effect.aquamirae.crystallization": "§cКристаллизация",
+  "effect.aquamirae.crystallization.description": "Эффект брони Ослепляющей бездны. Вы наносите на 80% меньше урона и умираете по окончанию эффекта.",
   "effect.aquamirae.health_decrease": "§cРассечение",
+  "effect.aquamirae.health_decrease.description": "Эффект Рассекателя. Уменьшает максимальное здоровье.",
   "effect.aquamirae.strong_armor": "§9Крепкая броня",
+  "effect.aquamirae.strong_armor.description": "Эффект брони Ослепляющей бездны. Увеличивает показатель брони.",
   "effect.aquamirae.swim_speed": "§9Скорость",
+  "effect.aquamirae.swim_speed.description": "Эффект Ужасной брони. Увеличивает скорость передвижения под водой.",
 
   "death.attack.crystallization": "%1$s был обращён в кристалл",
 
@@ -206,8 +213,8 @@
   "info.maze_mother_spawn": "§c Вы чувствуете вибрацию подо льдом...",
 
   "perk.rune_of_the_storm.name": "@§7Руна Шторма",
-  "perk.rune_of_the_storm.text": "Руна Шторма>Наносит на 33% больше>урона в холодных биомах.",
   "perk.rune_of_the_storm.style": "rune_of_the_storm",
+  "perk.rune_of_the_storm.text": "Руна Шторма>Наносит на 33% больше>урона в холодных биомах.",
 
   "aquamirae.obscure_book.mod_entry": " §7Приключенческий мод, добавляющий> §7кладбище кораблей с ужасными> §7глубоководными существами.> §8Исследование этого мода> §8начинается с нахождения Ледяного> §8Лабиринта, расположенного где-то> §8в Глубоком Ледяном Океане. ",
   "aquamirae.obscure_book.mod_link": "ob-aquamirae",

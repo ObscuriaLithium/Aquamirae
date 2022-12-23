@@ -33,7 +33,7 @@
             16,
             16
           ],
-          "texture": "#0"
+          "texture": "#texture"
         },
         "west": {
           "uv": [
@@ -42,7 +42,7 @@
             16,
             16
           ],
-          "texture": "#0"
+          "texture": "#texture"
         }
       }
     },
@@ -75,7 +75,7 @@
             16,
             16
           ],
-          "texture": "#0"
+          "texture": "#texture"
         },
         "west": {
           "uv": [
@@ -84,7 +84,7 @@
             16,
             16
           ],
-          "texture": "#0"
+          "texture": "#texture"
         }
       }
     }

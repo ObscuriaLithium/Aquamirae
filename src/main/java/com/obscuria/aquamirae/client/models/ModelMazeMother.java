@@ -1,69 +1,45 @@
 package com.obscuria.aquamirae.client.models;
 
-import com.obscuria.aquamirae.AquamiraeMod;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.EntityModel;
-
-import com.obscuria.aquamirae.client.HekateLegacy;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.obscureapi.client.animations.HekateLib;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "maze_mother"), "main");
-	public final ModelPart main;
-	public final ModelPart main2;
-	public final ModelPart body_top;
-	public final ModelPart body_bottom;
-	public final ModelPart tail1;
-	public final ModelPart tail2;
-	public final ModelPart tail3;
-	public final ModelPart tail4;
-	public final ModelPart tail5;
-	public final ModelPart jaw1;
-	public final ModelPart jaw2;
-	public final ModelPart jaw3;
-	public final ModelPart jaw4;
-	public final ModelPart left_wing1_top;
-	public final ModelPart left_wing2_top;
-	public final ModelPart right_wing1_top;
-	public final ModelPart right_wing2_top;
-	public final ModelPart left_wing1_bottom;
-	public final ModelPart left_wing2_bottom;
-	public final ModelPart right_wing1_bottom;
-	public final ModelPart right_wing2_bottom;
+	public final ModelPart main, main2, bodyTop, bodyBottom, tail1, tail2, tail3, tail4, tail5, jaw1, jaw2, jaw3, jaw4,
+			wing1LeftTop, wing1LeftBottom, wing1RightTop, wing1RightBottom, wing2LeftTop, wing2LeftBottom, wing2RightTop, wing2RightBottom;
 
 	public ModelMazeMother(ModelPart root) {
 		this.main = root.getChild("main");
 		this.main2 = main.getChild("main2");
-		this.body_top = main2.getChild("body_top");
-		this.body_bottom = main2.getChild("body_bottom");
-		this.jaw1 = body_top.getChild("jaw1");
-		this.jaw2 = body_top.getChild("jaw2");
-		this.jaw3 = body_top.getChild("jaw3");
-		this.jaw4 = body_top.getChild("jaw4");
-		this.tail1 = body_bottom.getChild("tail1");
+		this.bodyTop = main2.getChild("body_top");
+		this.bodyBottom = main2.getChild("body_bottom");
+		this.jaw1 = bodyTop.getChild("jaw1");
+		this.jaw2 = bodyTop.getChild("jaw2");
+		this.jaw3 = bodyTop.getChild("jaw3");
+		this.jaw4 = bodyTop.getChild("jaw4");
+		this.tail1 = bodyBottom.getChild("tail1");
 		this.tail2 = tail1.getChild("tail2");
 		this.tail3 = tail2.getChild("tail3");
 		this.tail4 = tail3.getChild("tail4");
 		this.tail5 = tail4.getChild("tail5");
-		this.left_wing1_top = body_top.getChild("left_wing1_top");
-		this.right_wing1_top = body_top.getChild("right_wing1_top");
-		this.left_wing2_top = left_wing1_top.getChild("left_wing2_top");
-		this.right_wing2_top = right_wing1_top.getChild("right_wing2_top");
-		this.left_wing1_bottom = body_bottom.getChild("left_wing1_bottom");
-		this.right_wing1_bottom = body_bottom.getChild("right_wing1_bottom");
-		this.left_wing2_bottom = left_wing1_bottom.getChild("left_wing2_bottom");
-		this.right_wing2_bottom = right_wing1_bottom.getChild("right_wing2_bottom");
+		this.wing1LeftTop = bodyTop.getChild("left_wing1_top");
+		this.wing1RightTop = bodyTop.getChild("right_wing1_top");
+		this.wing2LeftTop = wing1LeftTop.getChild("left_wing2_top");
+		this.wing2RightTop = wing1RightTop.getChild("right_wing2_top");
+		this.wing1LeftBottom = bodyBottom.getChild("left_wing1_bottom");
+		this.wing1RightBottom = bodyBottom.getChild("right_wing1_bottom");
+		this.wing2LeftBottom = wing1LeftBottom.getChild("left_wing2_bottom");
+		this.wing2RightBottom = wing1RightBottom.getChild("right_wing2_bottom");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -175,8 +151,8 @@ public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-			float blue, float alpha) {
+	public void renderToBuffer(PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
+							   float blue, float alpha) {
 		poseStack.pushPose();
 		poseStack.scale(5f, 5f, 5f);
 		poseStack.translate(0F, -1F, 0F);
@@ -184,50 +160,27 @@ public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 		poseStack.popPose();
 	}
 
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		HekateLegacy.updateRenderer(entity);
-		float i = HekateLegacy.setIdleModifier(limbSwingAmount, 3F);
-		float m = HekateLegacy.setMoveModifier(limbSwingAmount, 3F);
-		float a1 = HekateLegacy.getFrame(entity, "[attack]", 0.3, 15, 30);
-		float a1i = 1F - a1;
-		//IDLE
-		float iBodyTX = HekateLegacy.idle(10F, 0F, 0.06F, 0.6F, ageInTicks, 1F);
-		float iBodyBX = HekateLegacy.idle(10F, 0F, 0.06F, 0.5F, ageInTicks, 1F);
-		float iTail1X = HekateLegacy.idle(10F, 0F, 0.06F, 0.4F, ageInTicks, 1F);
-		float iTail2X = HekateLegacy.idle(10F, 0F, 0.06F, 0.3F, ageInTicks, 1F);
-		float iTail3X = HekateLegacy.idle(10F, 0F, 0.06F, 0.2F, ageInTicks, 1F);
-		float iTail4X = HekateLegacy.idle(10F, 0F, 0.06F, 0.1F, ageInTicks, 1F);
-		float iTail5X = HekateLegacy.idle(10F, 0F, 0.06F, 0F, ageInTicks, 1F);
-		float iLWing1Z = HekateLegacy.idle(-15F, 0F, 0.06F, 0.1F, ageInTicks, 1F);
-		float iRWing1Z = HekateLegacy.idle(15F, 0F, 0.06F, 0.1F, ageInTicks, 1F);
-		float iLWing2Z = HekateLegacy.idle(-15F, 0F, 0.06F, 0F, ageInTicks, 1F);
-		float iRWing2Z = HekateLegacy.idle(15F, 0F, 0.06F, 0F, ageInTicks, 1F);
-		float iJaw1Y = HekateLegacy.idle(12F, 0F, 0.3F, 0F, ageInTicks, HekateLegacy.getModifier(ageInTicks, 0.05F, 0F));
-		float iJaw2Y = HekateLegacy.idle(10F, 0F, 0.6F, 0F, ageInTicks, HekateLegacy.getModifier(ageInTicks, 0.05F, 0.2F));
-		//ATTACK
-		float a1MainX = HekateLegacy.fixed(-2F, a1);
-		float a1Jaw1Y = HekateLegacy.fixed(-30F, a1);
-		float a1Jaw2Y = HekateLegacy.fixed(-30F, a1);
-		//APPLYING PRESETS TO A MODEL
-		this.main.xRot = a1MainX;
-		this.body_top.xRot = iBodyTX;
-		this.body_bottom.xRot = iBodyBX;
-		this.tail1.xRot = iTail1X;
-		this.tail2.xRot = iTail2X;
-		this.tail3.xRot = iTail3X;
-		this.tail4.xRot = iTail4X;
-		this.tail5.xRot = iTail5X;
-		this.left_wing1_top.zRot = iLWing1Z;
-		this.left_wing1_bottom.zRot = iLWing1Z;
-		this.right_wing1_top.zRot = iRWing1Z;
-		this.right_wing1_bottom.zRot = iRWing1Z;
-		this.left_wing2_top.zRot = iLWing2Z;
-		this.left_wing2_bottom.zRot = iLWing2Z;
-		this.right_wing2_top.zRot = iRWing2Z;
-		this.right_wing2_bottom.zRot = iRWing2Z;
-		this.jaw1.yRot = iJaw1Y * a1i + a1Jaw1Y;
-		this.jaw2.yRot = -iJaw1Y * a1i + -a1Jaw1Y;
-		this.jaw3.yRot = iJaw2Y * a1i + a1Jaw2Y;
-		this.jaw4.yRot = -iJaw2Y * a1i + -a1Jaw2Y;
+	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		final float speed = 0.06F;
+
+		HekateLib.render.tick(entity);
+		HekateLib.render.prepare(main, main2, bodyTop, bodyBottom, tail1, tail2, tail3, tail4, tail5, jaw1, jaw2, jaw3, jaw4,
+				wing1LeftTop, wing1LeftBottom, wing1RightTop, wing1RightBottom, wing2LeftTop, wing2LeftBottom, wing2RightTop, wing2RightBottom);
+
+		HekateLib.i(bodyTop, -10F, 0, 0, 0, 0, 0, speed, 0F, ageInTicks, 1F);
+		HekateLib.i(bodyBottom, -10F, 0, 0, 0, 0, 0, speed, -0.1F, ageInTicks, 1F);
+		HekateLib.i(tail1, -10F, 0, 0, 0, 0, 0, speed, -0.2F, ageInTicks, 1F);
+		HekateLib.i(tail2, -10F, 0, 0, 0, 0, 0, speed, -0.3F, ageInTicks, 1F);
+		HekateLib.i(tail3, -10F, 0, 0, 0, 0, 0, speed, -0.4F, ageInTicks, 1F);
+		HekateLib.i(tail4, -10F, 0, 0, 0, 0, 0, speed, -0.5F, ageInTicks, 1F);
+		HekateLib.i(tail5, -10F, 0, 0, 0, 0, 0, speed, -0.6F, ageInTicks, 1F);
+		HekateLib.i(wing1RightTop, 0, 0, 0, 0, 15F, 0, speed, -0.1F, ageInTicks, 1F);
+		HekateLib.i(wing1LeftTop, 0, 0, 0, 0, -15F, 0, speed, -0.1F, ageInTicks, 1F);
+		HekateLib.i(wing2RightTop, 0, 0, 0, 0, 15F, 0, speed, -0.2F, ageInTicks, 1F);
+		HekateLib.i(wing2LeftTop, 0, 0, 0, 0, -15F, 0, speed, -0.2F, ageInTicks, 1F);
+		this.wing1RightBottom.zRot = this.wing1RightTop.zRot;
+		this.wing1LeftBottom.zRot = this.wing1LeftTop.zRot;
+		this.wing2RightBottom.zRot = this.wing2RightTop.zRot;
+		this.wing2LeftBottom.zRot = this.wing2LeftTop.zRot;
 	}
 }

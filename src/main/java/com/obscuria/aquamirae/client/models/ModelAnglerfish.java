@@ -180,8 +180,8 @@ public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(tail5, 0, 0, 25F, 0, 0, 0, speed2, -0.25F),
 						new AnimatedPart(tail6, 0, 0, 25F, 0, 0, 0, speed2, -0.3F)));
 		final float headMod = entity instanceof IHekateProvider provider ? 1F - provider.getHekateProvider().getModifier("onGround1") : 1F;
-		this.main.xRot += HekateLib.render.headYaw(headPitch, headMod);
-		this.main.yRot += HekateLib.render.headYaw(netHeadYaw, headMod);
-		this.main.xRot += HekateLib.render.headYaw(netHeadYaw, 1F - headMod);
+		this.main.xRot += HekateLib.render.head(headPitch, headMod);
+		this.main.yRot += HekateLib.render.head(netHeadYaw, headMod);
+		this.main.xRot += HekateLib.render.head(netHeadYaw, 1F - headMod);
 	}
 }

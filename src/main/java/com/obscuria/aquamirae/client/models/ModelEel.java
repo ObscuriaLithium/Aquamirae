@@ -177,7 +177,7 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 		HekateLib.render.tick(entity);
 		HekateLib.render.prepare(main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headTop, headBottom, leftFin,
 				rightFin);
-		//BASE
+
 		HekateLib.i(this.body1, -1F, -17.5F, 0F, 0F, 0F, 0F, s1, -0.95F, ageInTicks);
 		HekateLib.i(this.body2, -1F, 20F, 0F, 0F, 0F, 0F, s1, -0.90F, ageInTicks);
 		HekateLib.i(this.body3, -1F, 22.5F, 0F, 0F, 0F, 0F, s1, -0.85F, ageInTicks);
@@ -193,7 +193,7 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 		HekateLib.i(this.headBottom, -10F, -105F, 0F, 0F, 0F, 0F, s1, 0F, ageInTicks);
 		HekateLib.i(this.leftFin, 0F, 0F, 0F, 0F, 10F, -45F, s1, 0F, ageInTicks);
 		HekateLib.i(this.rightFin, 0F, 0F, 0F, 0F, -10F, 45F, s1, 0F, ageInTicks);
-		//RARE IDLE
+
 		this.body5.yRot = HekateLib.render.idle(1F, 0F, s1 * 1.4F, -0.95F, ageInTicks, rareIdle);
 		this.body6.yRot = HekateLib.render.idle(2F, 0F, s1 * 1.4F, -0.90F, ageInTicks, rareIdle);
 		this.body7.yRot = HekateLib.render.idle(3F, 0F, s1 * 1.4F, -0.85F, ageInTicks, rareIdle);
@@ -201,7 +201,7 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 		this.body9.yRot = HekateLib.render.idle(5F, 0F, s1 * 1.4F, -0.75F, ageInTicks, rareIdle);
 		this.body10.yRot = HekateLib.render.idle(6F, 0F, s1 * 1.4F, -0.70F, ageInTicks, rareIdle);
 		this.head.yRot = HekateLib.render.idle(7F, 0F, s1 * 1.4F, -0.65F, ageInTicks, rareIdle);
-		//ATTACK
+
 		HekateLib.render.animation(entity, "attack", ageInTicks, new KeyFrame(20, 8, 6F, 24F, new AnimatedPart(this.body1, -17.5F, 0F, 0F),
 				new AnimatedPart(this.body2, 20F, 0F, 0F), new AnimatedPart(this.body3, 22.5F, 0F, 0F), new AnimatedPart(this.body4, 27.5F, 0F, 0F),
 				new AnimatedPart(this.body5, -2.5F, 0F, 0F), new AnimatedPart(this.body6, -2.5F, 0F, 0F), new AnimatedPart(this.body7, -30F, 0F, 0F),
@@ -217,7 +217,7 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(this.head, -20F, -4F, 0F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
 						new AnimatedPart(this.headBottom, -75F, 0F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -40F),
 						new AnimatedPart(this.rightFin, 0F, 0F, 40F)));
-		//ROAR
+
 		HekateLib.render.animation(entity, "roar", ageInTicks,
 				new KeyFrame(52, 40, 4F, 14F, new AnimatedPart(this.body1, -17.5F, 0F, 0F), new AnimatedPart(this.body2, 20F, 0F, 0F),
 						new AnimatedPart(this.body3, 22.5F, 0F, 0F), new AnimatedPart(this.body4, 27.5F, 0F, 0F),
@@ -239,7 +239,7 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(this.head, 0F, -12.5F, 0F, 0F, 4F, 0F, 0.4F, -0.70F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
 						new AnimatedPart(this.headBottom, 10F, -145F, 0F, 0F, 0F, 0F, 1.5F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -80F),
 						new AnimatedPart(this.rightFin, 0F, 0F, 80F)));
-		//MOVE
+
 		HekateLib.render.animation(entity, "moveMain", ageInTicks, new KeyFrame(50, 20, 1.6F, 2F, new AnimatedPart(this.main, -20F, 0F, 0F)),
 				new KeyFrame(20, 0, 2F, 4F, new AnimatedPart(this.main, 0F, 0F, 0F)));
 		HekateLib.render.animation(entity, "move", ageInTicks,
@@ -269,15 +269,15 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(this.head, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.50F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
 						new AnimatedPart(this.headBottom, 5F, -90F, 0F, 0F, 0F, 0F, 1.4F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -90F),
 						new AnimatedPart(this.rightFin, 0F, 0F, 90F)));
-		this.body1.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body2.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body3.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body4.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body5.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body6.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body7.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body8.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body9.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
-		this.body10.yRot += HekateLib.render.headYaw(netHeadYaw, 0.1F);
+		this.body1.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body2.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body3.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body4.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body5.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body6.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body7.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body8.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body9.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+		this.body10.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
 	}
 }
