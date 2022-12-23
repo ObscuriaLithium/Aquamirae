@@ -50,6 +50,7 @@ import java.util.Objects;
 
 public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
+	private int attackTick = 0;
 	public Anglerfish(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.ANGLERFISH.get(), world);
 	}
@@ -162,13 +163,20 @@ public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekate
 	@Override public void baseTick() {
 		ANIMATIONS.playSound("attack", 24, "aquamirae:entity.eel.bite", SoundSource.HOSTILE, 1F, 1F);
 		if (this.isInWater()) this.setDeltaMovement(this.getDeltaMovement().add(0, -0.001F, 0));
-		else if (ANIMATIONS.getTick("onGround") <= 2 && this.tickCount > 1) ANIMATIONS.play("onGround", 20);
+		else {
+			if (ANIMATIONS.isPlaying("onGround")) {
+				if (ANIMATIONS.getTick("onGround") <= 2) ANIMATIONS.play("onGround", 20);
+			} else {
+				if (this.tickCount > 1 && this.attackTick <= 0) ANIMATIONS.play("onGround", 20);
+			}
+		}
 		if (ANIMATIONS.isPlaying("attack")) {
+			attackTick = 10;
 			if (this.getTarget() != null) this.lookControl.setLookAt(this.getTarget());
 			if (ANIMATIONS.getTick("attack") > 12) this.setDeltaMovement(this.getDeltaMovement().scale(0.9F));
 			if (ANIMATIONS.getTick("attack") == 12 && this.getTarget() != null) this.setDeltaMovement(this.getDeltaMovement()
 					.add(this.getPosition(1F).vectorTo(this.getTarget().getPosition(1F)).scale(0.4F)));
-		}
+		} else this.attackTick--;
 		super.baseTick();
 	}
 
