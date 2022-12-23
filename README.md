@@ -8,16 +8,13 @@
 
 ### Distribution Rules
 
-**You are allowed:**
+**You're allowed to:**
+- Add original mod files to public modpacks and monetize these packs.
+- Add original mod files to public servers and monetize these servers.
+- Post original mod files to sites and servers with a link to the mod's Curseforge page.
+- Сreate and monetize addons.
 
-- Use this mod in your modpacks and monetize modpacks with this mod.
-- Use this mod on your servers and monetize servers with this mod.
-- Use this mod in your videos and monetize videos with this mod.
-- Repost this mod to other sites and services with a link to this page.
-- Сreate addons for this mod.
-
-**You are not allowed:**
-
+**You aren't allowed to:**
 - Distribute modified mod files (Use them on public servers, add them to public modpacks or upload them to websites).
 - Use mod assets for your projects. All resources are protected by copyright.
 
