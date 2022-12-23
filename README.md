@@ -11,7 +11,7 @@
 **You're allowed to:**
 - Add original mod files to public modpacks and monetize these packs.
 - Add original mod files to public servers and monetize these servers.
-- Post original mod files to sites and servers with a link to the mod's Curseforge page.
+- Post original mod files to sites and services with a link to the mod's Curseforge page.
 - Сreate and monetize addons.
 
 **You aren't allowed to:**
