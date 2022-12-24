@@ -96,21 +96,25 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	private void placeOxygelium(WorldGenLevel world, int x, int y, int z, RandomSource random) {
 		final int max = random.nextInt(3, 10);
 		for (int i = 0; i <= max; i++) {
-			if (i < max - 1 && world.getBlockState(new BlockPos(x, y + i, z)).getMaterial().isSolid()
-					&& world.getBlockState(new BlockPos(x, y + i + 1, z)).getMaterial().isLiquid()) {
-				world.setBlock(new BlockPos(x, y + i + 1, z), AquamiraeBlocks.OXYGELIUM.get().defaultBlockState()
-						.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
-			} else if (world.getBlockState(new BlockPos(x, y + i, z)).hasProperty(OxygeliumBlock.TYPE) &&
-					world.getBlockState(new BlockPos(x, y + i, z)).getValue(OxygeliumBlock.TYPE) == OxygeliumBlock.Type.STEM) {
-				if (!world.getBlockState(new BlockPos(x, y + i + 1, z)).getMaterial().isLiquid() || i == max) {
+			final BlockState below = world.getBlockState(new BlockPos(x, y + i - 1, z));
+			final BlockState state = world.getBlockState(new BlockPos(x, y + i, z));
+			final BlockState above = world.getBlockState(new BlockPos(x, y + i + 1, z));
+			if ((below.getMaterial().isSolid() || isStem(below)) && state.getMaterial().isLiquid()) {
+				if (above.getMaterial().isLiquid()) {
 					world.setBlock(new BlockPos(x, y + i, z), AquamiraeBlocks.OXYGELIUM.get().defaultBlockState()
-							.setValue(OxygeliumBlock.TYPE, OxygeliumBlock.Type.EMPTY_BUD).setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
+							.setValue(OxygeliumBlock.TYPE, i < max ? OxygeliumBlock.Type.STEM : OxygeliumBlock.Type.EMPTY_BUD)
+							.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
 				} else {
-					world.setBlock(new BlockPos(x, y + i + 1, z), AquamiraeBlocks.OXYGELIUM.get().defaultBlockState()
+					world.setBlock(new BlockPos(x, y + i, z), AquamiraeBlocks.OXYGELIUM.get().defaultBlockState()
+							.setValue(OxygeliumBlock.TYPE, OxygeliumBlock.Type.EMPTY_BUD)
 							.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
 				}
 			}
 		}
+	}
+
+	private boolean isStem(BlockState state) {
+		return state.is(AquamiraeBlocks.OXYGELIUM.get()) && state.getValue(OxygeliumBlock.TYPE) == OxygeliumBlock.Type.STEM;
 	}
 
 	private void placeElodea(WorldGenLevel world, int x, int y, int z, RandomSource random) {
