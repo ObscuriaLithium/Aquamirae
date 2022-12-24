@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.features;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.world.blocks.WisteriaNiveisBlock;
 import net.minecraft.core.BlockPos;
@@ -37,11 +38,12 @@ public class WisteriaFeature extends Feature<NoneFeatureConfiguration> {
 
 	@Override
 	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+		if (context.random().nextInt(1, 4) != 1) return false;
 		boolean placed = false;
 		final int count = context.random().nextInt(4, 12);
 		for (int i = 0; i <= count; i++) {
-			final int x = (int) (context.origin().getX() + context.random().triangle(0, 5));
-			final int z = (int) (context.origin().getZ() + context.random().triangle(0, 5));
+			final int x = (int) (context.origin().getX() + context.random().nextDouble(-5, 5));
+			final int z = (int) (context.origin().getZ() + context.random().nextDouble(-5, 5));
 			final BlockPos pos = new BlockPos(x, context.level().getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z), z);
 			if (((WisteriaNiveisBlock) AquamiraeBlocks.WISTERIA_NIVEIS.get()).canBePlacedOn(context.level(), pos.below())) {
 				context.level().setBlock(pos, AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState()

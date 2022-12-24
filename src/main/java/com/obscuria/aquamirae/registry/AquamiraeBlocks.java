@@ -3,7 +3,13 @@ package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.world.blocks.*;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -21,4 +27,18 @@ public class AquamiraeBlocks {
 	public static final RegistryObject<Block> OXYGELIUM = REGISTRY.register("oxygelium", OxygeliumBlock::new);
 	public static final RegistryObject<Block> LUMINESCENT_BUBBLE = REGISTRY.register("luminescent_bubble", LuminescentBubbleBlock::new);
 	public static final RegistryObject<Block> WISTERIA_NIVEIS = REGISTRY.register("wisteria_niveis", WisteriaNiveisBlock::new);
+
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+	public static class Client {
+		@SubscribeEvent
+		public static void clientSetup(FMLClientSetupEvent event) {
+			ItemBlockRenderTypes.setRenderLayer(AquamiraeBlocks.GOLDEN_MOTH_IN_A_JAR.get(), renderType -> renderType == RenderType.cutoutMipped());
+			ItemBlockRenderTypes.setRenderLayer(AquamiraeBlocks.FROZEN_CHEST.get(), renderType -> renderType == RenderType.cutoutMipped());
+			ItemBlockRenderTypes.setRenderLayer(AquamiraeBlocks.LUMINESCENT_LAMP.get(), renderType -> renderType == RenderType.cutoutMipped());
+			ItemBlockRenderTypes.setRenderLayer(AquamiraeBlocks.LUMINESCENT_BUBBLE.get(), renderType -> renderType == RenderType.cutoutMipped());
+			ItemBlockRenderTypes.setRenderLayer(AquamiraeBlocks.OXYGELIUM.get(), renderType -> renderType == RenderType.cutoutMipped());
+			ItemBlockRenderTypes.setRenderLayer(AquamiraeBlocks.ELODEA.get(), renderType -> renderType == RenderType.cutoutMipped());
+			ItemBlockRenderTypes.setRenderLayer(AquamiraeBlocks.WISTERIA_NIVEIS.get(), renderType -> renderType == RenderType.cutoutMipped());
+		}
+	}
 }

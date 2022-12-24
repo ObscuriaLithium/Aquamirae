@@ -2,10 +2,9 @@
 package com.obscuria.aquamirae.world.blocks;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SeagrassBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -21,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class ElodeaBlock extends SeagrassBlock implements SimpleWaterloggedBlock {
 	public ElodeaBlock() {
@@ -40,11 +40,12 @@ public class ElodeaBlock extends SeagrassBlock implements SimpleWaterloggedBlock
 		return Collections.singletonList(new ItemStack(this, 1));
 	}
 
-	public boolean isValidBonemealTarget(@NotNull LevelReader levelReader, @NotNull BlockPos pos, @NotNull BlockState state, boolean flag) {
+	@Override
+	public boolean isValidBonemealTarget(@NotNull BlockGetter blockGetter, @NotNull BlockPos pos, @NotNull BlockState state, boolean flag) {
 		return false;
 	}
 
-	public boolean isBonemealSuccess(@NotNull Level level, @NotNull RandomSource random, @NotNull BlockPos pos, @NotNull BlockState state) {
+	public boolean isBonemealSuccess(@NotNull Level level, @NotNull Random random, @NotNull BlockPos pos, @NotNull BlockState state) {
 		return false;
 	}
 }

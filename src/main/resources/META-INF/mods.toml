@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[43,)"
+loaderVersion="[40,)"
 license="Obscuria Lithium (c) 2023, All Rights Reserved"
 
 [[mods]]
@@ -17,14 +17,14 @@ Ship graveyard with terrible deep sea creatures
 [[dependencies.aquamirae]]
     modId="forge"
     mandatory=true
-    versionRange="[43,)"
+    versionRange="[40,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.aquamirae]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.2]"
+    versionRange="[1.18.2]"
     ordering="NONE"
     side="BOTH"
 

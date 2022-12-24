@@ -1,6 +1,0 @@
-{
-  "type": "forge:add_features",
-  "biomes": "#aquamirae:ice_maze",
-  "features": "aquamirae:wisteria",
-  "step": "top_layer_modification"
-}

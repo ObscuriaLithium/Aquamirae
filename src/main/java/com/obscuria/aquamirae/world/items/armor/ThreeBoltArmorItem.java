@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,12 +33,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.client.IItemRenderProperties;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
@@ -117,10 +117,10 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
 				@Override
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
+				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
 							"head", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).head,
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -170,11 +170,11 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 			super(EquipmentSlot.CHEST, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
+				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
 							Map.of("body", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).body,
 									"left_arm", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).left_arm,
@@ -201,7 +201,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 			if (entity.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ThreeBoltArmorItem) {
 				if (entity.getAirSupply() <= 0) {
 					entity.setAirSupply(280);
-					if (stack.hurt(10, RandomSource.create(), null)) {
+					if (stack.hurt(10, new Random(), null)) {
 						stack.shrink(1);
 						stack.setDamageValue(0);
 					}
@@ -217,11 +217,11 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 			super(EquipmentSlot.LEGS, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
+				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
 							Map.of("body", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).leggings_body,
 									"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -249,11 +249,11 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 			super(EquipmentSlot.FEET, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
+				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
 							Map.of("body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),

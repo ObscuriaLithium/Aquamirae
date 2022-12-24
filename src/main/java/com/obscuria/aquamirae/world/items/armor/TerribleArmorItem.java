@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,10 +112,10 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
 				@Override
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
+				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
 							"head", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).head,
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -143,11 +143,11 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 			super(EquipmentSlot.CHEST, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
+				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
 							"body", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).body,
 							"left_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_arm,
@@ -175,11 +175,11 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 			super(EquipmentSlot.LEGS, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
+				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
 							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_shoe2,
 									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).right_shoe2,
@@ -207,11 +207,11 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 			super(EquipmentSlot.FEET, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
+				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
 							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_shoe,
 									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).right_shoe,

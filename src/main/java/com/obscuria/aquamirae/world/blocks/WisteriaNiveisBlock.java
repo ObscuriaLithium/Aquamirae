@@ -31,8 +31,13 @@ public class WisteriaNiveisBlock extends DoublePlantBlock {
 
 	public WisteriaNiveisBlock() {
 		super(Properties.of(Material.LEAVES).sound(SoundType.WEEPING_VINES).strength(1f, 10f).noCollission()
-				.isRedstoneConductor((bs, br, bp) -> false).offsetType(OffsetType.XYZ));
+				.isRedstoneConductor((bs, br, bp) -> false));
 		this.registerDefaultState(this.stateDefinition.any().setValue(LOOT, true));
+	}
+
+	@Override
+	public @NotNull OffsetType getOffsetType() {
+		return OffsetType.XYZ;
 	}
 
 	@Override

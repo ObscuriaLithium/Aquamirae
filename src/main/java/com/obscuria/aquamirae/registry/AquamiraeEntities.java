@@ -23,7 +23,7 @@ import com.obscuria.aquamirae.AquamiraeMod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AquamiraeEntities {
-	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, AquamiraeMod.MODID);
+	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITIES, AquamiraeMod.MODID);
 	public static final RegistryObject<EntityType<GoldenMoth>> GOLDEN_MOTH = register("golden_moth",
 			EntityType.Builder.<GoldenMoth>of(GoldenMoth::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(128)
 					.setUpdateInterval(3).setCustomClientFactory(GoldenMoth::new).fireImmune().sized(0.5f, 0.2f));

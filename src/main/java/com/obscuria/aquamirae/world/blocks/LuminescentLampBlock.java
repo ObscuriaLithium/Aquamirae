@@ -4,7 +4,6 @@ package com.obscuria.aquamirae.world.blocks;
 import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -30,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class LuminescentLampBlock extends Block implements SimpleWaterloggedBlock {
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -85,7 +85,7 @@ public class LuminescentLampBlock extends Block implements SimpleWaterloggedBloc
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void animateTick(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource random) {
+	public void animateTick(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull Random random) {
 		super.animateTick(blockstate, world, pos, random);
 		if (random.nextFloat() < 0.2) world.addParticle(AquamiraeParticleTypes.GHOST_SHINE.get(),
 					pos.getX() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, pos.getY() + 1.6 + (random.nextFloat() - 0.5) * 0.05D,

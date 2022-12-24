@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -42,10 +41,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public class LuminescentBubbleBlock extends Block implements SimpleWaterloggedBlock {
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -54,8 +55,13 @@ public class LuminescentBubbleBlock extends Block implements SimpleWaterloggedBl
 		super(BlockBehaviour.Properties.of(Material.WATER_PLANT, MaterialColor.COLOR_BROWN).sound(SoundType.CORAL_BLOCK).strength(0.1f, 0.5f)
 				.lightLevel(s -> 14).noCollission().speedFactor(0.8f).jumpFactor(0.8f).noOcclusion()
 				.hasPostProcess((bs, br, bp) -> true).emissiveRendering((bs, br, bp) -> true).isRedstoneConductor((bs, br, bp) -> false)
-				.dynamicShape().offsetType(Block.OffsetType.XYZ));
+				.dynamicShape());
 		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
+	}
+
+	@Override
+	public @NotNull OffsetType getOffsetType() {
+		return OffsetType.XYZ;
 	}
 
 	@Override
@@ -65,7 +71,7 @@ public class LuminescentBubbleBlock extends Block implements SimpleWaterloggedBl
 	}
 
 	@Override
-	public void tick(@NotNull BlockState blockstate, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource random) {
+	public void tick(@NotNull BlockState blockstate, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull Random random) {
 		super.tick(blockstate, world, pos, random);
 		world.scheduleTick(pos, this, 20);
 		final Vec3 center = new Vec3(pos.getX(), pos.getY(), pos.getZ());
@@ -118,8 +124,9 @@ public class LuminescentBubbleBlock extends Block implements SimpleWaterloggedBl
 		return AquamiraeItems.LUMINESCENT_BUBBLE.get().getDefaultInstance();
 	}
 
+	@Nullable
 	@Override
-	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob entity) {
 		return BlockPathTypes.OPEN;
 	}
 
@@ -130,7 +137,7 @@ public class LuminescentBubbleBlock extends Block implements SimpleWaterloggedBl
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void animateTick(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource random) {
+	public void animateTick(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull Random random) {
 		super.animateTick(blockstate, world, pos, random);
 		for (int l = 0; l < 3; ++l) {
 			double x0 = pos.getX() + random.nextFloat();

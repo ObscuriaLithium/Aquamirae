@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.features;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.world.blocks.OxygeliumBlock;
 import net.minecraft.core.BlockPos;
@@ -8,7 +9,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -26,6 +26,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.Material;
 
 import java.util.List;
+import java.util.Random;
 
 public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	private final List<Block> BLOCKS;
@@ -48,33 +49,33 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 
 	@Override
 	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+		if (context.random().nextInt(1, 3) != 1) return false;
 		final BlockPos mainPos = new BlockPos(context.origin().getX(), context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG,
 				context.origin().getX(), context.origin().getZ()) - 1, context.origin().getZ());
 		if (!BLOCKS.contains(context.level().getBlockState(mainPos).getBlock())) return false;
 		WorldGenLevel worldgenlevel = context.level();
-		RandomSource randomsource = context.random();
-		boolean flag = randomsource.nextDouble() > 0.7D;
+		Random random = context.random();
+		boolean flag = random.nextDouble() > 0.7D;
 		BlockState blockstate = Blocks.STONE.defaultBlockState();
-		double d0 = randomsource.nextDouble() * 2.0D * Math.PI;
-		int i = 11 - randomsource.nextInt(5);
-		int j = 3 + randomsource.nextInt(3);
-		boolean flag1 = randomsource.nextDouble() > 0.7D;
-		int k = 11;
-		int l = flag1 ? randomsource.nextInt(6) + 6 : randomsource.nextInt(15) + 3;
-		if (!flag1 && randomsource.nextDouble() > 0.9D) {
-			l += randomsource.nextInt(19) + 7;
+		double d0 = random.nextDouble() * 2.0D * Math.PI;
+		int i = 11 - random.nextInt(5);
+		int j = 3 + random.nextInt(3);
+		boolean flag1 = random.nextDouble() > 0.7D;
+		int l = flag1 ? random.nextInt(6) + 6 : random.nextInt(15) + 3;
+		if (!flag1 && random.nextDouble() > 0.9D) {
+			l += random.nextInt(19) + 7;
 		}
 
-		int i1 = Math.min(l + randomsource.nextInt(11), 18);
-		int j1 = Math.min(l + randomsource.nextInt(7) - randomsource.nextInt(5), 11);
+		int i1 = Math.min(l + random.nextInt(11), 18);
+		int j1 = Math.min(l + random.nextInt(7) - random.nextInt(5), 11);
 		int k1 = flag1 ? i : 11;
 
 		for(int l1 = -k1; l1 < k1; ++l1) {
 			for(int i2 = -k1; i2 < k1; ++i2) {
 				for(int j2 = 0; j2 < l; ++j2) {
-					int k2 = flag1 ? this.heightDependentRadiusEllipse(j2, l, j1) : this.heightDependentRadiusRound(randomsource, j2, l, j1);
+					int k2 = flag1 ? this.heightDependentRadiusEllipse(j2, l, j1) : this.heightDependentRadiusRound(random, j2, l, j1);
 					if (flag1 || l1 < k2) {
-						this.generateIcebergBlock(worldgenlevel, randomsource, mainPos, l, l1, j2, i2, k2, k1, flag1, j, d0, flag, blockstate);
+						this.generateIcebergBlock(worldgenlevel, random, mainPos, l, l1, j2, i2, k2, k1, flag1, j, d0, flag, blockstate);
 					}
 				}
 			}
@@ -85,32 +86,32 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 		for(int i3 = -k1; i3 < k1; ++i3) {
 			for(int j3 = -k1; j3 < k1; ++j3) {
 				for(int k3 = -1; k3 > -i1; --k3) {
-					int l3 = flag1 ? Mth.ceil((float)k1 * (1.0F - (float)Math.pow((double)k3, 2.0D) / ((float)i1 * 8.0F))) : k1;
-					int l2 = this.heightDependentRadiusSteep(randomsource, -k3, i1, j1);
+					int l3 = flag1 ? Mth.ceil((float)k1 * (1.0F - (float)Math.pow(k3, 2.0D) / ((float)i1 * 8.0F))) : k1;
+					int l2 = this.heightDependentRadiusSteep(random, -k3, i1, j1);
 					if (i3 < l2) {
-						this.generateIcebergBlock(worldgenlevel, randomsource, mainPos, i1, i3, k3, j3, l2, l3, flag1, j, d0, flag, blockstate);
+						this.generateIcebergBlock(worldgenlevel, random, mainPos, i1, i3, k3, j3, l2, l3, flag1, j, d0, flag, blockstate);
 					}
 				}
 			}
 		}
 
-		boolean flag2 = flag1 ? randomsource.nextDouble() > 0.1D : randomsource.nextDouble() > 0.7D;
+		boolean flag2 = flag1 ? random.nextDouble() > 0.1D : random.nextDouble() > 0.7D;
 		if (flag2) {
-			this.generateCutOut(randomsource, worldgenlevel, j1, l, mainPos, flag1, i, d0, j);
+			this.generateCutOut(random, worldgenlevel, j1, l, mainPos, flag1, i, d0, j);
 		}
 
 		final int count = context.random().nextInt(3, 13);
 		for (int index = 0; index <= count; index++) {
-			int x = (int) (context.origin().getX() + context.random().triangle(0, 4));
-			int z = (int) (context.origin().getZ() + context.random().triangle(0, 4));
+			int x = (int) (context.origin().getX() + context.random().nextDouble(-4, 4));
+			int z = (int) (context.origin().getZ() + context.random().nextDouble(-4, 4));
 			int y = context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z) - 1;
 			placeOxygelium(context.level(), x, y, z, context.random());
 		}
-		placeElodea(worldgenlevel, mainPos.getX(), mainPos.getY(), mainPos.getZ(), randomsource);
+		placeElodea(worldgenlevel, mainPos.getX(), mainPos.getY(), mainPos.getZ(), random);
 		return true;
 	}
 
-	private void placeOxygelium(WorldGenLevel world, int x, int y, int z, RandomSource random) {
+	private void placeOxygelium(WorldGenLevel world, int x, int y, int z, Random random) {
 		final int max = random.nextInt(3, 10);
 		for (int i = 0; i <= max; i++) {
 			final BlockState below = world.getBlockState(new BlockPos(x, y + i - 1, z));
@@ -134,10 +135,10 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 		return state.is(AquamiraeBlocks.OXYGELIUM.get()) && state.getValue(OxygeliumBlock.TYPE) == OxygeliumBlock.Type.STEM;
 	}
 
-	private void placeElodea(WorldGenLevel world, int x, int y, int z, RandomSource random) {
+	private void placeElodea(WorldGenLevel world, int x, int y, int z, Random random) {
 		final int max = random.nextInt(4, 24);
 		for (int i = 0; i <= max; i++) {
-			final BlockPos pos = new BlockPos(x + random.triangle(0, 7), y - 4, z + random.triangle(0, 7));
+			final BlockPos pos = new BlockPos(x + random.nextDouble(-7, 7), y - 4, z + random.nextDouble(-7, 7));
 			int offset = 0;
 			while (offset <= 10) {
 				if ((world.getBlockState(pos.above(offset - 1)).getBlock() == Blocks.GRAVEL ||
@@ -153,7 +154,7 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 		}
 	}
 
-	private void generateCutOut(RandomSource p_225100_, LevelAccessor p_225101_, int p_225102_, int p_225103_, BlockPos p_225104_, boolean p_225105_, int p_225106_, double p_225107_, int p_225108_) {
+	private void generateCutOut(Random p_225100_, LevelAccessor p_225101_, int p_225102_, int p_225103_, BlockPos p_225104_, boolean p_225105_, int p_225106_, double p_225107_, int p_225108_) {
 		int i = p_225100_.nextBoolean() ? -1 : 1;
 		int j = p_225100_.nextBoolean() ? -1 : 1;
 		int k = p_225100_.nextInt(Math.max(p_225102_ / 2 - 2, 1));
@@ -201,8 +202,8 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 		}
 	}
 
-	private void generateIcebergBlock(LevelAccessor p_225110_, RandomSource p_225111_, BlockPos pos, int p_225113_, int p_225114_, int p_225115_, int p_225116_, int p_225117_, int p_225118_, boolean p_225119_, int p_225120_, double p_225121_, boolean p_225122_, BlockState p_225123_) {
-		double d0 = p_225119_ ? this.signedDistanceEllipse(p_225114_, p_225116_, BlockPos.ZERO, p_225118_, this.getEllipseC(p_225115_, p_225113_, p_225120_), p_225121_) : this.signedDistanceCircle(p_225114_, p_225116_, BlockPos.ZERO, p_225117_, p_225111_);
+	private void generateIcebergBlock(LevelAccessor p_225110_, Random p_225111_, BlockPos pos, int p_225113_, int p_225114_, int p_225115_, int p_225116_, int p_225117_, int p_225118_, boolean p_225119_, int p_225120_, double p_225121_, boolean p_225122_, BlockState p_225123_) {
+		double d0 = p_225119_ ? this.signedDistanceEllipse(p_225114_, p_225116_, BlockPos.ZERO, p_225118_, this.getEllipseC(p_225115_, p_225113_, p_225120_), p_225121_) : this.signedDistanceCircle(p_225114_, p_225116_, p_225117_, p_225111_);
 		if (d0 < 0.0D) {
 			BlockPos blockpos = pos.offset(p_225114_, p_225115_, p_225116_);
 			double d1 = p_225119_ ? -0.5D : (double)(-6 - p_225111_.nextInt(3));
@@ -215,7 +216,7 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 
 	}
 
-	private void setIcebergBlock(BlockPos pos, LevelAccessor levelAccessor, RandomSource p_225127_, int p_225128_, int p_225129_, boolean p_225130_, boolean p_225131_, BlockState p_225132_) {
+	private void setIcebergBlock(BlockPos pos, LevelAccessor levelAccessor, Random p_225127_, int p_225128_, int p_225129_, boolean p_225130_, boolean p_225131_, BlockState p_225132_) {
 		if (levelAccessor.getBlockState(pos.above()).getMaterial() == Material.AIR) return;
 		BlockState blockstate = levelAccessor.getBlockState(pos);
 		if (blockstate.getMaterial() == Material.AIR || blockstate.is(Blocks.SNOW_BLOCK) || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.WATER)) {
@@ -239,18 +240,18 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 		return i;
 	}
 
-	private double signedDistanceCircle(int p_225089_, int p_225090_, BlockPos p_225091_, int p_225092_, RandomSource p_225093_) {
+	private double signedDistanceCircle(int p_225089_, int p_225090_, int p_225092_, Random p_225093_) {
 		float f = 10.0F * Mth.clamp(p_225093_.nextFloat(), 0.2F, 0.8F) / (float)p_225092_;
-		return (double)f + Math.pow((double)(p_225089_ - p_225091_.getX()), 2.0D) + Math.pow((double)(p_225090_ - p_225091_.getZ()), 2.0D) - Math.pow((double)p_225092_, 2.0D);
+		return (double)f + Math.pow(p_225089_ - BlockPos.ZERO.getX(), 2.0D) + Math.pow(p_225090_ - BlockPos.ZERO.getZ(), 2.0D) - Math.pow(p_225092_, 2.0D);
 	}
 
 	private double signedDistanceEllipse(int p_66023_, int p_66024_, BlockPos p_66025_, int p_66026_, int p_66027_, double p_66028_) {
 		return Math.pow(((double)(p_66023_ - p_66025_.getX()) * Math.cos(p_66028_) - (double)(p_66024_ - p_66025_.getZ()) * Math.sin(p_66028_)) / (double)p_66026_, 2.0D) + Math.pow(((double)(p_66023_ - p_66025_.getX()) * Math.sin(p_66028_) + (double)(p_66024_ - p_66025_.getZ()) * Math.cos(p_66028_)) / (double)p_66027_, 2.0D) - 1.0D;
 	}
 
-	private int heightDependentRadiusRound(RandomSource p_225095_, int p_225096_, int p_225097_, int p_225098_) {
+	private int heightDependentRadiusRound(Random p_225095_, int p_225096_, int p_225097_, int p_225098_) {
 		float f = 3.5F - p_225095_.nextFloat();
-		float f1 = (1.0F - (float)Math.pow((double)p_225096_, 2.0D) / ((float)p_225097_ * f)) * (float)p_225098_;
+		float f1 = (1.0F - (float)Math.pow(p_225096_, 2.0D) / ((float)p_225097_ * f)) * (float)p_225098_;
 		if (p_225097_ > 15 + p_225095_.nextInt(5)) {
 			int i = p_225096_ < 3 + p_225095_.nextInt(6) ? p_225096_ / 2 : p_225096_;
 			f1 = (1.0F - (float)i / ((float)p_225097_ * f * 0.4F)) * (float)p_225098_;
@@ -260,12 +261,11 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	}
 
 	private int heightDependentRadiusEllipse(int p_66110_, int p_66111_, int p_66112_) {
-		float f = 1.0F;
-		float f1 = (1.0F - (float)Math.pow((double)p_66110_, 2.0D) / ((float)p_66111_ * 1.0F)) * (float)p_66112_;
+		float f1 = (1.0F - (float)Math.pow(p_66110_, 2.0D) / ((float) p_66111_)) * (float)p_66112_;
 		return Mth.ceil(f1 / 2.0F);
 	}
 
-	private int heightDependentRadiusSteep(RandomSource p_225134_, int p_225135_, int p_225136_, int p_225137_) {
+	private int heightDependentRadiusSteep(Random p_225134_, int p_225135_, int p_225136_, int p_225137_) {
 		float f = 1.0F + p_225134_.nextFloat() / 2.0F;
 		float f1 = (1.0F - (float)p_225135_ / ((float)p_225136_ * f)) * (float)p_225137_;
 		return Mth.ceil(f1 / 2.0F);

@@ -1,15 +1,12 @@
 
 package com.obscuria.aquamirae.world.effects;
 
-import net.minecraftforge.client.extensions.common.IClientMobEffectExtensions;
-
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.jetbrains.annotations.NotNull;
 
 public class HealthDecreaseMobEffect extends MobEffect {
@@ -32,15 +29,5 @@ public class HealthDecreaseMobEffect extends MobEffect {
 		super.addAttributeModifiers(entity, map, level);
 		if (entity.getHealth() > entity.getMaxHealth())
 			entity.setHealth(entity.getMaxHealth());
-	}
-
-	@Override
-	public void initializeClient(java.util.function.Consumer<IClientMobEffectExtensions> consumer) {
-		consumer.accept(new IClientMobEffectExtensions() {
-			@Override
-			public boolean isVisibleInGui(MobEffectInstance effect) {
-				return false;
-			}
-		});
 	}
 }

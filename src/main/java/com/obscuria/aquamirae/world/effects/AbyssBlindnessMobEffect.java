@@ -1,7 +1,6 @@
 package com.obscuria.aquamirae.world.effects;
 
-import net.minecraftforge.client.extensions.common.IClientMobEffectExtensions;
-
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -10,6 +9,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraftforge.client.EffectRenderer;
 import org.jetbrains.annotations.NotNull;
 
 public class AbyssBlindnessMobEffect extends MobEffect {
@@ -29,22 +29,19 @@ public class AbyssBlindnessMobEffect extends MobEffect {
 	}
 
 	@Override
-	public void initializeClient(java.util.function.Consumer<IClientMobEffectExtensions> consumer) {
-		consumer.accept(new IClientMobEffectExtensions() {
+	public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.EffectRenderer> consumer) {
+		consumer.accept(new EffectRenderer() {
 			@Override
-			public boolean isVisibleInInventory(MobEffectInstance effect) {
+			public boolean shouldRenderHUD(MobEffectInstance effect) {
 				return false;
 			}
 
 			@Override
-			public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, PoseStack poseStack, int x,
-					int y, int blitOffset) {
-				return false;
+			public void renderInventoryEffect(MobEffectInstance effect, EffectRenderingInventoryScreen<?> gui, PoseStack mStack, int x, int y, float z) {
 			}
 
 			@Override
-			public boolean isVisibleInGui(MobEffectInstance effect) {
-				return false;
+			public void renderHUDEffect(MobEffectInstance effect, GuiComponent gui, PoseStack mStack, int x, int y, float z, float alpha) {
 			}
 		});
 	}

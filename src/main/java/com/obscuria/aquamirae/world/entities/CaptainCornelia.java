@@ -10,10 +10,10 @@ import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
 import com.obscuria.obscureapi.client.animations.IHekateProvider;
+import com.obscuria.obscureapi.utils.TextHelper;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -59,7 +59,7 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 	private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(CaptainCornelia.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> REGENERATION = SynchedEntityData.defineId(CaptainCornelia.class,
 			EntityDataSerializers.INT);
-	private final ServerBossEvent bossInfo = new ServerBossEvent(AquamiraeConfig.Common.stylizedBossbar.get() ? Component.literal("1")
+	private final ServerBossEvent bossInfo = new ServerBossEvent(AquamiraeConfig.Common.stylizedBossbar.get() ? TextHelper.component("1")
 			.withStyle(Style.EMPTY.withFont(new ResourceLocation(AquamiraeMod.MODID, "bossbars"))) : this.getDisplayName(),
 			ServerBossEvent.BossBarColor.BLUE, ServerBossEvent.BossBarOverlay.PROGRESS);
 

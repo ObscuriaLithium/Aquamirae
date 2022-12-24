@@ -4,12 +4,12 @@ import com.obscuria.aquamirae.registry.*;
 import com.obscuria.aquamirae.world.events.AquamiraeEvents;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.utils.ItemHelper;
 import com.obscuria.obscureapi.world.classes.ObscureClass;
 import com.obscuria.obscureapi.world.classes.TooltipHandler;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -81,6 +81,7 @@ public class AquamiraeMod {
 		AquamiraeMobEffects.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraePotions.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraeParticleTypes.REGISTRY.register(MOD_EVENT_BUS);
+		AquamiraeStructureFeatures.REGISTRY.register(MOD_EVENT_BUS);
 
 		MOD_EVENT_BUS.addListener(this::commonSetup);
 		EVENT_BUS.addListener(AquamiraeEvents::onPlayerTick);
@@ -167,7 +168,7 @@ public class AquamiraeMod {
 				final ItemStack stack = new ItemStack(item);
 				stack.addAttributeModifier(Attributes.ARMOR, new AttributeModifier("base_armor", armor, AttributeModifier.Operation.ADDITION), slot);
 				stack.addAttributeModifier(attribute, new AttributeModifier("base_bonus", mod * i * 0.01, AttributeModifier.Operation.MULTIPLY_TOTAL), slot);
-				stack.getOrCreateTagElement("display").putString("Name", Component.Serializer.toJson(Component.translatable("set.aquamirae." + name)));
+				stack.getOrCreateTagElement("display").putString("Name", Component.Serializer.toJson(new TranslatableComponent("set.aquamirae." + name)));
 				if (i == 5) stack.enchant(Enchantments.UNBREAKING, mod);
 				if (color > 0) stack.getOrCreateTagElement("display").putInt("color", color);
 				list.add(stack);

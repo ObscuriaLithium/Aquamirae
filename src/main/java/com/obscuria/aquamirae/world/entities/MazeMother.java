@@ -5,9 +5,9 @@ import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.utils.EventHelper;
+import com.obscuria.obscureapi.utils.TextHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -36,7 +36,6 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
@@ -151,7 +150,7 @@ public class MazeMother extends Monster implements IShipGraveyardEntity {
 		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 		if (AquamiraeConfig.Common.notifications.get()) players.forEach(player -> EventHelper.sendMessage(player,
-				Component.translatable("icon.info").getString() + Component.translatable("info.maze_mother_spawn").getString()));
+				TextHelper.translation("icon.info") + TextHelper.translation("info.maze_mother_spawn")));
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 
@@ -191,18 +190,16 @@ public class MazeMother extends Monster implements IShipGraveyardEntity {
 			}
 	}
 
-	@Override public boolean canDrownInFluidType(FluidType type) {
-		if (type == ForgeMod.WATER_TYPE.get()) return false;
-		return super.canDrownInFluidType(type);
+	@Override public boolean canBreatheUnderwater() {
+		return true;
 	}
 
 	@Override public boolean checkSpawnObstruction(@NotNull LevelReader world) {
 		return world.isUnobstructed(this);
 	}
 
-	@Override public boolean isPushedByFluid(FluidType type) {
-		if (type == ForgeMod.WATER_TYPE.get()) return false;
-		return super.isPushedByFluid(type);
+	@Override public boolean isPushedByFluid() {
+		return false;
 	}
 
 	public static AttributeSupplier.@NotNull Builder createAttributes() {

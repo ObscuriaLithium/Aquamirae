@@ -37,7 +37,7 @@ public class JarBlock extends Block implements SimpleWaterloggedBlock {
 
 	public JarBlock() {
 		super(BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.GOLD).sound(SoundType.GLASS).strength(1f, 10f).lightLevel(s -> 8)
-				.requiresCorrectToolForDrops().noOcclusion().isRedstoneConductor((bs, br, bp) -> false).noLootTable());
+				.requiresCorrectToolForDrops().noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
 		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
 	}
 

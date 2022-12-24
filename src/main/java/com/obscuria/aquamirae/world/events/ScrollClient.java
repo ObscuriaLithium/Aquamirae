@@ -9,6 +9,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ScrollClient {
     public static void effect(int type) {
         if (Minecraft.getInstance().player == null) return;
-        Minecraft.getInstance().player.playSound(AquamiraeSounds.EFFECT_MYSTERY.get());
+        Minecraft.getInstance().player.playSound(AquamiraeSounds.EFFECT_MYSTERY.get(), 1F, 1F);
     }
 }

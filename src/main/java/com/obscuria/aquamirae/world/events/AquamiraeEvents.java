@@ -73,7 +73,7 @@ public class AquamiraeEvents {
     public static void onEntityDeath(LivingDeathEvent event) {
         //Abyssal Armor
         if (event != null && event.getEntity() != null) {
-            final LivingEntity entity = event.getEntity();
+            final LivingEntity entity = event.getEntityLiving();
             final int TOTAL = countArmor(entity, AbyssalArmorItem.class);
             if (TOTAL >= 4 && !entity.hasEffect(AquamiraeMobEffects.CRYSTALLIZATION.get())) {
                 final AbyssalArmorItem item = (AbyssalArmorItem) getArmor(entity, AbyssalArmorItem.class).getItem();

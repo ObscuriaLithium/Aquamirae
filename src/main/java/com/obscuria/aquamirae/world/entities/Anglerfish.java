@@ -41,7 +41,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
@@ -180,18 +179,16 @@ public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekate
 		super.baseTick();
 	}
 
-	@Override public boolean canDrownInFluidType(FluidType type) {
-		if (type == ForgeMod.WATER_TYPE.get()) return false;
-		return super.canDrownInFluidType(type);
+	@Override public boolean canBreatheUnderwater() {
+		return true;
 	}
 
 	@Override public boolean checkSpawnObstruction(LevelReader world) {
 		return world.isUnobstructed(this);
 	}
 
-	@Override public boolean isPushedByFluid(FluidType type) {
-		if (type == ForgeMod.WATER_TYPE.get()) return false;
-		return super.isPushedByFluid(type);
+	@Override public boolean isPushedByFluid() {
+		return false;
 	}
 
 	public static AttributeSupplier.@NotNull Builder createAttributes() {

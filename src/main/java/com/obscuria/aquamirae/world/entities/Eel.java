@@ -15,7 +15,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -32,7 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
@@ -114,7 +112,6 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 
 	@Override public void baseTick() {
 		HekateLib.updateScale(this, this.getEntityData().get(SCALE), this.getEntityData().get(SCALE_SPEED));
-		final RandomSource random = RandomSource.create();
 		final int moveCooldown = this.getEntityData().get(MOVE_COOLDOWN);
 		final int hitSeries = this.getEntityData().get(HIT_SERIES);
 		this.getEntityData().set(MOVE_COOLDOWN, moveCooldown - 1);
@@ -189,7 +186,6 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 	}
 
 	public Vec3 randomEelMove() {
-		final RandomSource random = RandomSource.create();
 		final int x = this.getBlockX() + random.nextInt(5, 16) * (Math.random() > 0.5 ? -1 : 1);
 		final int z = this.getBlockZ() + random.nextInt(5, 16) * (Math.random() > 0.5 ? -1 : 1);
 		for (int i = -8; i < 8; i++)
@@ -201,7 +197,6 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 
 	public Vec3 targetEelMove() {
 		if (this.getTarget() == null) return Vec3.ZERO;
-		final RandomSource random = RandomSource.create();
 		final int x = this.getTarget().getBlockX() + random.nextInt(-3, 3);
 		final int z = this.getTarget().getBlockZ() + random.nextInt(-3, 3);
 		for (int i = -4; i < 4; i++)
@@ -238,7 +233,7 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 
-	@Override public boolean isPushedByFluid(FluidType type) {
+	@Override public boolean isPushedByFluid() {
 		return false;
 	}
 

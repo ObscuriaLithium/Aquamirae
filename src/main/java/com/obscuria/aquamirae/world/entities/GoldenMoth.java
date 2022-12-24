@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -52,7 +51,6 @@ public class GoldenMoth extends PathfinderMob implements IShipGraveyardEntity {
 		this.goalSelector.addGoal(1, new RandomStrollGoal(this, 1, 20) {
 			@Override
 			protected Vec3 getPosition() {
-				RandomSource random = GoldenMoth.this.getRandom();
 				double dir_x = GoldenMoth.this.getX() + ((random.nextFloat() * 2 - 1) * 16);
 				double dir_y = GoldenMoth.this.getY() + ((random.nextFloat() * 2 - 1) * 16);
 				double dir_z = GoldenMoth.this.getZ() + ((random.nextFloat() * 2 - 1) * 16);

@@ -9,7 +9,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -44,10 +43,12 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
 	public static final EnumProperty<OxygeliumBlock.Type> TYPE = EnumProperty.create("type", OxygeliumBlock.Type.class);
@@ -56,7 +57,7 @@ public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
 	public OxygeliumBlock() {
 		super(Properties.of(Material.WATER_PLANT, MaterialColor.COLOR_CYAN).sound(SoundType.CORAL_BLOCK).strength(0.8f, 1f).randomTicks()
 						.requiresCorrectToolForDrops().noCollission().speedFactor(0.8f).jumpFactor(0.8f).isRedstoneConductor((bs, br, bp) -> false)
-						.hasPostProcess((bs, br, bp) -> isGlowing(bs)).emissiveRendering((bs, br, bp) -> isGlowing(bs)).lightLevel(s -> isGlowing(s) ? 12 : 0).noLootTable());
+						.hasPostProcess((bs, br, bp) -> isGlowing(bs)).emissiveRendering((bs, br, bp) -> isGlowing(bs)).lightLevel(s -> isGlowing(s) ? 12 : 0));
 		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(TYPE, Type.STEM));
 	}
 
@@ -107,8 +108,9 @@ public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
 		return new ItemStack(AquamiraeItems.OXYGELIUM.get());
 	}
 
+	@Nullable
 	@Override
-	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob entity) {
 		return BlockPathTypes.OPEN;
 	}
 
@@ -128,7 +130,7 @@ public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public void tick(@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource random) {
+	public void tick(@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull Random random) {
 		if (state.getValue(TYPE) != Type.EMPTY_BUD) return;
 		if (Math.random() < 0.1) {
 			if (!world.isClientSide()) world.playSound(null, pos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 5, 1);
@@ -144,7 +146,7 @@ public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void animateTick(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource random) {
+	public void animateTick(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Random random) {
 		super.animateTick(state, world, pos, random);
 		if (state.getValue(TYPE) != Type.BUD && state.getValue(TYPE) != Type.RARE_BUD) return;
 		int x = pos.getX();

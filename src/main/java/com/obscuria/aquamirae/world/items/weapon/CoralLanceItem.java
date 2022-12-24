@@ -73,7 +73,7 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 
 	@Override
 	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
-		if (this.allowedIn(tab)) list.add(getDefaultInstance());
+		if (this.allowdedIn(tab)) list.add(getDefaultInstance());
 	}
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {

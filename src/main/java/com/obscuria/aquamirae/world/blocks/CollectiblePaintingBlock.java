@@ -1,5 +1,6 @@
 package com.obscuria.aquamirae.world.blocks;
 
+import com.obscuria.obscureapi.utils.TextHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,7 +49,7 @@ public class CollectiblePaintingBlock extends Block implements SimpleWaterlogged
     @Override
     public void appendHoverText(@NotNull ItemStack stack, BlockGetter world, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, world, list, flag);
-        list.add(Component.literal(ChatFormatting.GRAY + Component.translatable(this.getDescriptionId() + "_desc").getString()));
+        list.add(TextHelper.component(ChatFormatting.GRAY + TextHelper.translation(this.getDescriptionId() + "_desc")));
     }
 
     @Override
