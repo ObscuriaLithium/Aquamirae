@@ -4,8 +4,7 @@ package com.obscuria.aquamirae.registry;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.world.features.OxygeliumFeature;
 import com.obscuria.aquamirae.world.features.WisteriaFeature;
-import net.minecraft.core.Holder;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.data.worldgen.placement.AquaticPlacements;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -24,11 +23,12 @@ public class AquamiraeFeatures {
 
 	@SubscribeEvent
 	public static void addFeaturesToBiomes(BiomeLoadingEvent event) {
-		final Holder<Biome> BIOME = Holder.direct(ForgeRegistries.BIOMES.getValue(event.getName()));
-		System.out.println(event.getName());
-		if (BIOME.is(AquamiraeMod.ICE_MAZE)) {
-			event.getGeneration().getFeatures(GenerationStep.Decoration.RAW_GENERATION).add(WisteriaFeature.PLACED_FEATURE);
+		if (event.getName() != null && event.getName().equals(AquamiraeMod.BIOME)) {
+			event.getGeneration().getFeatures(GenerationStep.Decoration.LOCAL_MODIFICATIONS).add(WisteriaFeature.PLACED_FEATURE);
 			event.getGeneration().getFeatures(GenerationStep.Decoration.RAW_GENERATION).add(OxygeliumFeature.PLACED_FEATURE);
+			event.getGeneration().getFeatures(GenerationStep.Decoration.RAW_GENERATION).add(AquaticPlacements.KELP_COLD);
+			event.getGeneration().getFeatures(GenerationStep.Decoration.RAW_GENERATION).add(AquaticPlacements.SEAGRASS_DEEP_COLD);
+			event.getGeneration().getFeatures(GenerationStep.Decoration.RAW_GENERATION).add(AquaticPlacements.SEAGRASS_NORMAL);
 		}
 	}
 }

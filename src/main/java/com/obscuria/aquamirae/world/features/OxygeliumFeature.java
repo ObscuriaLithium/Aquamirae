@@ -50,11 +50,12 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	@Override
 	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
 		if (context.random().nextInt(1, 3) != 1) return false;
-		final BlockPos mainPos = new BlockPos(context.origin().getX(), context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG,
-				context.origin().getX(), context.origin().getZ()) - 1, context.origin().getZ());
+		Random random = context.random();
+		final int ox = context.origin().getX() + random.nextInt(-6, 6);
+		final int oz = context.origin().getZ() + random.nextInt(-6, 6);
+		final BlockPos mainPos = new BlockPos(ox, context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG, ox, oz) - 1, oz);
 		if (!BLOCKS.contains(context.level().getBlockState(mainPos).getBlock())) return false;
 		WorldGenLevel worldgenlevel = context.level();
-		Random random = context.random();
 		boolean flag = random.nextDouble() > 0.7D;
 		BlockState blockstate = Blocks.STONE.defaultBlockState();
 		double d0 = random.nextDouble() * 2.0D * Math.PI;
@@ -102,8 +103,8 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 
 		final int count = context.random().nextInt(3, 13);
 		for (int index = 0; index <= count; index++) {
-			int x = (int) (context.origin().getX() + context.random().nextDouble(-4, 4));
-			int z = (int) (context.origin().getZ() + context.random().nextDouble(-4, 4));
+			int x = (int) (context.origin().getX() + context.random().nextInt(-4, 4));
+			int z = (int) (context.origin().getZ() + context.random().nextInt(-4, 4));
 			int y = context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z) - 1;
 			placeOxygelium(context.level(), x, y, z, context.random());
 		}
@@ -138,7 +139,7 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	private void placeElodea(WorldGenLevel world, int x, int y, int z, Random random) {
 		final int max = random.nextInt(4, 24);
 		for (int i = 0; i <= max; i++) {
-			final BlockPos pos = new BlockPos(x + random.nextDouble(-7, 7), y - 4, z + random.nextDouble(-7, 7));
+			final BlockPos pos = new BlockPos(x + random.nextInt(-7, 7), y - 4, z + random.nextInt(-7, 7));
 			int offset = 0;
 			while (offset <= 10) {
 				if ((world.getBlockState(pos.above(offset - 1)).getBlock() == Blocks.GRAVEL ||
