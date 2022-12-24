@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.items;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.AquamiraeAmbient;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ShipGraveyardEchoItem extends Item {
 	public ShipGraveyardEchoItem() {
-		super(new Item.Properties().stacksTo(64).rarity(Rarity.UNCOMMON));
+		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override

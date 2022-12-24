@@ -42,7 +42,7 @@ public class DividerItem extends SwordItem implements IClassItem, IAbilityItem {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
 			}
-		}, 3, -2.6f, new Item.Properties().fireResistant().rarity(Rarity.EPIC));
+		}, 3, -2.6f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY = new ObscureAbility(this, "divider", ObscureAbility.Cost.NONE, 0, 10);

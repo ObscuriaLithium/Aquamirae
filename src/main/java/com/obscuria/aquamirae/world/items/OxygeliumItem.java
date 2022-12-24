@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.items;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.world.blocks.OxygeliumBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.item.context.UseOnContext;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class OxygeliumItem extends Item {
 	public OxygeliumItem() {
-		super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
+		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64).rarity(Rarity.COMMON));
 	}
 
 	@Override

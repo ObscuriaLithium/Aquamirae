@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.items;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.aquamirae.world.entities.CaptainCornelia;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ShellHornItem extends Item {
 	public ShellHornItem() {
-		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB));
 	}
 
 	@Override

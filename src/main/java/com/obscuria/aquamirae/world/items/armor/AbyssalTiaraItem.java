@@ -73,7 +73,7 @@ public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, 
 			public float getKnockbackResistance() {
 				return 0f;
 			}
-		}, slot, properties.rarity(Rarity.EPIC));
+		}, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY_HALFSET = new ObscureAbility(this, "abyssal_armor_half", ObscureAbility.Cost.NONE, 0);

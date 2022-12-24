@@ -1,6 +1,6 @@
 {
+  "name": "aquamirae:outpost",
   "fallback": "minecraft:empty",
-
   "elements": [
     {
       "weight": 1,

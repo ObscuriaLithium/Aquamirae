@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.registry.AquamiraeCreativeTab;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.obscureapi.ObscureAPI;
@@ -12,6 +13,7 @@ import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.world.classes.*;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
 import com.obscuria.obscureapi.world.items.ChakraItem;
+import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,10 +21,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +57,7 @@ public class MazeRoseItem extends ChakraItem implements IClassItem, IAbilityItem
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
 			}
-		}, new Item.Properties().rarity(Rarity.UNCOMMON));
+		}, new Item.Properties().tab(AquamiraeMod.TAB).rarity(Rarity.UNCOMMON));
 	}
 
 	public final ObscureAbility ABILITY = new ObscureAbility(this, "maze_rose", ObscureAbility.Cost.COOLDOWN, 40, 5, 40);
@@ -73,6 +72,12 @@ public class MazeRoseItem extends ChakraItem implements IClassItem, IAbilityItem
 
 	public ObscureType getObscureType() {
 		return ObscureAPI.Types.WEAPON;
+	}
+
+	@Override
+	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
+		super.fillItemCategory(tab, list);
+		if (tab == AquamiraeMod.TAB) list.addAll(AquamiraeCreativeTab.mazeRose());
 	}
 
 	@Override

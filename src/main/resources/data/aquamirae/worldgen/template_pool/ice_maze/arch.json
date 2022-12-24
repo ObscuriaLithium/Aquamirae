@@ -1,6 +1,6 @@
 {
+  "name": "aquamirae:ice_maze/arch",
   "fallback": "minecraft:empty",
-
   "elements": [
     {
       "weight": 1,

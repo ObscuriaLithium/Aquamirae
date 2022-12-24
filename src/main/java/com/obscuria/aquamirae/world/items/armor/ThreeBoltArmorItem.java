@@ -86,7 +86,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 			public float getKnockbackResistance() {
 				return 0.1f;
 			}
-		}, slot, properties);
+		}, slot, properties.tab(AquamiraeMod.TAB));
 		this.BONUS_SLOT = slot;
 	}
 

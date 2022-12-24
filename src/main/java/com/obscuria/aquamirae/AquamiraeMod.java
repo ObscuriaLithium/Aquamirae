@@ -6,7 +6,8 @@ import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.utils.ItemHelper;
 import com.obscuria.obscureapi.world.classes.ObscureClass;
-import net.minecraft.core.registries.Registries;
+import com.obscuria.obscureapi.world.classes.TooltipHandler;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -34,6 +36,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,10 +55,19 @@ public class AquamiraeMod {
 	private static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 	private static final IEventBus EVENT_BUS = MinecraftForge.EVENT_BUS;
 	public static final ObscureClass SEA_WOLF = ObscureAPI.Classes.register(new ObscureClass(AquamiraeMod.MODID, "sea_wolf"));
-	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registries.BIOME, new ResourceLocation(AquamiraeMod.MODID, "ice_maze"));
+	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "ice_maze"));
 	public static final TagKey<Block> EEL_MOVE = BlockTags.create(new ResourceLocation(MODID, "eel_move"));
 	public static final TagKey<Block> MAZE_MOTHER_DESTROY = BlockTags.create(new ResourceLocation(MODID, "maze_mother_destroy"));
 	public static final TagKey<Block> SCROLL_DESTROY = BlockTags.create(new ResourceLocation(MODID, "scroll_destroy"));
+	public static final CreativeModeTab TAB = new CreativeModeTab("aquamirae") {
+		@Override public @NotNull ItemStack makeIcon() {
+			return AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance();
+		}
+
+		@Override public boolean hasSearchBar() {
+			return false;
+		}
+	};
 
 	public AquamiraeMod() {
 		EVENT_BUS.register(this);
@@ -71,7 +83,6 @@ public class AquamiraeMod {
 		AquamiraeParticleTypes.REGISTRY.register(MOD_EVENT_BUS);
 
 		MOD_EVENT_BUS.addListener(this::commonSetup);
-		MOD_EVENT_BUS.addListener(AquamiraeCreativeTab::registerTab);
 		EVENT_BUS.addListener(AquamiraeEvents::onPlayerTick);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
@@ -79,23 +90,23 @@ public class AquamiraeMod {
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
-		ObscureAPI.addMod(AquamiraeMod.MODID, "ob-aquamirae");
+		ObscureAPI.collectionMod(AquamiraeMod.MODID, "ob-aquamirae");
 
-		ItemHelper.addLore("aquamirae:sea_casserole", "sea_casserole");
-		ItemHelper.addLore("aquamirae:sea_stew", "sea_stew");
-		ItemHelper.addLore("aquamirae:poseidons_breakfast", "poseidons_breakfast");
-		ItemHelper.addLore("aquamirae:ship_graveyard_echo", "ship_graveyard_echo");
-		ItemHelper.addLore("aquamirae:pirate_pouch", "pirate_pouch");
-		ItemHelper.addLore("aquamirae:treasure_pouch", "treasure_pouch");
-		ItemHelper.addLore("aquamirae:luminescent_bubble", "luminescent_bubble");
-		ItemHelper.addLore("aquamirae:luminescent_lamp", "luminescent_lamp");
-		ItemHelper.addLore("aquamirae:shell_horn", "shell_horn");
-		ItemHelper.addLore("aquamirae:dead_sea_scroll", "scroll_of_the_dead_sea");
-		ItemHelper.addLore("aquamirae:frozen_key", "frozen_key");
-		ItemHelper.addLore("aquamirae:wisteria_niveis", "wisteria_niveis");
-		ItemHelper.addLore("aquamirae:golden_moth_in_a_jar", "golden_moth_in_a_jar");
-		ItemHelper.addLore("aquamirae:rune_of_the_storm", "rune_of_the_storm");
-		ItemHelper.addLore("aquamirae:oxygelium", "oxygelium");
+		TooltipHandler.Lore.add("aquamirae:sea_casserole");
+		TooltipHandler.Lore.add("aquamirae:sea_stew");
+		TooltipHandler.Lore.add("aquamirae:poseidons_breakfast");
+		TooltipHandler.Lore.add("aquamirae:ship_graveyard_echo");
+		TooltipHandler.Lore.add("aquamirae:pirate_pouch");
+		TooltipHandler.Lore.add("aquamirae:treasure_pouch");
+		TooltipHandler.Lore.add("aquamirae:luminescent_bubble");
+		TooltipHandler.Lore.add("aquamirae:luminescent_lamp");
+		TooltipHandler.Lore.add("aquamirae:shell_horn");
+		TooltipHandler.Lore.add("aquamirae:dead_sea_scroll");
+		TooltipHandler.Lore.add("aquamirae:frozen_key");
+		TooltipHandler.Lore.add("aquamirae:wisteria_niveis");
+		TooltipHandler.Lore.add("aquamirae:golden_moth_in_a_jar");
+		TooltipHandler.Lore.add("aquamirae:rune_of_the_storm");
+		TooltipHandler.Lore.add("aquamirae:oxygelium");
 	}
 
 	public static void loadFromConfig(LivingEntity entity, Attribute attribute, double amount) {

@@ -1,6 +1,6 @@
 {
+  "name": "aquamirae:shelter/tunnel_top",
   "fallback": "minecraft:empty",
-
   "elements": [
     {
       "weight": 1,

@@ -1,6 +1,6 @@
 {
+  "name": "aquamirae:shelter/main",
   "fallback": "minecraft:empty",
-
   "elements": [
     {
       "weight": 1,

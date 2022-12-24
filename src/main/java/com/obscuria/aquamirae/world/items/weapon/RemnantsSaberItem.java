@@ -50,7 +50,7 @@ public class RemnantsSaberItem extends SwordItem implements IClassItem, IAbility
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHARP_BONES.get()),
 						new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
-		}, 3, -2f, new Item.Properties());
+		}, 3, -2f, new Item.Properties().tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY = new ObscureAbility(this, "remnants_saber", ObscureAbility.Cost.NONE, 0, 100);

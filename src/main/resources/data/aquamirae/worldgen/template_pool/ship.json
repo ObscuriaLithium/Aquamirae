@@ -1,6 +1,6 @@
 {
+  "name": "aquamirae:ship",
   "fallback": "minecraft:empty",
-
   "elements": [
     {
       "weight": 1,

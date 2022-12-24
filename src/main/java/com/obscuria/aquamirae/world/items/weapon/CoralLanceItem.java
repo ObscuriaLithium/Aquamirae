@@ -9,13 +9,11 @@ import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.world.classes.*;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.common.ForgeMod;
@@ -51,7 +49,7 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 			public @NotNull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
-		}, 3, -2.8f, new Item.Properties().fireResistant().rarity(ObscureRarity.MYTHIC));
+		}, 3, -2.8f, new Item.Properties().fireResistant().rarity(ObscureRarity.MYTHIC).tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY = new ObscureAbility(this, "coral_lance", ObscureAbility.Cost.NONE, 0, 50);
@@ -71,6 +69,11 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 
 	public ObscureType getObscureType() {
 		return ObscureAPI.Types.WEAPON;
+	}
+
+	@Override
+	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
+		if (this.allowedIn(tab)) list.add(getDefaultInstance());
 	}
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {

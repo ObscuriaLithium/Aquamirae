@@ -51,7 +51,7 @@ public class TerribleSwordItem extends SwordItem implements IClassItem, IAbility
 			public @NotNull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.ANGLERS_FANG.get()), new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
-		}, 3, -3f, new Item.Properties());
+		}, 3, -3f, new Item.Properties().tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY = new ObscureAbility(this, "terrible_sword", ObscureAbility.Cost.NONE, 0, 1);

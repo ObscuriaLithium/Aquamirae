@@ -2,7 +2,7 @@
 package com.obscuria.aquamirae.client.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelCaptainCornelia;
 import com.obscuria.aquamirae.world.entities.CaptainCornelia;
@@ -55,8 +55,8 @@ public class CaptainCorneliaRenderer extends MobRenderer<CaptainCornelia, ModelC
 				pose.pushPose();
 				if (this.getParentModel() instanceof ModelCaptainCornelia<? extends Entity> model) model.translateToHand(HumanoidArm.RIGHT, pose);
 				pose.scale(1F, 1F, 1F);
-				pose.mulPose(Axis.XP.rotationDegrees(-90.0F));
-				pose.mulPose(Axis.YP.rotationDegrees(180.0F));
+				pose.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
+				pose.mulPose(Vector3f.YP.rotationDegrees(180.0F));
 				pose.translate(0.0D, 0.1D, 0.0D);
 				Minecraft.getInstance().gameRenderer.itemInHandRenderer.renderItem(entity, stack, ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, false, pose, source, i1);
 				pose.popPose();

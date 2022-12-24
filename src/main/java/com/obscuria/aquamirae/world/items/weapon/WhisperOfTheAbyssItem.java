@@ -49,7 +49,7 @@ public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbi
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
 			}
-		}, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC));
+		}, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY = new ObscureAbility(this, "whisper_of_the_abyss", ObscureAbility.Cost.NONE, 0, 10);

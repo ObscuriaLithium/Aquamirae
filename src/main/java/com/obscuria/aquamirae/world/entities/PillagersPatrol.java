@@ -9,6 +9,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Pillager;
+import net.minecraft.world.entity.monster.Vindicator;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PlayMessages;
 
@@ -25,7 +26,7 @@ public class PillagersPatrol extends Monster {
 		if (this.level instanceof ServerLevel server) {
 			Mob entity1 = new Pillager(EntityType.PILLAGER, server);
 			Mob entity2 = new Pillager(EntityType.PILLAGER, server);
-			Mob entity3 = new Pillager(EntityType.PILLAGER, server);
+			Mob entity3 = new Vindicator(EntityType.VINDICATOR, server);
 			entity1.moveTo(this.getX() + 0.2, this.getY(), this.getZ() + 0.2, this.level.getRandom().nextFloat() * 360F, 0);
 			entity2.moveTo(this.getX(), this.getY(), this.getZ(), this.level.getRandom().nextFloat() * 360F, 0);
 			entity3.moveTo(this.getX() - 0.2, this.getY(), this.getZ() + 0.2, this.level.getRandom().nextFloat() * 360F, 0);

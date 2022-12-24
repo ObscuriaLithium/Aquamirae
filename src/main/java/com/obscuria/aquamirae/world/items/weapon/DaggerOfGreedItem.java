@@ -48,7 +48,7 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 			public @NotNull Ingredient getRepairIngredient() {
 				return Ingredient.EMPTY;
 			}
-		}, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON));
+		}, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY_1 = new ObscureAbility(this, "dagger_of_greed_1", ObscureAbility.Cost.NONE, 0);

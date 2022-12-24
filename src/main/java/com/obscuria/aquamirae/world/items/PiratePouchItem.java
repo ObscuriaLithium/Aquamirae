@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PiratePouchItem extends Item {
 	public PiratePouchItem() {
-		super(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON));
+		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(16).rarity(Rarity.COMMON));
 	}
 
 	@Override

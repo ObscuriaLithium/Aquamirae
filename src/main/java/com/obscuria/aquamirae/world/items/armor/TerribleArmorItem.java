@@ -77,7 +77,7 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 			public float getKnockbackResistance() {
 				return 0f;
 			}
-		}, slot, properties);
+		}, slot, properties.tab(AquamiraeMod.TAB));
 		this.BONUS_SLOT = slot;
 	}
 

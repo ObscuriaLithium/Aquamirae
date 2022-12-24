@@ -46,7 +46,7 @@ public class PoisonedBladeItem extends SwordItem implements IClassItem, IAbility
 				return Ingredient.of(new ItemStack(AquamiraeItems.ANGLERS_FANG.get()),
 						new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
-		}, 3, -1f, new Item.Properties());
+		}, 3, -1f, new Item.Properties().tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY = new ObscureAbility(this, "poisoned_blade", ObscureAbility.Cost.COOLDOWN, 10, 5);

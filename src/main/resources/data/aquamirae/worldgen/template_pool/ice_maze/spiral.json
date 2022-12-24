@@ -1,4 +1,5 @@
 {
+  "name": "aquamirae:ice_maze/spiral",
   "fallback": "minecraft:empty",
   "elements": [
     {

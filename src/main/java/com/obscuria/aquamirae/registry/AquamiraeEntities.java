@@ -72,6 +72,7 @@ public class AquamiraeEntities {
 		event.put(ANGLERFISH.get(), Anglerfish.createAttributes().build());
 		event.put(MAZE_MOTHER.get(), MazeMother.createAttributes().build());
 		event.put(CAPTAIN_CORNELIA.get(), CaptainCornelia.createAttributes().build());
+		event.put(PILLAGERS_PATROL.get(), Mob.createMobAttributes().build());
 		event.put(TORTURED_SOUL.get(), TorturedSoul.createAttributes().build());
 		event.put(EEL.get(), Eel.createAttributes().build());
 		event.put(SPINEFISH.get(), Mob.createMobAttributes().build());

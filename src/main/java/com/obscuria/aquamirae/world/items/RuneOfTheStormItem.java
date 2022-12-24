@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.items;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.obscureapi.utils.ItemHelper;
 import com.obscuria.obscureapi.world.classes.ObscureRarity;
 import net.minecraft.server.level.ServerLevel;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 @Mod.EventBusSubscriber
 public class RuneOfTheStormItem extends Item {
 	public RuneOfTheStormItem() {
-		super(new Item.Properties().stacksTo(1).fireResistant().rarity(ObscureRarity.MYTHIC));
+		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1).fireResistant().rarity(ObscureRarity.MYTHIC));
 	}
 
 	@SubscribeEvent

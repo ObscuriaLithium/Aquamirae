@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.items;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LuminescentBubbleItem extends Item {
 	public LuminescentBubbleItem() {
-		super(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON));
+		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(16).rarity(Rarity.COMMON));
 	}
 
 	@Override

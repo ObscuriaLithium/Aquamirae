@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.items;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.world.events.ScrollEffects;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DeadSeaScrollItem extends Item {
 	public DeadSeaScrollItem() {
-		super(new Item.Properties().stacksTo(8).rarity(Rarity.UNCOMMON));
+		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(8).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class DeadSeaScrollItem extends Item {
 	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
 		InteractionResultHolder<ItemStack> resultHolder = super.use(level, player, hand);
 		if (level.isClientSide) Minecraft.getInstance().gameRenderer.displayItemActivation(resultHolder.getObject().copy());
-		level.playLocalSound(player.blockPosition(), AquamiraeSounds.ITEM_SCROLL_USE.get(), SoundSource.PLAYERS, 1, 1, false);
+		level.playLocalSound(player.getBlockX(), player.getBlockY(), player.getBlockZ(), AquamiraeSounds.ITEM_SCROLL_USE.get(), SoundSource.PLAYERS, 1, 1, false);
 		player.getCooldowns().addCooldown(resultHolder.getObject().getItem(), 100);
 		resultHolder.getObject().shrink(1); player.swing(hand);
 		ScrollEffects.create(player);

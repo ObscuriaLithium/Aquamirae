@@ -76,7 +76,7 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 			public float getKnockbackResistance() {
 				return 0.1f;
 			}
-		}, slot, properties.rarity(Rarity.EPIC));
+		}, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 		this.BONUS_SLOT = slot;
 	}
 

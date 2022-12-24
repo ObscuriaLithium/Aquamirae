@@ -38,7 +38,7 @@ public class FinCutterItem extends SwordItem implements IClassItem, IAbilityItem
 			public @NotNull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(Items.DIAMOND), new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
-		}, 3, -2f, new Item.Properties());
+		}, 3, -2f, new Item.Properties().tab(AquamiraeMod.TAB));
 	}
 
 	public final ObscureAbility ABILITY = new ObscureAbility(this, "fin_cutter", ObscureAbility.Cost.NONE, 0, 15, 150);

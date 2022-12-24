@@ -26,7 +26,7 @@ import java.util.List;
 
 public class TreasurePouchItem extends Item {
 	public TreasurePouchItem() {
-		super(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
+		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(16).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override

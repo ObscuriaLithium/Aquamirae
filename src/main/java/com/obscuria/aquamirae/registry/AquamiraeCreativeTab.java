@@ -1,129 +1,40 @@
 
 package com.obscuria.aquamirae.registry;
 
-import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.obscureapi.registry.ObscureAPIEnchantments;
-import com.obscuria.obscureapi.registry.ObscureAPIItems;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.CreativeModeTabEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AquamiraeCreativeTab {
 
-	public static void registerTab(final CreativeModeTabEvent.Register event) {
-		event.registerCreativeModeTab(new ResourceLocation(AquamiraeMod.MODID, "tab"), builder -> builder
-				.title(Component.translatable("itemGroup." + AquamiraeMod.MODID))
-				.icon(() -> AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance())
-				.displayItems((flagSet, entries, flag) -> {
-
-					entries.accept(AquamiraeItems.RUNE_OF_THE_STORM.get());
-					entries.accept(AquamiraeItems.GOLDEN_MOTH_SPAWN_EGG.get());
-					entries.accept(AquamiraeItems.TERRIBLE_SWORD.get());
-					entries.accept(AquamiraeItems.FIN_CUTTER.get());
-					entries.accept(AquamiraeItems.TERRIBLE_HELMET.get());
-					entries.accept(AquamiraeItems.TERRIBLE_CHESTPLATE.get());
-					entries.accept(AquamiraeItems.TERRIBLE_LEGGINGS.get());
-					entries.accept(AquamiraeItems.TERRIBLE_BOOTS.get());
-					entries.accept(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get());
-
-					entries.accept(AquamiraeItems.MAW_SPAWN_EGG.get());
-					entries.accept(AquamiraeItems.ANGLERFISH_SPAWN_EGG.get());
-					entries.accept(AquamiraeItems.DIVIDER.get());
-					entries.accept(AquamiraeItems.WHISPER_OF_THE_ABYSS.get());
-					entries.accept(AquamiraeItems.ABYSSAL_HEAUME.get());
-					entries.accept(AquamiraeItems.ABYSSAL_BRIGANTINE.get());
-					entries.accept(AquamiraeItems.ABYSSAL_LEGGINGS.get());
-					entries.accept(AquamiraeItems.ABYSSAL_BOOTS.get());
-					entries.accept(AquamiraeItems.ABYSSAL_TIARA.get());
-
-					entries.accept(AquamiraeItems.MAZE_MOTHER_SPAWN_EGG.get());
-					entries.accept(AquamiraeItems.CAPTAIN_CORNELIA_SPAWN_EGG.get());
-					entries.accept(AquamiraeItems.REMNANTS_SABER.get());
-					entries.accept(AquamiraeItems.POISONED_BLADE.get());
-					entries.accept(AquamiraeItems.THREE_BOLT_HELMET.get());
-					entries.accept(AquamiraeItems.THREE_BOLT_SUIT.get());
-					entries.accept(AquamiraeItems.THREE_BOLT_LEGGINGS.get());
-					entries.accept(AquamiraeItems.THREE_BOLT_BOOTS.get());
-					entries.accept(AquamiraeItems.DEAD_SEA_SCROLL.get());
-
-					entries.accept(AquamiraeItems.PILLAGERS_PATROL_SPAWN_EGG.get());
-					entries.accept(AquamiraeItems.TORTURED_SOUL_SPAWN_EGG.get());
-					entries.accept(AquamiraeItems.CORAL_LANCE.get().getDefaultInstance());
-					entries.accept(AquamiraeItems.DAGGER_OF_GREED.get());
-					entries.accept(AquamiraeItems.SHELL_HORN.get());
-					entries.accept(AquamiraeItems.FROZEN_KEY.get());
-					logBooks().forEach(entries::accept);
-
-					entries.accept(AquamiraeItems.EEL_SPAWN_EGG.get());
-					entries.accept(AquamiraeItems.SPINEFISH_SPAWN_EGG.get());
-					if (AquamiraeMod.winterEvent()) entries.accept(AquamiraeItems.SWEET_LANCE.get().getDefaultInstance());
-					poisonedChakra().forEach(entries::accept);
-					mazeRose().forEach(entries::accept);
-
-					entries.accept(AquamiraeItems.PIRATE_POUCH.get());
-					entries.accept(AquamiraeItems.TREASURE_POUCH.get());
-					entries.accept(AquamiraeItems.MUSIC_DISC_HORIZON.get());
-					entries.accept(AquamiraeItems.MUSIC_DISC_FORSAKEN_DROWNAGE.get());
-					entries.accept(ObscureAPIItems.ASTRAL_DUST.get());
-					entries.accept(AquamiraeItems.FIN.get());
-					entries.accept(AquamiraeItems.ESCA.get());
-					entries.accept(AquamiraeItems.ANGLERS_FANG.get());
-					entries.accept(AquamiraeItems.ABYSSAL_AMETHYST.get());
-					entries.accept(AquamiraeItems.SHARP_BONES.get());
-					entries.accept(AquamiraeItems.PAINTING_ANGLERFISH.get());
-					entries.accept(AquamiraeItems.PAINTING_OXYGELIUM.get());
-					entries.accept(AquamiraeItems.PAINTING_TORTURED_SOUL.get());
-					entries.accept(AquamiraeItems.PAINTING_AURORA.get());
-					entries.accept(AquamiraeItems.GOLDEN_MOTH_IN_A_JAR.get());
-					entries.accept(AquamiraeItems.OXYGELIUM.get());
-					entries.accept(AquamiraeItems.WISTERIA_NIVEIS.get());
-					entries.accept(AquamiraeItems.OXYGEN_TANK.get());
-					entries.accept(AquamiraeItems.FROZEN_CHEST.get());
-					entries.accept(AquamiraeItems.LUMINESCENT_BUBBLE.get());
-					entries.accept(AquamiraeItems.LUMINESCENT_LAMP.get());
-					entries.accept(AquamiraeItems.SEA_CASSEROLE.get());
-					entries.accept(AquamiraeItems.SPINEFISH_BUCKET.get());
-					entries.accept(AquamiraeItems.SPINEFISH.get());
-					entries.accept(AquamiraeItems.COOKED_SPINEFISH.get());
-					entries.accept(AquamiraeItems.SEA_STEW.get());
-					entries.accept(AquamiraeItems.POSEIDONS_BREAKFAST.get());
-					entries.accept(AquamiraeItems.ELODEA.get());
-
-					AquamiraeMod.LootBuilder.common().forEach(entries::accept);
-					AquamiraeMod.LootBuilder.rare().forEach(entries::accept);
-				}));
-	}
-
-	private static List<ItemStack> poisonedChakra() {
+	public static List<ItemStack> poisonedChakra() {
 		final List<ItemStack> list = new ArrayList<>();
 		final ItemStack stack1 = AquamiraeItems.POISONED_CHAKRA.get().getDefaultInstance();
 		final ItemStack stack2 = AquamiraeItems.POISONED_CHAKRA.get().getDefaultInstance();
 		stack1.enchant(ObscureAPIEnchantments.DISTANCE.get(), ObscureAPIEnchantments.DISTANCE.get().getMaxLevel());
 		stack1.enchant(ObscureAPIEnchantments.FAST_SPIN.get(), ObscureAPIEnchantments.FAST_SPIN.get().getMaxLevel());
 		stack2.enchant(ObscureAPIEnchantments.MIRROR.get(), ObscureAPIEnchantments.MIRROR.get().getMaxLevel());
-		list.add(AquamiraeItems.POISONED_CHAKRA.get().getDefaultInstance()); list.add(stack1); list.add(stack2);
+		list.add(stack1); list.add(stack2);
 		return list;
 	}
 
-	private static List<ItemStack> mazeRose() {
+	public static List<ItemStack> mazeRose() {
 		final List<ItemStack> list = new ArrayList<>();
 		final ItemStack stack1 = AquamiraeItems.MAZE_ROSE.get().getDefaultInstance();
 		final ItemStack stack2 = AquamiraeItems.MAZE_ROSE.get().getDefaultInstance();
 		stack1.enchant(ObscureAPIEnchantments.DISTANCE.get(), ObscureAPIEnchantments.DISTANCE.get().getMaxLevel());
 		stack1.enchant(ObscureAPIEnchantments.FAST_SPIN.get(), ObscureAPIEnchantments.FAST_SPIN.get().getMaxLevel());
 		stack2.enchant(ObscureAPIEnchantments.MIRROR.get(), ObscureAPIEnchantments.MIRROR.get().getMaxLevel());
-		list.add(AquamiraeItems.MAZE_ROSE.get().getDefaultInstance()); list.add(stack1); list.add(stack2);
+		list.add(stack1); list.add(stack2);
 		return list;
 	}
 
-	private static List<ItemStack> logBooks() {
+	public static List<ItemStack> logBooks() {
 		final List<ItemStack> list = new ArrayList<>();
 		final ItemStack book1 = Items.WRITTEN_BOOK.getDefaultInstance();
 		final ItemStack book2 = Items.WRITTEN_BOOK.getDefaultInstance();

@@ -4,7 +4,6 @@ import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.SoundSource;
@@ -55,7 +54,7 @@ public class AquamiraeAmbient {
 			corneliaMusic = 20 * 150;
 			Minecraft.getInstance().getMusicManager().stopPlaying();
 			Minecraft.getInstance().getMusicManager().startPlaying(
-					new Music(new Holder.Direct<>(AquamiraeSounds.MUSIC_FORSAKEN_DROWNAGE.get()), 10, 100, true));
+					new Music(AquamiraeSounds.MUSIC_FORSAKEN_DROWNAGE.get(), 10, 100, true));
 		}
 	}
 
@@ -64,7 +63,7 @@ public class AquamiraeAmbient {
 			biomeMusic = 20 * new Random().nextInt(180, 300);
 			Minecraft.getInstance().getMusicManager().stopPlaying();
 			Minecraft.getInstance().getMusicManager().startPlaying(
-					new Music(new Holder.Direct<>(AquamiraeSounds.MUSIC_ICE_MAZE_THEME.get()), 10, 100, true));
+					new Music(AquamiraeSounds.MUSIC_ICE_MAZE_THEME.get(), 10, 100, true));
 		}
 	}
 }

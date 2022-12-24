@@ -30,6 +30,8 @@
   "advancements.aquamirae.catch_golden_moth.descr": "Поймайте сияющего мотылька в бутылку",
   "advancements.aquamirae.catch_golden_moth.title": "Сияй!",
 
+  "obscure_book.aquamirae.description": " Adventure mod that adds a> Ship Graveyard with terrible> deep sea creatures.> The exploration of this mod> starts by finding an Ice Maze> located in the Deep Frozen> Ocean biome.",
+
   "class.aquamirae.sea_wolf": "Морской Волк",
   "class.aquamirae.sea_wolf_armor": "Броня Морского Волка",
   "class.aquamirae.sea_wolf_weapon": "Оружие Морского Волка",
@@ -63,7 +65,7 @@
   "tooltip.lore.pirate_pouch": "[i]Нажмите [u] чтобы открыть.>Забытые пиратские обноски,>пахнущие тухлыми устрицами...",
   "tooltip.lore.poseidons_breakfast": "Еда морских богов.>§9Неистовость X (3:00)>§9Спешка V (3:00)> >§5При применении:>§9+100% Сила способностей>§9+50% Сокращение перезарядки",
   "tooltip.lore.rune_of_the_storm": "[i]Нажмите [u] чтобы использовать.>Прикрепляется к мечу в вашей>левой руке, увеличивая его урон>в холодных биомах на 33%.",
-  "tooltip.lore.scroll_of_the_dead_sea": "[i]Нажмите [u] чтобы прочесть.>§dНеизвестный эффект",
+  "tooltip.lore.dead_sea_scroll": "[i]Нажмите [u] чтобы прочесть.>§dНеизвестный эффект",
   "tooltip.lore.sea_casserole": "Оно смотрит на меня?>§9Спешка II (1:30)>§9Сила (0:30)> >§5При применении:>§9+20% Сокращение перезарядки>§9+3 Урон",
   "tooltip.lore.sea_stew": "Сила моря в твоём желудке!>§9Неистовость III (2:00)>§9Сила (2:00)> >§5При применении:>§9+30% Сила способностей>§9+3 Урон",
   "tooltip.lore.shell_horn": "[b]§dПризывает Капитана Корнелию.>Можно использовать около>воды в Ледяном Лабиринте.",
