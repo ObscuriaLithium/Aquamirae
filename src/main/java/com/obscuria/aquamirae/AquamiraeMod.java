@@ -6,6 +6,7 @@ import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.utils.ItemHelper;
 import com.obscuria.obscureapi.world.classes.ObscureClass;
+import com.obscuria.obscureapi.world.classes.TooltipHandler;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -79,23 +80,23 @@ public class AquamiraeMod {
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
-		ObscureAPI.addMod(AquamiraeMod.MODID, "ob-aquamirae");
+		ObscureAPI.collectionMod(AquamiraeMod.MODID, "ob-aquamirae");
 
-		ItemHelper.addLore("aquamirae:sea_casserole", "sea_casserole");
-		ItemHelper.addLore("aquamirae:sea_stew", "sea_stew");
-		ItemHelper.addLore("aquamirae:poseidons_breakfast", "poseidons_breakfast");
-		ItemHelper.addLore("aquamirae:ship_graveyard_echo", "ship_graveyard_echo");
-		ItemHelper.addLore("aquamirae:pirate_pouch", "pirate_pouch");
-		ItemHelper.addLore("aquamirae:treasure_pouch", "treasure_pouch");
-		ItemHelper.addLore("aquamirae:luminescent_bubble", "luminescent_bubble");
-		ItemHelper.addLore("aquamirae:luminescent_lamp", "luminescent_lamp");
-		ItemHelper.addLore("aquamirae:shell_horn", "shell_horn");
-		ItemHelper.addLore("aquamirae:dead_sea_scroll", "scroll_of_the_dead_sea");
-		ItemHelper.addLore("aquamirae:frozen_key", "frozen_key");
-		ItemHelper.addLore("aquamirae:wisteria_niveis", "wisteria_niveis");
-		ItemHelper.addLore("aquamirae:golden_moth_in_a_jar", "golden_moth_in_a_jar");
-		ItemHelper.addLore("aquamirae:rune_of_the_storm", "rune_of_the_storm");
-		ItemHelper.addLore("aquamirae:oxygelium", "oxygelium");
+		TooltipHandler.Lore.add("aquamirae:sea_casserole");
+		TooltipHandler.Lore.add("aquamirae:sea_stew");
+		TooltipHandler.Lore.add("aquamirae:poseidons_breakfast");
+		TooltipHandler.Lore.add("aquamirae:ship_graveyard_echo");
+		TooltipHandler.Lore.add("aquamirae:pirate_pouch");
+		TooltipHandler.Lore.add("aquamirae:treasure_pouch");
+		TooltipHandler.Lore.add("aquamirae:luminescent_bubble");
+		TooltipHandler.Lore.add("aquamirae:luminescent_lamp");
+		TooltipHandler.Lore.add("aquamirae:shell_horn");
+		TooltipHandler.Lore.add("aquamirae:dead_sea_scroll");
+		TooltipHandler.Lore.add("aquamirae:frozen_key");
+		TooltipHandler.Lore.add("aquamirae:wisteria_niveis");
+		TooltipHandler.Lore.add("aquamirae:golden_moth_in_a_jar");
+		TooltipHandler.Lore.add("aquamirae:rune_of_the_storm");
+		TooltipHandler.Lore.add("aquamirae:oxygelium");
 	}
 
 	public static void loadFromConfig(LivingEntity entity, Attribute attribute, double amount) {

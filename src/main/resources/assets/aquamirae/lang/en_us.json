@@ -30,6 +30,8 @@
   "advancements.aquamirae.catch_golden_moth.descr": "Catch a shining moth in a bottle",
   "advancements.aquamirae.catch_golden_moth.title": "Shine!",
 
+  "obscure_book.aquamirae.description": " Adventure mod that adds a> Ship Graveyard with terrible> deep sea creatures.> The exploration of this mod> starts by finding an Ice Maze> located in the Deep Frozen> Ocean biome.",
+
   "class.aquamirae.sea_wolf": "Sea Wolf",
   "class.aquamirae.sea_wolf_armor": "Sea Wolf Armor",
   "class.aquamirae.sea_wolf_weapon": "Sea Wolf Weapon",
@@ -63,7 +65,7 @@
   "tooltip.lore.pirate_pouch": "[i]Press [u] to open.>Forgotten pirate clothes that>smell like rotten oysters...",
   "tooltip.lore.poseidons_breakfast": "Food of the Sea Gods.>§9Fury X (3:00)>§9Rush V (3:00)> >§5When Consumed:>§9+100% Ability Power>§9+50% Cooldown Reduction",
   "tooltip.lore.rune_of_the_storm": "[i]Press [u] to use.>Attaches to the sword in>your off hand, increasing its>damage in cold biomes by 33%.",
-  "tooltip.lore.scroll_of_the_dead_sea": "[i]Press [u] to read.>§dUnknown effect",
+  "tooltip.lore.dead_sea_scroll": "[i]Press [u] to read.>§dUnknown effect",
   "tooltip.lore.sea_casserole": "Is it looking at me?>§9Rush II (1:30)>§9Strength (0:30)> >§5When Consumed:>§9+20% Cooldown Reduction>§9+3 Attack Damage",
   "tooltip.lore.sea_stew": "The power of the>sea in your stomach!>§9Fury III (2:00)>§9Strength (2:00)> >§5When Consumed:>§9+30% Ability Power>§9+3 Attack Damage",
   "tooltip.lore.shell_horn": "[b]§dSummons Captain Cornelia.>Can be used near water>in an Ice Maze.",
