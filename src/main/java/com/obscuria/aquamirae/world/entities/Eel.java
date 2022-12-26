@@ -9,6 +9,11 @@ import com.obscuria.obscureapi.client.animations.HekateLib;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
 import com.obscuria.obscureapi.client.animations.IHekateProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -16,6 +21,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.World;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -31,13 +37,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvider {
+public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
 	private static final EntityDataAccessor<Integer> MOVE_COOLDOWN = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Float> POS_X = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
@@ -47,11 +54,11 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 	private static final EntityDataAccessor<Float> SCALE = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Float> SCALE_SPEED = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
 
-	public Eel(PlayMessages.SpawnEntity packet, Level world) {
+	public Eel(FMLPlayMessages.SpawnEntity packet, World world) {
 		this(AquamiraeEntities.EEL.get(), world);
 	}
 
-	public Eel(EntityType<Eel> type, Level world) {
+	public Eel(EntityType<Eel> type, World world) {
 		super(type, world);
 		xpReward = 120;
 		setPersistenceRequired();
@@ -271,8 +278,8 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 		return false;
 	}
 
-	public static AttributeSupplier.@NotNull Builder createAttributes() {
-		return Mob.createMobAttributes()
+	public static AttributeModifierMap.MutableAttribute createAttributes() {
+		return MobEntity.createMobAttributes()
 				.add(Attributes.MOVEMENT_SPEED, 0)
 				.add(Attributes.MAX_HEALTH, AquamiraeConfig.DEFAULT_EEL_MAX_HEALTH)
 				.add(Attributes.ARMOR, AquamiraeConfig.DEFAULT_EEL_ARMOR)

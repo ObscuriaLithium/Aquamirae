@@ -1,30 +1,22 @@
 
 package com.obscuria.aquamirae.world.items.weapon;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.world.classes.*;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.ForgeMod;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.EffectInstance;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbilityItem {
 	public WhisperOfTheAbyssItem() {
-		super(new Tier() {
+		super(new IItemTier() {
 			public int getUses() {
 				return 1400;
 			}
@@ -45,7 +37,7 @@ public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbi
 				return 14;
 			}
 
-			public @NotNull Ingredient getRepairIngredient() {
+			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
 			}
@@ -66,26 +58,14 @@ public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbi
 		return ObscureAPI.Types.WEAPON;
 	}
 
-	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
-		if (slot == EquipmentSlot.MAINHAND) {
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			builder.putAll(multimap);
-			builder.put(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(UUID.fromString("AB3F54D3-645C-4F36-A497-9C11A33DB5CF"),
-					"Weapon modifier", 0.25, AttributeModifier.Operation.MULTIPLY_BASE));
-			return builder.build();
-		}
-		return multimap;
-	}
-
 	@Override
-	public boolean hurtEnemy(@NotNull ItemStack itemstack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
+	public boolean hurtEnemy(ItemStack itemstack, LivingEntity entity, LivingEntity source) {
 		final boolean hurt = super.hurtEnemy(itemstack, entity, source);
 		if (hurt) {
-			final MobEffectInstance EFFECT = entity.getEffect(AquamiraeMobEffects.ARMOR_DECREASE.get());
-			if (EFFECT != null) entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
+			final EffectInstance EFFECT = entity.getEffect(AquamiraeMobEffects.ARMOR_DECREASE.get());
+			if (EFFECT != null) entity.addEffect(new EffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
 						20 * ABILITY.getAmount(source, 0), Math.min(4, EFFECT.getAmplifier() + 1), false, false));
-			else entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
+			else entity.addEffect(new EffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
 						20 * ABILITY.getAmount(source, 0), 0, false, false));
 		}
 		return hurt;

@@ -9,15 +9,13 @@ import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.world.classes.*;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraftforge.common.ForgeMod;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.UUID;
 
 public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityItem, IBonusItem {
 	public CoralLanceItem() {
-		super(new Tier() {
+		super(new IItemTier() {
 			public int getUses() {
 				return 1400;
 			}
@@ -46,7 +44,7 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 				return 14;
 			}
 
-			public @NotNull Ingredient getRepairIngredient() {
+			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
 		}, 3, -2.8f, new Item.Properties().fireResistant().rarity(ObscureRarity.MYTHIC).tab(AquamiraeMod.TAB));
@@ -72,19 +70,17 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 	}
 
 	@Override
-	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
+	public void fillItemCategory(ItemGroup tab, NonNullList<ItemStack> list) {
 		if (this.allowdedIn(tab)) list.add(getDefaultInstance());
 	}
 
-	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
-		if (slot == EquipmentSlot.MAINHAND) {
+		if (slot == EquipmentSlotType.MAINHAND) {
 			Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.putAll(multimap);
 			builder.put(ObscureAPIAttributes.ACCURACY.get(), new AttributeModifier(UUID.fromString("AB3F55D3-646C-4F38-A497-1C13A33DB5CF"),
 					"Weapon modifier", 0.3, AttributeModifier.Operation.MULTIPLY_BASE));
-			builder.put(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(UUID.fromString("A23F54D3-645C-4F36-A497-9C11A337B5CF"),
-					"Weapon modifier", 0.25, AttributeModifier.Operation.MULTIPLY_BASE));
 			return builder.build();
 		}
 		return multimap;
@@ -92,7 +88,7 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 	}
 
 	@Override
-	public @NotNull ItemStack getDefaultInstance() {
+	public ItemStack getDefaultInstance() {
 		final ItemStack stack = new ItemStack(this);
 		stack.enchant(Enchantments.UNBREAKING, 4);
 		return stack;

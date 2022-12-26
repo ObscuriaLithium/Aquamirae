@@ -1,6 +1,8 @@
 
 package com.obscuria.aquamirae.world.blocks;
 
+import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.SeaGrassBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -22,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class ElodeaBlock extends SeagrassBlock implements SimpleWaterloggedBlock {
+public class ElodeaBlock extends SeaGrassBlock implements IWaterLoggable {
 	public ElodeaBlock() {
 		super(BlockBehaviour.Properties.of(Material.WATER_PLANT, MaterialColor.TERRACOTTA_CYAN).sound(SoundType.WET_GRASS).strength(0.4f, 0.5f)
 				.noCollission().speedFactor(0.7f).jumpFactor(0.7f).noOcclusion().isRedstoneConductor((bs, br, bp) -> false));

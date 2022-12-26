@@ -9,8 +9,16 @@ import com.obscuria.obscureapi.world.classes.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,17 +41,17 @@ import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber
 public abstract class TerribleArmorItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
-	public final EquipmentSlot BONUS_SLOT;
+	public final EquipmentSlotType BONUS_SLOT;
 
-	public TerribleArmorItem(EquipmentSlot slot, Item.Properties properties) {
+	public TerribleArmorItem(EquipmentSlotType slot, Item.Properties properties) {
 		super(new ArmorMaterial() {
 			@Override
-			public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
+			public int getDurabilityForSlot(EquipmentSlotType slot) {
 				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 25;
 			}
 
 			@Override
-			public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
+			public int getDefenseForSlot(EquipmentSlotType slot) {
 				return new int[]{2, 3, 7, 5}[slot.getIndex()];
 			}
 
@@ -53,18 +61,18 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 			}
 
 			@Override
-			public @NotNull SoundEvent getEquipSound() {
+			public SoundEvent getEquipSound() {
 				return SoundEvents.ARMOR_EQUIP_IRON;
 			}
 
 			@Override
-			public @NotNull Ingredient getRepairIngredient() {
+			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ANGLERS_FANG.get()));
 			}
 
 			@Override
-			public @NotNull String getName() {
+			public String getName() {
 				return "terrible";
 			}
 
@@ -93,9 +101,9 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 	}
 
 	public List<ObscureBonus> getObscureBonuses() {
-		if (this.BONUS_SLOT == EquipmentSlot.HEAD) return Collections.singletonList(BONUS_HEAD);
-		if (this.BONUS_SLOT == EquipmentSlot.CHEST) return Collections.singletonList(BONUS_CHEST);
-		if (this.BONUS_SLOT == EquipmentSlot.LEGS) return Collections.singletonList(BONUS_LEGS);
+		if (this.BONUS_SLOT == EquipmentSlotType.HEAD) return Collections.singletonList(BONUS_HEAD);
+		if (this.BONUS_SLOT == EquipmentSlotType.CHEST) return Collections.singletonList(BONUS_CHEST);
+		if (this.BONUS_SLOT == EquipmentSlotType.LEGS) return Collections.singletonList(BONUS_LEGS);
 		return Collections.singletonList(BONUS_FEET);
 	}
 
@@ -109,7 +117,7 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 
 	public static class Helmet extends TerribleArmorItem {
 		public Helmet() {
-			super(EquipmentSlot.HEAD, new Item.Properties());
+			super(EquipmentSlotType.HEAD, new Item.Properties());
 		}
 
 		public void initializeClient(Consumer<IItemRenderProperties> consumer) {

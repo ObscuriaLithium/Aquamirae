@@ -2,11 +2,11 @@ package com.obscuria.aquamirae.network;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.world.events.ScrollClient;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -18,11 +18,11 @@ public class ScrollMessage {
         this.type = type;
     }
 
-    public ScrollMessage(FriendlyByteBuf buffer) {
+    public ScrollMessage(PacketBuffer buffer) {
         this.type = buffer.readInt();
     }
 
-    public static void buffer(ScrollMessage message, FriendlyByteBuf buffer) {
+    public static void buffer(ScrollMessage message, PacketBuffer buffer) {
         buffer.writeInt(message.type);
     }
 

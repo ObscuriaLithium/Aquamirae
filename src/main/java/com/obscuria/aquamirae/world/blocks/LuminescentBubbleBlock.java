@@ -2,6 +2,8 @@
 package com.obscuria.aquamirae.world.blocks;
 
 import com.obscuria.aquamirae.registry.AquamiraeItems;
+import net.minecraft.block.Block;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -48,7 +50,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-public class LuminescentBubbleBlock extends Block implements SimpleWaterloggedBlock {
+public class LuminescentBubbleBlock extends Block implements IWaterLoggable {
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public LuminescentBubbleBlock() {

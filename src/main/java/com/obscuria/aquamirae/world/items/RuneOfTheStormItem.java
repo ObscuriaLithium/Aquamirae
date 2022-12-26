@@ -4,23 +4,22 @@ package com.obscuria.aquamirae.world.items;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.obscureapi.utils.ItemHelper;
 import com.obscuria.obscureapi.world.classes.ObscureRarity;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
 
 @Mod.EventBusSubscriber
 public class RuneOfTheStormItem extends Item {
@@ -29,35 +28,34 @@ public class RuneOfTheStormItem extends Item {
 	}
 
 	@SubscribeEvent
-	public static void onLivingDamage(@NotNull LivingDamageEvent event) {
-		final LivingEntity source = event.getSource().getEntity() instanceof LivingEntity living ? living : null;
+	public static void onLivingDamage(LivingDamageEvent event) {
+		final LivingEntity source = event.getSource().getEntity() instanceof LivingEntity ? (LivingEntity) event.getSource().getEntity() : null;
 		if (source == null) return;
 		final ItemStack weapon = source.getMainHandItem();
-		if (ItemHelper.hasPerk(weapon, "rune_of_the_storm") && source.getLevel().getBiome(source.blockPosition()).value().getBaseTemperature() * 100f <= 0) {
+		if (ItemHelper.hasPerk(weapon, "rune_of_the_storm") && source.level.getBiome(source.blockPosition()).getBaseTemperature() * 100f <= 0) {
 			event.setAmount(event.getAmount() * 1.33F);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isFoil(@NotNull ItemStack itemstack) {
+	public boolean isFoil(ItemStack itemstack) {
 		return true;
 	}
 
 	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player entity, @NotNull InteractionHand hand) {
+	public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {
 		final ItemStack stack = entity.getItemInHand(hand);
-		final ItemStack offhand = entity.getItemInHand(InteractionHand.OFF_HAND);
-		if (hand != InteractionHand.MAIN_HAND)
-			return InteractionResultHolder.fail(stack);
+		final ItemStack offhand = entity.getItemInHand(Hand.OFF_HAND);
+		if (hand != Hand.MAIN_HAND)
+			return ActionResult.fail(stack);
 		if (offhand.getItem() instanceof SwordItem && !ItemHelper.hasPerk(offhand, "rune_of_the_storm")) {
-			if (world instanceof ServerLevel level)
-				level.playSound(null, entity.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 2, 1);
+			if (world instanceof ServerWorld) world.playSound(null, entity.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 2, 1);
 			entity.swing(hand);
 			stack.shrink(1);
 			ItemHelper.addPerk(offhand, "rune_of_the_storm", 1);
-			return InteractionResultHolder.success(stack);
+			return ActionResult.success(stack);
 		}
-		return InteractionResultHolder.fail(stack);
+		return ActionResult.fail(stack);
 	}
 }

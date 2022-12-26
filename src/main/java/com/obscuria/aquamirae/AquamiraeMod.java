@@ -6,37 +6,37 @@ import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.world.classes.ObscureClass;
 import com.obscuria.obscureapi.world.classes.TooltipHandler;
-import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,13 +55,13 @@ public class AquamiraeMod {
 	private static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 	private static final IEventBus EVENT_BUS = MinecraftForge.EVENT_BUS;
 	public static final ObscureClass SEA_WOLF = ObscureAPI.Classes.register(new ObscureClass(AquamiraeMod.MODID, "sea_wolf"));
-	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "ice_maze"));
+	public static final RegistryKey<Biome> ICE_MAZE = Biomes.DEEP_FROZEN_OCEAN;
 	public static final ResourceLocation BIOME = new ResourceLocation("minecraft:deep_frozen_ocean");
-	public static final TagKey<Block> EEL_MOVE = BlockTags.create(new ResourceLocation(MODID, "eel_move"));
-	public static final TagKey<Block> MAZE_MOTHER_DESTROY = BlockTags.create(new ResourceLocation(MODID, "maze_mother_destroy"));
-	public static final TagKey<Block> SCROLL_DESTROY = BlockTags.create(new ResourceLocation(MODID, "scroll_destroy"));
-	public static final CreativeModeTab TAB = new CreativeModeTab("aquamirae") {
-		@Override public @NotNull ItemStack makeIcon() {
+	public static final Tags.IOptionalNamedTag<Block> EEL_MOVE = BlockTags.createOptional(new ResourceLocation(MODID, "eel_move"));
+	public static final Tags.IOptionalNamedTag<Block> MAZE_MOTHER_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "maze_mother_destroy"));
+	public static final Tags.IOptionalNamedTag<Block> SCROLL_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "scroll_destroy"));
+	public static final ItemGroup TAB = new ItemGroup("aquamirae") {
+		@Override public ItemStack makeIcon() {
 			return AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance();
 		}
 
@@ -112,7 +112,7 @@ public class AquamiraeMod {
 	}
 
 	public static void loadFromConfig(LivingEntity entity, Attribute attribute, double amount) {
-		final AttributeInstance attributeInstance = entity.getAttribute(attribute);
+		final ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance != null) attributeInstance.setBaseValue(amount);
 		if (attribute == Attributes.MAX_HEALTH) entity.setHealth(entity.getMaxHealth());
 	}
@@ -121,7 +121,7 @@ public class AquamiraeMod {
 		return Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER || Calendar.getInstance().get(Calendar.MONTH) == Calendar.JANUARY;
 	}
 
-	public static <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
+	public static <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, PacketBuffer> encoder, Function<PacketBuffer, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
 		PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer); messageID++;
 	}
 
@@ -132,44 +132,44 @@ public class AquamiraeMod {
 			final int c2 = getColor(10, 190, 220);
 			final int c3 = getColor(10, 130, 220);
 			List<ItemStack> list = new ArrayList<>();
-			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c1, "dead_sea_hat", Attributes.ATTACK_DAMAGE);
-			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c2, "twilight_grotto_hat", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c3, "sea_tramps_hat", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c1, "dead_sea_doublet", Attributes.ATTACK_DAMAGE);
-			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c2, "twilight_grotto_doublet", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c3, "sea_tramps_doublet", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c1, "dead_sea_pants", Attributes.ATTACK_DAMAGE);
-			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c2, "twilight_grotto_pants", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c3, "sea_tramps_pants", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c1, "dead_sea_boots", Attributes.ATTACK_DAMAGE);
-			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c2, "twilight_grotto_boots", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c3, "sea_tramps_boots", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.LEATHER_HELMET, EquipmentSlotType.HEAD, 1, 1, c1, "dead_sea_hat", Attributes.ATTACK_DAMAGE);
+			add(list, Items.LEATHER_HELMET, EquipmentSlotType.HEAD, 1, 1, c2, "twilight_grotto_hat", ObscureAPIAttributes.PENETRATION.get());
+			add(list, Items.LEATHER_HELMET, EquipmentSlotType.HEAD, 1, 1, c3, "sea_tramps_hat", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlotType.CHEST, 1, 3, c1, "dead_sea_doublet", Attributes.ATTACK_DAMAGE);
+			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlotType.CHEST, 1, 3, c2, "twilight_grotto_doublet", ObscureAPIAttributes.PENETRATION.get());
+			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlotType.CHEST, 1, 3, c3, "sea_tramps_doublet", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.LEATHER_LEGGINGS, EquipmentSlotType.LEGS, 1, 2, c1, "dead_sea_pants", Attributes.ATTACK_DAMAGE);
+			add(list, Items.LEATHER_LEGGINGS, EquipmentSlotType.LEGS, 1, 2, c2, "twilight_grotto_pants", ObscureAPIAttributes.PENETRATION.get());
+			add(list, Items.LEATHER_LEGGINGS, EquipmentSlotType.LEGS, 1, 2, c3, "sea_tramps_pants", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.LEATHER_BOOTS, EquipmentSlotType.FEET, 1, 1, c1, "dead_sea_boots", Attributes.ATTACK_DAMAGE);
+			add(list, Items.LEATHER_BOOTS, EquipmentSlotType.FEET, 1, 1, c2, "twilight_grotto_boots", ObscureAPIAttributes.PENETRATION.get());
+			add(list, Items.LEATHER_BOOTS, EquipmentSlotType.FEET, 1, 1, c3, "sea_tramps_boots", ObscureAPIAttributes.CRITICAL_HIT.get());
 			return list;
 		}
 
 		public static List<ItemStack> rare() {
 			List<ItemStack> list = new ArrayList<>();
-			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "dead_sea_helmet", Attributes.ATTACK_DAMAGE);
-			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "twilight_grotto_helmet", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "sea_tramps_helmet", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "dead_sea_chestplate", Attributes.ATTACK_DAMAGE);
-			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "twilight_grotto_chestplate", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "sea_tramps_chestplate", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "dead_sea_leggings", Attributes.ATTACK_DAMAGE);
-			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "twilight_grotto_leggings", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "sea_tramps_leggings", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "dead_sea_boots", Attributes.ATTACK_DAMAGE);
-			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "twilight_grotto_boots", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "sea_tramps_boots", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.IRON_HELMET, EquipmentSlotType.HEAD, 2, 2, 0, "dead_sea_helmet", Attributes.ATTACK_DAMAGE);
+			add(list, Items.IRON_HELMET, EquipmentSlotType.HEAD, 2, 2, 0, "twilight_grotto_helmet", ObscureAPIAttributes.PENETRATION.get());
+			add(list, Items.IRON_HELMET, EquipmentSlotType.HEAD, 2, 2, 0, "sea_tramps_helmet", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.IRON_CHESTPLATE, EquipmentSlotType.CHEST, 2, 6, 0, "dead_sea_chestplate", Attributes.ATTACK_DAMAGE);
+			add(list, Items.IRON_CHESTPLATE, EquipmentSlotType.CHEST, 2, 6, 0, "twilight_grotto_chestplate", ObscureAPIAttributes.PENETRATION.get());
+			add(list, Items.IRON_CHESTPLATE, EquipmentSlotType.CHEST, 2, 6, 0, "sea_tramps_chestplate", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.IRON_LEGGINGS, EquipmentSlotType.LEGS, 2, 5, 0, "dead_sea_leggings", Attributes.ATTACK_DAMAGE);
+			add(list, Items.IRON_LEGGINGS, EquipmentSlotType.LEGS, 2, 5, 0, "twilight_grotto_leggings", ObscureAPIAttributes.PENETRATION.get());
+			add(list, Items.IRON_LEGGINGS, EquipmentSlotType.LEGS, 2, 5, 0, "sea_tramps_leggings", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.IRON_BOOTS, EquipmentSlotType.FEET, 2, 2, 0, "dead_sea_boots", Attributes.ATTACK_DAMAGE);
+			add(list, Items.IRON_BOOTS, EquipmentSlotType.FEET, 2, 2, 0, "twilight_grotto_boots", ObscureAPIAttributes.PENETRATION.get());
+			add(list, Items.IRON_BOOTS, EquipmentSlotType.FEET, 2, 2, 0, "sea_tramps_boots", ObscureAPIAttributes.CRITICAL_HIT.get());
 			return list;
 		}
 
-		public static void add(List<ItemStack> list, Item item, EquipmentSlot slot, int mod, int armor, int color, String name, Attribute attribute) {
+		public static void add(List<ItemStack> list, Item item, EquipmentSlotType slot, int mod, int armor, int color, String name, Attribute attribute) {
 			for (int i = 1; i <= 5; i++) {
 				final ItemStack stack = new ItemStack(item);
 				stack.addAttributeModifier(Attributes.ARMOR, new AttributeModifier("base_armor", armor, AttributeModifier.Operation.ADDITION), slot);
 				stack.addAttributeModifier(attribute, new AttributeModifier("base_bonus", mod * i * 0.01, AttributeModifier.Operation.MULTIPLY_TOTAL), slot);
-				stack.getOrCreateTagElement("display").putString("Name", Component.Serializer.toJson(new TranslatableComponent("set.aquamirae." + name)));
+				stack.getOrCreateTagElement("display").putString("Name", ITextComponent.Serializer.toJson(new TranslationTextComponent("set.aquamirae." + name)));
 				if (i == 5) stack.enchant(Enchantments.UNBREAKING, mod);
 				if (color > 0) stack.getOrCreateTagElement("display").putInt("color", color);
 				list.add(stack);

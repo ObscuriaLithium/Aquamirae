@@ -1,48 +1,131 @@
 package com.obscuria.aquamirae.client.models;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.client.animations.*;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.obscuria.obscureapi.client.animations.AnimatedPart;
+import com.obscuria.obscureapi.client.animations.HekateLib;
+import com.obscuria.obscureapi.client.animations.IHekateProvider;
+import com.obscuria.obscureapi.client.animations.KeyFrame;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 
 public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "anglerfish"), "main");
-	public final ModelPart main, head, headTop, headBottom, body, tail1, tail2, tail3, tail4, tail5, tail6, leftFin, rightFin, lamp1, lamp2, lamp3, lamp4, lamp5;
+	public final ModelRenderer main, head, headTop, headBottom, body, tail1, tail2, tail3, tail4, tail5, tail6, leftFin, rightFin, lamp1, lamp2, lamp3, lamp4, lamp5;
 
-	public ModelAnglerfish(ModelPart root) {
-		this.main = root.getChild("main");
-		this.head = main.getChild("head");
-		this.body = main.getChild("body");
-		this.headTop = head.getChild("headTop");
-		this.headBottom = head.getChild("headBottom");
-		this.leftFin = body.getChild("leftFin");
-		this.rightFin = body.getChild("rightFin");
-		this.tail1 = body.getChild("tail1");
-		this.tail2 = tail1.getChild("tail2");
-		this.tail3 = tail2.getChild("tail3");
-		this.tail4 = tail3.getChild("tail4");
-		this.tail5 = tail4.getChild("tail5");
-		this.tail6 = tail5.getChild("tail6");
-		this.lamp1 = headTop.getChild("lamp1");
-		this.lamp2 = lamp1.getChild("lamp2");
-		this.lamp3 = lamp2.getChild("lamp3");
-		this.lamp4 = lamp3.getChild("lamp4");
-		this.lamp5 = lamp4.getChild("lamp5");
-	}
+	public ModelAnglerfish() {
+		texWidth = 128;
+		texHeight = 128;
 
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
-		PartDefinition partdefinition = meshdefinition.getRoot();
+		main = new ModelRenderer(this);
+		main.setPos(0.0F, 5.0F, 0.0F);
 
-		PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 5.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+		head = new ModelRenderer(this);
+		head.setPos(0.0F, 0.0F, -5.0F);
+		main.addChild(head);
+		setRotationAngle(head, 0.6109F, 0.0F, 0.0F);
+
+		headTop = new ModelRenderer(this);
+		headTop.setPos(0.0F, 2.0F, -5.0F);
+		head.addChild(headTop);
+		headTop.texOffs(50, 45).addBox(-7.0F, -16.0F, 0.0F, 14.0F, 16.0F, 10.0F, 0.0F, false);
+		headTop.texOffs(59, 10).addBox(1.0F, -17.0F, 2.0F, 5.0F, 1.0F, 5.0F, 0.0F, false);
+		headTop.texOffs(40, 0).addBox(-6.0F, -17.0F, 2.0F, 5.0F, 1.0F, 5.0F, 0.0F, false);
+		headTop.texOffs(0, 55).addBox(-7.0F, -16.0F, -8.0F, 14.0F, 16.0F, 8.0F, 0.0F, false);
+
+		lamp1 = new ModelRenderer(this);
+		lamp1.setPos(0.0F, -16.0F, 9.0F);
+		headTop.addChild(lamp1);
+		setRotationAngle(lamp1, -0.2182F, 0.0F, 0.0F);
+		lamp1.texOffs(107, 0).addBox(-0.5F, -5.0F, 0.0F, 1.0F, 5.0F, 0.0F, 0.0F, false);
+
+		lamp2 = new ModelRenderer(this);
+		lamp2.setPos(0.0F, -5.0F, 0.0F);
+		lamp1.addChild(lamp2);
+		setRotationAngle(lamp2, 0.1745F, 0.0F, 0.0F);
+		lamp2.texOffs(107, 5).addBox(-0.5F, -5.0F, 0.0F, 1.0F, 5.0F, 0.0F, 0.0F, false);
+
+		lamp3 = new ModelRenderer(this);
+		lamp3.setPos(0.0F, -5.0F, 0.0F);
+		lamp2.addChild(lamp3);
+		setRotationAngle(lamp3, 0.5672F, 0.0F, 0.0F);
+		lamp3.texOffs(107, 10).addBox(-0.5F, -5.0F, 0.0F, 1.0F, 5.0F, 0.0F, 0.0F, false);
+
+		lamp4 = new ModelRenderer(this);
+		lamp4.setPos(0.0F, -5.0F, 0.0F);
+		lamp3.addChild(lamp4);
+		setRotationAngle(lamp4, 0.9163F, 0.0F, 0.0F);
+		lamp4.texOffs(107, 15).addBox(-0.5F, -5.0F, 0.0F, 1.0F, 5.0F, 0.0F, 0.0F, false);
+
+		lamp5 = new ModelRenderer(this);
+		lamp5.setPos(0.0F, -5.0F, 0.0F);
+		lamp4.addChild(lamp5);
+		setRotationAngle(lamp5, 0.5672F, 0.0F, 0.0F);
+		lamp5.texOffs(104, 20).addBox(-1.0F, -3.0F, -1.0F, 2.0F, 3.0F, 2.0F, 0.0F, false);
+
+		headBottom = new ModelRenderer(this);
+		headBottom.setPos(0.0F, 2.0F, -5.0F);
+		head.addChild(headBottom);
+		headBottom.texOffs(44, 16).addBox(-7.0F, -2.0F, -14.0F, 14.0F, 3.0F, 16.0F, 0.11F, false);
+		headBottom.texOffs(0, 32).addBox(-7.0F, -9.0F, -14.0F, 14.0F, 7.0F, 16.0F, 0.1F, false);
+
+		body = new ModelRenderer(this);
+		body.setPos(0.0F, 0.0F, 0.0F);
+		main.addChild(body);
+		body.texOffs(0, 0).addBox(-6.0F, -8.0F, -11.0F, 12.0F, 16.0F, 16.0F, 0.0F, false);
+		body.texOffs(44, 55).addBox(0.0F, -18.0F, -11.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+		body.texOffs(44, 19).addBox(0.0F, 8.0F, -11.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+
+		tail1 = new ModelRenderer(this);
+		tail1.setPos(0.0F, 0.0F, 5.0F);
+		body.addChild(tail1);
+		tail1.texOffs(68, 73).addBox(-4.0F, -7.0F, 0.0F, 8.0F, 14.0F, 8.0F, 0.0F, false);
+		tail1.texOffs(76, 27).addBox(0.0F, -17.0F, 0.0F, 0.0F, 10.0F, 8.0F, 0.0F, false);
+		tail1.texOffs(0, 24).addBox(0.0F, 7.0F, 0.0F, 0.0F, 10.0F, 8.0F, 0.0F, false);
+
+		tail2 = new ModelRenderer(this);
+		tail2.setPos(0.0F, 0.0F, 8.0F);
+		tail1.addChild(tail2);
+		tail2.texOffs(12, 79).addBox(-2.0F, -6.0F, 0.0F, 4.0F, 12.0F, 6.0F, 0.0F, false);
+		tail2.texOffs(52, 0).addBox(0.0F, -15.0F, 0.0F, 0.0F, 9.0F, 6.0F, 0.0F, false);
+		tail2.texOffs(40, 0).addBox(0.0F, 6.0F, 0.0F, 0.0F, 9.0F, 6.0F, 0.0F, false);
+
+		tail3 = new ModelRenderer(this);
+		tail3.setPos(0.0F, 0.0F, 6.0F);
+		tail2.addChild(tail3);
+		tail3.texOffs(0, 0).addBox(-1.0F, -3.0F, 0.0F, 2.0F, 6.0F, 6.0F, 0.0F, false);
+		tail3.texOffs(0, 73).addBox(0.0F, -12.0F, 0.0F, 0.0F, 24.0F, 6.0F, 0.0F, false);
+
+		tail4 = new ModelRenderer(this);
+		tail4.setPos(0.0F, 0.0F, 6.0F);
+		tail3.addChild(tail4);
+		tail4.texOffs(56, 75).addBox(0.0F, -8.0F, 0.0F, 0.0F, 16.0F, 6.0F, 0.0F, false);
+
+		tail5 = new ModelRenderer(this);
+		tail5.setPos(0.0F, 0.0F, 6.0F);
+		tail4.addChild(tail5);
+		tail5.texOffs(44, 75).addBox(0.0F, -8.0F, 0.0F, 0.0F, 16.0F, 6.0F, 0.0F, false);
+
+		tail6 = new ModelRenderer(this);
+		tail6.setPos(0.0F, 0.0F, 6.0F);
+		tail5.addChild(tail6);
+		tail6.texOffs(32, 73).addBox(0.0F, -8.0F, 0.0F, 0.0F, 16.0F, 6.0F, 0.0F, false);
+
+		leftFin = new ModelRenderer(this);
+		leftFin.setPos(6.0F, 0.0F, -4.5F);
+		body.addChild(leftFin);
+		setRotationAngle(leftFin, 0.0F, 0.7854F, -0.5236F);
+		leftFin.texOffs(0, 103).addBox(0.0F, -2.0F, -0.5F, 1.0F, 4.0F, 5.0F, 0.0F, false);
+		leftFin.texOffs(0, 103).addBox(0.5F, -6.0F, -0.5F, 0.0F, 12.0F, 13.0F, 0.0F, false);
+
+		rightFin = new ModelRenderer(this);
+		rightFin.setPos(-6.0F, 0.0F, -4.5F);
+		body.addChild(rightFin);
+		rightFin.texOffs(0, 103).addBox(-1.0F, -2.0F, -0.5F, 1.0F, 4.0F, 5.0F, 0.0F, false);
+		rightFin.texOffs(0, 103).addBox(-0.5F, -6.0F, -0.5F, 0.0F, 12.0F, 13.0F, 0.0F, false);
+		/*
+		main = new ModelRenderer(this);
+		main.addChild("main", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 5.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		PartDefinition head = main.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, -5.0F, 0.6109F, 0.0F, 0.0F));
 
@@ -92,18 +175,25 @@ public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
 				.texOffs(0, 103).addBox(-0.5F, -6.0F, -0.5F, 0.0F, 12.0F, 13.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-6.0F, 0.0F, -4.5F, 0.0F, -0.6981F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 128, 128);
+
+		 */
+	}
+
+	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+		modelRenderer.xRot = x;
+		modelRenderer.yRot = y;
+		modelRenderer.zRot = z;
 	}
 
 	@Override
-	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-							   float blue, float alpha) {
-		poseStack.pushPose();
-		poseStack.scale(1.5F, 1.5F, 1.5F);
-		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		poseStack.popPose();
+	public void renderToBuffer(MatrixStack pose, IVertexBuilder vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		pose.pushPose();
+		pose.scale(1.5F, 1.5F, 1.5F);
+		main.render(pose, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		pose.popPose();
 	}
 
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		final float idle = HekateLib.mod.idle(limbSwingAmount, 3F);
 		final float move = HekateLib.mod.move(limbSwingAmount, 3F);
 		final float speed1 = 0.1F;
@@ -146,8 +236,8 @@ public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
 		HekateLib.m(lamp4, 8F, -50F, 0, 0, 0, 0, speed2, -0.15F, ageInTicks, move);
 		HekateLib.m(lamp5, 10F, -30F, 0, 0, 0, 0, speed2, -0.2F, ageInTicks, move);
 
-		if (entity instanceof IHekateProvider iHekateProvider)
-			this.main.y = 5F + 5F * iHekateProvider.getHekateProvider().getModifier("onGround1");
+		if (entity instanceof IHekateProvider)
+			this.main.y = 5F + 5F * ((IHekateProvider)entity).getHekateProvider().getModifier("onGround1");
 		HekateLib.render.animation(entity, "onGround", ageInTicks,
 				new KeyFrame(20, 0, 5F, 5F,
 						new AnimatedPart(main, 0, 0, 90),
@@ -179,7 +269,7 @@ public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(tail4, 0, 0, 25F, 0, 0, 0, speed2, -0.2F),
 						new AnimatedPart(tail5, 0, 0, 25F, 0, 0, 0, speed2, -0.25F),
 						new AnimatedPart(tail6, 0, 0, 25F, 0, 0, 0, speed2, -0.3F)));
-		final float headMod = entity instanceof IHekateProvider provider ? 1F - provider.getHekateProvider().getModifier("onGround1") : 1F;
+		final float headMod = entity instanceof IHekateProvider ? 1F - ((IHekateProvider)entity).getHekateProvider().getModifier("onGround1") : 1F;
 		this.main.xRot += HekateLib.render.head(headPitch, headMod);
 		this.main.yRot += HekateLib.render.head(netHeadYaw, headMod);
 		this.main.xRot += HekateLib.render.head(netHeadYaw, 1F - headMod);

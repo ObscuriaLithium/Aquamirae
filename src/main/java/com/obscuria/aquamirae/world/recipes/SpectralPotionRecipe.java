@@ -1,21 +1,18 @@
 
 package com.obscuria.aquamirae.world.recipes;
 
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.common.brewing.IBrewingRecipe;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-
-import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Item;
-
-import com.obscuria.aquamirae.registry.AquamiraePotions;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.registry.AquamiraePotions;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.brewing.IBrewingRecipe;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SpectralPotionRecipe implements IBrewingRecipe {
@@ -37,7 +34,7 @@ public class SpectralPotionRecipe implements IBrewingRecipe {
 	}
 
 	@Override
-	public @NotNull ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack ingredient) {
+	public ItemStack getOutput(ItemStack input, ItemStack ingredient) {
 		if (isInput(input) && isIngredient(ingredient)) {
 			return PotionUtils.setPotion(new ItemStack(input.getItem()), AquamiraePotions.SPECTRAL_POTION.get());
 		}

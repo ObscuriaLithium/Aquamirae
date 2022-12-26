@@ -3,8 +3,14 @@ package com.obscuria.aquamirae.world.blocks;
 
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
+import net.minecraft.block.DoublePlantBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.core.BlockPos;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -36,7 +42,7 @@ public class WisteriaNiveisBlock extends DoublePlantBlock {
 	}
 
 	@Override
-	public @NotNull OffsetType getOffsetType() {
+	public OffsetType getOffsetType() {
 		return OffsetType.XYZ;
 	}
 
@@ -56,7 +62,7 @@ public class WisteriaNiveisBlock extends DoublePlantBlock {
 		return state.is(BlockTags.SNOW) || super.mayPlaceOn(state, level, pos);
 	}
 
-	public boolean canBePlacedOn(Level level, BlockPos pos) {
+	public boolean canBePlacedOn(World level, BlockPos pos) {
 		return mayPlaceOn(level.getBlockState(pos), level, pos) && level.isEmptyBlock(pos.above(1)) && level.isEmptyBlock(pos.above(2));
 	}
 

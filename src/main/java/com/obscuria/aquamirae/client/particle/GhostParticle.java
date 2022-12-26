@@ -1,66 +1,61 @@
 
 package com.obscuria.aquamirae.client.particle;
 
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.particle.*;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraftforge.api.distmarker.Dist;
-
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.multiplayer.ClientLevel;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class GhostParticle extends TextureSheetParticle {
-	public static GhostParticleProvider provider(SpriteSet spriteSet) {
-		return new GhostParticleProvider(spriteSet);
+public class GhostParticle {
+
+	@OnlyIn(Dist.CLIENT)
+	public static class Instance extends SpriteTexturedParticle {
+		private final IAnimatedSprite spriteSet;
+
+		protected Instance(ClientWorld world, double x, double y, double z, double vx, double vy, double vz, IAnimatedSprite spriteSet) {
+			super(world, x, y, z);
+			this.spriteSet = spriteSet;
+			this.setSize((float) 0.2, (float) 0.2);
+			this.quadSize *= (float) 1.2999999999999998;
+			this.age = 40;
+			this.gravity = (float) -0.3;
+			this.hasPhysics = false;
+			this.xd = vx * 0.1;
+			this.yd = vy * 0.1;
+			this.zd = vz * 0.1;
+			this.setSpriteFromAge(spriteSet);
+		}
+
+		@Override
+		protected int getLightColor(float partialTick) {
+			return 15728880;
+		}
+
+		@Override
+		public IParticleRenderType getRenderType() {
+			return IParticleRenderType.PARTICLE_SHEET_LIT;
+		}
+
+		@Override
+		public void tick() {
+			super.tick();
+			if (this.isAlive()) this.setSprite(this.spriteSet.get((this.age / 3) % 12 + 1, 12));
+		}
 	}
 
-	public static class GhostParticleProvider implements ParticleProvider<SimpleParticleType> {
-		private final SpriteSet spriteSet;
+	@OnlyIn(Dist.CLIENT)
+	public static class Factory implements IParticleFactory<BasicParticleType> {
+		private final IAnimatedSprite spriteSet;
 
-		public GhostParticleProvider(SpriteSet spriteSet) {
+		public Factory(IAnimatedSprite spriteSet) {
 			this.spriteSet = spriteSet;
 		}
 
-		public Particle createParticle(@NotNull SimpleParticleType typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed,
-									   double zSpeed) {
-			return new GhostParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
+		public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
+									 double zSpeed) {
+			return new Instance(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}
-	}
-
-	private final SpriteSet spriteSet;
-
-	protected GhostParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
-		super(world, x, y, z);
-		this.spriteSet = spriteSet;
-		this.setSize(0.2f, 0.2f);
-		this.quadSize *= 1.3f;
-		this.lifetime = 40;
-		this.gravity = -0.3f;
-		this.hasPhysics = false;
-		this.xd = vx * 0.1;
-		this.yd = vy * 0.1;
-		this.zd = vz * 0.1;
-		this.setSpriteFromAge(spriteSet);
-	}
-
-	@Override
-	public int getLightColor(float partialTick) {
-		return 15728880;
-	}
-
-	@Override
-	public @NotNull ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_LIT;
-	}
-
-	@Override
-	public void tick() {
-		super.tick();
-		if (!this.removed) this.setSprite(this.spriteSet.get((this.age / 3) % 12 + 1, 12));
 	}
 }

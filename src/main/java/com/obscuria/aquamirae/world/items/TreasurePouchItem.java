@@ -3,24 +3,19 @@ package com.obscuria.aquamirae.world.items;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameterSets;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.LootTable;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.List;
 
@@ -30,23 +25,24 @@ public class TreasurePouchItem extends Item {
 	}
 
 	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player player, @NotNull InteractionHand hand) {
-		InteractionResultHolder<ItemStack> resultHolder = super.use(world, player, hand);
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+		ActionResult<ItemStack> resultHolder = super.use(world, player, hand);
 		ItemStack stack = resultHolder.getObject();
 		player.swing(hand);
 		if (!world.isClientSide) {
-			world.playSound(player, new BlockPos(player.getX(), player.getY() + 1, player.getZ()), AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundSource.PLAYERS, 1, 1);
+			world.playSound(player, new BlockPos(player.getX(), player.getY() + 1, player.getZ()), AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundCategory.PLAYERS, 1, 1);
 			final List<ItemStack> loot = AquamiraeMod.LootBuilder.rare();
 			player.addItem(loot.get(player.getRandom().nextInt(0, loot.size() - 1)));
 			//
 			final MinecraftServer minecraftServer = player.level.getServer();
-			if (minecraftServer != null && player.level instanceof ServerLevel server) {
+			if (minecraftServer != null && player.level instanceof ServerWorld) {
+				final ServerWorld server = (ServerWorld) player.level;
 				ResourceLocation location = new ResourceLocation(AquamiraeMod.MODID, "gameplay/treasure_pouch");
 				LootTable lootTable = minecraftServer.getLootTables().get(location);
 				LootContext.Builder lootContext$Builder = new LootContext.Builder(server).withRandom(player.getRandom())
-						.withParameter(LootContextParams.THIS_ENTITY, player).withParameter(LootContextParams.ORIGIN, player.position())
-						.withParameter(LootContextParams.DAMAGE_SOURCE, DamageSource.OUT_OF_WORLD);
-				LootContext lootContext = lootContext$Builder.create(LootContextParamSets.ENTITY);
+						.withParameter(LootParameters.THIS_ENTITY, player).withParameter(LootParameters.ORIGIN, player.position())
+						.withParameter(LootParameters.DAMAGE_SOURCE, DamageSource.OUT_OF_WORLD);
+				LootContext lootContext = lootContext$Builder.create(LootParameterSets.ENTITY);
 				lootTable.getRandomItems(lootContext).forEach(player::addItem);
 			}
 		}

@@ -6,36 +6,37 @@ import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.world.entities.Eel;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.monster.Drowned;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.monster.DrownedEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ScrollEffects {
 
-    private final Player PLAYER;
+    private final PlayerEntity PLAYER;
     private int TICKS;
-    private ScrollEffects(Player player) {
+    private ScrollEffects(PlayerEntity player) {
         PLAYER = player;
     }
 
-    public static void create(Player player) {
+    public static void create(PlayerEntity player) {
         if (!player.level.isClientSide) MinecraftForge.EVENT_BUS.register(new ScrollEffects(player));
     }
 
@@ -47,17 +48,17 @@ public class ScrollEffects {
 
     private void effect() {
         final int type = (int) Math.round(7.0 * Math.random());
-        if (PLAYER instanceof ServerPlayer player)
-            AquamiraeMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ScrollMessage(type));
+        if (PLAYER instanceof ServerPlayerEntity)
+            AquamiraeMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) PLAYER), new ScrollMessage(type));
         switch (type) {
-            default -> PLAYER.drop(Items.DIAMOND.getDefaultInstance(), false);
-            case 1 -> abyss();
-            case 2 -> mimic();
-            case 3 -> MoveUp.create(PLAYER);
-            case 4 -> MoveSide.create(PLAYER);
-            case 5 -> { if (!shelter()) MoveUp.create(PLAYER); }
-            case 6 -> chakras();
-            case 7 -> Bones.create(PLAYER);
+            default : PLAYER.drop(Items.DIAMOND.getDefaultInstance(), false);
+            case 1 : abyss();
+            case 2 : mimic();
+            case 3 : MoveUp.create(PLAYER);
+            case 4 : MoveSide.create(PLAYER);
+            case 5 : { if (!shelter()) MoveUp.create(PLAYER); }
+            case 6 : chakras();
+            case 7 : Bones.create(PLAYER);
         }
     }
 
@@ -65,43 +66,44 @@ public class ScrollEffects {
         for (int ix = -1; ix <= 1; ix++)
             for (int iy = 1; iy >= -10; iy--)
                 for (int iz = -1; iz <= 1; iz++) {
-                    final BlockPos pos = new BlockPos(PLAYER.getBlockX() + ix, PLAYER.getBlockY() + iy, PLAYER.getBlockZ() + iz);
+                    final BlockPos pos = new BlockPos(PLAYER.getX() + ix, PLAYER.getY() + iy, PLAYER.getZ() + iz);
                     if (PLAYER.level.getBlockState(pos).is(AquamiraeMod.SCROLL_DESTROY)) PLAYER.level.destroyBlock(pos, true);
                 }
 
     }
 
     private void mimic() {
-        final Drowned drowned = new Drowned(EntityType.DROWNED, PLAYER.level);
-        if (PLAYER.level instanceof ServerLevel serverLevel) {
-            drowned.finalizeSpawn(serverLevel, PLAYER.level.getCurrentDifficultyAt(PLAYER.blockPosition()), MobSpawnType.EVENT, null, null);
+        final DrownedEntity drowned = new DrownedEntity(EntityType.DROWNED, PLAYER.level);
+        if (PLAYER.level instanceof ServerWorld) {
+            final ServerWorld serverLevel = (ServerWorld) PLAYER.level;
+            drowned.finalizeSpawn(serverLevel, PLAYER.level.getCurrentDifficultyAt(PLAYER.blockPosition()), SpawnReason.EVENT, null, null);
             drowned.moveTo(PLAYER.getPosition(0f));
-            drowned.setItemSlot(EquipmentSlot.HEAD, PLAYER.getItemBySlot(EquipmentSlot.HEAD));
-            drowned.setItemSlot(EquipmentSlot.CHEST, PLAYER.getItemBySlot(EquipmentSlot.CHEST));
-            drowned.setItemSlot(EquipmentSlot.LEGS, PLAYER.getItemBySlot(EquipmentSlot.LEGS));
-            drowned.setItemSlot(EquipmentSlot.FEET, PLAYER.getItemBySlot(EquipmentSlot.FEET));
-            drowned.setItemInHand(InteractionHand.MAIN_HAND, PLAYER.getItemInHand(InteractionHand.MAIN_HAND));
-            drowned.setItemInHand(InteractionHand.OFF_HAND, PLAYER.getItemInHand(InteractionHand.OFF_HAND));
-            drowned.setGuaranteedDrop(EquipmentSlot.HEAD);
-            drowned.setGuaranteedDrop(EquipmentSlot.CHEST);
-            drowned.setGuaranteedDrop(EquipmentSlot.LEGS);
-            drowned.setGuaranteedDrop(EquipmentSlot.FEET);
-            drowned.setGuaranteedDrop(EquipmentSlot.MAINHAND);
-            drowned.setGuaranteedDrop(EquipmentSlot.OFFHAND);
-            PLAYER.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-            PLAYER.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
-            PLAYER.setItemSlot(EquipmentSlot.LEGS, ItemStack.EMPTY);
-            PLAYER.setItemSlot(EquipmentSlot.FEET, ItemStack.EMPTY);
-            PLAYER.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            PLAYER.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+            drowned.setItemSlot(EquipmentSlotType.HEAD, PLAYER.getItemBySlot(EquipmentSlotType.HEAD));
+            drowned.setItemSlot(EquipmentSlotType.CHEST, PLAYER.getItemBySlot(EquipmentSlotType.CHEST));
+            drowned.setItemSlot(EquipmentSlotType.LEGS, PLAYER.getItemBySlot(EquipmentSlotType.LEGS));
+            drowned.setItemSlot(EquipmentSlotType.FEET, PLAYER.getItemBySlot(EquipmentSlotType.FEET));
+            drowned.setItemInHand(Hand.MAIN_HAND, PLAYER.getItemInHand(Hand.MAIN_HAND));
+            drowned.setItemInHand(Hand.OFF_HAND, PLAYER.getItemInHand(Hand.OFF_HAND));
+            drowned.setGuaranteedDrop(EquipmentSlotType.HEAD);
+            drowned.setGuaranteedDrop(EquipmentSlotType.CHEST);
+            drowned.setGuaranteedDrop(EquipmentSlotType.LEGS);
+            drowned.setGuaranteedDrop(EquipmentSlotType.FEET);
+            drowned.setGuaranteedDrop(EquipmentSlotType.MAINHAND);
+            drowned.setGuaranteedDrop(EquipmentSlotType.OFFHAND);
+            PLAYER.setItemSlot(EquipmentSlotType.HEAD, ItemStack.EMPTY);
+            PLAYER.setItemSlot(EquipmentSlotType.CHEST, ItemStack.EMPTY);
+            PLAYER.setItemSlot(EquipmentSlotType.LEGS, ItemStack.EMPTY);
+            PLAYER.setItemSlot(EquipmentSlotType.FEET, ItemStack.EMPTY);
+            PLAYER.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+            PLAYER.setItemInHand(Hand.OFF_HAND, ItemStack.EMPTY);
             serverLevel.addFreshEntity(drowned);
         }
     }
 
     private boolean shelter() {
-        final Vec3 center = PLAYER.getPosition(1F);
-        List<Eel> eels = PLAYER.level.getEntitiesOfClass(Eel.class, new AABB(center, center).inflate(128), e -> true).stream()
-                .sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
+        final Vector3d center = PLAYER.getPosition(1F);
+        List<Eel> eels = PLAYER.level.getEntitiesOfClass(Eel.class, new AxisAlignedBB(center, center).inflate(128), e -> true).stream()
+                .sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
         if (!eels.isEmpty()) { PLAYER.moveTo(eels.get(0).position()); return true; }
         return false;
     }
@@ -113,14 +115,14 @@ public class ScrollEffects {
 
     public static class MoveUp {
 
-        private final Player PLAYER;
+        private final PlayerEntity PLAYER;
         private int TICKS;
 
-        private MoveUp(Player player) {
+        private MoveUp(PlayerEntity player) {
             PLAYER = player;
         }
 
-        public static void create(Player player) {
+        public static void create(PlayerEntity player) {
             if (!player.level.isClientSide) MinecraftForge.EVENT_BUS.register(new MoveUp(player));
         }
 
@@ -128,22 +130,22 @@ public class ScrollEffects {
         public void tick(TickEvent.ServerTickEvent event) {
             if (event.phase != TickEvent.Phase.END) return;
             if (TICKS >= 60) MinecraftForge.EVENT_BUS.unregister(this);
-            if (TICKS == 0 || TICKS == 40) { PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(new Vec3(0, 1.5f, 0))); PLAYER.hurtMarked = true; }
-            if (TICKS == 20 || TICKS == 60) { PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(new Vec3(0, -1.0f, 0))); PLAYER.hurtMarked = true; }
+            if (TICKS == 0 || TICKS == 40) { PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(new Vector3d(0, 1.5f, 0))); PLAYER.hurtMarked = true; }
+            if (TICKS == 20 || TICKS == 60) { PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(new Vector3d(0, -1.0f, 0))); PLAYER.hurtMarked = true; }
             TICKS++;
         }
     }
 
     public static class MoveSide {
 
-        private final Player PLAYER;
+        private final PlayerEntity PLAYER;
         private int TICKS;
 
-        private MoveSide(Player player) {
+        private MoveSide(PlayerEntity player) {
             PLAYER = player;
         }
 
-        public static void create(Player player) {
+        public static void create(PlayerEntity player) {
             if (!player.level.isClientSide) MinecraftForge.EVENT_BUS.register(new MoveSide(player));
         }
 
@@ -151,10 +153,10 @@ public class ScrollEffects {
         public void tick(TickEvent.ServerTickEvent event) {
             if (event.phase != TickEvent.Phase.END) return;
             if (TICKS >= 20) MinecraftForge.EVENT_BUS.unregister(this);
-            if (TICKS == 0) { PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(new Vec3(0, 1.5f, 0))); PLAYER.hurtMarked = true; }
+            if (TICKS == 0) { PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(new Vector3d(0, 1.5f, 0))); PLAYER.hurtMarked = true; }
             if (TICKS == 20) {
-                PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(PLAYER.getPosition(1f).vectorTo(new Vec3(PLAYER.getX() +
-                        Math.cos(PLAYER.getXRot()) * 3f, PLAYER.getY() + 0.5f, PLAYER.getZ() + Math.sin(PLAYER.getXRot()) * 3f))));
+                PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(PLAYER.getPosition(1f).vectorTo(new Vector3d(PLAYER.getX() +
+                        Math.cos(PLAYER.xRot) * 3f, PLAYER.getY() + 0.5f, PLAYER.getZ() + Math.sin(PLAYER.xRot) * 3f))));
                 PLAYER.hurtMarked = true;
             }
             TICKS++;
@@ -163,15 +165,15 @@ public class ScrollEffects {
 
     public static class Bones {
 
-        private final Player PLAYER;
+        private final PlayerEntity PLAYER;
         private int TICKS;
         private int RELOAD;
 
-        private Bones(Player player) {
+        private Bones(PlayerEntity player) {
             PLAYER = player;
         }
 
-        public static void create(Player player) {
+        public static void create(PlayerEntity player) {
             if (!player.level.isClientSide) MinecraftForge.EVENT_BUS.register(new Bones(player));
         }
 

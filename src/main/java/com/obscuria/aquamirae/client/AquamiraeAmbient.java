@@ -5,6 +5,7 @@ import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +40,7 @@ public class AquamiraeAmbient {
 				player.getZ() - 6D + 12D * player.getRandom().nextDouble(), 0, 100, 0);
 	}
 
-	public static void playAmbientSounds(Player player, boolean config) {
+	public static void playAmbientSounds(PlayerEntity player, boolean config) {
 		if (config) { if (AquamiraeConfig.Client.ambientSounds.get() && Math.random() <= 0.01 && Math.random() <= 0.1)
 				player.getLevel().playLocalSound(player.getBlockX() - 10 + 20 * Math.random(), player.getBlockY(),
 						player.getBlockZ() - 10 + 20 * Math.random(),

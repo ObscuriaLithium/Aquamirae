@@ -3,35 +3,29 @@ package com.obscuria.aquamirae.world.entities.chakras;
 
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PlayMessages;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.network.FMLPlayMessages;
 
 public class PoisonedChakra extends ChakraEntity {
-	public PoisonedChakra(PlayMessages.SpawnEntity packet, Level world) {
+	public PoisonedChakra(FMLPlayMessages.SpawnEntity packet, World world) {
 		this(AquamiraeEntities.POISONED_CHAKRA.get(), world);
 	}
 
-	public PoisonedChakra(EntityType<PoisonedChakra> type, Level world) {
+	public PoisonedChakra(EntityType<PoisonedChakra> type, World world) {
 		super(type, world);
 		this.noCulling = true;
 	}
 
 	@Override public void attackChakra(LivingEntity entity) {
 		super.attackChakra(entity);
-		entity.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 1));
+		entity.addEffect(new EffectInstance(Effects.POISON, 60, 1));
 	}
 
 	@Override public float getAttackRange() {
 		return 1.3F;
-	}
-
-	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes();
 	}
 }

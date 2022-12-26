@@ -10,8 +10,18 @@ import com.obscuria.obscureapi.world.classes.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.world.World;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -25,6 +35,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,17 +43,17 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
-	public final EquipmentSlot BONUS_SLOT;
+	public final EquipmentSlotType BONUS_SLOT;
 
-	public AbyssalArmorItem(EquipmentSlot slot, Item.Properties properties) {
+	public AbyssalArmorItem(EquipmentSlotType slot, Item.Properties properties) {
 		super(new ArmorMaterial() {
 			@Override
-			public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
+			public int getDurabilityForSlot(EquipmentSlotType slot) {
 				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 40;
 			}
 
 			@Override
-			public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
+			public int getDefenseForSlot(EquipmentSlotType slot) {
 				return new int[]{2, 4, 4, 6}[slot.getIndex()];
 			}
 
@@ -52,18 +63,18 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 			}
 
 			@Override
-			public @NotNull SoundEvent getEquipSound() {
+			public SoundEvent getEquipSound() {
 				return SoundEvents.ARMOR_EQUIP_NETHERITE;
 			}
 
 			@Override
-			public @NotNull Ingredient getRepairIngredient() {
+			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
 			}
 
 			@Override
-			public @NotNull String getName() {
+			public String getName() {
 				return "abyssal";
 			}
 
@@ -93,9 +104,9 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 	}
 
 	public List<ObscureBonus> getObscureBonuses() {
-		if (this.BONUS_SLOT == EquipmentSlot.HEAD) return Collections.singletonList(BONUS_HEAD);
-		if (this.BONUS_SLOT == EquipmentSlot.CHEST) return Collections.singletonList(BONUS_CHEST);
-		if (this.BONUS_SLOT == EquipmentSlot.LEGS) return Collections.singletonList(BONUS_LEGS);
+		if (this.BONUS_SLOT == EquipmentSlotType.HEAD) return Collections.singletonList(BONUS_HEAD);
+		if (this.BONUS_SLOT == EquipmentSlotType.CHEST) return Collections.singletonList(BONUS_CHEST);
+		if (this.BONUS_SLOT == EquipmentSlotType.LEGS) return Collections.singletonList(BONUS_LEGS);
 		return Collections.singletonList(BONUS_FEET);
 	}
 
@@ -108,26 +119,26 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 	}
 
 	@Override
-	public void onArmorTick(ItemStack itemstack, Level world, Player player) {
-		final boolean HEAD = player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AbyssalArmorItem
-				|| player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AbyssalTiaraItem;
-		final boolean CHEST = player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AbyssalArmorItem;
-		final boolean LEGS = player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof AbyssalArmorItem;
-		final boolean FEET = player.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof AbyssalArmorItem;
+	public void onArmorTick(ItemStack itemstack, World world, PlayerEntity player) {
+		final boolean HEAD = player.getItemBySlot(EquipmentSlotType.HEAD).getItem() instanceof AbyssalArmorItem
+				|| player.getItemBySlot(EquipmentSlotType.HEAD).getItem() instanceof AbyssalTiaraItem;
+		final boolean CHEST = player.getItemBySlot(EquipmentSlotType.CHEST).getItem() instanceof AbyssalArmorItem;
+		final boolean LEGS = player.getItemBySlot(EquipmentSlotType.LEGS).getItem() instanceof AbyssalArmorItem;
+		final boolean FEET = player.getItemBySlot(EquipmentSlotType.FEET).getItem() instanceof AbyssalArmorItem;
 		final int TOTAL = (HEAD ? 1 : 0) + (CHEST ? 1 : 0) + (LEGS ? 1 : 0) + (FEET ? 1 : 0);
 		if (TOTAL >= 2) {
-			final MobEffectInstance EFFECT = player.getEffect(AquamiraeMobEffects.STRONG_ARMOR.get());
+			final EffectInstance EFFECT = player.getEffect(AquamiraeMobEffects.STRONG_ARMOR.get());
 			if (EFFECT != null) {
-				EFFECT.update(new MobEffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
+				EFFECT.update(new EffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
 			} else {
-				player.addEffect(new MobEffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
+				player.addEffect(new EffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
 			}
 		}
 	}
 
 	public static class Helmet extends AbyssalArmorItem {
 		public Helmet() {
-			super(EquipmentSlot.HEAD, new Item.Properties());
+			super(EquipmentSlotType.HEAD, new Item.Properties());
 		}
 
 		public void initializeClient(Consumer<IItemRenderProperties> consumer) {

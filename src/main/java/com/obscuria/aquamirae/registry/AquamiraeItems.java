@@ -10,21 +10,18 @@ import com.obscuria.aquamirae.world.items.armor.ThreeBoltArmorItem;
 import com.obscuria.aquamirae.world.items.weapon.*;
 import com.obscuria.obscureapi.registry.ObscureAPIMobEffects;
 import com.obscuria.obscureapi.world.classes.ObscureRarity;
-import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.*;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
 
 public class AquamiraeItems {
 	public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, AquamiraeMod.MODID);
@@ -76,7 +73,7 @@ public class AquamiraeItems {
 	public static final RegistryObject<Item> SHELL_HORN = REGISTRY.register("shell_horn", ShellHornItem::new);
 	public static final RegistryObject<Item> FROZEN_KEY = REGISTRY.register("frozen_key",
 			() -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB)) {
-				@Override public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
+				@Override public void fillItemCategory(ItemGroup tab, NonNullList<ItemStack> list) {
 					super.fillItemCategory(tab, list);
 					if (tab == AquamiraeMod.TAB) list.addAll(AquamiraeCreativeTab.logBooks());
 				}
@@ -86,7 +83,7 @@ public class AquamiraeItems {
 	public static final RegistryObject<Item> SWEET_LANCE = REGISTRY.register("sweet_lance", SweetLanceItem::new);
 	public static final RegistryObject<Item> SPINEFISH_SPAWN_EGG = REGISTRY.register("spinefish_spawn_egg",
 			() -> new ForgeSpawnEggItem(AquamiraeEntities.SPINEFISH,  1589067, 11451069, new Item.Properties().tab(AquamiraeMod.TAB)) {
-				@Override public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
+				@Override public void fillItemCategory(ItemGroup tab, NonNullList<ItemStack> list) {
 					super.fillItemCategory(tab, list);
 					if (tab == AquamiraeMod.TAB && AquamiraeMod.winterEvent()) list.add(SWEET_LANCE.get().getDefaultInstance());
 				}
@@ -96,14 +93,14 @@ public class AquamiraeItems {
 	public static final RegistryObject<Item> PIRATE_POUCH = REGISTRY.register("pirate_pouch", PiratePouchItem::new);
 	public static final RegistryObject<Item> TREASURE_POUCH = REGISTRY.register("treasure_pouch", TreasurePouchItem::new);
 	public static final RegistryObject<Item> MUSIC_DISC_HORIZON = REGISTRY.register("music_disc_horizon",
-			() -> new RecordItem(0, AquamiraeSounds.RECORD_HORIZON, new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1).rarity(Rarity.RARE)));
+			() -> new MusicDiscItem(0, AquamiraeSounds.RECORD_HORIZON, new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1).rarity(Rarity.RARE)));
 	public static final RegistryObject<Item> MUSIC_DISC_FORSAKEN_DROWNAGE = REGISTRY.register("music_disc_forsaken_drownage",
-			() -> new RecordItem(0, AquamiraeSounds.RECORD_FORSAKEN_DROWNAGE, new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1).rarity(ObscureRarity.MYTHIC)));
+			() -> new MusicDiscItem(0, AquamiraeSounds.RECORD_FORSAKEN_DROWNAGE, new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1).rarity(ObscureRarity.MYTHIC)));
 	public static final RegistryObject<Item> FIN = REGISTRY.register("fin", () -> new Item(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64)
-			.rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(1).saturationMod(0f).meat().build())));
+			.rarity(Rarity.COMMON).food((new Food.Builder()).nutrition(1).saturationMod(0f).meat().build())));
 	public static final RegistryObject<Item> ESCA = REGISTRY.register("esca", () -> new Item(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64)
-			.rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.2f)
-					.effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1).build())));
+			.rarity(Rarity.COMMON).food((new Food.Builder()).nutrition(6).saturationMod(0.2f)
+					.effect(() -> new EffectInstance(Effects.GLOWING, 200, 0), 1).build())));
 	public static final RegistryObject<Item> ANGLERS_FANG = REGISTRY.register("anglers_fang",
 			() -> new Item(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> ABYSSAL_AMETHYST = REGISTRY.register("abyssal_amethyst",
@@ -122,30 +119,30 @@ public class AquamiraeItems {
 	public static final RegistryObject<Item> LUMINESCENT_BUBBLE = REGISTRY.register("luminescent_bubble", LuminescentBubbleItem::new);
 	public static final RegistryObject<Item> LUMINESCENT_LAMP = block(AquamiraeBlocks.LUMINESCENT_LAMP, new Item.Properties().tab(AquamiraeMod.TAB));
 	public static final RegistryObject<Item> SEA_CASSEROLE = REGISTRY.register("sea_casserole", () -> new Item(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64)
-			.rarity(Rarity.COMMON).food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).alwaysEat()
-					.effect(() -> new MobEffectInstance(ObscureAPIMobEffects.RUSH.get(), 1800, 1), 1)
-					.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 0), 1).build())));
+			.rarity(Rarity.COMMON).food(new Food.Builder().nutrition(6).saturationMod(0.4f).alwaysEat()
+					.effect(() -> new EffectInstance(ObscureAPIMobEffects.RUSH.get(), 1800, 1), 1)
+					.effect(() -> new EffectInstance(Effects.DAMAGE_BOOST, 600, 0), 1).build())));
 	public static final RegistryObject<Item> SPINEFISH_BUCKET = REGISTRY.register("spinefish_bucket", () ->
-			new MobBucketItem(AquamiraeEntities.SPINEFISH, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH, new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1)));
+			new FishBucketItem(AquamiraeEntities.SPINEFISH, () -> Fluids.WATER, new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1)));
 	public static final RegistryObject<Item> SPINEFISH = REGISTRY.register("spinefish", () -> new SpinefishItem(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64)
-			.rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(2).saturationMod(0f).meat().build())));
+			.rarity(Rarity.COMMON).food((new Food.Builder()).nutrition(2).saturationMod(0f).meat().build())));
 	public static final RegistryObject<Item> COOKED_SPINEFISH = REGISTRY.register("cooked_spinefish",
-			() -> new SpinefishItem(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64).rarity(Rarity.COMMON).food((new FoodProperties.Builder())
+			() -> new SpinefishItem(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64).rarity(Rarity.COMMON).food((new Food.Builder())
 					.nutrition(6).saturationMod(0.4f).meat().build())));
 	public static final RegistryObject<Item> SEA_STEW = REGISTRY.register("sea_stew", () -> new StewItem(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1)
-			.rarity(Rarity.UNCOMMON).food((new FoodProperties.Builder()).nutrition(12).saturationMod(0.8f).alwaysEat()
-					.effect(() -> new MobEffectInstance(ObscureAPIMobEffects.FURY.get(), 2400, 2), 1)
-					.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 0), 1).build())));
+			.rarity(Rarity.UNCOMMON).food((new Food.Builder()).nutrition(12).saturationMod(0.8f).alwaysEat()
+					.effect(() -> new EffectInstance(ObscureAPIMobEffects.FURY.get(), 2400, 2), 1)
+					.effect(() -> new EffectInstance(Effects.DAMAGE_BOOST, 2400, 0), 1).build())));
 	public static final RegistryObject<Item> POSEIDONS_BREAKFAST = REGISTRY.register("poseidons_breakfast",
-			() -> new StewItem(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1).rarity(Rarity.EPIC).food((new FoodProperties.Builder())
+			() -> new StewItem(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(1).rarity(Rarity.EPIC).food((new Food.Builder())
 					.nutrition(20).saturationMod(1f).alwaysEat()
-					.effect(() -> new MobEffectInstance(ObscureAPIMobEffects.FURY.get(), 3600, 9), 1)
-					.effect(() -> new MobEffectInstance(ObscureAPIMobEffects.RUSH.get(), 3600, 4), 1).build())) {
-				@Override @OnlyIn(Dist.CLIENT) public boolean isFoil(@NotNull ItemStack itemstack) { return true; }});
+					.effect(() -> new EffectInstance(ObscureAPIMobEffects.FURY.get(), 3600, 9), 1)
+					.effect(() -> new EffectInstance(ObscureAPIMobEffects.RUSH.get(), 3600, 4), 1).build())) {
+				@Override @OnlyIn(Dist.CLIENT) public boolean isFoil(ItemStack itemstack) { return true; }});
 	public static final RegistryObject<Item> ELODEA = REGISTRY.register(AquamiraeBlocks.ELODEA.getId().getPath(),
 			() -> new BlockItem(AquamiraeBlocks.ELODEA.get(), new Item.Properties().tab(AquamiraeMod.TAB)) {
 				@Override
-				public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
+				public void fillItemCategory(ItemGroup tab, NonNullList<ItemStack> list) {
 					super.fillItemCategory(tab, list);
 					if (tab == AquamiraeMod.TAB) {
 						list.addAll(AquamiraeMod.LootBuilder.common());

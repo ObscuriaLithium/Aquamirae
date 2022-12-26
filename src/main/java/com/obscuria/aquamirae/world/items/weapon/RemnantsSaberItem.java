@@ -9,15 +9,14 @@ import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.world.classes.*;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.IItemTier;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.crafting.Ingredient;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.UUID;
 
 public class RemnantsSaberItem extends SwordItem implements IClassItem, IAbilityItem {
 	public RemnantsSaberItem() {
-		super(new Tier() {
+		super(new IItemTier() {
 			public int getUses() {
 				return 100;
 			}
@@ -46,7 +45,7 @@ public class RemnantsSaberItem extends SwordItem implements IClassItem, IAbility
 				return 5;
 			}
 
-			public @NotNull Ingredient getRepairIngredient() {
+			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHARP_BONES.get()),
 						new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
@@ -67,9 +66,9 @@ public class RemnantsSaberItem extends SwordItem implements IClassItem, IAbility
 		return ObscureAPI.Types.WEAPON;
 	}
 
-	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
-		if (slot == EquipmentSlot.MAINHAND) {
+		if (slot == EquipmentSlotType.MAINHAND) {
 			Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.putAll(multimap);
 			builder.put(ObscureAPIAttributes.CRITICAL_HIT.get(), new AttributeModifier(UUID.fromString("AB3F55D3-644C-4F38-A497-9C13A33DB5CF"),

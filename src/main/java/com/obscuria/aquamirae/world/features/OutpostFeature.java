@@ -3,6 +3,8 @@ package com.obscuria.aquamirae.world.features;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class OutpostFeature extends StructureFeature<JigsawConfiguration> {
+public class OutpostFeature extends Structure<NoFeatureConfig> {
 
    public static final Codec<JigsawConfiguration> CODEC = RecordCodecBuilder.create((codec) -> codec.group(
            StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(JigsawConfiguration::startPool),

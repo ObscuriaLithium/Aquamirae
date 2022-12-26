@@ -2,27 +2,26 @@ package com.obscuria.aquamirae.world.entities;
 
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.AbstractSchoolingFish;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PlayMessages;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.fish.AbstractGroupFishEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.network.FMLPlayMessages;
 
-public class LuminousJelly extends AbstractSchoolingFish implements IShipGraveyardEntity {
+public class LuminousJelly extends AbstractGroupFishEntity implements IShipGraveyardEntity {
 
-    public LuminousJelly(EntityType<? extends LuminousJelly> type, Level level) {
+    public LuminousJelly(EntityType<? extends LuminousJelly> type, World level) {
         super(type, level);
     }
 
-    public LuminousJelly(PlayMessages.SpawnEntity packet, Level level) {
+    public LuminousJelly(FMLPlayMessages.SpawnEntity packet, World level) {
         this(AquamiraeEntities.LUMINOUS_JELLY.get(), level);
     }
 
-    public @NotNull ItemStack getBucketItemStack() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(AquamiraeItems.SPINEFISH_BUCKET.get());
     }
 
@@ -34,11 +33,11 @@ public class LuminousJelly extends AbstractSchoolingFish implements IShipGraveya
         return SoundEvents.COD_DEATH;
     }
 
-    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.COD_HURT;
     }
 
-    protected @NotNull SoundEvent getFlopSound() {
+    protected SoundEvent getFlopSound() {
         return SoundEvents.COD_FLOP;
     }
 }

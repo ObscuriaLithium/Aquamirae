@@ -5,16 +5,15 @@ import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.world.classes.*;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
 
 import java.util.Collections;
 import java.util.List;
 
 public class FinCutterItem extends SwordItem implements IClassItem, IAbilityItem {
 	public FinCutterItem() {
-		super(new Tier() {
+		super(new IItemTier() {
 			public int getUses() {
 				return 1000;
 			}
@@ -35,7 +34,7 @@ public class FinCutterItem extends SwordItem implements IClassItem, IAbilityItem
 				return 20;
 			}
 
-			public @NotNull Ingredient getRepairIngredient() {
+			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(Items.DIAMOND), new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
 		}, 3, -2f, new Item.Properties().tab(AquamiraeMod.TAB));

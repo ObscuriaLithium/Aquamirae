@@ -13,6 +13,11 @@ import com.obscuria.obscureapi.client.animations.IHekateProvider;
 import com.obscuria.obscureapi.utils.TextHelper;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -25,6 +30,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.World;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -47,6 +53,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +61,7 @@ import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IHekateProvider {
+public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEntity, IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
 	private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(CaptainCornelia.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> REGENERATION = SynchedEntityData.defineId(CaptainCornelia.class,
@@ -63,11 +70,11 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 			.withStyle(Style.EMPTY.withFont(new ResourceLocation(AquamiraeMod.MODID, "bossbars"))) : this.getDisplayName(),
 			ServerBossEvent.BossBarColor.BLUE, ServerBossEvent.BossBarOverlay.PROGRESS);
 
-	public CaptainCornelia(PlayMessages.SpawnEntity packet, Level world) {
+	public CaptainCornelia(FMLPlayMessages.SpawnEntity packet, World world) {
 		this(AquamiraeEntities.CAPTAIN_CORNELIA.get(), world);
 	}
 
-	public CaptainCornelia(EntityType<CaptainCornelia> type, Level world) {
+	public CaptainCornelia(EntityType<CaptainCornelia> type, World world) {
 		super(type, world);
 		xpReward = 100;
 		setPersistenceRequired();
@@ -295,8 +302,8 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 		this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
 	}
 
-	public static AttributeSupplier.@NotNull Builder createAttributes() {
-		return Mob.createMobAttributes()
+	public static AttributeModifierMap.MutableAttribute createAttributes() {
+		return MobEntity.createMobAttributes()
 				.add(Attributes.MOVEMENT_SPEED, AquamiraeConfig.DEFAULT_CORNELIA_MOVEMENT_SPEED)
 				.add(Attributes.MAX_HEALTH, AquamiraeConfig.DEFAULT_CORNELIA_MAX_HEALTH)
 				.add(Attributes.ARMOR, AquamiraeConfig.DEFAULT_CORNELIA_ARMOR)

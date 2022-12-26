@@ -3,6 +3,8 @@ package com.obscuria.aquamirae.world.blocks;
 
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
+import net.minecraft.block.Block;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -50,7 +52,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
+public class OxygeliumBlock extends Block implements IWaterLoggable {
 	public static final EnumProperty<OxygeliumBlock.Type> TYPE = EnumProperty.create("type", OxygeliumBlock.Type.class);
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 

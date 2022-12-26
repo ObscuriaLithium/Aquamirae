@@ -7,11 +7,18 @@ import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.utils.EventHelper;
 import com.obscuria.obscureapi.utils.TextHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.World;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -36,6 +43,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,15 +52,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class MazeMother extends Monster implements IShipGraveyardEntity {
-	public MazeMother(PlayMessages.SpawnEntity packet, Level world) {
+public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
+	public MazeMother(FMLPlayMessages.SpawnEntity packet, World world) {
 		this(AquamiraeEntities.MAZE_MOTHER.get(), world);
 	}
 
-	public MazeMother(EntityType<MazeMother> type, Level world) {
+	public MazeMother(EntityType<MazeMother> type, World world) {
 		super(type, world);
 		xpReward = 6;
-		this.setPathfindingMalus(BlockPathTypes.WATER, 0);
+		this.setPathfindingMalus(PathNodeType.WATER, 0);
 		this.moveControl = new MoveControl(this) {
 			@Override
 			public void tick() {
@@ -202,8 +210,8 @@ public class MazeMother extends Monster implements IShipGraveyardEntity {
 		return false;
 	}
 
-	public static AttributeSupplier.@NotNull Builder createAttributes() {
-		return Mob.createMobAttributes()
+	public static AttributeModifierMap.MutableAttribute createAttributes() {
+		return MobEntity.createMobAttributes()
 				.add(ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.DEFAULT_MOTHER_SWIM_SPEED)
 				.add(Attributes.MAX_HEALTH, AquamiraeConfig.DEFAULT_MOTHER_MAX_HEALTH)
 				.add(Attributes.ARMOR, AquamiraeConfig.DEFAULT_MOTHER_ARMOR)

@@ -4,17 +4,16 @@ package com.obscuria.aquamirae.world.items;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.world.blocks.WisteriaNiveisBlock;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Rarity;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 
 public class WisteriaNiveisItem extends Item {
 	public WisteriaNiveisItem() {
@@ -22,16 +21,16 @@ public class WisteriaNiveisItem extends Item {
 	}
 
 	@Override
-	public @NotNull InteractionResult useOn(UseOnContext context) {
+	public ActionResultType useOn(ItemUseContext context) {
 		final BlockPos pos = context.getClickedPos();
-		if (context.getClickedFace() == Direction.UP && AquamiraeBlocks.WISTERIA_NIVEIS.get() instanceof WisteriaNiveisBlock wisteriaBlock &&
-				wisteriaBlock.canBePlacedOn(context.getLevel(), pos)) {
-			context.getLevel().playSound(context.getPlayer(), context.getClickedPos(), SoundEvents.WEEPING_VINES_PLACE, SoundSource.BLOCKS, 1F, 1F);
+		if (context.getClickedFace() == Direction.UP && AquamiraeBlocks.WISTERIA_NIVEIS.get() instanceof WisteriaNiveisBlock &&
+				((WisteriaNiveisBlock)AquamiraeBlocks.WISTERIA_NIVEIS.get()).canBePlacedOn(context.getLevel(), pos)) {
+			context.getLevel().playSound(context.getPlayer(), context.getClickedPos(), SoundEvents.WEEPING_VINES_PLACE, SoundCategory.BLOCKS, 1F, 1F);
 			context.getLevel().setBlock(pos.above(), AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState()
 					.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER).setValue(WisteriaNiveisBlock.LOOT, false), 3);
 			context.getItemInHand().shrink(1);
-			return InteractionResult.SUCCESS;
+			return ActionResultType.SUCCESS;
 		}
-		return InteractionResult.FAIL;
+		return ActionResultType.FAIL;
 	}
 }

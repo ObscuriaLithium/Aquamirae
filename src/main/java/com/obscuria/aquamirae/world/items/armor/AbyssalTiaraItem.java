@@ -11,8 +11,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.world.World;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -31,15 +38,15 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
-	public AbyssalTiaraItem(EquipmentSlot slot, Item.Properties properties) {
+	public AbyssalTiaraItem(EquipmentSlotType slot, Item.Properties properties) {
 		super(new ArmorMaterial() {
 			@Override
-			public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
+			public int getDurabilityForSlot(EquipmentSlotType slot) {
 				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 40;
 			}
 
 			@Override
-			public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
+			public int getDefenseForSlot(EquipmentSlotType slot) {
 				return new int[]{3, 6, 8, 2}[slot.getIndex()];
 			}
 
@@ -49,18 +56,18 @@ public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, 
 			}
 
 			@Override
-			public @NotNull SoundEvent getEquipSound() {
+			public SoundEvent getEquipSound() {
 				return SoundEvents.ARMOR_EQUIP_NETHERITE;
 			}
 
 			@Override
-			public @NotNull Ingredient getRepairIngredient() {
+			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
 			}
 
 			@Override
-			public @NotNull String getName() {
+			public String getName() {
 				return "abyssal_extra";
 			}
 
@@ -98,7 +105,7 @@ public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, 
 	}
 
 	@Override
-	public void onArmorTick(ItemStack itemstack, Level world, Player entity) {
+	public void onArmorTick(ItemStack itemstack, World world, PlayerEntity entity) {
 		if (entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AbyssalArmorItem
 				&& entity.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof AbyssalArmorItem
 				&& entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof AbyssalArmorItem) {

@@ -2,17 +2,15 @@
 package com.obscuria.aquamirae.world.items;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.blocks.OxygeliumBlock;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.world.blocks.OxygeliumBlock;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Rarity;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 
 public class OxygeliumItem extends Item {
 	public OxygeliumItem() {
@@ -20,7 +18,7 @@ public class OxygeliumItem extends Item {
 	}
 
 	@Override
-	public @NotNull InteractionResult useOn(UseOnContext context) {
+	public ActionResultType useOn(ItemUseContext context) {
 		if (context.getClickedFace() == Direction.UP) {
 			if (context.getLevel().getBlockState(context.getClickedPos()).getMaterial().isSolid() &&
 					context.getLevel().getBlockState(new BlockPos(context.getClickedPos().getX(), context.getClickedPos().getY() + 1,
@@ -30,7 +28,7 @@ public class OxygeliumItem extends Item {
 						AquamiraeBlocks.OXYGELIUM.get().defaultBlockState().setValue(OxygeliumBlock.TYPE, OxygeliumBlock.Type.EMPTY_BUD)
 								.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
 				context.getItemInHand().shrink(1);
-				return InteractionResult.SUCCESS;
+				return ActionResultType.SUCCESS;
 			}
 			if (context.getLevel()
 					.getBlockState(new BlockPos(context.getClickedPos().getX(), context.getClickedPos().getY() + 1, context.getClickedPos().getZ()))
@@ -44,9 +42,9 @@ public class OxygeliumItem extends Item {
 						AquamiraeBlocks.OXYGELIUM.get().defaultBlockState().setValue(OxygeliumBlock.TYPE, OxygeliumBlock.Type.EMPTY_BUD)
 								.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
 				context.getItemInHand().shrink(1);
-				return InteractionResult.SUCCESS;
+				return ActionResultType.SUCCESS;
 			}
 		}
-		return InteractionResult.FAIL;
+		return ActionResultType.FAIL;
 	}
 }

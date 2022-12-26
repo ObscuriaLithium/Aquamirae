@@ -4,19 +4,18 @@ package com.obscuria.aquamirae.world.items.weapon;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.world.classes.*;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
+import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.Random;
 
 public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbilityItem {
 	public DaggerOfGreedItem() {
-		super(new Tier() {
+		super(new IItemTier() {
 			public int getUses() {
 				return 100;
 			}
@@ -45,7 +44,7 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 				return 30;
 			}
 
-			public @NotNull Ingredient getRepairIngredient() {
+			public Ingredient getRepairIngredient() {
 				return Ingredient.EMPTY;
 			}
 		}, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB));
@@ -67,18 +66,18 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 		return ObscureAPI.Types.WEAPON;
 	}
 
-	public void inventoryTick(ItemStack stack, @NotNull Level level, @NotNull Entity entity, int i, boolean flag) {
+	public void inventoryTick(ItemStack stack, World level, Entity entity, int i, boolean flag) {
 		if (stack.getDamageValue() != stack.getOrCreateTag().getInt("DamageValue"))
 			stack.setDamageValue(stack.getOrCreateTag().getInt("DamageValue"));
 	}
 
 	@Override
-	public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
+	public boolean hurtEnemy(ItemStack stack,  LivingEntity entity, LivingEntity source) {
 		final boolean hurt = super.hurtEnemy(stack, entity, source);
-		final Level level = entity.getLevel();
+		final World level = entity.level;
 		if (level.isClientSide()) return hurt;
 		stack.getOrCreateTag().putInt("DamageValue", stack.getOrCreateTag().getInt("DamageValue") + 1);
-		if (entity instanceof AbstractVillager || entity instanceof AbstractIllager) {
+		if (entity instanceof AbstractVillagerEntity || entity instanceof AbstractIllagerEntity) {
 			ItemEntity emerald = new ItemEntity(level, entity.getX(), entity.getY() + entity.getBbHeight() / 2.0, entity.getZ(),
 					new ItemStack(Items.EMERALD));
 			emerald.setPickUpDelay(10);
@@ -89,15 +88,15 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 				emeralds.setPickUpDelay(10);
 				level.addFreshEntity(emeralds);
 			}
-			if (entity instanceof AbstractVillager && new Random().nextInt(0, 20) == 20)
-				source.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 24000, 0));
+			if (entity instanceof AbstractVillagerEntity && new Random().nextInt(0, 20) == 20)
+				source.addEffect(new EffectInstance(Effects.BAD_OMEN, 24000, 0));
 		}
 		return hurt;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isFoil(@NotNull ItemStack itemstack) {
+	public boolean isFoil(ItemStack itemstack) {
 		return true;
 	}
 }
