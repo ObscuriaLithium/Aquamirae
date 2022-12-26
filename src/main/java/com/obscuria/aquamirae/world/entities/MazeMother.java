@@ -6,51 +6,43 @@ import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.utils.EventHelper;
 import com.obscuria.obscureapi.utils.TextHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
+import net.minecraft.pathfinding.SwimmerPathNavigator;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.network.PlayMessages;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 	public MazeMother(FMLPlayMessages.SpawnEntity packet, World world) {
@@ -61,26 +53,26 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		super(type, world);
 		xpReward = 6;
 		this.setPathfindingMalus(PathNodeType.WATER, 0);
-		this.moveControl = new MoveControl(this) {
+		this.moveControl = new MovementController(this) {
 			@Override
 			public void tick() {
 				if (MazeMother.this.isInWater())
 					MazeMother.this.setDeltaMovement(MazeMother.this.getDeltaMovement().add(0, 0.005, 0));
-				if (this.operation == MoveControl.Operation.MOVE_TO && !MazeMother.this.getNavigation().isDone()) {
+				if (this.operation == MovementController.Action.MOVE_TO && !MazeMother.this.getNavigation().isDone()) {
 					double dx = this.wantedX - MazeMother.this.getX();
 					double dy = this.wantedY - MazeMother.this.getY();
 					double dz = this.wantedZ - MazeMother.this.getZ();
-					float f = (float) (Mth.atan2(dz, dx) * (180 / Math.PI)) - 90;
+					float f = (float) (MathHelper.atan2(dz, dx) * (180 / Math.PI)) - 90;
 					float f1 = (float) (this.speedModifier * Objects.requireNonNull(MazeMother.this.getAttribute(Attributes.MOVEMENT_SPEED)).getValue());
-					MazeMother.this.setYRot(this.rotlerp(MazeMother.this.getYRot(), f, 10));
-					MazeMother.this.yBodyRot = MazeMother.this.getYRot();
-					MazeMother.this.yHeadRot = MazeMother.this.getYRot();
+					MazeMother.this.yRot = (this.rotlerp(MazeMother.this.yRot, f, 10));
+					MazeMother.this.yBodyRot = MazeMother.this.yRot;
+					MazeMother.this.yHeadRot = MazeMother.this.yRot;
 					if (MazeMother.this.isInWater()) {
 						MazeMother.this.setSpeed((float) Objects.requireNonNull(MazeMother.this.getAttribute(Attributes.MOVEMENT_SPEED)).getValue());
-						float f2 = -(float) (Mth.atan2(dy, (float) Math.sqrt(dx * dx + dz * dz)) * (180 / Math.PI));
-						f2 = Mth.clamp(Mth.wrapDegrees(f2), -85, 85);
-						MazeMother.this.setXRot(this.rotlerp(MazeMother.this.getXRot(), f2, 5));
-						float f3 = Mth.cos(MazeMother.this.getXRot() * (float) (Math.PI / 180.0));
+						float f2 = -(float) (MathHelper.atan2(dy, (float) Math.sqrt(dx * dx + dz * dz)) * (180 / Math.PI));
+						f2 = MathHelper.clamp(MathHelper.wrapDegrees(f2), -85, 85);
+						MazeMother.this.xRot = (this.rotlerp(MazeMother.this.xRot, f2, 5));
+						float f3 = MathHelper.cos(MazeMother.this.xRot * (float) (Math.PI / 180.0));
 						MazeMother.this.setZza(f3 * f1);
 						MazeMother.this.setYya((float) (f1 * dy));
 					} else {
@@ -95,7 +87,7 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		};
 	}
 
-	@Override public @NotNull AABB getBoundingBoxForCulling() {
+	@Override public AxisAlignedBB getBoundingBoxForCulling() {
 		return super.getBoundingBoxForCulling().inflate(10F);
 	}
 
@@ -103,26 +95,26 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		return distance > 200;
 	}
 
-	@Override protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
-		return new WaterBoundPathNavigation(this, world);
+	@Override protected PathNavigator createNavigation(World world) {
+		return new SwimmerPathNavigator(this, world);
 	}
 
 	@Override protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false) {
-			@Override protected double getAttackReachSqr(@NotNull LivingEntity entity) {
+			@Override protected double getAttackReachSqr(LivingEntity entity) {
 				return 44.0;
 			}
 		});
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
-		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
-		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false, false));
+		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractIllagerEntity.class, false, false));
+		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false, false));
 		this.goalSelector.addGoal(6, new RandomSwimmingGoal(this, 1, 40));
 	}
 
-	@Override public @NotNull MobType getMobType() {
-		return MobType.WATER;
+	@Override public CreatureAttribute getMobType() {
+		return CreatureAttribute.WATER;
 	}
 
 	@Override public double getPassengersRidingOffset() {
@@ -133,7 +125,7 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		return SoundEvents.ELDER_GUARDIAN_AMBIENT;
 	}
 
-	@Override public SoundEvent getHurtSound(@NotNull DamageSource source) {
+	@Override public SoundEvent getHurtSound(DamageSource source) {
 		return SoundEvents.ELDER_GUARDIAN_HURT;
 	}
 
@@ -141,12 +133,12 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		return SoundEvents.ELDER_GUARDIAN_DEATH;
 	}
 
-	@Override public boolean hurt(@NotNull DamageSource source, float amount) {
+	@Override public boolean hurt(DamageSource source, float amount) {
 		if (source == DamageSource.DROWN) return false;
 		return super.hurt(source, amount);
 	}
 
-	@Override public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
+	@Override public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
 		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.motherSwimSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.motherMaxHealth.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.motherArmor.get());
@@ -154,18 +146,18 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		AquamiraeMod.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.motherFollowRange.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
-		final Vec3 center = this.getPosition(1F);
-		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
-				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
+		final Vector3d center = this.getPosition(1F);
+		List<PlayerEntity> players = this.level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(center, center).inflate(100), e -> true).stream()
+				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
 		if (AquamiraeConfig.Common.notifications.get()) players.forEach(player -> EventHelper.sendMessage(player,
 				TextHelper.translation("icon.info") + TextHelper.translation("info.maze_mother_spawn")));
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 
 	@Override protected void updateNoActionTime() {
-		final Vec3 center = this.getPosition(1F);
-		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(128), e -> true).stream()
-				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
+		final Vector3d center = this.getPosition(1F);
+		List<PlayerEntity> players = this.level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(center, center).inflate(128), e -> true).stream()
+				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
 		if (!players.isEmpty()) this.setNoActionTime(0);
 		super.updateNoActionTime();
 	}
@@ -187,7 +179,7 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 	private void breakIce(int offset) {
 		for (int ix = -6; ix <= 6; ix++)
 			for (int iz = -6; iz <= 6; iz++) {
-				final BlockPos pos = new BlockPos(this.getBlockX() + ix, this.getBlockY() + offset, this.getBlockZ() + iz);
+				final BlockPos pos = new BlockPos(this.getX() + ix, this.getY() + offset, this.getZ() + iz);
 				if (this.level.getBlockState(pos.above()).getMaterial() == Material.AIR && this.level.getBlockState(pos).is(AquamiraeMod.MAZE_MOTHER_DESTROY)) {
 					if (this.random.nextBoolean())
 						if (this.level.getBlockState(pos).is(Blocks.ICE) || this.level.getBlockState(pos).is(Blocks.FROSTED_ICE)) {
@@ -202,7 +194,8 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		return true;
 	}
 
-	@Override public boolean checkSpawnObstruction(@NotNull LevelReader world) {
+	@Override
+	public boolean checkSpawnObstruction(IWorldReader world) {
 		return world.isUnobstructed(this);
 	}
 

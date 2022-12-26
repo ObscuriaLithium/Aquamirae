@@ -8,51 +8,43 @@ import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.client.animations.HekateLib;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
 import com.obscuria.obscureapi.client.animations.IHekateProvider;
-import net.minecraft.core.BlockPos;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.network.PlayMessages;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
 public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
-	private static final EntityDataAccessor<Integer> MOVE_COOLDOWN = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Float> POS_X = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
-	private static final EntityDataAccessor<Float> POS_Y = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
-	private static final EntityDataAccessor<Float> POS_Z = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
-	private static final EntityDataAccessor<Integer> HIT_SERIES = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Float> SCALE = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
-	private static final EntityDataAccessor<Float> SCALE_SPEED = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
+	private static final DataParameter<Integer> MOVE_COOLDOWN = EntityDataManager.defineId(Eel.class, DataSerializers.INT);
+	private static final DataParameter<Float> POS_X = EntityDataManager.defineId(Eel.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> POS_Y = EntityDataManager.defineId(Eel.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> POS_Z = EntityDataManager.defineId(Eel.class, DataSerializers.FLOAT);
+	private static final DataParameter<Integer> HIT_SERIES = EntityDataManager.defineId(Eel.class, DataSerializers.INT);
+	private static final DataParameter<Float> SCALE = EntityDataManager.defineId(Eel.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SCALE_SPEED = EntityDataManager.defineId(Eel.class, DataSerializers.FLOAT);
 
 	public Eel(FMLPlayMessages.SpawnEntity packet, World world) {
 		this(AquamiraeEntities.EEL.get(), world);
@@ -64,16 +56,16 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		setPersistenceRequired();
 	}
 
-	@Override public @NotNull AABB getBoundingBoxForCulling() {
+	@Override public AxisAlignedBB getBoundingBoxForCulling() {
 		return super.getBoundingBoxForCulling().inflate(2F);
 	}
 
 	@Override protected void registerGoals() {
 		super.registerGoals();
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false, false));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractIllagerEntity.class, false, false));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false, false));
 	}
 
 	@Override protected void defineSynchedData() {
@@ -87,9 +79,9 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		this.getEntityData().define(SCALE_SPEED, 0.1F);
 	}
 
-	@Override public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+	@Override public void addAdditionalSaveData(CompoundNBT tag) {
 		super.addAdditionalSaveData(tag);
-		CompoundTag data = new CompoundTag();
+		CompoundNBT data = new CompoundNBT();
 		data.putInt("MoveCooldown", this.getEntityData().get(MOVE_COOLDOWN));
 		data.putInt("Hits", this.getEntityData().get(HIT_SERIES));
 		data.putFloat("Scale", this.getEntityData().get(SCALE));
@@ -101,9 +93,9 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 	}
 
 	@Override
-	public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+	public void readAdditionalSaveData(CompoundNBT tag) {
 		super.readAdditionalSaveData(tag);
-		CompoundTag data = tag.getCompound("EelData");
+		CompoundNBT data = tag.getCompound("EelData");
 		this.getEntityData().set(MOVE_COOLDOWN, data.getInt("MoveCooldown"));
 		this.getEntityData().set(HIT_SERIES, data.getInt("Hits"));
 		this.getEntityData().set(SCALE, data.getFloat("Scale"));
@@ -139,7 +131,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 			if (this.getTarget() != null) {
 				final LivingEntity target = this.getTarget();
 				final double distance = this.distanceToSqr(target);
-				this.lookControl.setLookAt(target);
+				this.lookControl.setLookAt(target.getPosition(1F));
 				//ATTACK
 				if (this.getEntityData().get(HIT_SERIES) <= 0 && distance <= 30 && random.nextInt(60) == 1) {
 					this.getEntityData().set(HIT_SERIES, new Random().nextInt(1, 3));
@@ -155,22 +147,21 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 					if (target.getHealth() < hp) this.heal((hp - target.getHealth()) * 2);
 				}
 				//KNOCKBACK
-				if (!target.getLevel().isClientSide() && ANIMATIONS.isPlaying("roar") && ANIMATIONS.getTick("roar") <= 40) {
+				if (!target.level.isClientSide() && ANIMATIONS.isPlaying("roar") && ANIMATIONS.getTick("roar") <= 40) {
 					if (distance < 150) {
-						final Vec3 thisVec = new Vec3(this.getX(), this.getY(), this.getZ());
-						final Vec3 targetVec = new Vec3(target.getX(), target.getY(), target.getZ());
-						final Vec3 targetDelta = target.getDeltaMovement();
-						final Vec3 roarVec = thisVec.vectorTo(targetVec).scale(0.07).scale(Math.max(0, 1.0 - distance / 150.0));
+						final Vector3d thisVec = new Vector3d(this.getX(), this.getY(), this.getZ());
+						final Vector3d targetVec = new Vector3d(target.getX(), target.getY(), target.getZ());
+						final Vector3d targetDelta = target.getDeltaMovement();
+						final Vector3d roarVec = thisVec.vectorTo(targetVec).scale(0.07).scale(Math.max(0, 1.0 - distance / 150.0));
 						target.setDeltaMovement(targetDelta.x + roarVec.x, targetDelta.y, targetDelta.z + roarVec.z);
-						if (target instanceof Player player)
-							player.hurtMarked = true;
+						if (target instanceof PlayerEntity) target.hurtMarked = true;
 					}
-					if (target instanceof Mob mob) mob.setTarget(this);
+					if (target instanceof MobEntity) ((MobEntity)target).setTarget(this);
 				}
 			}
 			//MOVE
 			if (!ANIMATIONS.isPlaying("attack") && !ANIMATIONS.isPlaying("roar") && moveCooldown < 0) {
-				final Vec3 pos = this.getTarget() != null && this.distanceToSqr(this.getTarget()) > 40 ? this.targetEelMove() : this.randomEelMove();
+				final Vector3d pos = this.getTarget() != null && this.distanceToSqr(this.getTarget()) > 40 ? this.targetEelMove() : this.randomEelMove();
 				if (pos.y() == 0) {
 					this.getEntityData().set(MOVE_COOLDOWN, 2);
 				} else {
@@ -186,52 +177,52 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 			if (!ANIMATIONS.isPlaying("rareIdle") && random.nextInt(80) == 1)
 				ANIMATIONS.play("rareIdle", random.nextInt(80, 160));
 		}
-		ANIMATIONS.playSound("attack", 20, "aquamirae:entity.eel.bite", SoundSource.HOSTILE, 2F, 1F);
-		ANIMATIONS.playSound("roar", 52, "aquamirae:entity.eel.roar", SoundSource.HOSTILE, 2F, 1F);
+		ANIMATIONS.playSound("attack", 20, "aquamirae:entity.eel.bite", SoundCategory.HOSTILE, 2F, 1F);
+		ANIMATIONS.playSound("roar", 52, "aquamirae:entity.eel.roar", SoundCategory.HOSTILE, 2F, 1F);
 
 		super.baseTick();
 	}
 
-	public Vec3 randomEelMove() {
-		final int x = this.getBlockX() + random.nextInt(5, 16) * (Math.random() > 0.5 ? -1 : 1);
-		final int z = this.getBlockZ() + random.nextInt(5, 16) * (Math.random() > 0.5 ? -1 : 1);
+	public Vector3d randomEelMove() {
+		final int x = this.blockPosition().getX() + random.nextInt(5, 16) * (Math.random() > 0.5 ? -1 : 1);
+		final int z = this.blockPosition().getZ() + random.nextInt(5, 16) * (Math.random() > 0.5 ? -1 : 1);
 		for (int i = -8; i < 8; i++)
-			if (checkGround(x, this.getBlockY() - i, z) && checkSpace(x, this.getBlockY() - i + 1, z) && checkSpace(x, this.getBlockY() - i + 2, z)
-					&& checkSpace(x, this.getBlockY() - i + 3, z) && checkSpace(x, this.getBlockY() - i + 4, z))
-				return new Vec3(x + 0.5, this.getBlockY() - i + 1.0, z + 0.5);
-		return Vec3.ZERO;
+			if (checkGround(x, this.blockPosition().getY() - i, z) && checkSpace(x, this.blockPosition().getY()- i + 1, z) && checkSpace(x, this.blockPosition().getY() - i + 2, z)
+					&& checkSpace(x, this.blockPosition().getY() - i + 3, z) && checkSpace(x, this.blockPosition().getY() - i + 4, z))
+				return new Vector3d(x + 0.5, this.blockPosition().getY()- i + 1.0, z + 0.5);
+		return Vector3d.ZERO;
 	}
 
-	public Vec3 targetEelMove() {
-		if (this.getTarget() == null) return Vec3.ZERO;
-		final int x = this.getTarget().getBlockX() + random.nextInt(-3, 3);
-		final int z = this.getTarget().getBlockZ() + random.nextInt(-3, 3);
+	public Vector3d targetEelMove() {
+		if (this.getTarget() == null) return Vector3d.ZERO;
+		final int x = this.getTarget().blockPosition().getX() + random.nextInt(-3, 3);
+		final int z = this.getTarget().blockPosition().getZ() + random.nextInt(-3, 3);
 		for (int i = -4; i < 4; i++)
-			if (checkGround(x, this.getBlockY() - i, z) && checkSpace(x, this.getBlockY() - i + 1, z) && checkSpace(x, this.getBlockY() - i + 2, z)
-					&& checkSpace(x, this.getBlockY() - i + 3, z) && checkSpace(x, this.getBlockY() - i + 4, z))
-				return new Vec3(x + 0.5, this.getBlockY() - i + 1.0, z + 0.5);
-		return Vec3.ZERO;
+			if (checkGround(x, this.blockPosition().getY() - i, z) && checkSpace(x, this.blockPosition().getY() - i + 1, z) && checkSpace(x, this.blockPosition().getY() - i + 2, z)
+					&& checkSpace(x, this.blockPosition().getY() - i + 3, z) && checkSpace(x, this.blockPosition().getY() - i + 4, z))
+				return new Vector3d(x + 0.5, this.blockPosition().getY()- i + 1.0, z + 0.5);
+		return Vector3d.ZERO;
 	}
 
 	public boolean checkGround(int x, int y, int z) {
-		return this.getLevel().getBlockState(new BlockPos(x, y, z)).is(AquamiraeMod.EEL_MOVE)
-				&& this.getLevel().getBlockState(new BlockPos(x + 1, y, z)).is(AquamiraeMod.EEL_MOVE)
-				&& this.getLevel().getBlockState(new BlockPos(x - 1, y, z)).is(AquamiraeMod.EEL_MOVE)
-				&& this.getLevel().getBlockState(new BlockPos(x, y, z + 1)).is(AquamiraeMod.EEL_MOVE)
-				&& this.getLevel().getBlockState(new BlockPos(x, y, z - 1)).is(AquamiraeMod.EEL_MOVE);
+		return this.level.getBlockState(new BlockPos(x, y, z)).is(AquamiraeMod.EEL_MOVE)
+				&& this.level.getBlockState(new BlockPos(x + 1, y, z)).is(AquamiraeMod.EEL_MOVE)
+				&& this.level.getBlockState(new BlockPos(x - 1, y, z)).is(AquamiraeMod.EEL_MOVE)
+				&& this.level.getBlockState(new BlockPos(x, y, z + 1)).is(AquamiraeMod.EEL_MOVE)
+				&& this.level.getBlockState(new BlockPos(x, y, z - 1)).is(AquamiraeMod.EEL_MOVE);
 	}
 
 	public boolean checkSpace(int x, int y, int z) {
-		return this.getLevel().isEmptyBlock(new BlockPos(x, y, z)) && this.getLevel().isEmptyBlock(new BlockPos(x + 1, y, z))
-				&& this.getLevel().isEmptyBlock(new BlockPos(x - 1, y, z)) && this.getLevel().isEmptyBlock(new BlockPos(x, y, z + 1))
-				&& this.getLevel().isEmptyBlock(new BlockPos(x, y, z - 1)) && this.getLevel().isEmptyBlock(new BlockPos(x + 1, y, z + 1))
-				&& this.getLevel().isEmptyBlock(new BlockPos(x - 1, y, z - 1)) && this.getLevel().isEmptyBlock(new BlockPos(x + 1, y, z - 1))
-				&& this.getLevel().isEmptyBlock(new BlockPos(x - 1, y, z + 1));
+		return this.level.isEmptyBlock(new BlockPos(x, y, z)) && this.level.isEmptyBlock(new BlockPos(x + 1, y, z))
+				&& this.level.isEmptyBlock(new BlockPos(x - 1, y, z)) && this.level.isEmptyBlock(new BlockPos(x, y, z + 1))
+				&& this.level.isEmptyBlock(new BlockPos(x, y, z - 1)) && this.level.isEmptyBlock(new BlockPos(x + 1, y, z + 1))
+				&& this.level.isEmptyBlock(new BlockPos(x - 1, y, z - 1)) && this.level.isEmptyBlock(new BlockPos(x + 1, y, z - 1))
+				&& this.level.isEmptyBlock(new BlockPos(x - 1, y, z + 1));
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason,
-										@Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
+	public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason,
+										   @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
 		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.eelMaxHealth.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.eelArmor.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.eelAttackDamage.get());
@@ -247,8 +238,8 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 	@Override public void push(double d1, double d2, double d3) {
 	}
 
-	@Override public @NotNull MobType getMobType() {
-		return MobType.UNDEFINED;
+	@Override public CreatureAttribute getMobType() {
+		return CreatureAttribute.UNDEFINED;
 	}
 
 	@Override public boolean removeWhenFarAway(double distanceToClosestPlayer) {
@@ -259,7 +250,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		return AquamiraeSounds.ENTITY_DEEP_AMBIENT.get();
 	}
 
-	@Override public SoundEvent getHurtSound(@NotNull DamageSource source) {
+	@Override public SoundEvent getHurtSound(DamageSource source) {
 		return AquamiraeSounds.ENTITY_DEEP_HURT.get();
 	}
 
@@ -267,9 +258,9 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		return AquamiraeSounds.ENTITY_DEEP_DEATH.get();
 	}
 
-	@Override public boolean hurt(@NotNull DamageSource source, float amount) {
+	@Override public boolean hurt(DamageSource source, float amount) {
 		if (ANIMATIONS.isPlaying("move")) return false;
-		if (source.getDirectEntity() instanceof AbstractArrow) return false;
+		if (source.getDirectEntity() instanceof AbstractArrowEntity) return false;
 		if (source == DamageSource.FALL || source == DamageSource.CACTUS || source == DamageSource.DROWN) return false;
 		return super.hurt(source, amount);
 	}

@@ -14,12 +14,23 @@ import com.obscuria.obscureapi.utils.TextHelper;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -29,6 +40,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Style;
+import net.minecraft.world.BossInfo;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.damagesource.DamageSource;
@@ -53,6 +67,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.server.ServerBossInfo;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
@@ -63,12 +78,12 @@ import java.util.List;
 
 public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEntity, IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
-	private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(CaptainCornelia.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> REGENERATION = SynchedEntityData.defineId(CaptainCornelia.class,
-			EntityDataSerializers.INT);
-	private final ServerBossEvent bossInfo = new ServerBossEvent(AquamiraeConfig.Common.stylizedBossbar.get() ? TextHelper.component("1")
-			.withStyle(Style.EMPTY.withFont(new ResourceLocation(AquamiraeMod.MODID, "bossbars"))) : this.getDisplayName(),
-			ServerBossEvent.BossBarColor.BLUE, ServerBossEvent.BossBarOverlay.PROGRESS);
+	private static final DataParameter<Integer> ATTACK = EntityDataManager.defineId(CaptainCornelia.class, DataSerializers.INT);
+	private static final DataParameter<Integer> REGENERATION = EntityDataManager.defineId(CaptainCornelia.class, DataSerializers.INT);
+
+	private final ServerBossInfo bossInfo = new ServerBossInfo(AquamiraeConfig.Common.stylizedBossbar.get()
+			? TextHelper.component("1").withStyle(Style.EMPTY.withFont(new ResourceLocation(AquamiraeMod.MODID, "bossbars")))
+			: this.getDisplayName(), BossInfo.Color.BLUE, BossInfo.Overlay.NOTCHED_6);
 
 	public CaptainCornelia(FMLPlayMessages.SpawnEntity packet, World world) {
 		this(AquamiraeEntities.CAPTAIN_CORNELIA.get(), world);
@@ -78,26 +93,26 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		super(type, world);
 		xpReward = 100;
 		setPersistenceRequired();
-		this.setItemSlot(EquipmentSlot.MAINHAND, AquamiraeMod.winterEvent() ?
+		this.setItemSlot(EquipmentSlotType.MAINHAND, AquamiraeMod.winterEvent() ?
 				AquamiraeItems.SWEET_LANCE.get().getDefaultInstance() :
 				AquamiraeItems.CORAL_LANCE.get().getDefaultInstance());
 	}
 
 	@Override protected void registerGoals() {
-		this.goalSelector.addGoal(4, new FloatGoal(this));
-		this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.2));
+		this.goalSelector.addGoal(4, new SwimGoal(this));
+		this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.2));
 		super.registerGoals();
 		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false) {
 			@Override
-			protected double getAttackReachSqr(@NotNull LivingEntity entity) {
+			protected double getAttackReachSqr(LivingEntity entity) {
 				return 0;
 			}
 		});
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false, false));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractIllagerEntity.class, false, false));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false, false));
 	}
 
 	@Override protected void defineSynchedData() {
@@ -106,18 +121,17 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		this.getEntityData().define(REGENERATION, AquamiraeConfig.Common.corneliaSkillRegeneration.get());
 	}
 
-	@Override public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+	@Override public void addAdditionalSaveData(CompoundNBT tag) {
 		super.addAdditionalSaveData(tag);
-		CompoundTag data = new CompoundTag();
+		CompoundNBT data = new CompoundNBT();
 		data.putInt("Attack", this.getEntityData().get(ATTACK));
 		data.putInt("Regeneration", this.getEntityData().get(REGENERATION));
 		tag.put("CorneliaData", data);
 	}
 
-	@Override public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+	@Override public void readAdditionalSaveData(CompoundNBT tag) {
 		super.readAdditionalSaveData(tag);
-		CompoundTag data = (CompoundTag) tag.get("CorneliaData");
-		if (data == null) return;
+		CompoundNBT data = tag.getCompound("CorneliaData");
 		this.getEntityData().set(ATTACK, data.getInt("Attack"));
 		this.getEntityData().set(REGENERATION, data.getInt("Regeneration"));
 	}
@@ -287,19 +301,19 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		return false;
 	}
 
-	@Override public void startSeenByPlayer(@NotNull ServerPlayer player) {
+	@Override public void startSeenByPlayer(ServerPlayerEntity player) {
 		super.startSeenByPlayer(player);
 		this.bossInfo.addPlayer(player);
 	}
 
-	@Override public void stopSeenByPlayer(@NotNull ServerPlayer player) {
+	@Override public void stopSeenByPlayer(ServerPlayerEntity player) {
 		super.stopSeenByPlayer(player);
 		this.bossInfo.removePlayer(player);
 	}
 
 	@Override public void customServerAiStep() {
 		super.customServerAiStep();
-		this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
+		this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
 	}
 
 	public static AttributeModifierMap.MutableAttribute createAttributes() {
