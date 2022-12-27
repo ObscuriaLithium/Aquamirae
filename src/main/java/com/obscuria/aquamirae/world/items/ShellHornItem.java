@@ -24,6 +24,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class ShellHornItem extends Item {
@@ -32,7 +33,8 @@ public class ShellHornItem extends Item {
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> use(@Nonnull World world, @Nonnull PlayerEntity entity, @Nonnull Hand hand) {
 		ActionResult<ItemStack> ar = super.use(world, entity, hand);
 		if (entity.level instanceof ServerWorld)
 			entity.level.playSound(null, new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()),

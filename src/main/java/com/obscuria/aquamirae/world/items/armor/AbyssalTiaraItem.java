@@ -7,46 +7,40 @@ import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.world.classes.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.IItemRenderProperties;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.function.Consumer;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
 	public AbyssalTiaraItem(EquipmentSlotType slot, Item.Properties properties) {
-		super(new ArmorMaterial() {
+		super(new IArmorMaterial() {
 			@Override
-			public int getDurabilityForSlot(EquipmentSlotType slot) {
+			public int getDurabilityForSlot(@Nonnull EquipmentSlotType slot) {
 				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 40;
 			}
 
 			@Override
-			public int getDefenseForSlot(EquipmentSlotType slot) {
+			public int getDefenseForSlot(@Nonnull EquipmentSlotType slot) {
 				return new int[]{3, 6, 8, 2}[slot.getIndex()];
 			}
 
@@ -56,17 +50,20 @@ public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, 
 			}
 
 			@Override
+			@Nonnull
 			public SoundEvent getEquipSound() {
 				return SoundEvents.ARMOR_EQUIP_NETHERITE;
 			}
 
 			@Override
+			@Nonnull
 			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
 			}
 
 			@Override
+			@Nonnull
 			public String getName() {
 				return "abyssal_extra";
 			}
@@ -106,14 +103,14 @@ public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, 
 
 	@Override
 	public void onArmorTick(ItemStack itemstack, World world, PlayerEntity entity) {
-		if (entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AbyssalArmorItem
-				&& entity.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof AbyssalArmorItem
-				&& entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof AbyssalArmorItem) {
-			final Vec3 center = new Vec3(entity.getX(), entity.getY() + 1, entity.getZ());
-			List<Monster> list = world.getEntitiesOfClass(Monster.class, new AABB(center, center).inflate(4), e -> true).stream()
-					.sorted(Comparator.comparingDouble(entities -> entities.distanceToSqr(center))).toList();
-			for (Monster monster : list) {
-				monster.addEffect(new MobEffectInstance(AquamiraeMobEffects.ABYSS_BLINDNESS.get(), 10, 0, false, false));
+		if (entity.getItemBySlot(EquipmentSlotType.CHEST).getItem() instanceof AbyssalArmorItem
+				&& entity.getItemBySlot(EquipmentSlotType.LEGS).getItem() instanceof AbyssalArmorItem
+				&& entity.getItemBySlot(EquipmentSlotType.FEET).getItem() instanceof AbyssalArmorItem) {
+			final Vector3d center = new Vector3d(entity.getX(), entity.getY() + 1, entity.getZ());
+			List<MonsterEntity> list = world.getEntitiesOfClass(MonsterEntity.class, new AxisAlignedBB(center, center).inflate(4), e -> true).stream()
+					.sorted(Comparator.comparingDouble(entities -> entities.distanceToSqr(center))).collect(Collectors.toList());
+			for (MonsterEntity monster : list) {
+				monster.addEffect(new EffectInstance(AquamiraeMobEffects.ABYSS_BLINDNESS.get(), 10, 0, false, false));
 			}
 			final double radius = 4;
 			world.addParticle(ParticleTypes.DRAGON_BREATH, entity.getX() + Math.cos(entity.tickCount * 0.05) * radius, entity.getY() + 0.5,
@@ -125,31 +122,20 @@ public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, 
 
 	public static class Helmet extends AbyssalTiaraItem {
 		public Helmet() {
-			super(EquipmentSlot.HEAD, new Item.Properties());
-		}
-
-		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-			consumer.accept(new IItemRenderProperties() {
-				@Override
-				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"head", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).tiara,
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
+			super(EquipmentSlotType.HEAD, new Item.Properties());
 		}
 
 		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
+			final ModelAbyssalArmor<?> model = new ModelAbyssalArmor<>();
+			defaultModel.head = model.tiara;
+			defaultModel.crouching = living.isCrouching();
+			defaultModel.young = living.isBaby();
+			return defaultModel;
+		}
+
+		@Override
+		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
 			return "aquamirae:textures/entity/armor/abyssal_tiara.png";
 		}
 	}

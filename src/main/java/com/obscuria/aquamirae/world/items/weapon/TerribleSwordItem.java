@@ -20,6 +20,7 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.DamageSource;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class TerribleSwordItem extends SwordItem implements IClassItem, IAbility
 				return 18;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.ANGLERS_FANG.get()), new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
 		}, 3, -3f, new Item.Properties().tab(AquamiraeMod.TAB));
@@ -67,7 +68,8 @@ public class TerribleSwordItem extends SwordItem implements IClassItem, IAbility
 		return ObscureAPI.Types.WEAPON;
 	}
 
-	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType slot) {
+	@Nonnull
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@Nonnull EquipmentSlotType slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
 		if (slot == EquipmentSlotType.MAINHAND) {
 			Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -82,7 +84,7 @@ public class TerribleSwordItem extends SwordItem implements IClassItem, IAbility
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack itemstack, LivingEntity entity, LivingEntity source) {
+	public boolean hurtEnemy(@Nonnull ItemStack itemstack, LivingEntity entity, @Nonnull LivingEntity source) {
 		if (entity.getHealth() > 0) source.hurt(DamageSource.DRAGON_BREATH, ABILITY.getAmount(source, 0));
 		return super.hurtEnemy(itemstack, entity, source);
 	}

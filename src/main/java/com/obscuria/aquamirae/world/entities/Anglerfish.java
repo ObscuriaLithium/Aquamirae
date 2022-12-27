@@ -44,6 +44,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
@@ -96,13 +97,14 @@ public class Anglerfish extends MonsterEntity implements IShipGraveyardEntity, I
 	}
 
 	@Override
-	public boolean doHurtTarget(Entity entity) {
+	public boolean doHurtTarget(@Nonnull Entity entity) {
 		final boolean hurt = super.doHurtTarget(entity);
 		if (hurt && entity instanceof LivingEntity) ((LivingEntity)entity).addEffect(new EffectInstance(Effects.POISON, 100, 0));
 		return hurt;
 	}
 
-	@Override protected PathNavigator createNavigation(World world) {
+	@Override @Nonnull
+	protected PathNavigator createNavigation(@Nonnull World world) {
 		return new SwimmerPathNavigator(this, world);
 	}
 
@@ -118,14 +120,15 @@ public class Anglerfish extends MonsterEntity implements IShipGraveyardEntity, I
 		this.goalSelector.addGoal(5, new RandomSwimmingGoal(this, 1, 40) {
 			@Override protected Vector3d getPosition() {
 				Vector3d vector3d = RandomPositionGenerator.getPos(this.mob, 32, 7);
-				for(int i = 0; vector3d != null && !this.mob.level.getBlockState(new BlockPos(vector3d)).isPathfindable(this.mob.level, new BlockPos(vector3d), PathType.WATER) && i++ < 10; vector3d = RandomPositionGenerator.getPos(this.mob, 10, 7)) {
-				}
+				for(int i = 0;
+					vector3d != null && !this.mob.level.getBlockState(new BlockPos(vector3d)).isPathfindable(this.mob.level, new BlockPos(vector3d), PathType.WATER) && i++ < 10;
+					vector3d = RandomPositionGenerator.getPos(this.mob, 10, 7)) {}
 				return vector3d;
 			}
 		});
 	}
 
-	@Override public CreatureAttribute getMobType() {
+	@Override @Nonnull public CreatureAttribute getMobType() {
 		return CreatureAttribute.WATER;
 	}
 
@@ -133,7 +136,7 @@ public class Anglerfish extends MonsterEntity implements IShipGraveyardEntity, I
 		return AquamiraeSounds.ENTITY_DEEP_AMBIENT.get();
 	}
 
-	@Override public SoundEvent getHurtSound(DamageSource source) {
+	@Override public SoundEvent getHurtSound(@Nonnull DamageSource source) {
 		return AquamiraeSounds.ENTITY_DEEP_HURT.get();
 	}
 
@@ -141,11 +144,11 @@ public class Anglerfish extends MonsterEntity implements IShipGraveyardEntity, I
 		return AquamiraeSounds.ENTITY_DEEP_DEATH.get();
 	}
 
-	@Override public void playStepSound(BlockPos pos, BlockState blockIn) {
+	@Override public void playStepSound(@Nonnull BlockPos pos, @Nonnull BlockState blockIn) {
 		this.playSound(SoundEvents.GUARDIAN_FLOP, 0.15f, 1);
 	}
 
-	@Override public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason spawnType, @Nullable ILivingEntityData spawnGroupData, @Nullable CompoundNBT tag) {
+	@Override public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason spawnType, @Nullable ILivingEntityData spawnGroupData, @Nullable CompoundNBT tag) {
 		if (world instanceof ServerWorld && spawnType == SpawnReason.NATURAL && this.random.nextInt(1, 200) == 1) {
 			final ServerWorld server = (ServerWorld) world;
 			MazeMother mazeMother = new MazeMother(AquamiraeEntities.MAZE_MOTHER.get(), server);

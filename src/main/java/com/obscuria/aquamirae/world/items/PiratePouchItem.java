@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
@@ -23,7 +24,8 @@ public class PiratePouchItem extends Item {
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> use(@Nonnull World world, @Nonnull PlayerEntity entity, @Nonnull Hand hand) {
 		ActionResult<ItemStack> ar = super.use(world, entity, hand);
 		ItemStack sourceStack = ar.getObject();
 		entity.swing(hand);

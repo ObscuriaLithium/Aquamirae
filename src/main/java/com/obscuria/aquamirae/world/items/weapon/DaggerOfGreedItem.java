@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +45,7 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 				return 30;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.EMPTY;
 			}
 		}, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB));
@@ -66,13 +67,13 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 		return ObscureAPI.Types.WEAPON;
 	}
 
-	public void inventoryTick(ItemStack stack, World level, Entity entity, int i, boolean flag) {
+	public void inventoryTick(ItemStack stack, @Nonnull World level, @Nonnull Entity entity, int i, boolean flag) {
 		if (stack.getDamageValue() != stack.getOrCreateTag().getInt("DamageValue"))
 			stack.setDamageValue(stack.getOrCreateTag().getInt("DamageValue"));
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack stack,  LivingEntity entity, LivingEntity source) {
+	public boolean hurtEnemy(@Nonnull ItemStack stack, @Nonnull LivingEntity entity, @Nonnull LivingEntity source) {
 		final boolean hurt = super.hurtEnemy(stack, entity, source);
 		final World level = entity.level;
 		if (level.isClientSide()) return hurt;
@@ -96,7 +97,7 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isFoil(ItemStack itemstack) {
+	public boolean isFoil(@Nonnull ItemStack itemstack) {
 		return true;
 	}
 }

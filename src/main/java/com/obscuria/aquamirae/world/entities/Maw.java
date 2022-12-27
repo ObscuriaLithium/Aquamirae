@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -49,7 +50,7 @@ public class Maw extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		this.goalSelector.addGoal(1, new LeapAtTargetGoal(this, (float) 0.4));
 		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false) {
 			@Override
-			protected double getAttackReachSqr(LivingEntity entity) {
+			protected double getAttackReachSqr(@Nonnull LivingEntity entity) {
 				return 4.0 + entity.getBbWidth() * entity.getBbWidth();
 			}
 		});
@@ -65,7 +66,7 @@ public class Maw extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		return this.ANIMATIONS;
 	}
 
-	@Override public CreatureAttribute getMobType() {
+	@Override @Nonnull public CreatureAttribute getMobType() {
 		return CreatureAttribute.UNDEFINED;
 	}
 
@@ -73,11 +74,11 @@ public class Maw extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		return AquamiraeSounds.ENTITY_DEEP_AMBIENT.get();
 	}
 
-	@Override public void playStepSound(BlockPos pos, BlockState blockIn) {
+	@Override public void playStepSound(@Nonnull BlockPos pos, @Nonnull BlockState blockIn) {
 		this.playSound(SoundEvents.GUARDIAN_FLOP, 0.15f, 1);
 	}
 
-	@Override public SoundEvent getHurtSound(DamageSource source) {
+	@Override public SoundEvent getHurtSound(@Nonnull DamageSource source) {
 		return AquamiraeSounds.ENTITY_DEEP_HURT.get();
 	}
 
@@ -85,18 +86,18 @@ public class Maw extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		return AquamiraeSounds.ENTITY_DEEP_DEATH.get();
 	}
 
-	@Override public boolean hurt(DamageSource source, float amount) {
+	@Override public boolean hurt(@Nonnull DamageSource source, float amount) {
 		if (source == DamageSource.DROWN) return false;
 		return super.hurt(source, amount);
 	}
 
-	@Override public boolean doHurtTarget(Entity entity) {
+	@Override public boolean doHurtTarget(@Nonnull Entity entity) {
 		ANIMATIONS.play("attack", 5);
 		return super.doHurtTarget(entity);
 	}
 
-	@Override public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason,
-												  @Nullable ILivingEntityData data, @Nullable CompoundNBT tag) {
+	@Override public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason reason,
+													 @Nullable ILivingEntityData data, @Nullable CompoundNBT tag) {
 		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.mawSwimSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.mawSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.mawMaxHealth.get());

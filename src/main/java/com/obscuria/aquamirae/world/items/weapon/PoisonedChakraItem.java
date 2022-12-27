@@ -28,6 +28,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -55,7 +56,7 @@ public class PoisonedChakraItem extends ChakraItem implements IClassItem, IAbili
 				return 12;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.ANGLERS_FANG.get()),
 						new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
@@ -77,7 +78,7 @@ public class PoisonedChakraItem extends ChakraItem implements IClassItem, IAbili
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup tab, NonNullList<ItemStack> list) {
+	public void fillItemCategory(@Nonnull ItemGroup tab, @Nonnull NonNullList<ItemStack> list) {
 		super.fillItemCategory(tab, list);
 		if (tab == AquamiraeMod.TAB) list.addAll(AquamiraeCreativeTab.poisonedChakra());
 	}
@@ -96,7 +97,8 @@ public class PoisonedChakraItem extends ChakraItem implements IClassItem, IAbili
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> use(@Nonnull World world, PlayerEntity entity, @Nonnull Hand hand) {
 		final ItemStack stack = entity.getItemInHand(hand);
 		if (world instanceof ServerWorld) {
 			stack.hurt(3, entity.getRandom(), null);

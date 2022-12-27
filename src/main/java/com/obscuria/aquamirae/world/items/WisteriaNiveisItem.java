@@ -15,12 +15,15 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
+
 public class WisteriaNiveisItem extends Item {
 	public WisteriaNiveisItem() {
 		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64).rarity(Rarity.COMMON));
 	}
 
 	@Override
+	@Nonnull
 	public ActionResultType useOn(ItemUseContext context) {
 		final BlockPos pos = context.getClickedPos();
 		if (context.getClickedFace() == Direction.UP && AquamiraeBlocks.WISTERIA_NIVEIS.get() instanceof WisteriaNiveisBlock &&

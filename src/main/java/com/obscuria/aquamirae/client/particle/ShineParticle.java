@@ -7,13 +7,15 @@ import net.minecraft.particles.BasicParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class ShineParticle {
 	@OnlyIn(Dist.CLIENT)
 	private static class Instance extends SpriteTexturedParticle {
 		private final IAnimatedSprite spriteSet;
 		private float angularVelocity;
-		private float angularAcceleration;
+		private final float angularAcceleration;
 
 		protected Instance(ClientWorld world, double x, double y, double z, double vx, double vy, double vz, IAnimatedSprite spriteSet) {
 			super(world, x, y, z);
@@ -37,6 +39,7 @@ public class ShineParticle {
 		}
 
 		@Override
+		@Nonnull
 		public IParticleRenderType getRenderType() {
 			return IParticleRenderType.PARTICLE_SHEET_LIT;
 		}
@@ -59,7 +62,7 @@ public class ShineParticle {
 			this.spriteSet = spriteSet;
 		}
 
-		public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
+		public Particle createParticle(@Nonnull BasicParticleType typeIn, @Nonnull ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
 									   double zSpeed) {
 			return new Instance(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}

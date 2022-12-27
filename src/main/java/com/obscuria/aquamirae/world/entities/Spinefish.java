@@ -11,6 +11,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
+import javax.annotation.Nonnull;
+
 public class Spinefish extends AbstractGroupFishEntity implements IShipGraveyardEntity {
 
     public Spinefish(EntityType<? extends Spinefish> type, World level) {
@@ -21,7 +23,7 @@ public class Spinefish extends AbstractGroupFishEntity implements IShipGraveyard
         this(AquamiraeEntities.SPINEFISH.get(), level);
     }
 
-    public ItemStack getBucketItemStack() {
+    public @Nonnull ItemStack getBucketItemStack() {
         return new ItemStack(AquamiraeItems.SPINEFISH_BUCKET.get());
     }
 
@@ -33,11 +35,11 @@ public class Spinefish extends AbstractGroupFishEntity implements IShipGraveyard
         return SoundEvents.COD_DEATH;
     }
 
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@Nonnull DamageSource source) {
         return SoundEvents.COD_HURT;
     }
 
-    protected SoundEvent getFlopSound() {
+    @Nonnull protected SoundEvent getFlopSound() {
         return SoundEvents.COD_FLOP;
     }
 }

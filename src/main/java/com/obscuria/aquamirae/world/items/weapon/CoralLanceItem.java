@@ -17,6 +17,7 @@ import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -44,7 +45,7 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 				return 14;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
 		}, 3, -2.8f, new Item.Properties().fireResistant().rarity(ObscureRarity.MYTHIC).tab(AquamiraeMod.TAB));
@@ -70,11 +71,12 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup tab, NonNullList<ItemStack> list) {
+	public void fillItemCategory(@Nonnull ItemGroup tab, @Nonnull NonNullList<ItemStack> list) {
 		if (this.allowdedIn(tab)) list.add(getDefaultInstance());
 	}
 
-	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType slot) {
+	@Nonnull
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@Nonnull EquipmentSlotType slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
 		if (slot == EquipmentSlotType.MAINHAND) {
 			Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -88,6 +90,7 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getDefaultInstance() {
 		final ItemStack stack = new ItemStack(this);
 		stack.enchant(Enchantments.UNBREAKING, 4);

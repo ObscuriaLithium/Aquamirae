@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TreasurePouchItem extends Item {
@@ -25,7 +26,8 @@ public class TreasurePouchItem extends Item {
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> use(@Nonnull World world, @Nonnull PlayerEntity player, @Nonnull Hand hand) {
 		ActionResult<ItemStack> resultHolder = super.use(world, player, hand);
 		ItemStack stack = resultHolder.getObject();
 		player.swing(hand);

@@ -1,5 +1,7 @@
 package com.obscuria.aquamirae.client.models;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.obscuria.aquamirae.AquamiraeMod;
@@ -9,67 +11,79 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+
 public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "maze_mother"), "main");
-	public final ModelPart main, main2, bodyTop, bodyBottom, tail1, tail2, tail3, tail4, tail5, jaw1, jaw2, jaw3, jaw4,
+
+	public final ModelRenderer main, main2, bodyTop, bodyBottom, tail1, tail2, tail3, tail4, tail5, jaw1, jaw2, jaw3, jaw4,
 			wing1LeftTop, wing1LeftBottom, wing1RightTop, wing1RightBottom, wing2LeftTop, wing2LeftBottom, wing2RightTop, wing2RightBottom;
 
-	public ModelMazeMother(ModelPart root) {
-		this.main = root.getChild("main");
-		this.main2 = main.getChild("main2");
-		this.bodyTop = main2.getChild("body_top");
-		this.bodyBottom = main2.getChild("body_bottom");
-		this.jaw1 = bodyTop.getChild("jaw1");
-		this.jaw2 = bodyTop.getChild("jaw2");
-		this.jaw3 = bodyTop.getChild("jaw3");
-		this.jaw4 = bodyTop.getChild("jaw4");
-		this.tail1 = bodyBottom.getChild("tail1");
-		this.tail2 = tail1.getChild("tail2");
-		this.tail3 = tail2.getChild("tail3");
-		this.tail4 = tail3.getChild("tail4");
-		this.tail5 = tail4.getChild("tail5");
-		this.wing1LeftTop = bodyTop.getChild("left_wing1_top");
-		this.wing1RightTop = bodyTop.getChild("right_wing1_top");
-		this.wing2LeftTop = wing1LeftTop.getChild("left_wing2_top");
-		this.wing2RightTop = wing1RightTop.getChild("right_wing2_top");
-		this.wing1LeftBottom = bodyBottom.getChild("left_wing1_bottom");
-		this.wing1RightBottom = bodyBottom.getChild("right_wing1_bottom");
-		this.wing2LeftBottom = wing1LeftBottom.getChild("left_wing2_bottom");
-		this.wing2RightBottom = wing1RightBottom.getChild("right_wing2_bottom");
-	}
+	public ModelMazeMother() {
+		this.texWidth = 128;
+		this.texHeight = 128;
 
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
-		PartDefinition partdefinition = meshdefinition.getRoot();
-		PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(0.0F, -126.0F, 0.0F));
-		PartDefinition main2 = main.addOrReplaceChild("main2", CubeListBuilder.create(), PartPose.offset(0.0F, 147.0F, 0.0F));
-		PartDefinition body_top = main2.addOrReplaceChild("body_top",
-				CubeListBuilder.create().texOffs(0, 45).addBox(-8.0F, -1.5F, -16.0F, 16.0F, 3.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(0.0F, 0.0F, 0.0F));
-		PartDefinition jaw1 = body_top.addOrReplaceChild("jaw1",
-				CubeListBuilder.create().texOffs(37, 26).addBox(-3.0F, 0.0F, -10.5F, 6.0F, 0.0F, 11.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(-7.0F, 0.0F, -14.5F));
-		PartDefinition jaw2 = body_top.addOrReplaceChild("jaw2",
-				CubeListBuilder.create().texOffs(49, 26).addBox(-3.0F, 0.0F, -10.5F, 6.0F, 0.0F, 11.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(7.0F, 0.0F, -14.5F));
-		PartDefinition jaw3 = body_top.addOrReplaceChild("jaw3",
-				CubeListBuilder.create().texOffs(65, 26).addBox(-1.5F, 0.0F, -5.5F, 3.0F, 0.0F, 7.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(-3.5F, 0.0F, -15.5F));
-		PartDefinition jaw4 = body_top.addOrReplaceChild("jaw4",
-				CubeListBuilder.create().texOffs(73, 26).addBox(-1.5F, 0.0F, -5.5F, 3.0F, 0.0F, 7.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(3.5F, 0.0F, -15.5F));
-		PartDefinition crystal1_top = body_top.addOrReplaceChild("crystal1_top", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -16.0F));
-		PartDefinition cube_r1 = crystal1_top.addOrReplaceChild("cube_r1",
-				CubeListBuilder.create().texOffs(32, 58).addBox(-2.0F, -10.5F, -16.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -2.0F, 16.0F, 0.0F, 0.0F, -0.7854F));
-		PartDefinition crystal2_top = body_top.addOrReplaceChild("crystal2_top", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -16.0F));
-		PartDefinition cube_r2 = crystal2_top.addOrReplaceChild("cube_r2",
-				CubeListBuilder.create().texOffs(64, 45).addBox(-1.0F, -9.5F, -16.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -2.0F, 16.0F, 0.0F, 0.0F, -0.3491F));
+		main = new ModelRenderer(this);
+		main.setPos(0.0F, -126.0F, 0.0F);
+
+		main2 = new ModelRenderer(this);
+		main2.setPos(0.0F, 147.0F, 0.0F);
+		main.addChild(main2);
+
+		bodyTop = new ModelRenderer(this);
+		bodyTop.setPos(0.0F, 0.0F, 0.0F);
+		main2.addChild(bodyTop);
+		bodyTop.texOffs(0, 45).addBox(-8.0F, -1.5F, -16.0F, 16.0F, 3.0F, 16.0F, 0.0F, false);
+
+		jaw1 = new ModelRenderer(this);
+		jaw1.setPos(-7.0F, 0.0F, -14.5F);
+		bodyTop.addChild(jaw1);
+		jaw1.texOffs(37, 26).addBox(-3.0F, 0.0F, -10.5F, 6.0F, 0.0F, 11.0F, 0.0F, false);
+
+		jaw2 = new ModelRenderer(this);
+		jaw2.setPos(7.0F, 0.0F, -14.5F);
+		bodyTop.addChild(jaw2);
+		jaw2.texOffs(49, 26).addBox(-3.0F, 0.0F, -10.5F, 6.0F, 0.0F, 11.0F, 0.0F, false);
+
+		jaw3 = new ModelRenderer(this);
+		jaw3.setPos(-3.5F, 0.0F, -15.5F);
+		bodyTop.addChild(jaw3);
+		jaw3.texOffs(65, 26).addBox(-1.5F, 0.0F, -5.5F, 3.0F, 0.0F, 7.0F, 0.0F, false);
+
+		jaw4 = new ModelRenderer(this);
+		jaw4.setPos(3.5F, 0.0F, -15.5F);
+		bodyTop.addChild(jaw4);
+		jaw4.texOffs(73, 26).addBox(-1.5F, 0.0F, -5.5F, 3.0F, 0.0F, 7.0F, 0.0F, false);
+
+		final ModelRenderer cube1 = new ModelRenderer(this);
+		cube1.setPos(0.0F, 0.0F, -16.0F);
+		bodyTop.addChild(cube1);
+
+		final ModelRenderer cube2 = new ModelRenderer(this);
+		cube2.setPos(0.0F, -2.0F, 16.0F);
+		cube1.addChild(cube2);
+		setRotationAngle(cube2, 0.0F, 0.0F, -0.7854F);
+		cube2.texOffs(32, 58).addBox(-2.0F, -10.5F, -16.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+
+		final ModelRenderer cube3 = new ModelRenderer(this);
+		cube3.setPos(0.0F, 0.0F, -16.0F);
+		bodyTop.addChild(cube3);
+
+		final ModelRenderer cube4 = new ModelRenderer(this);
+		cube4.setPos(0.0F, -2.0F, 16.0F);
+		cube3.addChild(cube4);
+		setRotationAngle(cube4, 0.0F, 0.0F, -0.3491F);
+		cube4.texOffs(64, 45).addBox(-1.0F, -9.5F, -16.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+
+
+
+
 		PartDefinition crystal3_top = body_top.addOrReplaceChild("crystal3_top", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -16.0F));
 		PartDefinition cube_r3 = crystal3_top.addOrReplaceChild("cube_r3",
 				CubeListBuilder.create().texOffs(64, 65).addBox(1.0F, -9.5F, -16.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
@@ -150,9 +164,14 @@ public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 		return LayerDefinition.create(meshdefinition, 128, 128);
 	}
 
+	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+		modelRenderer.xRot = x;
+		modelRenderer.yRot = y;
+		modelRenderer.zRot = z;
+	}
+
 	@Override
-	public void renderToBuffer(PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-							   float blue, float alpha) {
+	public void renderToBuffer(MatrixStack poseStack, @Nonnull IVertexBuilder vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		poseStack.pushPose();
 		poseStack.scale(5f, 5f, 5f);
 		poseStack.translate(0F, -1F, 0F);
@@ -160,7 +179,7 @@ public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 		poseStack.popPose();
 	}
 
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(@Nonnull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		final float speed = 0.06F;
 
 		HekateLib.render.tick(entity);

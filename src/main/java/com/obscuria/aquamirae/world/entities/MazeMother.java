@@ -38,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
@@ -87,7 +88,8 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		};
 	}
 
-	@Override public AxisAlignedBB getBoundingBoxForCulling() {
+	@Override @Nonnull
+	public AxisAlignedBB getBoundingBoxForCulling() {
 		return super.getBoundingBoxForCulling().inflate(10F);
 	}
 
@@ -95,14 +97,14 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		return distance > 200;
 	}
 
-	@Override protected PathNavigator createNavigation(World world) {
+	@Override @Nonnull protected PathNavigator createNavigation(@Nonnull World world) {
 		return new SwimmerPathNavigator(this, world);
 	}
 
 	@Override protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false) {
-			@Override protected double getAttackReachSqr(LivingEntity entity) {
+			@Override protected double getAttackReachSqr(@Nonnull LivingEntity entity) {
 				return 44.0;
 			}
 		});
@@ -113,7 +115,7 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		this.goalSelector.addGoal(6, new RandomSwimmingGoal(this, 1, 40));
 	}
 
-	@Override public CreatureAttribute getMobType() {
+	@Override @Nonnull public CreatureAttribute getMobType() {
 		return CreatureAttribute.WATER;
 	}
 
@@ -125,7 +127,7 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		return SoundEvents.ELDER_GUARDIAN_AMBIENT;
 	}
 
-	@Override public SoundEvent getHurtSound(DamageSource source) {
+	@Override public SoundEvent getHurtSound(@Nonnull DamageSource source) {
 		return SoundEvents.ELDER_GUARDIAN_HURT;
 	}
 
@@ -133,12 +135,12 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		return SoundEvents.ELDER_GUARDIAN_DEATH;
 	}
 
-	@Override public boolean hurt(DamageSource source, float amount) {
+	@Override public boolean hurt(@Nonnull DamageSource source, float amount) {
 		if (source == DamageSource.DROWN) return false;
 		return super.hurt(source, amount);
 	}
 
-	@Override public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
+	@Override public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason reason, ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
 		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.motherSwimSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.motherMaxHealth.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.motherArmor.get());

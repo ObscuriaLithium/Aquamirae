@@ -6,52 +6,38 @@ import com.obscuria.aquamirae.client.models.armor.ModelTerribleArmor;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.world.classes.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber
 public abstract class TerribleArmorItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
 	public final EquipmentSlotType BONUS_SLOT;
 
 	public TerribleArmorItem(EquipmentSlotType slot, Item.Properties properties) {
-		super(new ArmorMaterial() {
+		super(new IArmorMaterial() {
 			@Override
-			public int getDurabilityForSlot(EquipmentSlotType slot) {
+			public int getDurabilityForSlot(@Nonnull EquipmentSlotType slot) {
 				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 25;
 			}
 
 			@Override
-			public int getDefenseForSlot(EquipmentSlotType slot) {
+			public int getDefenseForSlot(@Nonnull EquipmentSlotType slot) {
 				return new int[]{2, 3, 7, 5}[slot.getIndex()];
 			}
 
@@ -61,17 +47,20 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 			}
 
 			@Override
+			@Nonnull
 			public SoundEvent getEquipSound() {
 				return SoundEvents.ARMOR_EQUIP_IRON;
 			}
 
 			@Override
+			@Nonnull
 			public Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ANGLERS_FANG.get()));
 			}
 
 			@Override
+			@Nonnull
 			public String getName() {
 				return "terrible";
 			}
@@ -120,124 +109,81 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 			super(EquipmentSlotType.HEAD, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-			consumer.accept(new IItemRenderProperties() {
-				@Override
-				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"head", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).head,
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
+		@Override
+		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
+			final ModelTerribleArmor<?> model = new ModelTerribleArmor<>();
+			defaultModel.head = model.head;
+			defaultModel.crouching = living.isCrouching();
+			defaultModel.young = living.isBaby();
+			return defaultModel;
 		}
 
 		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
 			return "aquamirae:textures/entity/armor/terrible_helmet.png";
 		}
 	}
 
 	public static class Chestplate extends TerribleArmorItem {
 		public Chestplate() {
-			super(EquipmentSlot.CHEST, new Item.Properties());
-		}
-
-		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-			consumer.accept(new IItemRenderProperties() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"body", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).body,
-							"left_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_arm,
-							"right_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).right_arm,
-							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
+			super(EquipmentSlotType.CHEST, new Item.Properties());
 		}
 
 		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
+			final ModelTerribleArmor<?> model = new ModelTerribleArmor<>();
+			defaultModel.body = model.body;
+			defaultModel.leftArm = model.leftArm;
+			defaultModel.rightArm = model.rightArm;
+			defaultModel.crouching = living.isCrouching();
+			defaultModel.young = living.isBaby();
+			return defaultModel;
+		}
+
+		@Override
+		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
 			return "aquamirae:textures/entity/armor/terrible_chestplate.png";
 		}
 	}
 
 	public static class Leggings extends TerribleArmorItem {
 		public Leggings() {
-			super(EquipmentSlot.LEGS, new Item.Properties());
-		}
-
-		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-			consumer.accept(new IItemRenderProperties() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
-							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_shoe2,
-									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).right_shoe2,
-									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
+			super(EquipmentSlotType.LEGS, new Item.Properties());
 		}
 
 		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
+			final ModelTerribleArmor<?> model = new ModelTerribleArmor<>();
+			defaultModel.leftLeg = model.leftLeg;
+			defaultModel.rightLeg = model.rightLeg;
+			defaultModel.crouching = living.isCrouching();
+			defaultModel.young = living.isBaby();
+			return defaultModel;
+		}
+
+		@Override
+		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
 			return "aquamirae:textures/entity/armor/terrible_leggings.png";
 		}
 	}
 
 	public static class Boots extends TerribleArmorItem {
 		public Boots() {
-			super(EquipmentSlot.FEET, new Item.Properties());
-		}
-
-		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-			consumer.accept(new IItemRenderProperties() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
-							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_shoe,
-									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).right_shoe,
-									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
+			super(EquipmentSlotType.FEET, new Item.Properties());
 		}
 
 		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
+			final ModelTerribleArmor<?> model = new ModelTerribleArmor<>();
+			defaultModel.leftLeg = model.leftBoot;
+			defaultModel.rightLeg = model.rightBoot;
+			defaultModel.crouching = living.isCrouching();
+			defaultModel.young = living.isBaby();
+			return defaultModel;
+		}
+
+		@Override
+		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
 			return "aquamirae:textures/entity/armor/terrible_boots.png";
 		}
 	}

@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.crafting.Ingredient;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +46,7 @@ public class RemnantsSaberItem extends SwordItem implements IClassItem, IAbility
 				return 5;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHARP_BONES.get()),
 						new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
@@ -66,7 +67,8 @@ public class RemnantsSaberItem extends SwordItem implements IClassItem, IAbility
 		return ObscureAPI.Types.WEAPON;
 	}
 
-	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType slot) {
+	@Nonnull
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@Nonnull EquipmentSlotType slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
 		if (slot == EquipmentSlotType.MAINHAND) {
 			Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();

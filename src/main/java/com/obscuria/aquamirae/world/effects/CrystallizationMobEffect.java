@@ -9,6 +9,8 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraft.util.DamageSource;
 
+import javax.annotation.Nonnull;
+
 public class CrystallizationMobEffect extends Effect {
 	public CrystallizationMobEffect() {
 		super(EffectType.HARMFUL, -6750055);
@@ -16,12 +18,13 @@ public class CrystallizationMobEffect extends Effect {
 	}
 
 	@Override
+	@Nonnull
 	public String getDescriptionId() {
 		return "effect.aquamirae.crystallization";
 	}
 
 	@Override
-	public void removeAttributeModifiers(LivingEntity entity, AttributeModifierManager attributeMap, int amplifier) {
+	public void removeAttributeModifiers(@Nonnull LivingEntity entity, @Nonnull AttributeModifierManager attributeMap, int amplifier) {
 		super.removeAttributeModifiers(entity, attributeMap, amplifier);
 		entity.getPersistentData().putBoolean("crystallization", true);
 		entity.hurt(new DamageSource("crystallization").bypassArmor().setMagic(), 9999999F);

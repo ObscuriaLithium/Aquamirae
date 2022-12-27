@@ -11,6 +11,7 @@ import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.EffectInstance;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbi
 				return 14;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
 						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
 			}
@@ -59,7 +60,7 @@ public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbi
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack itemstack, LivingEntity entity, LivingEntity source) {
+	public boolean hurtEnemy(@Nonnull ItemStack itemstack, @Nonnull LivingEntity entity, @Nonnull LivingEntity source) {
 		final boolean hurt = super.hurtEnemy(itemstack, entity, source);
 		if (hurt) {
 			final EffectInstance EFFECT = entity.getEffect(AquamiraeMobEffects.ARMOR_DECREASE.get());

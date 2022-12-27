@@ -1,57 +1,66 @@
 package com.obscuria.aquamirae.client.models;
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.obscuria.obscureapi.client.animations.HekateLib;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.Entity;
+
+import javax.annotation.Nonnull;
 
 public class ModelSpinefish<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "spinefish"), "main");
-	private final ModelPart main, bodyTop, bodyBottom, head, tail;
 
-	public ModelSpinefish(ModelPart root) {
-		this.main = root.getChild("main");
-		this.bodyTop = main.getChild("bodyTop");
-		this.bodyBottom = main.getChild("bodyBottom");
-		this.head = bodyTop.getChild("head");
-		this.tail = bodyBottom.getChild("tail");
+	private final ModelRenderer main, bodyTop, bodyBottom, head, tail;
+
+	public ModelSpinefish() {
+		this.texWidth = 32;
+		this.texHeight = 32;
+
+		main = new ModelRenderer(this);
+		main.setPos(0.0F, 17.5F, 0.0F);
+
+		bodyTop = new ModelRenderer(this);
+		setRotationAngle(bodyTop, 0.0F, 0.0F, 1.0F);
+		main.addChild(bodyTop);
+		bodyTop.texOffs(16, 8).addBox(-1.0F, -2.5F, -3.0F, 2.0F, 5.0F, 3.0F, 0.0F, false);
+		bodyTop.texOffs(10, 0).addBox(0.0F, -6.5F, -3.0F, 0.0F, 13.0F, 3.0F, 0.0F, false);
+
+		head = new ModelRenderer(this);
+		setRotationAngle(head, 0.0F, 0.0F, -2.9697F);
+		bodyTop.addChild(head);
+		head.texOffs(6, 13).addBox(0.0F, -5.5F, -6.0303F, 0.0F, 11.0F, 3.0F, 0.0F, false);
+		head.texOffs(18, 16).addBox(-1.0F, -2.5F, -3.0303F, 2.0F, 5.0F, 3.0F, 0.0F, false);
+		head.texOffs(0, 11).addBox(0.0F, -6.5F, -3.0303F, 0.0F, 13.0F, 3.0F, 0.0F, false);
+
+		ModelRenderer cube1 = new ModelRenderer(this);
+		setRotationAngle(cube1, 0.0F, 0.0F, -5.5303F);
+		head.addChild(cube1);
+		setRotationAngle(cube1, -0.7854F, 0.0F, 0.0F);
+		cube1.texOffs(16, 0).addBox(-1.0F, -3.5F, -0.5F, 2.0F, 4.0F, 4.0F, 0.01F, false);
+
+		bodyBottom = new ModelRenderer(this);
+		setRotationAngle(bodyBottom, 0.0F, 0.0F, 1.0F);
+		main.addChild(bodyBottom);
+		bodyBottom.texOffs(12, 13).addBox(0.0F, -5.5F, 0.0F, 0.0F, 11.0F, 3.0F, 0.0F, false);
+		bodyBottom.texOffs(15, 24).addBox(-1.0F, -2.0F, 0.0F, 2.0F, 4.0F, 3.0F, 0.0F, false);
+
+		tail = new ModelRenderer(this);
+		setRotationAngle(tail, 0.0F, 0.0F, 3.0F);
+		bodyBottom.addChild(tail);
+		tail.texOffs(0, 0).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F, 0.0F, false);
+		tail.texOffs(0, 0).addBox(0.0F, -4.5F, 0.0F, 0.0F, 9.0F, 5.0F, 0.0F, false);
 	}
 
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
-		PartDefinition partdefinition = meshdefinition.getRoot();
-
-		PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(0.0F, 17.5F, 0.0F));
-
-		PartDefinition bodyTop = main.addOrReplaceChild("bodyTop", CubeListBuilder.create().texOffs(16, 8).addBox(-1.0F, -2.5F, -3.0F, 2.0F, 5.0F, 3.0F, new CubeDeformation(0.0F))
-		.texOffs(10, 0).addBox(0.0F, -6.5F, -3.0F, 0.0F, 13.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 1.0F));
-
-		PartDefinition head = bodyTop.addOrReplaceChild("head", CubeListBuilder.create().texOffs(6, 13).addBox(0.0F, -5.5F, -6.0303F, 0.0F, 11.0F, 3.0F, new CubeDeformation(0.0F))
-		.texOffs(18, 16).addBox(-1.0F, -2.5F, -3.0303F, 2.0F, 5.0F, 3.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 11).addBox(0.0F, -6.5F, -3.0303F, 0.0F, 13.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -2.9697F));
-
-		PartDefinition cube_r1 = head.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(16, 0).addBox(-1.0F, -3.5F, -0.5F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.01F)), PartPose.offsetAndRotation(0.0F, 0.0F, -5.5303F, -0.7854F, 0.0F, 0.0F));
-
-		PartDefinition bodyBottom = main.addOrReplaceChild("bodyBottom", CubeListBuilder.create().texOffs(12, 13).addBox(0.0F, -5.5F, 0.0F, 0.0F, 11.0F, 3.0F, new CubeDeformation(0.0F))
-		.texOffs(15, 24).addBox(-1.0F, -2.0F, 0.0F, 2.0F, 4.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 1.0F));
-
-		PartDefinition tail = bodyBottom.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 0).addBox(0.0F, -4.5F, 0.0F, 0.0F, 9.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 3.0F));
-
-		return LayerDefinition.create(meshdefinition, 32, 32);
+	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+		modelRenderer.xRot = x;
+		modelRenderer.yRot = y;
+		modelRenderer.zRot = z;
 	}
 
 	@Override
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(@Nonnull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		final float speed = 0.5F;
 		this.main.zRot = entity.isInWater() ? 0 : (float) Math.toRadians(-90F);
 		this.main.y = entity.isInWater() ? 17.5F : 22F;
@@ -62,7 +71,7 @@ public class ModelSpinefish<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(@Nonnull MatrixStack poseStack, @Nonnull IVertexBuilder vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 }

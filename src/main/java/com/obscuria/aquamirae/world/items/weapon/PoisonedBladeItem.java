@@ -15,6 +15,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class PoisonedBladeItem extends SwordItem implements IClassItem, IAbility
 				return 6;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(AquamiraeItems.ANGLERS_FANG.get()),
 						new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
@@ -63,7 +64,7 @@ public class PoisonedBladeItem extends SwordItem implements IClassItem, IAbility
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack itemstack, LivingEntity entity, LivingEntity source) {
+	public boolean hurtEnemy(@Nonnull ItemStack itemstack, @Nonnull LivingEntity entity, @Nonnull LivingEntity source) {
 		final boolean hurt = super.hurtEnemy(itemstack, entity, source);
 		if (hurt)
 			if (source instanceof PlayerEntity) {

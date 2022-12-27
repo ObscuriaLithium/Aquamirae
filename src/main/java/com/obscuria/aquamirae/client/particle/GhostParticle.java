@@ -7,6 +7,8 @@ import net.minecraft.particles.BasicParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class GhostParticle {
 
@@ -34,6 +36,7 @@ public class GhostParticle {
 		}
 
 		@Override
+		@Nonnull
 		public IParticleRenderType getRenderType() {
 			return IParticleRenderType.PARTICLE_SHEET_LIT;
 		}
@@ -53,7 +56,7 @@ public class GhostParticle {
 			this.spriteSet = spriteSet;
 		}
 
-		public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
+		public Particle createParticle(@Nonnull BasicParticleType typeIn, @Nonnull ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
 									 double zSpeed) {
 			return new Instance(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}

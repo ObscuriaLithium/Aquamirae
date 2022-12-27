@@ -9,6 +9,8 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 
+import javax.annotation.Nonnull;
+
 public class AbyssBlindnessMobEffect extends Effect {
 	public AbyssBlindnessMobEffect() {
 		super(EffectType.HARMFUL, -6750055);
@@ -16,6 +18,7 @@ public class AbyssBlindnessMobEffect extends Effect {
 	}
 
 	@Override
+	@Nonnull
 	public String getDescriptionId() {
 		return "effect.aquamirae.abyss_blindness";
 	}

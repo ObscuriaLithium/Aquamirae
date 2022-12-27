@@ -8,6 +8,7 @@ import com.obscuria.obscureapi.world.classes.*;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class FinCutterItem extends SwordItem implements IClassItem, IAbilityItem
 				return 20;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.of(new ItemStack(Items.DIAMOND), new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
 			}
 		}, 3, -2f, new Item.Properties().tab(AquamiraeMod.TAB));

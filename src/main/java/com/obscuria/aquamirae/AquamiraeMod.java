@@ -38,6 +38,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -61,7 +62,8 @@ public class AquamiraeMod {
 	public static final Tags.IOptionalNamedTag<Block> MAZE_MOTHER_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "maze_mother_destroy"));
 	public static final Tags.IOptionalNamedTag<Block> SCROLL_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "scroll_destroy"));
 	public static final ItemGroup TAB = new ItemGroup("aquamirae") {
-		@Override public ItemStack makeIcon() {
+		@Override @Nonnull
+		public ItemStack makeIcon() {
 			return AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance();
 		}
 
@@ -85,7 +87,6 @@ public class AquamiraeMod {
 		AquamiraeStructureFeatures.REGISTRY.register(MOD_EVENT_BUS);
 
 		MOD_EVENT_BUS.addListener(this::commonSetup);
-		EVENT_BUS.addListener(AquamiraeEvents::onPlayerTick);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityDeath);

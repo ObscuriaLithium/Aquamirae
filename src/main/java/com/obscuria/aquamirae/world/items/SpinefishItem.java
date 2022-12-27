@@ -8,13 +8,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class SpinefishItem extends Item {
 	public SpinefishItem(Item.Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public ItemStack finishUsingItem(ItemStack itemstack, World world, LivingEntity entity) {
+	@Nonnull
+	public ItemStack finishUsingItem(@Nonnull ItemStack itemstack, @Nonnull World world, @Nonnull LivingEntity entity) {
 		ItemStack bone = new ItemStack(AquamiraeItems.SHARP_BONES.get());
 		super.finishUsingItem(itemstack, world, entity);
 		if (itemstack.isEmpty()) return bone;

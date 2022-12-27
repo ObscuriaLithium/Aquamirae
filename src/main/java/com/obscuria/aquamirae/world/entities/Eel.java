@@ -33,6 +33,7 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -56,7 +57,8 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		setPersistenceRequired();
 	}
 
-	@Override public AxisAlignedBB getBoundingBoxForCulling() {
+	@Override @Nonnull
+	public AxisAlignedBB getBoundingBoxForCulling() {
 		return super.getBoundingBoxForCulling().inflate(2F);
 	}
 
@@ -79,7 +81,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		this.getEntityData().define(SCALE_SPEED, 0.1F);
 	}
 
-	@Override public void addAdditionalSaveData(CompoundNBT tag) {
+	@Override public void addAdditionalSaveData(@Nonnull CompoundNBT tag) {
 		super.addAdditionalSaveData(tag);
 		CompoundNBT data = new CompoundNBT();
 		data.putInt("MoveCooldown", this.getEntityData().get(MOVE_COOLDOWN));
@@ -93,7 +95,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundNBT tag) {
+	public void readAdditionalSaveData(@Nonnull CompoundNBT tag) {
 		super.readAdditionalSaveData(tag);
 		CompoundNBT data = tag.getCompound("EelData");
 		this.getEntityData().set(MOVE_COOLDOWN, data.getInt("MoveCooldown"));
@@ -221,7 +223,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 	}
 
 	@Override
-	public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason,
+	public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason reason,
 										   @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
 		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.eelMaxHealth.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.eelArmor.get());
@@ -238,7 +240,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 	@Override public void push(double d1, double d2, double d3) {
 	}
 
-	@Override public CreatureAttribute getMobType() {
+	@Override @Nonnull public CreatureAttribute getMobType() {
 		return CreatureAttribute.UNDEFINED;
 	}
 
@@ -250,7 +252,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		return AquamiraeSounds.ENTITY_DEEP_AMBIENT.get();
 	}
 
-	@Override public SoundEvent getHurtSound(DamageSource source) {
+	@Override public SoundEvent getHurtSound(@Nonnull DamageSource source) {
 		return AquamiraeSounds.ENTITY_DEEP_HURT.get();
 	}
 
@@ -258,7 +260,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 		return AquamiraeSounds.ENTITY_DEEP_DEATH.get();
 	}
 
-	@Override public boolean hurt(DamageSource source, float amount) {
+	@Override public boolean hurt(@Nonnull DamageSource source, float amount) {
 		if (ANIMATIONS.isPlaying("move")) return false;
 		if (source.getDirectEntity() instanceof AbstractArrowEntity) return false;
 		if (source == DamageSource.FALL || source == DamageSource.CACTUS || source == DamageSource.DROWN) return false;

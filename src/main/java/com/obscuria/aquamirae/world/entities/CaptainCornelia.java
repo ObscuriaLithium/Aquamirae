@@ -12,69 +12,46 @@ import com.obscuria.obscureapi.client.animations.HekateProvider;
 import com.obscuria.obscureapi.client.animations.IHekateProvider;
 import com.obscuria.obscureapi.utils.TextHelper;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerBossEvent;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.server.ServerBossInfo;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.network.PlayMessages;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEntity, IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
@@ -105,7 +82,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		super.registerGoals();
 		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false) {
 			@Override
-			protected double getAttackReachSqr(LivingEntity entity) {
+			protected double getAttackReachSqr(@Nonnull LivingEntity entity) {
 				return 0;
 			}
 		});
@@ -121,7 +98,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		this.getEntityData().define(REGENERATION, AquamiraeConfig.Common.corneliaSkillRegeneration.get());
 	}
 
-	@Override public void addAdditionalSaveData(CompoundNBT tag) {
+	@Override public void addAdditionalSaveData(@Nonnull CompoundNBT tag) {
 		super.addAdditionalSaveData(tag);
 		CompoundNBT data = new CompoundNBT();
 		data.putInt("Attack", this.getEntityData().get(ATTACK));
@@ -129,7 +106,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		tag.put("CorneliaData", data);
 	}
 
-	@Override public void readAdditionalSaveData(CompoundNBT tag) {
+	@Override public void readAdditionalSaveData(@Nonnull CompoundNBT tag) {
 		super.readAdditionalSaveData(tag);
 		CompoundNBT data = tag.getCompound("CorneliaData");
 		this.getEntityData().set(ATTACK, data.getInt("Attack"));
@@ -144,99 +121,100 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		final int attack = this.getEntityData().get(ATTACK);
 		this.getEntityData().set(ATTACK, attack - 1);
 
-		if (this.getHealth() < this.getMaxHealth() * 0.3 && this.getEntityData().get(REGENERATION) > 0 && !this.hasEffect(MobEffects.LEVITATION)) this.rage();
-		if (this.getHealth() <= this.getMaxHealth() * 0.1 && !this.hasEffect(MobEffects.WEAKNESS)) this.heal(0.5F);
+		if (this.getHealth() < this.getMaxHealth() * 0.3 && this.getEntityData().get(REGENERATION) > 0 && !this.hasEffect(Effects.LEVITATION)) this.rage();
+		if (this.getHealth() <= this.getMaxHealth() * 0.1 && !this.hasEffect(Effects.WEAKNESS)) this.heal(0.5F);
 
 		if (this.getTarget() != null) {
 			final LivingEntity target = this.getTarget();
 			final double distance = this.distanceToSqr(target);
-			this.lookControl.setLookAt(target);
+			this.lookControl.setLookAt(target.getEyePosition(1F));
 			this.yBodyRot = this.yHeadRot;
 			if (!ANIMATIONS.isPlaying("attack")) {
-				if ((distance < 3 || this.hasEffect(MobEffects.LEVITATION))) ANIMATIONS.play("attack", Math.random() < 0.5 ? 40 : 20);
+				if ((distance < 3 || this.hasEffect(Effects.LEVITATION))) ANIMATIONS.play("attack", Math.random() < 0.5 ? 40 : 20);
 				else if (distance < 25 && random.nextInt(100) == 1) ANIMATIONS.play("attack", Math.random() < 0.5 ? 40 : 20);
 				else if (distance < 600 && random.nextInt(200) == 1) ANIMATIONS.play("attack", 60);
 			}
 			if (ANIMATIONS.getTick("attack") == 50) {
-				target.setDeltaMovement(new Vec3(target.getX(), target.getY(), target.getZ())
-						.vectorTo(new Vec3(this.getX(), this.getY() + 0.5F, this.getZ())).scale(0.25F));
-				if (target instanceof Player player) player.hurtMarked = true;
+				target.setDeltaMovement(new Vector3d(target.getX(), target.getY(), target.getZ())
+						.vectorTo(new Vector3d(this.getX(), this.getY() + 0.5F, this.getZ())).scale(0.25F));
+				if (target instanceof PlayerEntity) target.hurtMarked = true;
 			}
 			if (ANIMATIONS.getTick("attack") == 8 || ANIMATIONS.getTick("attack") == 28)
-				this.setDeltaMovement(new Vec3(this.getX(), this.getY(), this.getZ())
-						.vectorTo(new Vec3(target.getX(), target.getY() + 0.1F, target.getZ())).scale(0.2F));
+				this.setDeltaMovement(new Vector3d(this.getX(), this.getY(), this.getZ())
+						.vectorTo(new Vector3d(target.getX(), target.getY() + 0.1F, target.getZ())).scale(0.2F));
 			if (ANIMATIONS.getTick("attack") == 26 && distance < 9) this.doHurtTarget(target);
 			if (ANIMATIONS.getTick("attack") == 6 && distance < 12) this.doHurtTarget(target);
 
-			if (this.isUnderWater() && !this.hasEffect(MobEffects.LEVITATION)) this.setDeltaMovement(new Vec3(this.getX(), this.getY(), this.getZ())
-					.vectorTo(new Vec3(target.getX(), target.getY(), target.getZ())).scale(0.04F));
-			else if (this.isInWater() && !this.hasEffect(MobEffects.LEVITATION)) this.setDeltaMovement(new Vec3(this.getX(), this.getY(), this.getZ())
-					.vectorTo(new Vec3(target.getX(), target.getY(), target.getZ())).scale(0.04F).add(0F, 0.08F, 0F));
+			if (this.isUnderWater() && !this.hasEffect(Effects.LEVITATION)) this.setDeltaMovement(new Vector3d(this.getX(), this.getY(), this.getZ())
+					.vectorTo(new Vector3d(target.getX(), target.getY(), target.getZ())).scale(0.04F));
+			else if (this.isInWater() && !this.hasEffect(Effects.LEVITATION)) this.setDeltaMovement(new Vector3d(this.getX(), this.getY(), this.getZ())
+					.vectorTo(new Vector3d(target.getX(), target.getY(), target.getZ())).scale(0.04F).add(0F, 0.08F, 0F));
 		}
 
-		ANIMATIONS.playSound("attack", 40, "aquamirae:entity.captain_cornelia.attack_1", SoundSource.HOSTILE, 2F, 1F);
-		ANIMATIONS.playSound("attack", 20, "aquamirae:entity.captain_cornelia.attack_2", SoundSource.HOSTILE, 2F, 1F);
+		ANIMATIONS.playSound("attack", 40, "aquamirae:entity.captain_cornelia.attack_1", SoundCategory.HOSTILE, 2F, 1F);
+		ANIMATIONS.playSound("attack", 20, "aquamirae:entity.captain_cornelia.attack_2", SoundCategory.HOSTILE, 2F, 1F);
 
 		if (ANIMATIONS.getTick("attack") > 10)
-			this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, 3, false, false));
+			this.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 5, 3, false, false));
 
-		if (this.hasEffect(MobEffects.LEVITATION) && !this.getLevel().isClientSide()) {
-			final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
-			List<LivingEntity> list = this.getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(10), e -> true).stream()
-					.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
-			final MobEffectInstance LEVITATION = this.getEffect(MobEffects.LEVITATION);
+		if (this.hasEffect(Effects.LEVITATION) && !this.level.isClientSide()) {
+			final Vector3d center = new Vector3d(this.getX(), this.getY(), this.getZ());
+			List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(center, center).inflate(10), e -> true).stream()
+					.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
+			final EffectInstance LEVITATION = this.getEffect(Effects.LEVITATION);
 			final int DURATION = LEVITATION == null ? 0 : LEVITATION.getDuration();
 			list.forEach(entity -> {
-				if (entity instanceof Player player && (player.isCreative() || player.isSpectator())) return;
+				if (entity instanceof PlayerEntity && (((PlayerEntity)entity).isCreative() || entity.isSpectator())) return;
 				if (entity.getMaxHealth() <= 100) {
 					if (DURATION > 1) {
 						final double radius = 5;
-						final Vec3 orbit = new Vec3(center.x + Math.cos(entity.tickCount * -0.1F) * radius, center.y,
+						final Vector3d orbit = new Vector3d(center.x + Math.cos(entity.tickCount * -0.1F) * radius, center.y,
 								center.z + Math.sin(entity.tickCount * -0.1F) * radius);
-						entity.setDeltaMovement(new Vec3(entity.getX(), entity.getY(), entity.getZ()).vectorTo(orbit).scale(0.2F));
-						if (entity instanceof Player _player) _player.hurtMarked = true;
+						entity.setDeltaMovement(new Vector3d(entity.getX(), entity.getY(), entity.getZ()).vectorTo(orbit).scale(0.2F));
+						if (entity instanceof PlayerEntity) entity.hurtMarked = true;
 					} else if (DURATION == 1) {
-						entity.setDeltaMovement(new Vec3(this.getX(), this.getY(), this.getZ())
-								.vectorTo(new Vec3(entity.getX(), entity.getY(), entity.getZ())).scale(0.2F));
-						if (entity instanceof Player _player) _player.hurtMarked = true;
+						entity.setDeltaMovement(new Vector3d(this.getX(), this.getY(), this.getZ())
+								.vectorTo(new Vector3d(entity.getX(), entity.getY(), entity.getZ())).scale(0.2F));
+						if (entity instanceof PlayerEntity) entity.hurtMarked = true;
 					}
 				}
 			});
 
 			this.getPersistentData().putDouble("Par1", this.getPersistentData().getDouble("Par1") + 1);
-			if (this.getLevel() instanceof ServerLevel server && this.getPersistentData().getDouble("Par1") > 1) {
+			if (this.level instanceof ServerWorld && this.getPersistentData().getDouble("Par1") > 1) {
 				this.getPersistentData().putDouble("Par1", 0);
-				server.sendParticles(AquamiraeParticleTypes.GHOST.get(), this.getX(), this.getY() - 0.2, this.getZ(), 1,
+				((ServerWorld) this.level).sendParticles(AquamiraeParticleTypes.GHOST.get(), this.getX(), this.getY() - 0.2, this.getZ(), 1,
 						0.3, 0.1, 0.3, 0.1);
 			}
-			if (this.isInWater()) this.setDeltaMovement(new Vec3(0F, 0.4F, 0F));
+			if (this.isInWater()) this.setDeltaMovement(new Vector3d(0F, 0.4F, 0F));
 		}
 		this.getPersistentData().putDouble("Par2", this.getPersistentData().getDouble("Par2") + 1);
-		if (this.getLevel() instanceof ServerLevel server && this.getPersistentData().getDouble("Par2") > 9) {
+		if (this.level instanceof ServerWorld && this.getPersistentData().getDouble("Par2") > 9) {
 			this.getPersistentData().putDouble("Par2", 0);
-			server.sendParticles(AquamiraeParticleTypes.GHOST_SHINE.get(), this.getX(), this.getY() + 1.7, this.getZ(), 1,
+			((ServerWorld) this.level).sendParticles(AquamiraeParticleTypes.GHOST_SHINE.get(), this.getX(), this.getY() + 1.7, this.getZ(), 1,
 					0.15, 0.1, 0.15, 0.1);
 		}
 		//
-		final Vec3 center = this.getPosition(1F);
-		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(32), e -> true).stream()
-				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
-		players.forEach(player -> { if (player.getLevel().isClientSide()) AquamiraeAmbient.playCorneliaMusic(player); });
+		final Vector3d center = this.getPosition(1F);
+		List<PlayerEntity> players = this.level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(center, center).inflate(32), e -> true).stream()
+				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
+		players.forEach(player -> { if (player.level.isClientSide()) AquamiraeAmbient.playCorneliaMusic(player); });
 		super.baseTick();
 	}
 
 	public void rage() {
 		this.getEntityData().set(REGENERATION, this.getEntityData().get(REGENERATION) - 1);
-		this.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 0, false, false));
-		this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 8, false, false));
-		if (this.level instanceof ServerLevel serverLevel) {
+		this.addEffect(new EffectInstance(Effects.LEVITATION, 200, 0, false, false));
+		this.addEffect(new EffectInstance(Effects.REGENERATION, 200, 8, false, false));
+		if (this.level instanceof ServerWorld) {
+			final ServerWorld serverLevel = (ServerWorld) this.level;
 			final BlockPos pos = new BlockPos(this.getX(), this.getY(), this.getZ());
-			LightningBolt entityToSpawn = new LightningBolt(EntityType.LIGHTNING_BOLT, serverLevel);
-			entityToSpawn.moveTo(Vec3.atBottomCenterOf(pos));
+			LightningBoltEntity entityToSpawn = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, serverLevel);
+			entityToSpawn.moveTo(Vector3d.atBottomCenterOf(pos));
 			entityToSpawn.setVisualOnly(true);
 			serverLevel.addFreshEntity(entityToSpawn);
-			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
-			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_RAGE.get(), SoundSource.HOSTILE, 4, 1);
+			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundCategory.HOSTILE, 3, 1);
+			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_RAGE.get(), SoundCategory.HOSTILE, 4, 1);
 			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0F, 600, 1000);
 			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0.33F, 600, 1000);
 			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0.66F, 600, 1000);
@@ -252,8 +230,8 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		}
 	}
 
-	@Override public @NotNull MobType getMobType() {
-		return MobType.WATER;
+	@Override @Nonnull public CreatureAttribute getMobType() {
+		return CreatureAttribute.WATER;
 	}
 
 	@Override public boolean removeWhenFarAway(double distanceToClosestPlayer) {
@@ -264,7 +242,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		return AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_AMBIENT.get();
 	}
 
-	@Override public SoundEvent getHurtSound(@NotNull DamageSource source) {
+	@Override public SoundEvent getHurtSound(@Nonnull DamageSource source) {
 		return AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HURT.get();
 	}
 
@@ -273,7 +251,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 	}
 
 	@Override public boolean hurt(DamageSource source, float amount) {
-		if (source.getDirectEntity() instanceof AbstractArrow) return false;
+		if (source.getDirectEntity() instanceof AbstractArrowEntity) return false;
 		if (source == DamageSource.FALL) return false;
 		if (source == DamageSource.CACTUS) return false;
 		if (source == DamageSource.DROWN) return false;
@@ -283,10 +261,10 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		return super.hurt(source, amount);
 	}
 
-	@Override public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-		if (this.getLevel() instanceof ServerLevel serverLevel) serverLevel.playSound(null, new BlockPos(this.getX(), this.getY(), this.getZ()),
-					AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
-		this.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 120, 0, false, false));
+	@Override public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason reason, @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
+		if (this.level instanceof ServerWorld) this.level.playSound(null, new BlockPos(this.getX(), this.getY(), this.getZ()),
+					AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundCategory.HOSTILE, 3, 1);
+		this.addEffect(new EffectInstance(Effects.LEVITATION, 120, 0, false, false));
 		AquamiraeMod.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.corneliaMovementSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.corneliaMaxHealth.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.corneliaArmor.get());
@@ -301,12 +279,12 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		return false;
 	}
 
-	@Override public void startSeenByPlayer(ServerPlayerEntity player) {
+	@Override public void startSeenByPlayer(@Nonnull ServerPlayerEntity player) {
 		super.startSeenByPlayer(player);
 		this.bossInfo.addPlayer(player);
 	}
 
-	@Override public void stopSeenByPlayer(ServerPlayerEntity player) {
+	@Override public void stopSeenByPlayer(@Nonnull ServerPlayerEntity player) {
 		super.stopSeenByPlayer(player);
 		this.bossInfo.removePlayer(player);
 	}

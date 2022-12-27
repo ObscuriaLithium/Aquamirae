@@ -12,6 +12,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
+import javax.annotation.Nonnull;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PotionOfTenacityRecipe implements IBrewingRecipe {
 	@SubscribeEvent
@@ -30,7 +32,8 @@ public class PotionOfTenacityRecipe implements IBrewingRecipe {
 	}
 
 	@Override
-	public ItemStack getOutput(ItemStack input, ItemStack ingredient) {
+	@Nonnull
+	public ItemStack getOutput(@Nonnull ItemStack input, @Nonnull ItemStack ingredient) {
 		if (isInput(input) && isIngredient(ingredient)) {
 			return PotionUtils.setPotion(new ItemStack(Items.POTION), AquamiraePotions.POTION_OF_TENACITY.get());
 		}

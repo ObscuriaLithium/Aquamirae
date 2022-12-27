@@ -21,6 +21,8 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nonnull;
+
 @Mod.EventBusSubscriber
 public class RuneOfTheStormItem extends Item {
 	public RuneOfTheStormItem() {
@@ -39,12 +41,13 @@ public class RuneOfTheStormItem extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isFoil(ItemStack itemstack) {
+	public boolean isFoil(@Nonnull ItemStack itemstack) {
 		return true;
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> use(@Nonnull World world, PlayerEntity entity, @Nonnull Hand hand) {
 		final ItemStack stack = entity.getItemInHand(hand);
 		final ItemStack offhand = entity.getItemInHand(Hand.OFF_HAND);
 		if (hand != Hand.MAIN_HAND)

@@ -53,9 +53,6 @@ public class AquamiraeEntities {
 	public static final RegistryObject<EntityType<Spinefish>> SPINEFISH = register("spinefish",
 			EntityType.Builder.<Spinefish>of(Spinefish::new, EntityClassification.WATER_AMBIENT).setShouldReceiveVelocityUpdates(true)
 					.setTrackingRange(128).setUpdateInterval(3).setCustomClientFactory(Spinefish::new).sized(0.7f, 0.7f));
-	public static final RegistryObject<EntityType<LuminousJelly>> LUMINOUS_JELLY = register("luminous_jelly",
-			EntityType.Builder.<LuminousJelly>of(LuminousJelly::new, EntityClassification.WATER_AMBIENT).setShouldReceiveVelocityUpdates(true)
-					.setTrackingRange(128).setUpdateInterval(3).setCustomClientFactory(LuminousJelly::new).sized(0.5f, 0.9f));
 
 	private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
 		return REGISTRY.register(registryname, () -> entityTypeBuilder.build(registryname));
@@ -72,7 +69,6 @@ public class AquamiraeEntities {
 		event.put(TORTURED_SOUL.get(), TorturedSoul.createAttributes().build());
 		event.put(EEL.get(), Eel.createAttributes().build());
 		event.put(SPINEFISH.get(), MobEntity.createMobAttributes().build());
-		event.put(LUMINOUS_JELLY.get(), MobEntity.createMobAttributes().build());
 		event.put(POISONED_CHAKRA.get(), MobEntity.createMobAttributes().build());
 		event.put(MAZE_ROSE.get(), MobEntity.createMobAttributes().build());
 	}

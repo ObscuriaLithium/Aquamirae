@@ -10,6 +10,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 import net.minecraftforge.common.ForgeMod;
 
+import javax.annotation.Nonnull;
+
 public class SwimSpeedMobEffect extends Effect {
 	public SwimSpeedMobEffect() {
 		super(EffectType.BENEFICIAL, -16737844);
@@ -17,6 +19,7 @@ public class SwimSpeedMobEffect extends Effect {
 	}
 
 	@Override
+	@Nonnull
 	public String getDescriptionId() {
 		return "effect.aquamirae.swim_speed";
 	}

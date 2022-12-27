@@ -6,6 +6,8 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 
+import javax.annotation.Nonnull;
+
 public class ArmorDecreaseMobEffect extends Effect {
 	public ArmorDecreaseMobEffect() {
 		super(EffectType.NEUTRAL, -6750055);
@@ -13,6 +15,7 @@ public class ArmorDecreaseMobEffect extends Effect {
 	}
 
 	@Override
+	@Nonnull
 	public String getDescriptionId() {
 		return "effect.aquamirae.armor_decrease";
 	}

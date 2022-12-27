@@ -1,168 +1,263 @@
 package com.obscuria.aquamirae.client.models;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.obscuria.obscureapi.client.animations.AnimatedPart;
 import com.obscuria.obscureapi.client.animations.HekateLib;
 import com.obscuria.obscureapi.client.animations.KeyFrame;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.PoseStack;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ModelEel<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "eel"), "main");
-	public final ModelPart main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headTop, headBottom, leftFin, rightFin;
 
-	public ModelEel(ModelPart root) {
-		this.main = root.getChild("main");
-		this.body1 = main.getChild("body1");
-		this.body2 = body1.getChild("body2");
-		this.body3 = body2.getChild("body3");
-		this.body4 = body3.getChild("body4");
-		this.body5 = body4.getChild("body5");
-		this.body6 = body5.getChild("body6");
-		this.body7 = body6.getChild("body7");
-		this.body8 = body7.getChild("body8");
-		this.body9 = body8.getChild("body9");
-		this.body10 = body9.getChild("body10");
-		this.head = body10.getChild("head");
-		this.headTop = head.getChild("headTop");
-		this.headBottom = head.getChild("headBottom");
-		this.leftFin = head.getChild("leftFinP").getChild("leftFin");
-		this.rightFin = head.getChild("rightFinP").getChild("rightFin");
+	public final ModelRenderer main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headTop, headBottom, leftFin, rightFin;
+
+	public ModelEel() {
+		this.texWidth = 256;
+		this.texHeight = 256;
+
+		main = new ModelRenderer(this);
+		main.setPos(0.0F, 24.0F, 300.0F);
+
+		body1 = new ModelRenderer(this);
+		body1.setPos(0.0F, 24.0F, 0.0F);
+		main.addChild(body1);
+		setRotationAngle(body1, 0.5672F, 0.0F, 0.0F);
+
+		body2 = new ModelRenderer(this);
+		body2.setPos(0.0F, -5.0F, 0.0F);
+		body1.addChild(body2);
+		setRotationAngle(body2, -0.3491F, 0.0F, 0.0F);
+
+		body3 = new ModelRenderer(this);
+		body3.setPos(0.0F, -6.0F, 0.0F);
+		body2.addChild(body3);
+		setRotationAngle(body3, -0.6109F, 0.0F, 0.0F);
+
+		body4 = new ModelRenderer(this);
+		body4.setPos(0.0F, -6.0F, 0.0F);
+		body3.addChild(body4);
+		setRotationAngle(body4, -0.5236F, 0.0F, 0.0F);
+
+		body5 = new ModelRenderer(this);
+		body5.setPos(0.0F, -6.0F, 0.0F);
+		body4.addChild(body5);
+		setRotationAngle(body5, 0.5236F, 0.0F, 0.0F);
+
+		body6 = new ModelRenderer(this);
+		body6.setPos(0.0F, -7.0F, 0.0F);
+		body5.addChild(body6);
+		setRotationAngle(body6, 0.5672F, 0.0F, 0.0F);
+
+		body7 = new ModelRenderer(this);
+		body7.setPos(0.0F, -5.0F, 0.0F);
+		body6.addChild(body7);
+		setRotationAngle(body7, 0.6109F, 0.0F, 0.0F);
+
+		body8 = new ModelRenderer(this);
+		body8.setPos(0.0F, -6.0F, 0.0F);
+		body7.addChild(body8);
+		setRotationAngle(body8, 0.5236F, 0.0F, 0.0F);
+
+		body9 = new ModelRenderer(this);
+		body9.setPos(0.0F, -6.0F, 0.0F);
+		body8.addChild(body9);
+		setRotationAngle(body9, 0.3927F, 0.0F, 0.0F);
+
+		body10 = new ModelRenderer(this);
+		body10.setPos(0.0F, -6.0F, 0.0F);
+		body9.addChild(body10);
+		setRotationAngle(body10, 0.2182F, 0.0F, 0.0F);
+
+		head = new ModelRenderer(this);
+		head.setPos(0.0F, -3.0F, 0.0F);
+		body10.addChild(head);
+		setRotationAngle(head, 0.2182F, 0.0F, 0.0F);
+
+		headTop = new ModelRenderer(this);
+		headTop.setPos(0.0F, -11.0F, -6.0F);
+		head.addChild(headTop);
+		setRotationAngle(headTop, 0.6981F, 0.0F, 0.0F);
+
+		final ModelRenderer bone3 = new ModelRenderer(this);
+		bone3.setPos(0.0F, 42.5507F, 4.774F);
+		headTop.addChild(bone3);
+		setRotationAngle(bone3, 0.0F, -0.7854F, 0.0F);
+		bone3.texOffs(84, 61).addBox(-6.0F, -42.0F, -6.0F, 12.0F, 8.0F, 12.0F, 0.0F, false);
+		bone3.texOffs(12, 0).addBox(6.0F, -40.0F, -3.0F, 1.0F, 4.0F, 4.0F, 0.0F, false);
+		bone3.texOffs(12, 8).addBox(-3.0F, -40.0F, 6.0F, 4.0F, 4.0F, 1.0F, 0.0F, false);
+		bone3.texOffs(84, 82).addBox(-6.0F, -46.5F, -6.0F, 12.0F, 5.0F, 12.0F, -0.5F, false);
+		bone3.texOffs(84, 82).addBox(-7.0F, -46.0F, -7.0F, 12.0F, 5.0F, 12.0F, -1.0F, false);
+
+		headBottom = new ModelRenderer(this);
+		headBottom.setPos(0.0F, -11.0F, -6.0F);
+		head.addChild(headBottom);
+		setRotationAngle(headBottom, 2.0944F, 0.0F, 0.0F);
+
+		final ModelRenderer bone5 = new ModelRenderer(this);
+		bone5.setPos(0.0F, 40.2191F, 4.5237F);
+		headBottom.addChild(bone5);
+		setRotationAngle(bone5, 0.0F, -0.7854F, 0.0F);
+		bone5.texOffs(12, 23).addBox(-9.0F, -42.0F, -9.0F, 15.0F, 2.0F, 15.0F, 0.0F, false);
+		bone5.texOffs(12, 0).addBox(-9.0F, -40.5F, -9.0F, 15.0F, 8.0F, 15.0F, -0.5F, false);
+		bone5.texOffs(12, 0).addBox(-10.0F, -41.0F, -10.0F, 15.0F, 8.0F, 15.0F, -1.0F, false);
+
+		final ModelRenderer bone2 = new ModelRenderer(this);
+		bone2.setPos(0.0F, 35.0F, 0.0F);
+		head.addChild(bone2);
+		setRotationAngle(bone2, 0.0F, -0.7854F, 0.0F);
+		bone2.texOffs(12, 40).addBox(-6.0F, -45.0F, -6.0F, 12.0F, 12.0F, 12.0F, 0.0F, false);
+
+		final ModelRenderer bone11 = new ModelRenderer(this);
+		bone11.setPos(0.0F, -40.0F, 0.0F);
+		bone2.addChild(bone11);
+		setRotationAngle(bone11, 0.0F, 0.7854F, 0.0F);
+		bone11.texOffs(169, -8).addBox(0.0F, -8.0F, 7.2426F, 0.0F, 15.0F, 9.0F, 0.0F, false);
+
+		final ModelRenderer bone13 = new ModelRenderer(this);
+		bone13.setPos(0.0F, -40.0F, 0.0F);
+		bone2.addChild(bone13);
+		setRotationAngle(bone13, 0.0F, 2.3562F, 0.0F);
+		bone13.texOffs(169, -8).addBox(0.0F, -8.0F, 7.2426F, 0.0F, 15.0F, 9.0F, 0.0F, false);
+
+		final ModelRenderer bone15 = new ModelRenderer(this);
+		bone15.setPos(0.0F, -40.0F, 0.0F);
+		bone2.addChild(bone15);
+		setRotationAngle(bone15, 0.0F, -0.7854F, 0.0F);
+		bone15.texOffs(169, -8).addBox(0.0F, -8.0F, 7.2426F, 0.0F, 15.0F, 9.0F, 0.0F, false);
+
+		final ModelRenderer leftFinP = new ModelRenderer(this);
+		leftFinP.setPos(4.0F, -7.0F, -4.0F);
+		head.addChild(leftFinP);
+		setRotationAngle(leftFinP, 0.0F, 0.7854F, 0.0F);
+
+		leftFin = new ModelRenderer(this);
+		leftFin.setPos(0.0F, 0.0F, 0.0F);
+		leftFinP.addChild(leftFin);
+		setRotationAngle(leftFin, 0.0F, 0.0F, -0.9599F);
+		leftFin.texOffs(137, -9).addBox(0.5F, -1.0F, -5.0F, 0.0F, 18.0F, 10.0F, 0.0F, false);
+		leftFin.texOffs(158, 1).addBox(0.0F, -1.0F, -2.0F, 1.0F, 8.0F, 4.0F, 0.0F, false);
+
+		final ModelRenderer rightFinP = new ModelRenderer(this);
+		rightFinP.setPos(-5.0F, -7.0F, -4.0F);
+		head.addChild(rightFinP);
+		setRotationAngle(rightFinP, 0.0F, -0.7854F, 0.0F);
+
+		rightFin = new ModelRenderer(this);
+		rightFin.setPos(0.0F, 0.0F, 0.0F);
+		rightFinP.addChild(rightFin);
+		setRotationAngle(rightFin, 0.0F, 0.0F, 1.0908F);
+		rightFin.texOffs(137, -9).addBox(0.5F, -1.0F, -5.0F, 0.0F, 18.0F, 10.0F, 0.0F, false);
+		rightFin.texOffs(158, 1).addBox(0.0F, -1.0F, -2.0F, 1.0F, 8.0F, 4.0F, 0.0F, false);
+
+		final ModelRenderer bone20 = new ModelRenderer(this);
+		bone20.setPos(0.0F, 40.0F, 0.0F);
+		body10.addChild(bone20);
+		setRotationAngle(bone20, 0.0F, -0.7854F, 0.0F);
+		bone20.texOffs(48, 52).addBox(-6.0F, -44.0F, -6.0F, 12.0F, 9.0F, 12.0F, -0.1F, false);
+
+		final ModelRenderer bone17 = new ModelRenderer(this);
+		bone17.setPos(0.0F, -47.0F, 0.0F);
+		bone20.addChild(bone17);
+		setRotationAngle(bone17, 0.0F, 0.7854F, 0.0F);
+		bone17.texOffs(170, -8).addBox(0.0F, 3.0F, 5.0F, 0.0F, 10.0F, 8.0F, 0.0F, false);
+
+		final ModelRenderer bone19 = new ModelRenderer(this);
+		bone19.setPos(0.0F, -47.0F, 0.0F);
+		bone20.addChild(bone19);
+		setRotationAngle(bone19, 0.0F, 2.3562F, 0.0F);
+		bone19.texOffs(170, -8).addBox(0.0F, 3.0F, 5.0F, 0.0F, 10.0F, 8.0F, 0.0F, false);
+
+		final ModelRenderer bone21 = new ModelRenderer(this);
+		bone21.setPos(0.0F, -47.0F, 0.0F);
+		bone20.addChild(bone21);
+		setRotationAngle(bone21, 0.0F, -0.7854F, 0.0F);
+		bone21.texOffs(170, -8).addBox(0.0F, 3.0F, 5.0F, 0.0F, 10.0F, 8.0F, 0.0F, false);
+
+		final ModelRenderer bone18 = new ModelRenderer(this);
+		bone18.setPos(0.0F, 30.0F, 0.0F);
+		body9.addChild(bone18);
+		setRotationAngle(bone18, 0.0F, -0.7854F, 0.0F);
+		bone18.texOffs(60, 11).addBox(-6.0F, -34.0F, -6.0F, 12.0F, 9.0F, 12.0F, -0.15F, false);
+
+		final ModelRenderer bone22 = new ModelRenderer(this);
+		bone22.setPos(0.0F, -37.0F, 0.0F);
+		bone18.addChild(bone22);
+		setRotationAngle(bone22, 0.0F, 0.7854F, 0.0F);
+		bone22.texOffs(170, -8).addBox(0.0F, 2.0F, 3.0F, 0.0F, 10.0F, 8.0F, 0.0F, false);
+
+		final ModelRenderer bone23 = new ModelRenderer(this);
+		bone23.setPos(0.0F, -37.0F, 0.0F);
+		bone18.addChild(bone23);
+		setRotationAngle(bone23, 0.0F, 2.3562F, 0.0F);
+		bone23.texOffs(170, -8).addBox(0.0F, 2.0F, 3.0F, 0.0F, 10.0F, 8.0F, 0.0F, false);
+
+		final ModelRenderer bone24 = new ModelRenderer(this);
+		bone24.setPos(0.0F, -37.0F, 0.0F);
+		bone18.addChild(bone24);
+		setRotationAngle(bone24, 0.0F, -0.7854F, 0.0F);
+		bone24.texOffs(170, -8).addBox(0.0F, 2.0F, 3.0F, 0.0F, 10.0F, 8.0F, 0.0F, false);
+
+		final ModelRenderer bone16 = new ModelRenderer(this);
+		bone16.setPos(0.0F, 20.0F, 0.0F);
+		body8.addChild(bone16);
+		setRotationAngle(bone16, 0.0F, -0.7854F, 0.0F);
+		bone16.texOffs(12, 64).addBox(-6.0F, -24.0F, -6.0F, 12.0F, 9.0F, 12.0F, -0.2F, false);
+
+		final ModelRenderer bone14 = new ModelRenderer(this);
+		bone14.setPos(0.0F, 0.0F, 0.0F);
+		body7.addChild(bone14);
+		setRotationAngle(bone14, 0.0F, -0.7854F, 0.0F);
+		bone14.texOffs(48, 73).addBox(-6.0F, -4.0F, -6.0F, 12.0F, 9.0F, 12.0F, -0.25F, false);
+
+		final ModelRenderer bone12 = new ModelRenderer(this);
+		bone12.setPos(0.0F, 0.0F, 0.0F);
+		body6.addChild(bone12);
+		setRotationAngle(bone12, 0.0F, -0.7854F, 0.0F);
+		bone12.texOffs(84, 32).addBox(-6.0F, -3.0F, -6.0F, 12.0F, 9.0F, 12.0F, -0.3F, false);
+
+		final ModelRenderer bone10 = new ModelRenderer(this);
+		bone10.setPos(0.0F, 40.0F, 0.0F);
+		body5.addChild(bone10);
+		setRotationAngle(bone10, 0.0F, -0.7854F, 0.0F);
+		bone10.texOffs(2, 85).addBox(-5.0F, -44.0F, -5.0F, 10.0F, 8.0F, 10.0F, 0.2F, false);
+
+		final ModelRenderer bone8 = new ModelRenderer(this);
+		bone8.setPos(0.0F, 30.0F, 0.0F);
+		body4.addChild(bone8);
+		setRotationAngle(bone8, 0.0F, -0.7854F, 0.0F);
+		bone8.texOffs(32, 94).addBox(-5.0F, -34.0F, -5.0F, 10.0F, 8.0F, 10.0F, 0.15F, false);
+
+		final ModelRenderer bone6 = new ModelRenderer(this);
+		bone6.setPos(0.0F, 20.0F, 0.0F);
+		body3.addChild(bone6);
+		setRotationAngle(bone6, 0.0F, -0.7854F, 0.0F);
+		bone6.texOffs(96, 0).addBox(-5.0F, -24.0F, -5.0F, 10.0F, 8.0F, 10.0F, 0.1F, false);
+
+		final ModelRenderer bone4 = new ModelRenderer(this);
+		bone4.setPos(0.0F, 0.0F, 0.0F);
+		body2.addChild(bone4);
+		setRotationAngle(bone4, 0.0F, -0.7854F, 0.0F);
+		bone4.texOffs(72, 99).addBox(-5.0F, -4.0F, -5.0F, 10.0F, 8.0F, 10.0F, 0.05F, false);
+
+		final ModelRenderer bone = new ModelRenderer(this);
+		bone.setPos(0.0F, 0.0F, 0.0F);
+		body1.addChild(bone);
+		setRotationAngle(bone, 0.0F, -0.7854F, 0.0F);
+		bone.texOffs(0, 103).addBox(-5.0F, -3.0F, -5.0F, 10.0F, 8.0F, 10.0F, 0.0F, false);
 	}
 
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
-		PartDefinition partdefinition = meshdefinition.getRoot();
-		PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 300.0F));
-		PartDefinition body1 = main.addOrReplaceChild("body1", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, 0.0F, -300.0F, 0.5672F, 0.0F, 0.0F));
-		PartDefinition body2 = body1.addOrReplaceChild("body2", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, -0.3491F, 0.0F, 0.0F));
-		PartDefinition body3 = body2.addOrReplaceChild("body3", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, -0.6109F, 0.0F, 0.0F));
-		PartDefinition body4 = body3.addOrReplaceChild("body4", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, -0.5236F, 0.0F, 0.0F));
-		PartDefinition body5 = body4.addOrReplaceChild("body5", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, 0.5236F, 0.0F, 0.0F));
-		PartDefinition body6 = body5.addOrReplaceChild("body6", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -7.0F, 0.0F, 0.5672F, 0.0F, 0.0F));
-		PartDefinition body7 = body6.addOrReplaceChild("body7", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, 0.6109F, 0.0F, 0.0F));
-		PartDefinition body8 = body7.addOrReplaceChild("body8", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, 0.5236F, 0.0F, 0.0F));
-		PartDefinition body9 = body8.addOrReplaceChild("body9", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, 0.3927F, 0.0F, 0.0F));
-		PartDefinition body10 = body9.addOrReplaceChild("body10", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, 0.2182F, 0.0F, 0.0F));
-		PartDefinition head = body10.addOrReplaceChild("head", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -3.0F, 0.0F, 0.2182F, 0.0F, 0.0F));
-		PartDefinition headTop = head.addOrReplaceChild("headTop", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -11.0F, -6.0F, 0.6981F, 0.0F, 0.0F));
-		PartDefinition bone3 = headTop.addOrReplaceChild("bone3",
-				CubeListBuilder.create().texOffs(84, 61).addBox(-6.0F, -42.0F, -6.0F, 12.0F, 8.0F, 12.0F, new CubeDeformation(0.0F)).texOffs(12, 0)
-						.addBox(6.0F, -40.0F, -3.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(12, 8)
-						.addBox(-3.0F, -40.0F, 6.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(84, 82)
-						.addBox(-6.0F, -46.5F, -6.0F, 12.0F, 5.0F, 12.0F, new CubeDeformation(-0.5F)).texOffs(84, 82)
-						.addBox(-7.0F, -46.0F, -7.0F, 12.0F, 5.0F, 12.0F, new CubeDeformation(-1.0F)),
-				PartPose.offsetAndRotation(0.0F, 42.5507F, 4.774F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition headBottom = head.addOrReplaceChild("headBottom", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(0.0F, -11.0F, -6.0F, 2.0944F, 0.0F, 0.0F));
-		PartDefinition bone5 = headBottom.addOrReplaceChild("bone5",
-				CubeListBuilder.create().texOffs(12, 23).addBox(-9.0F, -42.0F, -9.0F, 15.0F, 2.0F, 15.0F, new CubeDeformation(0.0F)).texOffs(12, 0)
-						.addBox(-9.0F, -40.5F, -9.0F, 15.0F, 8.0F, 15.0F, new CubeDeformation(-0.5F)).texOffs(12, 0)
-						.addBox(-10.0F, -41.0F, -10.0F, 15.0F, 8.0F, 15.0F, new CubeDeformation(-1.0F)),
-				PartPose.offsetAndRotation(0.0F, 40.2191F, 4.5237F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone2 = head.addOrReplaceChild("bone2",
-				CubeListBuilder.create().texOffs(12, 40).addBox(-6.0F, -45.0F, -6.0F, 12.0F, 12.0F, 12.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, 35.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone11 = bone2.addOrReplaceChild("bone11",
-				CubeListBuilder.create().texOffs(169, -8).addBox(0.0F, -8.0F, 7.2426F, 0.0F, 15.0F, 9.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -40.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
-		PartDefinition bone13 = bone2.addOrReplaceChild("bone13",
-				CubeListBuilder.create().texOffs(169, -8).addBox(0.0F, -8.0F, 7.2426F, 0.0F, 15.0F, 9.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -40.0F, 0.0F, 0.0F, 2.3562F, 0.0F));
-		PartDefinition bone15 = bone2.addOrReplaceChild("bone15",
-				CubeListBuilder.create().texOffs(169, -8).addBox(0.0F, -8.0F, 7.2426F, 0.0F, 15.0F, 9.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -40.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition leftFinP = head.addOrReplaceChild("leftFinP", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(4.0F, -7.0F, -4.0F, 0.0F, 0.7854F, 0.0F));
-		PartDefinition leftFin = leftFinP.addOrReplaceChild("leftFin",
-				CubeListBuilder.create().texOffs(137, -9).addBox(0.5F, -1.0F, -5.0F, 0.0F, 18.0F, 10.0F, new CubeDeformation(0.0F)).texOffs(158, 1)
-						.addBox(0.0F, -1.0F, -2.0F, 1.0F, 8.0F, 4.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.9599F));
-		PartDefinition rightFinP = head.addOrReplaceChild("rightFinP", CubeListBuilder.create(),
-				PartPose.offsetAndRotation(-5.0F, -7.0F, -4.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition rightFin = rightFinP.addOrReplaceChild("rightFin",
-				CubeListBuilder.create().texOffs(137, -9).addBox(0.5F, -1.0F, -5.0F, 0.0F, 18.0F, 10.0F, new CubeDeformation(0.0F)).texOffs(158, 1)
-						.addBox(0.0F, -1.0F, -2.0F, 1.0F, 8.0F, 4.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0908F));
-		PartDefinition bone20 = body10.addOrReplaceChild("bone20",
-				CubeListBuilder.create().texOffs(48, 52).addBox(-6.0F, -44.0F, -6.0F, 12.0F, 9.0F, 12.0F, new CubeDeformation(-0.1F)),
-				PartPose.offsetAndRotation(0.0F, 40.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone17 = bone20.addOrReplaceChild("bone17",
-				CubeListBuilder.create().texOffs(170, -8).addBox(0.0F, 3.0F, 5.0F, 0.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -47.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
-		PartDefinition bone19 = bone20.addOrReplaceChild("bone19",
-				CubeListBuilder.create().texOffs(170, -8).addBox(0.0F, 3.0F, 5.0F, 0.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -47.0F, 0.0F, 0.0F, 2.3562F, 0.0F));
-		PartDefinition bone21 = bone20.addOrReplaceChild("bone21",
-				CubeListBuilder.create().texOffs(170, -8).addBox(0.0F, 3.0F, 5.0F, 0.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -47.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone18 = body9.addOrReplaceChild("bone18",
-				CubeListBuilder.create().texOffs(60, 11).addBox(-6.0F, -34.0F, -6.0F, 12.0F, 9.0F, 12.0F, new CubeDeformation(-0.15F)),
-				PartPose.offsetAndRotation(0.0F, 30.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone22 = bone18.addOrReplaceChild("bone22",
-				CubeListBuilder.create().texOffs(170, -8).addBox(0.0F, 2.0F, 3.0F, 0.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -37.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
-		PartDefinition bone23 = bone18.addOrReplaceChild("bone23",
-				CubeListBuilder.create().texOffs(170, -8).addBox(0.0F, 2.0F, 3.0F, 0.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -37.0F, 0.0F, 0.0F, 2.3562F, 0.0F));
-		PartDefinition bone24 = bone18.addOrReplaceChild("bone24",
-				CubeListBuilder.create().texOffs(170, -8).addBox(0.0F, 2.0F, 3.0F, 0.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -37.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone16 = body8.addOrReplaceChild("bone16",
-				CubeListBuilder.create().texOffs(12, 64).addBox(-6.0F, -24.0F, -6.0F, 12.0F, 9.0F, 12.0F, new CubeDeformation(-0.2F)),
-				PartPose.offsetAndRotation(0.0F, 20.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone14 = body7.addOrReplaceChild("bone14",
-				CubeListBuilder.create().texOffs(48, 73).addBox(-6.0F, -4.0F, -6.0F, 12.0F, 9.0F, 12.0F, new CubeDeformation(-0.25F)),
-				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone12 = body6.addOrReplaceChild("bone12",
-				CubeListBuilder.create().texOffs(84, 32).addBox(-6.0F, -3.0F, -6.0F, 12.0F, 9.0F, 12.0F, new CubeDeformation(-0.3F)),
-				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone10 = body5.addOrReplaceChild("bone10",
-				CubeListBuilder.create().texOffs(2, 85).addBox(-5.0F, -44.0F, -5.0F, 10.0F, 8.0F, 10.0F, new CubeDeformation(0.2F)),
-				PartPose.offsetAndRotation(0.0F, 40.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone8 = body4.addOrReplaceChild("bone8",
-				CubeListBuilder.create().texOffs(32, 94).addBox(-5.0F, -34.0F, -5.0F, 10.0F, 8.0F, 10.0F, new CubeDeformation(0.15F)),
-				PartPose.offsetAndRotation(0.0F, 30.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone6 = body3.addOrReplaceChild("bone6",
-				CubeListBuilder.create().texOffs(96, 0).addBox(-5.0F, -24.0F, -5.0F, 10.0F, 8.0F, 10.0F, new CubeDeformation(0.1F)),
-				PartPose.offsetAndRotation(0.0F, 20.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone4 = body2.addOrReplaceChild("bone4",
-				CubeListBuilder.create().texOffs(72, 99).addBox(-5.0F, -4.0F, -5.0F, 10.0F, 8.0F, 10.0F, new CubeDeformation(0.05F)),
-				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		PartDefinition bone = body1.addOrReplaceChild("bone",
-				CubeListBuilder.create().texOffs(0, 103).addBox(-5.0F, -3.0F, -5.0F, 10.0F, 8.0F, 10.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-		return LayerDefinition.create(meshdefinition, 256, 256);
+	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+		modelRenderer.xRot = x;
+		modelRenderer.yRot = y;
+		modelRenderer.zRot = z;
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-							   float blue, float alpha) {
+	public void renderToBuffer(MatrixStack poseStack, @Nonnull IVertexBuilder vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		poseStack.pushPose();
 		poseStack.scale(1.8f, 1.8f, 1.8f);
 		poseStack.translate(0F, -0.7F, 0F);
@@ -170,13 +265,12 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 		poseStack.popPose();
 	}
 
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(@Nonnull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
 		final float rareIdle = HekateLib.mod.get(entity, "rareIdle", 1F, 1F);
 		final float s1 = 0.1F;
 		HekateLib.render.tick(entity);
-		HekateLib.render.prepare(main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headTop, headBottom, leftFin,
-				rightFin);
+		HekateLib.render.prepare(main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headTop, headBottom, leftFin, rightFin);
 
 		HekateLib.i(this.body1, -1F, -17.5F, 0F, 0F, 0F, 0F, s1, -0.95F, ageInTicks);
 		HekateLib.i(this.body2, -1F, 20F, 0F, 0F, 0F, 0F, s1, -0.90F, ageInTicks);

@@ -14,6 +14,8 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class SweetLanceItem extends SwordItem {
 	public SweetLanceItem() {
 		super(new IItemTier() {
@@ -37,7 +39,7 @@ public class SweetLanceItem extends SwordItem {
 				return 14;
 			}
 
-			public Ingredient getRepairIngredient() {
+			public @Nonnull Ingredient getRepairIngredient() {
 				return Ingredient.of(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get().getDefaultInstance());
 			}
 		}, 3, -3.0f, new Properties().fireResistant().rarity(ObscureRarity.MYTHIC)
@@ -45,7 +47,8 @@ public class SweetLanceItem extends SwordItem {
 	}
 
 	@Override
-	public ItemStack finishUsingItem(ItemStack itemstack, World world, LivingEntity entity) {
+	@Nonnull
+	public ItemStack finishUsingItem(@Nonnull ItemStack itemstack, @Nonnull World world, @Nonnull LivingEntity entity) {
 		if (entity instanceof PlayerEntity) {
 			final PlayerEntity player = (PlayerEntity) entity;
 			world.playSound(player, player.getX(), player.getY(), player.getZ(), player.getEatingSound(itemstack), SoundCategory.NEUTRAL,
@@ -59,6 +62,7 @@ public class SweetLanceItem extends SwordItem {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getDefaultInstance() {
 		final ItemStack stack = new ItemStack(this);
 		stack.enchant(Enchantments.MOB_LOOTING, 1);
