@@ -2,21 +2,10 @@ package com.obscuria.aquamirae.client.models;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.obscureapi.client.animations.HekateLib;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -81,87 +70,139 @@ public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 		setRotationAngle(cube4, 0.0F, 0.0F, -0.3491F);
 		cube4.texOffs(64, 45).addBox(-1.0F, -9.5F, -16.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
 
+		final ModelRenderer cube5 = new ModelRenderer(this);
+		cube5.setPos(0.0F, 0.0F, -16.0F);
+		bodyTop.addChild(cube5);
 
+		final ModelRenderer cube6 = new ModelRenderer(this);
+		cube6.setPos(0.0F, -2.0F, 16.0F);
+		cube5.addChild(cube6);
+		setRotationAngle(cube6, 0.0F, 0.0F, 0.3491F);
+		cube6.texOffs(64, 65).addBox(1.0F, -9.5F, -16.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
 
+		final ModelRenderer cube7 = new ModelRenderer(this);
+		cube7.setPos(0.0F, 0.0F, -16.0F);
+		bodyTop.addChild(cube7);
 
-		PartDefinition crystal3_top = body_top.addOrReplaceChild("crystal3_top", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -16.0F));
-		PartDefinition cube_r3 = crystal3_top.addOrReplaceChild("cube_r3",
-				CubeListBuilder.create().texOffs(64, 65).addBox(1.0F, -9.5F, -16.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -2.0F, 16.0F, 0.0F, 0.0F, 0.3491F));
-		PartDefinition crystal4_top = body_top.addOrReplaceChild("crystal4_top", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -16.0F));
-		PartDefinition cube_r4 = crystal4_top.addOrReplaceChild("cube_r4",
-				CubeListBuilder.create().texOffs(32, 48).addBox(2.0F, -10.5F, -16.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -2.0F, 16.0F, 0.0F, 0.0F, 0.7854F));
-		PartDefinition left_wing1_top = body_top.addOrReplaceChild("left_wing1_top",
-				CubeListBuilder.create().texOffs(48, 45).addBox(-9.0F, -1.0F, -14.0F, 9.0F, 2.0F, 14.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(-8.0F, 0.0F, 0.0F));
-		PartDefinition left_wing2_top = left_wing1_top.addOrReplaceChild("left_wing2_top",
-				CubeListBuilder.create().texOffs(92, 0).addBox(-5.0F, -1.0F, -11.0F, 5.0F, 2.0F, 11.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(-9.0F, 0.0F, 0.0F));
-		PartDefinition right_wing1_top = body_top.addOrReplaceChild("right_wing1_top",
-				CubeListBuilder.create().texOffs(60, 0).addBox(0.0F, -1.0F, -14.0F, 9.0F, 2.0F, 14.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(8.0F, 0.0F, 0.0F));
-		PartDefinition right_wing2_top = right_wing1_top.addOrReplaceChild("right_wing2_top",
-				CubeListBuilder.create().texOffs(47, 91).addBox(0.0F, -1.0F, -11.0F, 5.0F, 2.0F, 11.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(9.0F, 0.0F, 0.0F));
-		PartDefinition body_bottom = main2.addOrReplaceChild(
-				"body_bottom", CubeListBuilder.create().texOffs(0, 26).addBox(-8.0F, 0.5F, 0.0F, 16.0F, 3.0F, 16.0F, new CubeDeformation(0.0F))
-						.texOffs(72, 26).addBox(-1.5F, -0.5F, 0.0F, 3.0F, 3.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(0.0F, -2.0F, 0.0F));
-		PartDefinition crystal1_bottom = body_bottom.addOrReplaceChild("crystal1_bottom", CubeListBuilder.create(),
-				PartPose.offset(0.0F, 2.0F, 0.0F));
-		PartDefinition cube_r5 = crystal1_bottom.addOrReplaceChild("cube_r5",
-				CubeListBuilder.create().texOffs(0, 58).addBox(-2.0F, -10.5F, 0.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, -0.7854F));
-		PartDefinition crystal2_bottom = body_bottom.addOrReplaceChild("crystal2_bottom", CubeListBuilder.create(),
-				PartPose.offset(0.0F, 2.0F, 0.0F));
-		PartDefinition cube_r6 = crystal2_bottom.addOrReplaceChild("cube_r6",
-				CubeListBuilder.create().texOffs(60, 0).addBox(-1.0F, -9.5F, 0.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, -0.3491F));
-		PartDefinition crystal3_bottom = body_bottom.addOrReplaceChild("crystal3_bottom", CubeListBuilder.create(),
-				PartPose.offset(0.0F, 2.0F, 0.0F));
-		PartDefinition cube_r7 = crystal3_bottom.addOrReplaceChild("cube_r7",
-				CubeListBuilder.create().texOffs(64, 55).addBox(1.0F, -9.5F, 0.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, 0.3491F));
-		PartDefinition crystal4_bottom = body_bottom.addOrReplaceChild("crystal4_bottom", CubeListBuilder.create(),
-				PartPose.offset(0.0F, 2.0F, 0.0F));
-		PartDefinition cube_r8 = crystal4_bottom.addOrReplaceChild("cube_r8",
-				CubeListBuilder.create().texOffs(0, 48).addBox(2.0F, -10.5F, 0.0F, 0.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)),
-				PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, 0.7854F));
-		PartDefinition left_wing1_bottom = body_bottom.addOrReplaceChild("left_wing1_bottom",
-				CubeListBuilder.create().texOffs(80, 45).addBox(-9.0F, -1.0F, 0.0F, 9.0F, 2.0F, 10.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(-8.0F, 2.0F, 0.0F));
-		PartDefinition left_wing2_bottom = left_wing1_bottom.addOrReplaceChild("left_wing2_bottom",
-				CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -1.0F, 0.0F, 5.0F, 2.0F, 5.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(-9.0F, 0.0F, 0.0F));
-		PartDefinition right_wing1_bottom = body_bottom.addOrReplaceChild("right_wing1_bottom",
-				CubeListBuilder.create().texOffs(20, 84).addBox(0.0F, -1.0F, 0.0F, 9.0F, 2.0F, 10.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(8.0F, 2.0F, 0.0F));
-		PartDefinition right_wing2_bottom = right_wing1_bottom.addOrReplaceChild("right_wing2_bottom",
-				CubeListBuilder.create().texOffs(0, 7).addBox(0.0F, -1.0F, 0.0F, 5.0F, 2.0F, 5.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(9.0F, 0.0F, 0.0F));
-		PartDefinition tail1 = body_bottom.addOrReplaceChild("tail1",
-				CubeListBuilder.create().texOffs(96, 57).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 9.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(0.0F, 1.0F, 16.0F));
-		PartDefinition tail2 = tail1.addOrReplaceChild("tail2",
-				CubeListBuilder.create().texOffs(98, 69).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 7.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(0.0F, 0.0F, 9.0F));
-		PartDefinition tail3 = tail2
-				.addOrReplaceChild("tail3",
-						CubeListBuilder.create().texOffs(0, 87).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 9.0F, new CubeDeformation(0.0F))
-								.texOffs(22, 22).addBox(-8.5F, 0.0F, 5.0F, 17.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)),
-						PartPose.offset(0.0F, 0.0F, 7.0F));
-		PartDefinition tail4 = tail3
-				.addOrReplaceChild("tail4",
-						CubeListBuilder.create().texOffs(2, 98).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 7.0F, new CubeDeformation(0.0F))
-								.texOffs(19, 15).addBox(-8.5F, 0.0F, 0.0F, 17.0F, 0.0F, 7.0F, new CubeDeformation(0.0F)),
-						PartPose.offset(0.0F, 0.0F, 9.0F));
-		PartDefinition tail5 = tail4
-				.addOrReplaceChild("tail5",
-						CubeListBuilder.create().texOffs(11, 0).addBox(-8.5F, 0.0F, 0.0F, 17.0F, 0.0F, 15.0F, new CubeDeformation(0.0F))
-								.texOffs(0, 14).addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 8.0F, new CubeDeformation(0.0F)),
-						PartPose.offset(0.0F, 0.0F, 7.0F));
-		return LayerDefinition.create(meshdefinition, 128, 128);
+		final ModelRenderer cube8 = new ModelRenderer(this);
+		cube8.setPos(0.0F, -2.0F, 16.0F);
+		cube7.addChild(cube8);
+		setRotationAngle(cube8, 0.0F, 0.0F, 0.7854F);
+		cube8.texOffs(32, 48).addBox(2.0F, -10.5F, -16.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+
+		wing1LeftTop = new ModelRenderer(this);
+		wing1LeftTop.setPos(-8.0F, 0.0F, 0.0F);
+		bodyTop.addChild(wing1LeftTop);
+		wing1LeftTop.texOffs(48, 45).addBox(-9.0F, -1.0F, -14.0F, 9.0F, 2.0F, 14.0F, 0.0F, false);
+
+		wing2LeftTop = new ModelRenderer(this);
+		wing2LeftTop.setPos(-9.0F, 0.0F, 0.0F);
+		wing1LeftTop.addChild(wing2LeftTop);
+		wing2LeftTop.texOffs(92, 0).addBox(-5.0F, -1.0F, -11.0F, 5.0F, 2.0F, 11.0F, 0.0F, false);
+
+		wing1RightTop = new ModelRenderer(this);
+		wing1RightTop.setPos(8.0F, 0.0F, 0.0F);
+		bodyTop.addChild(wing1RightTop);
+		wing1RightTop.texOffs(60, 0).addBox(0.0F, -1.0F, -14.0F, 9.0F, 2.0F, 14.0F, 0.0F, false);
+
+		wing2RightTop = new ModelRenderer(this);
+		wing2RightTop.setPos(9.0F, 0.0F, 0.0F);
+		wing1RightTop.addChild(wing2RightTop);
+		wing2RightTop.texOffs(47, 91).addBox(0.0F, -1.0F, -11.0F, 5.0F, 2.0F, 11.0F, 0.0F, false);
+
+		bodyBottom = new ModelRenderer(this);
+		bodyBottom.setPos(0.0F, -2.0F, 0.0F);
+		main2.addChild(bodyBottom);
+		bodyBottom.texOffs(0, 26).addBox(-8.0F, 0.5F, 0.0F, 16.0F, 3.0F, 16.0F, 0.0F, false);
+		bodyBottom.texOffs(72, 26).addBox(-1.5F, -0.5F, 0.0F, 3.0F, 3.0F, 16.0F, 0.0F, false);
+
+		final ModelRenderer cube9 = new ModelRenderer(this);
+		cube9.setPos(0.0F, 2.0F, 0.0F);
+		bodyBottom.addChild(cube9);
+
+		final ModelRenderer cube10 = new ModelRenderer(this);
+		cube10.setPos(0.0F, -2.0F, 0.0F);
+		cube9.addChild(cube10);
+		setRotationAngle(cube10, 0.0F, 0.0F, -0.7854F);
+		cube10.texOffs(0, 58).addBox(-2.0F, -10.5F, 0.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+
+		final ModelRenderer cube11 = new ModelRenderer(this);
+		cube11.setPos(0.0F, 2.0F, 0.0F);
+		bodyBottom.addChild(cube11);
+
+		final ModelRenderer cube12 = new ModelRenderer(this);
+		cube12.setPos(0.0F, -2.0F, 0.0F);
+		cube11.addChild(cube12);
+		setRotationAngle(cube12, 0.0F, 0.0F, -0.3491F);
+		cube12.texOffs(60, 0).addBox(-1.0F, -9.5F, 0.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+
+		final ModelRenderer cube13 = new ModelRenderer(this);
+		cube13.setPos(0.0F, 2.0F, 0.0F);
+		bodyBottom.addChild(cube13);
+
+		final ModelRenderer cube14 = new ModelRenderer(this);
+		cube14.setPos(0.0F, -2.0F, 0.0F);
+		cube13.addChild(cube14);
+		setRotationAngle(cube14, 0.0F, 0.0F, 0.3491F);
+		cube14.texOffs(64, 55).addBox(1.0F, -9.5F, 0.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+
+		final ModelRenderer cube15 = new ModelRenderer(this);
+		cube15.setPos(0.0F, 2.0F, 0.0F);
+		bodyBottom.addChild(cube15);
+
+		final ModelRenderer cube16 = new ModelRenderer(this);
+		cube16.setPos(0.0F, -2.0F, 0.0F);
+		cube15.addChild(cube16);
+		setRotationAngle(cube16, 0.0F, 0.0F, 0.7854F);
+		cube16.texOffs(0, 48).addBox(2.0F, -10.5F, 0.0F, 0.0F, 10.0F, 16.0F, 0.0F, false);
+
+		wing1LeftBottom = new ModelRenderer(this);
+		wing1LeftBottom.setPos(-8.0F, 2.0F, 0.0F);
+		bodyBottom.addChild(wing1LeftBottom);
+		wing1LeftBottom.texOffs(80, 45).addBox(-9.0F, -1.0F, 0.0F, 9.0F, 2.0F, 10.0F, 0.0F, false);
+
+		wing2LeftBottom = new ModelRenderer(this);
+		wing2LeftBottom.setPos(-9.0F, 0.0F, 0.0F);
+		wing1LeftBottom.addChild(wing2LeftBottom);
+		wing2LeftBottom.texOffs(0, 0).addBox(-5.0F, -1.0F, 0.0F, 5.0F, 2.0F, 5.0F, 0.0F, false);
+
+		wing1RightBottom = new ModelRenderer(this);
+		wing1RightBottom.setPos(8.0F, 2.0F, 0.0F);
+		bodyBottom.addChild(wing1RightBottom);
+		wing1RightBottom.texOffs(20, 84).addBox(0.0F, -1.0F, 0.0F, 9.0F, 2.0F, 10.0F, 0.0F, false);
+
+		wing2RightBottom = new ModelRenderer(this);
+		wing2RightBottom.setPos(9.0F, 0.0F, 0.0F);
+		wing1RightBottom.addChild(wing2RightBottom);
+		wing2RightBottom.texOffs(0, 7).addBox(0.0F, -1.0F, 0.0F, 5.0F, 2.0F, 5.0F, 0.0F, false);
+
+		tail1 = new ModelRenderer(this);
+		tail1.setPos(0.0F, 1.0F, 16.0F);
+		bodyBottom.addChild(tail1);
+		tail1.texOffs(96, 57).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 9.0F, 0.0F, false);
+
+		tail2 = new ModelRenderer(this);
+		tail2.setPos(0.0F, 0.0F, 9.0F);
+		tail1.addChild(tail2);
+		tail2.texOffs(98, 69).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 7.0F, 0.0F, false);
+
+		tail3 = new ModelRenderer(this);
+		tail3.setPos(0.0F, 0.0F, 7.0F);
+		tail2.addChild(tail3);
+		tail3.texOffs(0, 87).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 9.0F, 0.0F, false);
+		tail3.texOffs(22, 22).addBox(-8.5F, 0.0F, 5.0F, 17.0F, 0.0F, 4.0F, 0.0F, false);
+
+		tail4 = new ModelRenderer(this);
+		tail4.setPos(0.0F, 0.0F, 9.0F);
+		tail3.addChild(tail4);
+		tail4.texOffs(2, 98).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 7.0F, 0.0F, false);
+		tail4.texOffs(19, 15).addBox(-8.5F, 0.0F, 0.0F, 17.0F, 0.0F, 7.0F, 0.0F,false);
+
+		tail5 = new ModelRenderer(this);
+		tail5.setPos(0.0F, 0.0F, 7.0F);
+		tail4.addChild(tail5);
+		tail5.texOffs(11, 0).addBox(-8.5F, 0.0F, 0.0F, 17.0F, 0.0F, 15.0F, 0.0F, false);
+		tail5.texOffs(0, 14).addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 8.0F, 0.0F, false);
 	}
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
