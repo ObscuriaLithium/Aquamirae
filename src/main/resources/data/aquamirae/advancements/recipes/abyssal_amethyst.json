@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:abyssal_amethyst"
-            ]
+            "item": "aquamirae:abyssal_amethyst"
           }
         ]
       }

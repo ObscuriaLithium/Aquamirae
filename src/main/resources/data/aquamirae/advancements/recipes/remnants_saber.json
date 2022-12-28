@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:remnants_saber"
-            ]
+            "item": "aquamirae:remnants_saber"
           }
         ]
       }

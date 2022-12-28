@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:sharp_bones"
-            ]
+            "item": "aquamirae:sharp_bones"
           }
         ]
       }

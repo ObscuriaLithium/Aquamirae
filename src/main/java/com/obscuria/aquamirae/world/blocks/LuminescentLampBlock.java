@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.world.blocks;
 
-import com.obscuria.aquamirae.client.particle.GhostShineParticle;
+import com.obscuria.aquamirae.registry.AquamiraeParticles;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.fluid.FluidState;
@@ -83,7 +83,7 @@ public class LuminescentLampBlock extends Block implements IWaterLoggable {
 	@Override
 	public void animateTick(@Nonnull BlockState blockstate, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Random random) {
 		super.animateTick(blockstate, world, pos, random);
-		if (random.nextFloat() < 0.2) world.addParticle(GhostShineParticle.TYPE,
+		if (random.nextFloat() < 0.2) world.addParticle(AquamiraeParticles.GHOST_SHINE.get(),
 					pos.getX() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, pos.getY() + 1.6 + (random.nextFloat() - 0.5) * 0.05D,
 					pos.getZ() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, 0, 0, 0);
 	}

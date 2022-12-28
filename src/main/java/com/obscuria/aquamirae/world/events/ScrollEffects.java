@@ -66,8 +66,9 @@ public class ScrollEffects {
         for (int ix = -1; ix <= 1; ix++)
             for (int iy = 1; iy >= -10; iy--)
                 for (int iz = -1; iz <= 1; iz++) {
-                    final BlockPos pos = new BlockPos(PLAYER.getX() + ix, PLAYER.getY() + iy, PLAYER.getZ() + iz);
-                    if (PLAYER.level.getBlockState(pos).is(AquamiraeMod.SCROLL_DESTROY)) PLAYER.level.destroyBlock(pos, true);
+                    final BlockPos pos = new BlockPos(PLAYER.blockPosition().getX() + ix, PLAYER.blockPosition().getY() + iy, PLAYER.blockPosition().getZ() + iz);
+                    if (PLAYER.level.getBlockState(pos).is(AquamiraeMod.SCROLL_DESTROY))
+                        PLAYER.level.destroyBlock(pos, true);
                 }
 
     }

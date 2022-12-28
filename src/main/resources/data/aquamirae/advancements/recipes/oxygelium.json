@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:oxygelium"
-            ]
+            "item": "aquamirae:oxygelium"
           }
         ]
       }

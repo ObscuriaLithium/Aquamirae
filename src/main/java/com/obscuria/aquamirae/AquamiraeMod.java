@@ -20,14 +20,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -52,13 +51,12 @@ public class AquamiraeMod {
 	public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 	private static int messageID = 0;
 
-	public static final ObscureClass SEA_WOLF = ObscureAPI.Classes.register(new ObscureClass(AquamiraeMod.MODID, "sea_wolf"));
-	public static final List<ResourceLocation> ICE_MAZE = Collections.singletonList(new ResourceLocation("minecraft:deep_frozen_ocean"));
-	public static final ResourceLocation BIOME = new ResourceLocation("minecraft:deep_frozen_ocean");
+	public static final ObscureClass SEA_WOLF = ObscureAPI.Classes.register(new ObscureClass(MODID, "sea_wolf"));
+	public static final List<ResourceLocation> ICE_MAZE = Arrays.asList(Biomes.DEEP_FROZEN_OCEAN.location(), Biomes.FROZEN_OCEAN.location());
 	public static final Tags.IOptionalNamedTag<Block> EEL_MOVE = BlockTags.createOptional(new ResourceLocation(MODID, "eel_move"));
 	public static final Tags.IOptionalNamedTag<Block> MAZE_MOTHER_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "maze_mother_destroy"));
 	public static final Tags.IOptionalNamedTag<Block> SCROLL_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "scroll_destroy"));
-	public static final ItemGroup TAB = new ItemGroup("aquamirae") {
+	public static final ItemGroup TAB = new ItemGroup(MODID) {
 		@Override @Nonnull
 		public ItemStack makeIcon() {
 			return AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance();
@@ -72,25 +70,29 @@ public class AquamiraeMod {
 	public AquamiraeMod() {
 		final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 		final IEventBus EVENT_BUS = MinecraftForge.EVENT_BUS;
-		EVENT_BUS.register(this);
 
 		AquamiraeConfig.load();
 		AquamiraeFeatures.REGISTRY.register(MOD_EVENT_BUS);
+		AquamiraeStructures.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraeSounds.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraeBlocks.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraeEntities.REGISTRY.register(MOD_EVENT_BUS);
+		AquamiraeParticles.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraeItems.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraeMobEffects.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraePotions.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeStructures.REGISTRY.register(MOD_EVENT_BUS);
 
+		EVENT_BUS.register(this);
 		MOD_EVENT_BUS.addListener(this::commonSetup);
+		EVENT_BUS.addListener(this::addStructures);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityDeath);
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
+		AquamiraeStructures.register();
+		AquamiraeConfiguredStructures.register();
 		ObscureAPI.collectionMod(AquamiraeMod.MODID, "ob-aquamirae");
 
 		TooltipHandler.Lore.add("aquamirae:sea_casserole");
@@ -108,6 +110,14 @@ public class AquamiraeMod {
 		TooltipHandler.Lore.add("aquamirae:golden_moth_in_a_jar");
 		TooltipHandler.Lore.add("aquamirae:rune_of_the_storm");
 		TooltipHandler.Lore.add("aquamirae:oxygelium");
+	}
+
+	private void addStructures(final BiomeLoadingEvent event) {
+		if (event.getName() != null && ICE_MAZE.contains(event.getName())) {
+			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_ICE_MAZE);
+			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_SHIP);
+			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_OUTPOST);
+		}
 	}
 
 	public static void loadFromConfig(LivingEntity entity, Attribute attribute, double amount) {

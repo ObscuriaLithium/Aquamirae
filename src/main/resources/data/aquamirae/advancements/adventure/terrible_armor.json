@@ -20,24 +20,16 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:terrible_helmet"
-            ]
+            "item": "aquamirae:terrible_helmet"
           },
           {
-            "items": [
-              "aquamirae:terrible_chestplate"
-            ]
+            "item": "aquamirae:terrible_chestplate"
           },
           {
-            "items": [
-              "aquamirae:terrible_leggings"
-            ]
+            "item": "aquamirae:terrible_leggings"
           },
           {
-            "items": [
-              "aquamirae:terrible_boots"
-            ]
+            "item": "aquamirae:terrible_boots"
           }
         ]
       }

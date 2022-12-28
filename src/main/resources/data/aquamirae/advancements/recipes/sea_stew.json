@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:sea_stew"
-            ]
+            "item": "aquamirae:sea_stew"
           }
         ]
       }

@@ -1,40 +1,19 @@
 
 package com.obscuria.aquamirae.client.particle;
 
-import com.obscuria.aquamirae.AquamiraeMod;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@OnlyIn(Dist.CLIENT)
 public class ShineParticle {
 
-	public static final BasicParticleType TYPE = new BasicParticleType(true);
-
-	@SubscribeEvent
-	public static void registerParticleType(RegistryEvent.Register<ParticleType<?>> event) {
-		event.getRegistry().register(TYPE.setRegistryName(new ResourceLocation(AquamiraeMod.MODID, "shine")));
-	}
-
 	@OnlyIn(Dist.CLIENT)
-	@SubscribeEvent
-	public static void registerParticle(ParticleFactoryRegisterEvent event) {
-		Minecraft.getInstance().particleEngine.register(TYPE, Factory::new);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static class Instance extends SpriteTexturedParticle {
+	public static class Instance extends SpriteTexturedParticle {
 		private final IAnimatedSprite spriteSet;
 		private float angularVelocity;
 		private final float angularAcceleration;

@@ -15,35 +15,51 @@
     "hidden": false
   },
   "criteria": {
-    "abyssal_armor": {
+    "abyssal_armor_heaume": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:abyssal_heaume",
-              "aquamirae:abyssal_tiara"
-            ]
+            "item": "aquamirae:abyssal_heaume"
           },
           {
-            "items": [
-              "aquamirae:abyssal_brigantine"
-            ]
+            "item": "aquamirae:abyssal_brigantine"
           },
           {
-            "items": [
-              "aquamirae:abyssal_leggings"
-            ]
+            "item": "aquamirae:abyssal_leggings"
           },
           {
-            "items": [
-              "aquamirae:abyssal_boots"
-            ]
+            "item": "aquamirae:abyssal_boots"
+          }
+        ]
+      }
+    },
+    "abyssal_armor_tiara": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "aquamirae:abyssal_tiara"
+          },
+          {
+            "item": "aquamirae:abyssal_brigantine"
+          },
+          {
+            "item": "aquamirae:abyssal_leggings"
+          },
+          {
+            "item": "aquamirae:abyssal_boots"
           }
         ]
       }
     }
   },
+  "requirements": [
+    [
+      "abyssal_armor_heaume",
+      "abyssal_armor_tiara"
+    ]
+  ],
   "rewards": {
     "experience": 100
   },

@@ -20,9 +20,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:golden_moth_in_a_jar"
-            ]
+            "item": "aquamirae:golden_moth_in_a_jar"
           }
         ]
       }

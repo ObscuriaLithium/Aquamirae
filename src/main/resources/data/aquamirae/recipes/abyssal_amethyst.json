@@ -3,29 +3,23 @@
   "group": "abyssal_amethyst",
   "category": "misc",
   "pattern": [
-    " 1 ",
-    "345",
-    " 7 "
+    "212",
+    "101",
+    "212"
   ],
   "key": {
+    "0": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
     "1": {
-      "item": "aquamirae:ship_graveyard_echo"
+      "item": "minecraft:diamond"
     },
-    "3": {
-      "item": "aquamirae:ship_graveyard_echo"
-    },
-    "4": {
-      "item": "minecraft:amethyst_shard"
-    },
-    "5": {
-      "item": "aquamirae:ship_graveyard_echo"
-    },
-    "7": {
+    "2": {
       "item": "aquamirae:ship_graveyard_echo"
     }
   },
   "result": {
     "item": "aquamirae:abyssal_amethyst",
-    "count": 1
+    "count": 3
   }
 }

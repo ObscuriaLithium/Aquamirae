@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:ship_graveyard_echo"
-            ]
+            "item": "aquamirae:ship_graveyard_echo"
           }
         ]
       }

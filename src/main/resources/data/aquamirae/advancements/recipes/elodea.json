@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:elodea"
-            ]
+            "item": "aquamirae:elodea"
           }
         ]
       }

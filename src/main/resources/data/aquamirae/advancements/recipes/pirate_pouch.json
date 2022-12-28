@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:pirate_pouch"
-            ]
+            "item": "aquamirae:pirate_pouch"
           }
         ]
       }

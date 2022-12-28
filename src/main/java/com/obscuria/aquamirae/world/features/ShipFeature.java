@@ -2,7 +2,6 @@ package com.obscuria.aquamirae.world.features;
 
 import com.google.common.collect.ImmutableList;
 import com.obscuria.aquamirae.AquamiraeMod;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
@@ -12,13 +11,11 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.structure.*;
@@ -55,13 +52,9 @@ public class ShipFeature extends Structure<NoFeatureConfig> {
    }
 
    @Override
-   protected boolean isFeatureChunk(ChunkGenerator chunkGenerator,@Nonnull BiomeProvider biomeSource, long seed,@Nonnull SharedSeedRandom chunkRandom, int chunkX,
-                                    int chunkZ,@Nonnull Biome biome,@Nonnull ChunkPos chunkPos,@Nonnull NoFeatureConfig featureConfig) {
-      BlockPos centerOfChunk = new BlockPos(chunkX * 16, 0, chunkZ * 16);
-      int landHeight = chunkGenerator.getFirstOccupiedHeight(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Type.WORLD_SURFACE_WG);
-      IBlockReader columnOfBlocks = chunkGenerator.getBaseColumn(centerOfChunk.getX(), centerOfChunk.getZ());
-      BlockState topBlock = columnOfBlocks.getBlockState(centerOfChunk.above(landHeight));
-      return topBlock.getMaterial().isLiquid();
+   protected boolean isFeatureChunk(@Nonnull ChunkGenerator chunkGenerator, @Nonnull BiomeProvider biomeSource, long seed, @Nonnull SharedSeedRandom chunkRandom, int chunkX,
+                                    int chunkZ, @Nonnull Biome biome, @Nonnull ChunkPos chunkPos, @Nonnull NoFeatureConfig featureConfig) {
+      return true;
    }
 
    public static class Start extends StructureStart<NoFeatureConfig> {
@@ -70,16 +63,16 @@ public class ShipFeature extends Structure<NoFeatureConfig> {
       }
 
       @Override
-      public void generatePieces(@Nonnull DynamicRegistries dynamicRegistryManager,@Nonnull ChunkGenerator chunkGenerator,@Nonnull TemplateManager templateManagerIn,
-                                 int chunkX, int chunkZ,@Nonnull Biome biomeIn,@Nonnull NoFeatureConfig config) {
+      public void generatePieces(@Nonnull DynamicRegistries dynamicRegistryManager, @Nonnull ChunkGenerator chunkGenerator, @Nonnull TemplateManager templateManagerIn,
+                                 int chunkX, int chunkZ, @Nonnull Biome biomeIn, @Nonnull NoFeatureConfig config) {
          int x = chunkX * 16;
          int z = chunkZ * 16;
 
-         BlockPos centerPos = new BlockPos(x, 0, z);
+         BlockPos centerPos = new BlockPos(x, chunkGenerator.getSeaLevel(), z);
 
          JigsawManager.addPieces(dynamicRegistryManager,
                  new VillageConfig(() -> dynamicRegistryManager.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(new ResourceLocation(AquamiraeMod.MODID, "ship")), 10),
-                 AbstractVillagePiece::new, chunkGenerator, templateManagerIn, centerPos, this.pieces, this.random, false, true);
+                 AbstractVillagePiece::new, chunkGenerator, templateManagerIn, centerPos, this.pieces, this.random, false, false);
 
          this.pieces.forEach(piece -> piece.move(0, 0, 0));
 

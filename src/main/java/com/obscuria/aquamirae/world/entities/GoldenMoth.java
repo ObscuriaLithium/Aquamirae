@@ -1,9 +1,9 @@
 
 package com.obscuria.aquamirae.world.entities;
 
-import com.obscuria.aquamirae.client.particle.ShineParticle;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
+import com.obscuria.aquamirae.registry.AquamiraeParticles;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -88,7 +88,7 @@ public class GoldenMoth extends CreatureEntity implements IShipGraveyardEntity {
 		if (source == DamageSource.CACTUS) return false;
 		if (source == DamageSource.DROWN) return false;
 		if (source == DamageSource.LIGHTNING_BOLT) return false;
-		if (this.level instanceof ServerWorld) ((ServerWorld) this.level).sendParticles(ShineParticle.TYPE,
+		if (this.level instanceof ServerWorld) ((ServerWorld) this.level).sendParticles(AquamiraeParticles.SHINE.get(),
 				this.getX(), this.getY(), this.getZ(), 6, 0.05, 0.05, 0.05, 0.8);
 		return super.hurt(source, amount);
 	}
@@ -116,7 +116,7 @@ public class GoldenMoth extends CreatureEntity implements IShipGraveyardEntity {
 		if (this.getPersistentData().getDouble("shine") > 2) {
 			this.getPersistentData().putDouble("shine", 0);
 			if (this.level instanceof ServerWorld)
-				((ServerWorld) this.level).sendParticles(ShineParticle.TYPE, this.getX(), this.getY(), this.getZ(),
+				((ServerWorld) this.level).sendParticles(AquamiraeParticles.SHINE.get(), this.getX(), this.getY(), this.getZ(),
 						1, 0.1, 0.1, 0.1, 0.1);
 		}
 		if (this.isInWaterOrBubble()) this.setDeltaMovement(this.getDeltaMovement().add(0, 0.05f, 0));

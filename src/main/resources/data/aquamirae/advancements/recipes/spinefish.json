@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:spinefish"
-            ]
+            "item": "aquamirae:spinefish"
           }
         ]
       }

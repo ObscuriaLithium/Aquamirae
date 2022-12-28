@@ -23,7 +23,7 @@ public class AquamiraeFeatures {
 
 	@SubscribeEvent
 	public static void addFeaturesToBiomes(BiomeLoadingEvent event) {
-		if (event.getName() != null && event.getName().equals(AquamiraeMod.BIOME)) {
+		if (event.getName() != null && AquamiraeMod.ICE_MAZE.contains(event.getName())) {
 			event.getGeneration().getFeatures(GenerationStage.Decoration.LOCAL_MODIFICATIONS).add(() -> WisteriaFeature.CONFIGURED_FEATURE);
 			event.getGeneration().getFeatures(GenerationStage.Decoration.RAW_GENERATION).add(() -> OxygeliumFeature.CONFIGURED_FEATURE);
 			event.getGeneration().getFeatures(GenerationStage.Decoration.RAW_GENERATION).add(() -> Features.KELP_COLD);

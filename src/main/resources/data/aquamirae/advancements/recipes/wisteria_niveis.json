@@ -6,9 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:wisteria_niveis"
-            ]
+            "item": "aquamirae:wisteria_niveis"
           }
         ]
       }

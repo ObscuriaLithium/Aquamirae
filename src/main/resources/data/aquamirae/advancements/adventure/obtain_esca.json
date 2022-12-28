@@ -20,9 +20,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:esca"
-            ]
+            "item": "aquamirae:esca"
           }
         ]
       }

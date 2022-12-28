@@ -4,10 +4,9 @@ package com.obscuria.aquamirae.world.entities;
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.AquamiraeAmbient;
-import com.obscuria.aquamirae.client.particle.GhostParticle;
-import com.obscuria.aquamirae.client.particle.GhostShineParticle;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.aquamirae.registry.AquamiraeParticles;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
 import com.obscuria.obscureapi.client.animations.IHekateProvider;
@@ -185,7 +184,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 			this.getPersistentData().putDouble("Par1", this.getPersistentData().getDouble("Par1") + 1);
 			if (this.level instanceof ServerWorld && this.getPersistentData().getDouble("Par1") > 1) {
 				this.getPersistentData().putDouble("Par1", 0);
-				((ServerWorld) this.level).sendParticles(GhostParticle.TYPE, this.getX(), this.getY() - 0.2, this.getZ(), 1,
+				((ServerWorld) this.level).sendParticles(AquamiraeParticles.GHOST.get(), this.getX(), this.getY() - 0.2, this.getZ(), 1,
 						0.3, 0.1, 0.3, 0.1);
 			}
 			if (this.isInWater()) this.setDeltaMovement(new Vector3d(0F, 0.4F, 0F));
@@ -193,7 +192,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		this.getPersistentData().putDouble("Par2", this.getPersistentData().getDouble("Par2") + 1);
 		if (this.level instanceof ServerWorld && this.getPersistentData().getDouble("Par2") > 9) {
 			this.getPersistentData().putDouble("Par2", 0);
-			((ServerWorld) this.level).sendParticles(GhostShineParticle.TYPE, this.getX(), this.getY() + 1.7, this.getZ(), 1,
+			((ServerWorld) this.level).sendParticles(AquamiraeParticles.GHOST_SHINE.get(), this.getX(), this.getY() + 1.7, this.getZ(), 1,
 					0.15, 0.1, 0.15, 0.1);
 		}
 		//

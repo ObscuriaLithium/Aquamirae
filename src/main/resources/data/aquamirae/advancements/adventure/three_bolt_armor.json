@@ -20,24 +20,16 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aquamirae:three_bolt_helmet"
-            ]
+            "item": "aquamirae:three_bolt_helmet"
           },
           {
-            "items": [
-              "aquamirae:three_bolt_suit"
-            ]
+            "item": "aquamirae:three_bolt_suit"
           },
           {
-            "items": [
-              "aquamirae:three_bolt_leggings"
-            ]
+            "item": "aquamirae:three_bolt_leggings"
           },
           {
-            "items": [
-              "aquamirae:three_bolt_boots"
-            ]
+            "item": "aquamirae:three_bolt_boots"
           }
         ]
       }

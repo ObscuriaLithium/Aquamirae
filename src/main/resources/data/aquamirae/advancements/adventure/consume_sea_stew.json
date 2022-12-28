@@ -19,9 +19,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "items": [
-            "aquamirae:sea_stew"
-          ]
+          "item": "aquamirae:sea_stew"
         }
       }
     }
