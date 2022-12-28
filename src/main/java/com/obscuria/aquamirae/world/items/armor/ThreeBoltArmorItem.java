@@ -4,6 +4,7 @@ package com.obscuria.aquamirae.world.items.armor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.client.models.armor.ModelTerribleArmor;
 import com.obscuria.aquamirae.client.models.armor.ModelThreeBoltArmor;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.ObscureAPI;
@@ -112,11 +113,12 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelThreeBoltArmor<?> model = new ModelThreeBoltArmor<>();
-			defaultModel.head = model.head;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.head = new ModelThreeBoltArmor<>().head;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -155,13 +157,14 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelThreeBoltArmor<?> model = new ModelThreeBoltArmor<>();
-			defaultModel.body = model.body;
-			defaultModel.leftArm = model.leftArm;
-			defaultModel.rightArm = model.rightArm;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.body = new ModelThreeBoltArmor<>().body;
+			model.leftArm = new ModelThreeBoltArmor<>().leftArm;
+			model.rightArm = new ModelThreeBoltArmor<>().rightArm;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -192,13 +195,14 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelThreeBoltArmor<?> model = new ModelThreeBoltArmor<>();
-			defaultModel.body = model.leggingsBody;
-			defaultModel.leftLeg = model.leftLeg;
-			defaultModel.rightLeg = model.rightLeg;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.body = new ModelThreeBoltArmor<>().leggingsBody;
+			model.leftLeg = new ModelThreeBoltArmor<>().leftLeg;
+			model.rightLeg = new ModelThreeBoltArmor<>().rightLeg;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -214,12 +218,13 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelThreeBoltArmor<?> model = new ModelThreeBoltArmor<>();
-			defaultModel.leftLeg = model.leftBoot;
-			defaultModel.rightLeg = model.rightBoot;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.leftLeg = new ModelThreeBoltArmor<>().leftBoot;
+			model.rightLeg = new ModelThreeBoltArmor<>().rightBoot;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override

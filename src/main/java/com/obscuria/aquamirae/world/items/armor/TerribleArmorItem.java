@@ -2,6 +2,7 @@
 package com.obscuria.aquamirae.world.items.armor;
 
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.client.models.armor.ModelAbyssalArmor;
 import com.obscuria.aquamirae.client.models.armor.ModelTerribleArmor;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.obscureapi.ObscureAPI;
@@ -111,11 +112,12 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelTerribleArmor<?> model = new ModelTerribleArmor<>();
-			defaultModel.head = model.head;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.head = new ModelTerribleArmor<>().head;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -131,13 +133,14 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelTerribleArmor<?> model = new ModelTerribleArmor<>();
-			defaultModel.body = model.body;
-			defaultModel.leftArm = model.leftArm;
-			defaultModel.rightArm = model.rightArm;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.body = new ModelTerribleArmor<>().body;
+			model.leftArm = new ModelTerribleArmor<>().leftArm;
+			model.rightArm = new ModelTerribleArmor<>().rightArm;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -153,12 +156,13 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelTerribleArmor<?> model = new ModelTerribleArmor<>();
-			defaultModel.leftLeg = model.leftLeg;
-			defaultModel.rightLeg = model.rightLeg;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.leftLeg = new ModelTerribleArmor<>().leftLeg;
+			model.rightLeg = new ModelTerribleArmor<>().rightLeg;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -174,12 +178,13 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelTerribleArmor<?> model = new ModelTerribleArmor<>();
-			defaultModel.leftLeg = model.leftBoot;
-			defaultModel.rightLeg = model.rightBoot;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.leftLeg = new ModelTerribleArmor<>().leftBoot;
+			model.rightLeg = new ModelTerribleArmor<>().rightBoot;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override

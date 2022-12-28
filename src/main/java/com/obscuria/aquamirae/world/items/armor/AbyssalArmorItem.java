@@ -130,10 +130,12 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			defaultModel.head = new ModelAbyssalArmor<>().tiara;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.head = new ModelAbyssalArmor<>().helmet;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -149,13 +151,14 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelAbyssalArmor<?> model = new ModelAbyssalArmor<>();
-			defaultModel.body = model.body;
-			defaultModel.leftArm = model.leftArm;
-			defaultModel.rightArm = model.rightArm;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.body = new ModelAbyssalArmor<>().body;
+			model.leftArm = new ModelAbyssalArmor<>().leftArm;
+			model.rightArm = new ModelAbyssalArmor<>().rightArm;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -171,12 +174,13 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelAbyssalArmor<?> model = new ModelAbyssalArmor<>();
-			defaultModel.leftLeg = model.leftLeg;
-			defaultModel.rightLeg = model.rightLeg;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.leftLeg = new ModelAbyssalArmor<>().leftLeg;
+			model.rightLeg = new ModelAbyssalArmor<>().rightLeg;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
@@ -192,12 +196,13 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelAbyssalArmor<?> model = new ModelAbyssalArmor<>();
-			defaultModel.leftLeg = model.leftBoot;
-			defaultModel.rightLeg = model.rightBoot;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.leftLeg = new ModelAbyssalArmor<>().leftBoot;
+			model.rightLeg = new ModelAbyssalArmor<>().rightBoot;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override

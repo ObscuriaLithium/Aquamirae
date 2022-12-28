@@ -127,11 +127,12 @@ public abstract class AbyssalTiaraItem extends ArmorItem implements IClassItem, 
 
 		@Override
 		public <A extends BipedModel<?>> A getArmorModel(LivingEntity living, ItemStack stack, EquipmentSlotType slot, A defaultModel) {
-			final ModelAbyssalArmor<?> model = new ModelAbyssalArmor<>();
-			defaultModel.head = model.tiara;
-			defaultModel.crouching = living.isCrouching();
-			defaultModel.young = living.isBaby();
-			return defaultModel;
+			final BipedModel<?> model = new BipedModel<>(1F);
+			model.head = new ModelAbyssalArmor<>().tiara;
+			model.crouching = living.isCrouching();
+			model.young = living.isBaby();
+			model.riding = defaultModel.riding;
+			return (A) model;
 		}
 
 		@Override
