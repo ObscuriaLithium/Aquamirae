@@ -1,9 +1,8 @@
-package com.obscuria.aquamirae.world.features;
+package com.obscuria.aquamirae.world.events.features;
 
 import com.google.common.collect.ImmutableList;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
@@ -12,13 +11,11 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.structure.*;
@@ -27,16 +24,16 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ShelterFeature extends Structure<NoFeatureConfig> {
+public class ShipFeature extends Structure<NoFeatureConfig> {
 
-   public ShelterFeature() {
+   public ShipFeature() {
       super(NoFeatureConfig.CODEC);
    }
 
    @Override
    @Nonnull
-   public IStartFactory<NoFeatureConfig> getStartFactory() {
-      return ShelterFeature.Start::new;
+   public  IStartFactory<NoFeatureConfig> getStartFactory() {
+      return ShipFeature.Start::new;
    }
 
    @Override
@@ -46,7 +43,8 @@ public class ShelterFeature extends Structure<NoFeatureConfig> {
    }
 
    private static final List<MobSpawnInfo.Spawners> STRUCTURE_MONSTERS = ImmutableList.of(
-           new MobSpawnInfo.Spawners(AquamiraeEntities.TORTURED_SOUL.get(), 100, 1, 4)
+           new MobSpawnInfo.Spawners(EntityType.PILLAGER, 100, 1, 4),
+           new MobSpawnInfo.Spawners(EntityType.VINDICATOR, 100, 1, 2)
    );
    @Override
    public List<MobSpawnInfo.Spawners> getDefaultSpawnList() {
@@ -54,13 +52,9 @@ public class ShelterFeature extends Structure<NoFeatureConfig> {
    }
 
    @Override
-   protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, @Nonnull BiomeProvider biomeSource, long seed, @Nonnull SharedSeedRandom chunkRandom, int chunkX,
+   protected boolean isFeatureChunk(@Nonnull ChunkGenerator chunkGenerator, @Nonnull BiomeProvider biomeSource, long seed, @Nonnull SharedSeedRandom chunkRandom, int chunkX,
                                     int chunkZ, @Nonnull Biome biome, @Nonnull ChunkPos chunkPos, @Nonnull NoFeatureConfig featureConfig) {
-      BlockPos centerOfChunk = new BlockPos(chunkX * 16, 0, chunkZ * 16);
-      int landHeight = chunkGenerator.getFirstOccupiedHeight(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Type.WORLD_SURFACE_WG);
-      IBlockReader columnOfBlocks = chunkGenerator.getBaseColumn(centerOfChunk.getX(), centerOfChunk.getZ());
-      BlockState topBlock = columnOfBlocks.getBlockState(centerOfChunk.above(landHeight));
-      return topBlock.getMaterial().isSolid();
+      return true;
    }
 
    public static class Start extends StructureStart<NoFeatureConfig> {
@@ -74,11 +68,11 @@ public class ShelterFeature extends Structure<NoFeatureConfig> {
          int x = chunkX * 16;
          int z = chunkZ * 16;
 
-         BlockPos centerPos = new BlockPos(x, 0, z);
+         BlockPos centerPos = new BlockPos(x, chunkGenerator.getSeaLevel(), z);
 
          JigsawManager.addPieces(dynamicRegistryManager,
-                 new VillageConfig(() -> dynamicRegistryManager.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(new ResourceLocation(AquamiraeMod.MODID, "shelter/tunnel_bottom")), 10),
-                 AbstractVillagePiece::new, chunkGenerator, templateManagerIn, centerPos, this.pieces, this.random, false, true);
+                 new VillageConfig(() -> dynamicRegistryManager.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(new ResourceLocation(AquamiraeMod.MODID, "ship")), 10),
+                 AbstractVillagePiece::new, chunkGenerator, templateManagerIn, centerPos, this.pieces, this.random, false, false);
 
          this.pieces.forEach(piece -> piece.move(0, 0, 0));
 

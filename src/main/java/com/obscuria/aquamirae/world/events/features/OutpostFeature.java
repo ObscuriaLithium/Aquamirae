@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.world.features;
+package com.obscuria.aquamirae.world.events.features;
 
 import com.google.common.collect.ImmutableList;
 import com.obscuria.aquamirae.AquamiraeMod;
@@ -24,16 +24,16 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ShipFeature extends Structure<NoFeatureConfig> {
+public class OutpostFeature extends Structure<NoFeatureConfig> {
 
-   public ShipFeature() {
+   public OutpostFeature() {
       super(NoFeatureConfig.CODEC);
    }
 
    @Override
    @Nonnull
    public  IStartFactory<NoFeatureConfig> getStartFactory() {
-      return ShipFeature.Start::new;
+      return OutpostFeature.Start::new;
    }
 
    @Override
@@ -71,7 +71,7 @@ public class ShipFeature extends Structure<NoFeatureConfig> {
          BlockPos centerPos = new BlockPos(x, chunkGenerator.getSeaLevel(), z);
 
          JigsawManager.addPieces(dynamicRegistryManager,
-                 new VillageConfig(() -> dynamicRegistryManager.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(new ResourceLocation(AquamiraeMod.MODID, "ship")), 10),
+                 new VillageConfig(() -> dynamicRegistryManager.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(new ResourceLocation(AquamiraeMod.MODID, "outpost")), 10),
                  AbstractVillagePiece::new, chunkGenerator, templateManagerIn, centerPos, this.pieces, this.random, false, false);
 
          this.pieces.forEach(piece -> piece.move(0, 0, 0));

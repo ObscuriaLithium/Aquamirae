@@ -4,23 +4,16 @@ package com.obscuria.aquamirae.registry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.features.*;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import com.obscuria.aquamirae.world.events.features.IceMazeFeature;
+import com.obscuria.aquamirae.world.events.features.OutpostFeature;
+import com.obscuria.aquamirae.world.events.features.ShelterFeature;
+import com.obscuria.aquamirae.world.events.features.ShipFeature;
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.FlatGenerationSettings;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.Features;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -32,12 +25,13 @@ public class AquamiraeStructures {
 	public static final RegistryObject<Structure<NoFeatureConfig>> ICE_MAZE = REGISTRY.register("ice_maze", IceMazeFeature::new);
 	public static final RegistryObject<Structure<NoFeatureConfig>> SHIP = REGISTRY.register("ship", ShipFeature::new);
 	public static final RegistryObject<Structure<NoFeatureConfig>> OUTPOST = REGISTRY.register("outpost", OutpostFeature::new);
-	//public static final RegistryObject<Structure<NoFeatureConfig>> SHELTER = REGISTRY.register("shelter", ShelterFeature::new);
+	public static final RegistryObject<Structure<NoFeatureConfig>> SHELTER = REGISTRY.register("shelter", ShelterFeature::new);
 
 	public static void register() {
 		registerSpacing(ICE_MAZE.get(), new StructureSeparationSettings(2, 0, 1191766080 ), false);
 		registerSpacing(SHIP.get(), new StructureSeparationSettings(25, 10, 1391766081 ), false);
 		registerSpacing(OUTPOST.get(), new StructureSeparationSettings(18, 10, 1291764181 ), false);
+		registerSpacing(SHELTER.get(), new StructureSeparationSettings(40, 20, 1492356481 ), true);
 	}
 
 	private static <F extends Structure<?>> void registerSpacing(F structure, StructureSeparationSettings structureSeparationSettings, boolean transformSurroundingLand) {

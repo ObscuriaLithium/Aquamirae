@@ -1,5 +1,5 @@
 
-package com.obscuria.aquamirae.world.features;
+package com.obscuria.aquamirae.world.events.features;
 
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.world.blocks.OxygeliumBlock;

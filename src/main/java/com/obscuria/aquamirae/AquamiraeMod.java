@@ -27,6 +27,7 @@ import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -84,7 +85,7 @@ public class AquamiraeMod {
 
 		EVENT_BUS.register(this);
 		MOD_EVENT_BUS.addListener(this::commonSetup);
-		EVENT_BUS.addListener(this::addStructures);
+		EVENT_BUS.addListener(EventPriority.HIGH, this::addStructures);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityDeath);
@@ -117,6 +118,7 @@ public class AquamiraeMod {
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_ICE_MAZE);
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_SHIP);
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_OUTPOST);
+			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_SHELTER);
 		}
 	}
 

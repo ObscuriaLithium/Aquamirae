@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.world.features;
+package com.obscuria.aquamirae.world.events.features;
 
 import com.google.common.collect.ImmutableList;
 import com.obscuria.aquamirae.AquamiraeMod;
@@ -44,7 +44,7 @@ public class IceMazeFeature extends Structure<NoFeatureConfig> {
    private static final List<MobSpawnInfo.Spawners> STRUCTURE_MONSTERS = ImmutableList.of(
            new MobSpawnInfo.Spawners(AquamiraeEntities.MAW.get(), 100, 1, 4),
            new MobSpawnInfo.Spawners(AquamiraeEntities.TORTURED_SOUL.get(), 5, 1, 4),
-           new MobSpawnInfo.Spawners(AquamiraeEntities.GOLDEN_MOTH.get(), 5, 1, 3)
+           new MobSpawnInfo.Spawners(AquamiraeEntities.GOLDEN_MOTH.get(), 1, 1, 2)
    );
 
    @Override
