@@ -27,7 +27,7 @@ public class AquamiraeAmbient {
 		if (biomeMusic > 0) biomeMusic--;
 		if (corneliaMusic > 0) corneliaMusic--;
 		final PlayerEntity player = Minecraft.getInstance().player;
-		if (Objects.equals(player.level.getBiome(player.blockPosition()).getRegistryName(), AquamiraeMod.ICE_MAZE.getRegistryName())) {
+		if (AquamiraeMod.ICE_MAZE.contains(player.level.getBiome(player.blockPosition()).getRegistryName())) {
 			playAmbientSounds(player, true);
 			playBiomeMusic(player);
 			spawnParticles(player);
@@ -61,7 +61,7 @@ public class AquamiraeAmbient {
 
 	private static void playBiomeMusic(PlayerEntity player) {
 		if (AquamiraeConfig.Client.biomeMusic.get() && player.isAlive() && biomeMusic <= 0 && corneliaMusic <= 0) {
-			biomeMusic = 20 * new Random().nextInt(180, 300);
+			biomeMusic = 20 * (180 + new Random().nextInt(300));
 			Minecraft.getInstance().getMusicManager().stopPlaying();
 			Minecraft.getInstance().getMusicManager().startPlaying(
 					new BackgroundMusicSelector(AquamiraeSounds.MUSIC_ICE_MAZE_THEME.get(), 10, 100, true));

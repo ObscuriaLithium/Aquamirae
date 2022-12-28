@@ -39,9 +39,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -53,10 +51,9 @@ public class AquamiraeMod {
 	private static final String PROTOCOL_VERSION = "1";
 	public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 	private static int messageID = 0;
-	private static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-	private static final IEventBus EVENT_BUS = MinecraftForge.EVENT_BUS;
+
 	public static final ObscureClass SEA_WOLF = ObscureAPI.Classes.register(new ObscureClass(AquamiraeMod.MODID, "sea_wolf"));
-	public static final RegistryKey<Biome> ICE_MAZE = Biomes.DEEP_FROZEN_OCEAN;
+	public static final List<ResourceLocation> ICE_MAZE = Collections.singletonList(new ResourceLocation("minecraft:deep_frozen_ocean"));
 	public static final ResourceLocation BIOME = new ResourceLocation("minecraft:deep_frozen_ocean");
 	public static final Tags.IOptionalNamedTag<Block> EEL_MOVE = BlockTags.createOptional(new ResourceLocation(MODID, "eel_move"));
 	public static final Tags.IOptionalNamedTag<Block> MAZE_MOTHER_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "maze_mother_destroy"));
@@ -73,6 +70,8 @@ public class AquamiraeMod {
 	};
 
 	public AquamiraeMod() {
+		final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+		final IEventBus EVENT_BUS = MinecraftForge.EVENT_BUS;
 		EVENT_BUS.register(this);
 
 		AquamiraeConfig.load();
@@ -83,8 +82,7 @@ public class AquamiraeMod {
 		AquamiraeItems.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraeMobEffects.REGISTRY.register(MOD_EVENT_BUS);
 		AquamiraePotions.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeParticleTypes.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeStructureFeatures.REGISTRY.register(MOD_EVENT_BUS);
+		AquamiraeStructures.REGISTRY.register(MOD_EVENT_BUS);
 
 		MOD_EVENT_BUS.addListener(this::commonSetup);
 		EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);

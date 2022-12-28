@@ -98,6 +98,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 	public void readAdditionalSaveData(@Nonnull CompoundNBT tag) {
 		super.readAdditionalSaveData(tag);
 		CompoundNBT data = tag.getCompound("EelData");
+		if (data.isEmpty()) return;
 		this.getEntityData().set(MOVE_COOLDOWN, data.getInt("MoveCooldown"));
 		this.getEntityData().set(HIT_SERIES, data.getInt("Hits"));
 		this.getEntityData().set(SCALE, data.getFloat("Scale"));
@@ -136,7 +137,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 				this.lookControl.setLookAt(target.getPosition(1F));
 				//ATTACK
 				if (this.getEntityData().get(HIT_SERIES) <= 0 && distance <= 30 && random.nextInt(60) == 1) {
-					this.getEntityData().set(HIT_SERIES, new Random().nextInt(1, 3));
+					this.getEntityData().set(HIT_SERIES, 1 + new Random().nextInt(2));
 				} else if (this.getEntityData().get(HIT_SERIES) > 0 && !ANIMATIONS.isPlaying("attack") && !ANIMATIONS.isPlaying("roar")) {
 					this.getEntityData().set(HIT_SERIES, hitSeries - 1);
 					ANIMATIONS.play("attack", 20);
@@ -177,7 +178,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 			}
 			//IDLE
 			if (!ANIMATIONS.isPlaying("rareIdle") && random.nextInt(80) == 1)
-				ANIMATIONS.play("rareIdle", random.nextInt(80, 160));
+				ANIMATIONS.play("rareIdle", 80 + random.nextInt(80));
 		}
 		ANIMATIONS.playSound("attack", 20, "aquamirae:entity.eel.bite", SoundCategory.HOSTILE, 2F, 1F);
 		ANIMATIONS.playSound("roar", 52, "aquamirae:entity.eel.roar", SoundCategory.HOSTILE, 2F, 1F);
@@ -186,8 +187,8 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 	}
 
 	public Vector3d randomEelMove() {
-		final int x = this.blockPosition().getX() + random.nextInt(5, 16) * (Math.random() > 0.5 ? -1 : 1);
-		final int z = this.blockPosition().getZ() + random.nextInt(5, 16) * (Math.random() > 0.5 ? -1 : 1);
+		final int x = this.blockPosition().getX() + 5 + random.nextInt(11) * (Math.random() > 0.5 ? -1 : 1);
+		final int z = this.blockPosition().getZ() + 5 + random.nextInt(11) * (Math.random() > 0.5 ? -1 : 1);
 		for (int i = -8; i < 8; i++)
 			if (checkGround(x, this.blockPosition().getY() - i, z) && checkSpace(x, this.blockPosition().getY()- i + 1, z) && checkSpace(x, this.blockPosition().getY() - i + 2, z)
 					&& checkSpace(x, this.blockPosition().getY() - i + 3, z) && checkSpace(x, this.blockPosition().getY() - i + 4, z))
@@ -197,8 +198,8 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 
 	public Vector3d targetEelMove() {
 		if (this.getTarget() == null) return Vector3d.ZERO;
-		final int x = this.getTarget().blockPosition().getX() + random.nextInt(-3, 3);
-		final int z = this.getTarget().blockPosition().getZ() + random.nextInt(-3, 3);
+		final int x = this.getTarget().blockPosition().getX() - 3 + random.nextInt(6);
+		final int z = this.getTarget().blockPosition().getZ() - 3 + random.nextInt(6);
 		for (int i = -4; i < 4; i++)
 			if (checkGround(x, this.blockPosition().getY() - i, z) && checkSpace(x, this.blockPosition().getY() - i + 1, z) && checkSpace(x, this.blockPosition().getY() - i + 2, z)
 					&& checkSpace(x, this.blockPosition().getY() - i + 3, z) && checkSpace(x, this.blockPosition().getY() - i + 4, z))
@@ -278,6 +279,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 				.add(Attributes.ARMOR, AquamiraeConfig.DEFAULT_EEL_ARMOR)
 				.add(Attributes.ATTACK_DAMAGE, AquamiraeConfig.DEFAULT_EEL_ATTACK_DAMAGE)
 				.add(Attributes.FOLLOW_RANGE, AquamiraeConfig.DEFAULT_EEL_FOLLOW_RANGE)
-				.add(Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.DEFAULT_EEL_ATTACK_KNOCKBACK);
+				.add(Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.DEFAULT_EEL_ATTACK_KNOCKBACK)
+				.add(Attributes.KNOCKBACK_RESISTANCE, 100);
 	}
 }

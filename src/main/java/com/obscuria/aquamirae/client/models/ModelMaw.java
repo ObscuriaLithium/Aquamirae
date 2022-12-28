@@ -62,6 +62,7 @@ public class ModelMaw<T extends Entity> extends EntityModel<T> {
 
 		body2 = new ModelRenderer(this);
 		body2.setPos(0.0F, 0.0F, 16.0F);
+		body.addChild(body2);
 
 		ModelRenderer cube4 = new ModelRenderer(this);
 		cube4.setPos(0.0F, 0.0F, 0.0F);
@@ -93,6 +94,7 @@ public class ModelMaw<T extends Entity> extends EntityModel<T> {
 
 		rightFin = new ModelRenderer(this);
 		rightFin.setPos(-9.0F, 3.0F, 10.0F);
+		body.addChild(rightFin);
 
 		ModelRenderer cube7 = new ModelRenderer(this);
 		cube7.setPos(0.0F, 0.0F, 0.0F);

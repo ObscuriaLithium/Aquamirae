@@ -22,32 +22,32 @@ public class ModelSpinefish<T extends Entity> extends EntityModel<T> {
 		main.setPos(0.0F, 17.5F, 0.0F);
 
 		bodyTop = new ModelRenderer(this);
-		setRotationAngle(bodyTop, 0.0F, 0.0F, 1.0F);
+		bodyTop.setPos(0.0F, 0.0F, 1.0F);
 		main.addChild(bodyTop);
 		bodyTop.texOffs(16, 8).addBox(-1.0F, -2.5F, -3.0F, 2.0F, 5.0F, 3.0F, 0.0F, false);
 		bodyTop.texOffs(10, 0).addBox(0.0F, -6.5F, -3.0F, 0.0F, 13.0F, 3.0F, 0.0F, false);
 
 		head = new ModelRenderer(this);
-		setRotationAngle(head, 0.0F, 0.0F, -2.9697F);
+		head.setPos(0.0F, 0.0F, -2.9697F);
 		bodyTop.addChild(head);
 		head.texOffs(6, 13).addBox(0.0F, -5.5F, -6.0303F, 0.0F, 11.0F, 3.0F, 0.0F, false);
 		head.texOffs(18, 16).addBox(-1.0F, -2.5F, -3.0303F, 2.0F, 5.0F, 3.0F, 0.0F, false);
 		head.texOffs(0, 11).addBox(0.0F, -6.5F, -3.0303F, 0.0F, 13.0F, 3.0F, 0.0F, false);
 
-		ModelRenderer cube1 = new ModelRenderer(this);
-		setRotationAngle(cube1, 0.0F, 0.0F, -5.5303F);
+		final ModelRenderer cube1 = new ModelRenderer(this);
+		cube1.setPos(0.0F, 0.0F, -5.5303F);
 		head.addChild(cube1);
 		setRotationAngle(cube1, -0.7854F, 0.0F, 0.0F);
 		cube1.texOffs(16, 0).addBox(-1.0F, -3.5F, -0.5F, 2.0F, 4.0F, 4.0F, 0.01F, false);
 
 		bodyBottom = new ModelRenderer(this);
-		setRotationAngle(bodyBottom, 0.0F, 0.0F, 1.0F);
+		bodyBottom.setPos(0.0F, 0.0F, 1.0F);
 		main.addChild(bodyBottom);
 		bodyBottom.texOffs(12, 13).addBox(0.0F, -5.5F, 0.0F, 0.0F, 11.0F, 3.0F, 0.0F, false);
 		bodyBottom.texOffs(15, 24).addBox(-1.0F, -2.0F, 0.0F, 2.0F, 4.0F, 3.0F, 0.0F, false);
 
 		tail = new ModelRenderer(this);
-		setRotationAngle(tail, 0.0F, 0.0F, 3.0F);
+		tail.setPos(0.0F, 0.0F, 3.0F);
 		bodyBottom.addChild(tail);
 		tail.texOffs(0, 0).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F, 0.0F, false);
 		tail.texOffs(0, 0).addBox(0.0F, -4.5F, 0.0F, 0.0F, 9.0F, 5.0F, 0.0F, false);

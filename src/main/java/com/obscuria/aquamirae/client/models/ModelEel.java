@@ -23,7 +23,7 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 		main.setPos(0.0F, 24.0F, 300.0F);
 
 		body1 = new ModelRenderer(this);
-		body1.setPos(0.0F, 24.0F, 0.0F);
+		body1.setPos(0.0F, 0.0F, -300.0F);
 		main.addChild(body1);
 		setRotationAngle(body1, 0.5672F, 0.0F, 0.0F);
 

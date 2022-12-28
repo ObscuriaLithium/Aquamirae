@@ -51,14 +51,14 @@ public class ScrollEffects {
         if (PLAYER instanceof ServerPlayerEntity)
             AquamiraeMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) PLAYER), new ScrollMessage(type));
         switch (type) {
-            default : PLAYER.drop(Items.DIAMOND.getDefaultInstance(), false);
-            case 1 : abyss();
-            case 2 : mimic();
-            case 3 : MoveUp.create(PLAYER);
-            case 4 : MoveSide.create(PLAYER);
-            case 5 : { if (!shelter()) MoveUp.create(PLAYER); }
-            case 6 : chakras();
-            case 7 : Bones.create(PLAYER);
+            case 1 : { abyss(); break; }
+            case 2 : { mimic(); break; }
+            case 3 : { MoveUp.create(PLAYER); break; }
+            case 4 : { MoveSide.create(PLAYER); break; }
+            case 5 : { if (!shelter()) MoveUp.create(PLAYER); break; }
+            case 6 : { chakras(); break; }
+            case 7 : { Bones.create(PLAYER); break; }
+            default : { PLAYER.drop(Items.DIAMOND.getDefaultInstance(), false); break; }
         }
     }
 

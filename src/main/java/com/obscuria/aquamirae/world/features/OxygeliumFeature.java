@@ -1,61 +1,52 @@
 
 package com.obscuria.aquamirae.world.features;
 
-import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.world.blocks.OxygeliumBlock;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.ISeedReader;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.placement.IPlacementConfig;
+import net.minecraft.world.gen.placement.Placement;
 
+import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
+public class OxygeliumFeature extends Feature<NoFeatureConfig> {
 	private final List<Block> BLOCKS;
 
-	public static OxygeliumFeature FEATURE = null;
-	public static Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> CONFIGURED_FEATURE = null;
-	public static Holder<PlacedFeature> PLACED_FEATURE = null;
+	public static OxygeliumFeature FEATURE = new OxygeliumFeature();
+	public static ConfiguredFeature<?, ?> CONFIGURED_FEATURE = FEATURE.configured(IFeatureConfig.NONE).decorated(Placement.NOPE.configured(IPlacementConfig.NONE));
 
 	public OxygeliumFeature() {
-		super(NoneFeatureConfiguration.CODEC);
-		BLOCKS = List.of(Blocks.GRAVEL);
+		super(NoFeatureConfig.CODEC);
+		BLOCKS = Collections.singletonList(Blocks.GRAVEL);
 	}
 
 	public static Feature<?> feature() {
-		FEATURE = new OxygeliumFeature();
-		CONFIGURED_FEATURE = FeatureUtils.register("aquamirae:oxygelium", FEATURE, FeatureConfiguration.NONE);
-		PLACED_FEATURE = PlacementUtils.register("aquamirae:oxygelium", CONFIGURED_FEATURE, List.of());
 		return FEATURE;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
-		if (context.random().nextInt(1, 3) != 1) return false;
-		Random random = context.random();
-		final int ox = context.origin().getX() + random.nextInt(-6, 6);
-		final int oz = context.origin().getZ() + random.nextInt(-6, 6);
-		final BlockPos mainPos = new BlockPos(ox, context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG, ox, oz) - 1, oz);
-		if (!BLOCKS.contains(context.level().getBlockState(mainPos).getBlock())) return false;
-		WorldGenLevel worldgenlevel = context.level();
+	public boolean place(@Nonnull ISeedReader seedReader, @Nonnull ChunkGenerator chunkGenerator, @Nonnull Random random, @Nonnull BlockPos origin, @Nonnull NoFeatureConfig config) {
+		if (random.nextInt(3) != 1) return false;
+		final int ox = origin.getX() - 6 + random.nextInt(12);
+		final int oz = origin.getZ() - 6 + random.nextInt(12);
+		final BlockPos mainPos = new BlockPos(ox, seedReader.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, ox, oz) - 1, oz);
+		if (!BLOCKS.contains(seedReader.getBlockState(mainPos).getBlock())) return false;
 		boolean flag = random.nextDouble() > 0.7D;
 		BlockState blockstate = Blocks.STONE.defaultBlockState();
 		double d0 = random.nextDouble() * 2.0D * Math.PI;
@@ -76,21 +67,21 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 				for(int j2 = 0; j2 < l; ++j2) {
 					int k2 = flag1 ? this.heightDependentRadiusEllipse(j2, l, j1) : this.heightDependentRadiusRound(random, j2, l, j1);
 					if (flag1 || l1 < k2) {
-						this.generateIcebergBlock(worldgenlevel, random, mainPos, l, l1, j2, i2, k2, k1, flag1, j, d0, flag, blockstate);
+						this.generateIcebergBlock(seedReader, random, mainPos, l, l1, j2, i2, k2, k1, flag1, j, d0, flag, blockstate);
 					}
 				}
 			}
 		}
 
-		this.smooth(worldgenlevel, mainPos, j1, l, flag1, i);
+		this.smooth(seedReader, mainPos, j1, l, flag1, i);
 
 		for(int i3 = -k1; i3 < k1; ++i3) {
 			for(int j3 = -k1; j3 < k1; ++j3) {
 				for(int k3 = -1; k3 > -i1; --k3) {
-					int l3 = flag1 ? Mth.ceil((float)k1 * (1.0F - (float)Math.pow(k3, 2.0D) / ((float)i1 * 8.0F))) : k1;
+					int l3 = flag1 ? MathHelper.ceil((float)k1 * (1.0F - (float)Math.pow(k3, 2.0D) / ((float)i1 * 8.0F))) : k1;
 					int l2 = this.heightDependentRadiusSteep(random, -k3, i1, j1);
 					if (i3 < l2) {
-						this.generateIcebergBlock(worldgenlevel, random, mainPos, i1, i3, k3, j3, l2, l3, flag1, j, d0, flag, blockstate);
+						this.generateIcebergBlock(seedReader, random, mainPos, i1, i3, k3, j3, l2, l3, flag1, j, d0, flag, blockstate);
 					}
 				}
 			}
@@ -98,22 +89,22 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 
 		boolean flag2 = flag1 ? random.nextDouble() > 0.1D : random.nextDouble() > 0.7D;
 		if (flag2) {
-			this.generateCutOut(random, worldgenlevel, j1, l, mainPos, flag1, i, d0, j);
+			this.generateCutOut(random, seedReader, j1, l, mainPos, flag1, i, d0, j);
 		}
 
-		final int count = context.random().nextInt(3, 13);
+		final int count = 3 + random.nextInt(10);
 		for (int index = 0; index <= count; index++) {
-			int x = (int) (context.origin().getX() + context.random().nextInt(-4, 4));
-			int z = (int) (context.origin().getZ() + context.random().nextInt(-4, 4));
-			int y = context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z) - 1;
-			placeOxygelium(context.level(), x, y, z, context.random());
+			int x = origin.getX() - 4 + random.nextInt(8);
+			int z = origin.getZ() - 4 + random.nextInt(8);
+			int y = seedReader.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, x, z) - 1;
+			placeOxygelium(seedReader, x, y, z, random);
 		}
-		placeElodea(worldgenlevel, mainPos.getX(), mainPos.getY(), mainPos.getZ(), random);
+		placeElodea(seedReader, mainPos.getX(), mainPos.getY(), mainPos.getZ(), random);
 		return true;
 	}
 
-	private void placeOxygelium(WorldGenLevel world, int x, int y, int z, Random random) {
-		final int max = random.nextInt(3, 10);
+	private void placeOxygelium(ISeedReader world, int x, int y, int z, Random random) {
+		final int max = 3 + random.nextInt(7);
 		for (int i = 0; i <= max; i++) {
 			final BlockState below = world.getBlockState(new BlockPos(x, y + i - 1, z));
 			final BlockState state = world.getBlockState(new BlockPos(x, y + i, z));
@@ -136,10 +127,10 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 		return state.is(AquamiraeBlocks.OXYGELIUM.get()) && state.getValue(OxygeliumBlock.TYPE) == OxygeliumBlock.Type.STEM;
 	}
 
-	private void placeElodea(WorldGenLevel world, int x, int y, int z, Random random) {
-		final int max = random.nextInt(4, 24);
+	private void placeElodea(ISeedReader world, int x, int y, int z, Random random) {
+		final int max = 4 + random.nextInt(20);
 		for (int i = 0; i <= max; i++) {
-			final BlockPos pos = new BlockPos(x + random.nextInt(-7, 7), y - 4, z + random.nextInt(-7, 7));
+			final BlockPos pos = new BlockPos(x - 7 + random.nextInt(14), y - 4, z - 7 + random.nextInt(14));
 			int offset = 0;
 			while (offset <= 10) {
 				if ((world.getBlockState(pos.above(offset - 1)).getBlock() == Blocks.GRAVEL ||
@@ -155,7 +146,7 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 		}
 	}
 
-	private void generateCutOut(Random p_225100_, LevelAccessor p_225101_, int p_225102_, int p_225103_, BlockPos p_225104_, boolean p_225105_, int p_225106_, double p_225107_, int p_225108_) {
+	private void generateCutOut(Random p_225100_, ISeedReader p_225101_, int p_225102_, int p_225103_, BlockPos p_225104_, boolean p_225105_, int p_225106_, double p_225107_, int p_225108_) {
 		int i = p_225100_.nextBoolean() ? -1 : 1;
 		int j = p_225100_.nextBoolean() ? -1 : 1;
 		int k = p_225100_.nextInt(Math.max(p_225102_ / 2 - 2, 1));
@@ -187,7 +178,7 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 
 	}
 
-	private void carve(int p_66036_, int p_66037_, BlockPos p_66038_, LevelAccessor p_66039_, boolean p_66040_, double p_66041_, BlockPos p_66042_, int p_66043_, int p_66044_) {
+	private void carve(int p_66036_, int p_66037_, BlockPos p_66038_, ISeedReader p_66039_, boolean p_66040_, double p_66041_, BlockPos p_66042_, int p_66043_, int p_66044_) {
 		int i = p_66036_ + 1 + p_66043_ / 3;
 		int j = Math.min(p_66036_ - 3, 3) + p_66044_ / 2 - 1;
 
@@ -203,7 +194,7 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 		}
 	}
 
-	private void generateIcebergBlock(LevelAccessor p_225110_, Random p_225111_, BlockPos pos, int p_225113_, int p_225114_, int p_225115_, int p_225116_, int p_225117_, int p_225118_, boolean p_225119_, int p_225120_, double p_225121_, boolean p_225122_, BlockState p_225123_) {
+	private void generateIcebergBlock(ISeedReader p_225110_, Random p_225111_, BlockPos pos, int p_225113_, int p_225114_, int p_225115_, int p_225116_, int p_225117_, int p_225118_, boolean p_225119_, int p_225120_, double p_225121_, boolean p_225122_, BlockState p_225123_) {
 		double d0 = p_225119_ ? this.signedDistanceEllipse(p_225114_, p_225116_, BlockPos.ZERO, p_225118_, this.getEllipseC(p_225115_, p_225113_, p_225120_), p_225121_) : this.signedDistanceCircle(p_225114_, p_225116_, p_225117_, p_225111_);
 		if (d0 < 0.0D) {
 			BlockPos blockpos = pos.offset(p_225114_, p_225115_, p_225116_);
@@ -217,7 +208,7 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 
 	}
 
-	private void setIcebergBlock(BlockPos pos, LevelAccessor levelAccessor, Random p_225127_, int p_225128_, int p_225129_, boolean p_225130_, boolean p_225131_, BlockState p_225132_) {
+	private void setIcebergBlock(BlockPos pos, ISeedReader levelAccessor, Random p_225127_, int p_225128_, int p_225129_, boolean p_225130_, boolean p_225131_, BlockState p_225132_) {
 		if (levelAccessor.getBlockState(pos.above()).getMaterial() == Material.AIR) return;
 		BlockState blockstate = levelAccessor.getBlockState(pos);
 		if (blockstate.getMaterial() == Material.AIR || blockstate.is(Blocks.SNOW_BLOCK) || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.WATER)) {
@@ -242,7 +233,7 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	}
 
 	private double signedDistanceCircle(int p_225089_, int p_225090_, int p_225092_, Random p_225093_) {
-		float f = 10.0F * Mth.clamp(p_225093_.nextFloat(), 0.2F, 0.8F) / (float)p_225092_;
+		float f = 10.0F * MathHelper.clamp(p_225093_.nextFloat(), 0.2F, 0.8F) / (float)p_225092_;
 		return (double)f + Math.pow(p_225089_ - BlockPos.ZERO.getX(), 2.0D) + Math.pow(p_225090_ - BlockPos.ZERO.getZ(), 2.0D) - Math.pow(p_225092_, 2.0D);
 	}
 
@@ -258,29 +249,29 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 			f1 = (1.0F - (float)i / ((float)p_225097_ * f * 0.4F)) * (float)p_225098_;
 		}
 
-		return Mth.ceil(f1 / 2.0F);
+		return MathHelper.ceil(f1 / 2.0F);
 	}
 
 	private int heightDependentRadiusEllipse(int p_66110_, int p_66111_, int p_66112_) {
 		float f1 = (1.0F - (float)Math.pow(p_66110_, 2.0D) / ((float) p_66111_)) * (float)p_66112_;
-		return Mth.ceil(f1 / 2.0F);
+		return MathHelper.ceil(f1 / 2.0F);
 	}
 
 	private int heightDependentRadiusSteep(Random p_225134_, int p_225135_, int p_225136_, int p_225137_) {
 		float f = 1.0F + p_225134_.nextFloat() / 2.0F;
 		float f1 = (1.0F - (float)p_225135_ / ((float)p_225136_ * f)) * (float)p_225137_;
-		return Mth.ceil(f1 / 2.0F);
+		return MathHelper.ceil(f1 / 2.0F);
 	}
 
 	private static boolean isIcebergState(BlockState p_159886_) {
 		return p_159886_.is(Blocks.STONE) || p_159886_.is(Blocks.COBBLESTONE);
 	}
 
-	private boolean belowIsAir(BlockGetter p_66046_, BlockPos p_66047_) {
+	private boolean belowIsAir(ISeedReader p_66046_, BlockPos p_66047_) {
 		return p_66046_.getBlockState(p_66047_.below()).getBlock() == Blocks.WATER;
 	}
 
-	private void smooth(LevelAccessor p_66052_, BlockPos p_66053_, int p_66054_, int p_66055_, boolean p_66056_, int p_66057_) {
+	private void smooth(ISeedReader p_66052_, BlockPos p_66053_, int p_66054_, int p_66055_, boolean p_66056_, int p_66057_) {
 		int i = p_66056_ ? p_66057_ : p_66054_ / 2;
 
 		for(int j = -i; j <= i; ++j) {

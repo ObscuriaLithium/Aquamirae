@@ -34,7 +34,7 @@ public class TreasurePouchItem extends Item {
 		if (!world.isClientSide) {
 			world.playSound(player, new BlockPos(player.getX(), player.getY() + 1, player.getZ()), AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundCategory.PLAYERS, 1, 1);
 			final List<ItemStack> loot = AquamiraeMod.LootBuilder.rare();
-			player.addItem(loot.get(player.getRandom().nextInt(0, loot.size() - 1)));
+			player.addItem(loot.get(player.getRandom().nextInt(loot.size() - 1)));
 			//
 			final MinecraftServer minecraftServer = player.level.getServer();
 			if (minecraftServer != null && player.level instanceof ServerWorld) {

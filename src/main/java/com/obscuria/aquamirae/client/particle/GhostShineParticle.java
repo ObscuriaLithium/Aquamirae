@@ -1,16 +1,37 @@
 
 package com.obscuria.aquamirae.client.particle;
 
+import com.obscuria.aquamirae.AquamiraeMod;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 
-@OnlyIn(Dist.CLIENT)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class GhostShineParticle {
+
+	public static final BasicParticleType TYPE = new BasicParticleType(true);
+
+	@SubscribeEvent
+	public static void registerParticleType(RegistryEvent.Register<ParticleType<?>> event) {
+		event.getRegistry().register(TYPE.setRegistryName(new ResourceLocation(AquamiraeMod.MODID, "ghost_shine")));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
+	public static void registerParticle(ParticleFactoryRegisterEvent event) {
+		Minecraft.getInstance().particleEngine.register(TYPE, Factory::new);
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static class Instance extends SpriteTexturedParticle {
@@ -23,7 +44,7 @@ public class GhostShineParticle {
 			this.spriteSet = spriteSet;
 			this.setSize((float) 0.2, (float) 0.2);
 			this.quadSize *= (float) 0.8;
-			this.age = 30;
+			this.lifetime = 30;
 			this.gravity = (float) -0.1;
 			this.hasPhysics = false;
 			this.xd = vx * 0.1;

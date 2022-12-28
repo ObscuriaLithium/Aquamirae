@@ -2,8 +2,8 @@
 package com.obscuria.aquamirae.world.blocks;
 
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.client.particle.ShineParticle;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -133,7 +133,7 @@ public class FrozenChestBlock extends Block implements IWaterLoggable {
 				double d0 = pos.getX() - 0.2D + 1.4D * player.getRandom().nextDouble();
 				double d1 = pos.getY() - 0.2D + 1.4D * player.getRandom().nextDouble();
 				double d2 = pos.getZ() - 0.2D + 1.4D * player.getRandom().nextDouble();
-				world.addParticle(AquamiraeParticleTypes.SHINE.get(), d0, d1, d2, 0, 0.05, 0);
+				world.addParticle(ShineParticle.TYPE, d0, d1, d2, 0, 0.05, 0);
 			}
 			return ActionResultType.SUCCESS;
 		}

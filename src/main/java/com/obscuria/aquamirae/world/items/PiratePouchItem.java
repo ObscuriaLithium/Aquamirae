@@ -33,7 +33,7 @@ public class PiratePouchItem extends Item {
 			entity.level.playSound(null, new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()), AquamiraeSounds.ITEM_POUCH_OPEN.get(),
 					SoundCategory.PLAYERS, 1, 1);
 		final List<ItemStack> loot = AquamiraeMod.LootBuilder.common();
-		entity.addItem(loot.get(new Random().nextInt(0, loot.size() - 1)));
+		entity.addItem(loot.get(new Random().nextInt(loot.size() - 1)));
 		sourceStack.shrink(1);
 		return ar;
 	}

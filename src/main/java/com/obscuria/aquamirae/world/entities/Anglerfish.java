@@ -149,7 +149,7 @@ public class Anglerfish extends MonsterEntity implements IShipGraveyardEntity, I
 	}
 
 	@Override public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason spawnType, @Nullable ILivingEntityData spawnGroupData, @Nullable CompoundNBT tag) {
-		if (world instanceof ServerWorld && spawnType == SpawnReason.NATURAL && this.random.nextInt(1, 200) == 1) {
+		if (world instanceof ServerWorld && spawnType == SpawnReason.NATURAL && this.random.nextInt(200) == 1) {
 			final ServerWorld server = (ServerWorld) world;
 			MazeMother mazeMother = new MazeMother(AquamiraeEntities.MAZE_MOTHER.get(), server);
 			mazeMother.moveTo(this.position());

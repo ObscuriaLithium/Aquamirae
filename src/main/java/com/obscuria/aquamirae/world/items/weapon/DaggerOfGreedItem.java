@@ -85,11 +85,11 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 			level.addFreshEntity(emerald);
 			if (!entity.isAlive()) {
 				ItemEntity emeralds = new ItemEntity(level, entity.getX(), entity.getY() + entity.getBbHeight() / 2.0, entity.getZ(),
-						new ItemStack(Items.EMERALD, new Random().nextInt(3, 8)));
+						new ItemStack(Items.EMERALD, 3 + new Random().nextInt(5)));
 				emeralds.setPickUpDelay(10);
 				level.addFreshEntity(emeralds);
 			}
-			if (entity instanceof AbstractVillagerEntity && new Random().nextInt(0, 20) == 20)
+			if (entity instanceof AbstractVillagerEntity && new Random().nextInt(20) == 0)
 				source.addEffect(new EffectInstance(Effects.BAD_OMEN, 24000, 0));
 		}
 		return hurt;

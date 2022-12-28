@@ -48,13 +48,13 @@ public class ShellHornItem extends Item {
 			final int sx = entity.blockPosition().getX() + ix;
 			for (int iz = -6; iz <= 6; iz++) {
 				final int sz = entity.blockPosition().getZ() + iz;
-				if (Objects.equals(entity.level.getBiome(new BlockPos(sx, 58, sz)).getRegistryName(), AquamiraeMod.ICE_MAZE.getRegistryName())) {
-					if ((entity.level.getBlockState(new BlockPos(sx, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.level.getBlockState(new BlockPos(sx, 58, sz))).getBlock() == Blocks.WATER
-							&& (entity.level.getBlockState(new BlockPos(sx - 1, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.level.getBlockState(new BlockPos(sx + 1, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.level.getBlockState(new BlockPos(sx, 62, sz - 1))).getBlock() == Blocks.WATER
-							&& (entity.level.getBlockState(new BlockPos(sx, 62, sz + 1))).getBlock() == Blocks.WATER) {
+				if (AquamiraeMod.ICE_MAZE.contains(entity.level.getBiome(new BlockPos(sx, entity.level.getSeaLevel() - 5, sz)).getRegistryName())) {
+					if ((entity.level.getBlockState(new BlockPos(sx, entity.level.getSeaLevel() - 1, sz))).getBlock() == Blocks.WATER
+							&& (entity.level.getBlockState(new BlockPos(sx, entity.level.getSeaLevel() - 5, sz))).getBlock() == Blocks.WATER
+							&& (entity.level.getBlockState(new BlockPos(sx - 1, entity.level.getSeaLevel() - 1, sz))).getBlock() == Blocks.WATER
+							&& (entity.level.getBlockState(new BlockPos(sx + 1, entity.level.getSeaLevel() - 1, sz))).getBlock() == Blocks.WATER
+							&& (entity.level.getBlockState(new BlockPos(sx, entity.level.getSeaLevel() - 1, sz - 1))).getBlock() == Blocks.WATER
+							&& (entity.level.getBlockState(new BlockPos(sx, entity.level.getSeaLevel() - 1, sz + 1))).getBlock() == Blocks.WATER) {
 						summon = true;
 						pos = new BlockPos(sx, 58, sz);
 						stack.shrink(1);
