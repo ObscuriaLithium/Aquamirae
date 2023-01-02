@@ -4,7 +4,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '5.api10'
+version = '5.3.api11'
 group = 'com.obscuria.aquamirae'
 archivesBaseName = 'aquamirae'
 
@@ -79,7 +79,7 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.2.0'
     //implementation fg.deobf('curse.maven:obscure_api-638417:4172155')
-    implementation fg.deobf('obscuria:obscure_api:10')
+    implementation fg.deobf('obscuria:obscure_api:11')
 }
 
 jar {

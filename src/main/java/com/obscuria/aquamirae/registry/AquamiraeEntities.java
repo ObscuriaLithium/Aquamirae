@@ -1,25 +1,19 @@
 
 package com.obscuria.aquamirae.registry;
 
+import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.world.entities.*;
 import com.obscuria.aquamirae.world.entities.chakras.MazeRose;
 import com.obscuria.aquamirae.world.entities.chakras.PoisonedChakra;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-
-import com.obscuria.aquamirae.world.entities.GoldenMoth;
-import com.obscuria.aquamirae.AquamiraeMod;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AquamiraeEntities {
@@ -83,21 +77,12 @@ public class AquamiraeEntities {
 	}
 
 	@SubscribeEvent
-	public static void registerSpawns(FMLCommonSetupEvent event) {
-		event.enqueueWork(() -> {
-			SpawnPlacements.register(AquamiraeEntities.GOLDEN_MOTH.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (entityType, world, reason, pos, random) ->
-					world instanceof Level level && !level.isDay());
-			SpawnPlacements.register(AquamiraeEntities.SPINEFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (entityType, world, reason, pos, random) ->
-					world.getBlockState(pos).getBlock() instanceof LiquidBlock);
-
-			SpawnPlacements.register(AquamiraeEntities.MAW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (entityType, world, reason, pos, random) ->
-					pos.getY() < world.getSeaLevel() + 6);
-			SpawnPlacements.register(AquamiraeEntities.ANGLERFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, (entityType, world, reason, pos, random) ->
-					!(world.getDifficulty() == Difficulty.PEACEFUL));
-			SpawnPlacements.register(AquamiraeEntities.PILLAGERS_PATROL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (entityType, world, reason, pos, random) ->
-					Mob.checkMobSpawnRules(entityType, world, reason, pos, random) && (world.getDifficulty() != Difficulty.PEACEFUL && Monster.isDarkEnoughToSpawn(world, pos, random)));
-			SpawnPlacements.register(AquamiraeEntities.TORTURED_SOUL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (entityType, world, reason, pos, random) ->
-					Mob.checkMobSpawnRules(entityType, world, reason, pos, random) && (world.getDifficulty() != Difficulty.PEACEFUL && Monster.isDarkEnoughToSpawn(world, pos, random)));
-		});
+	public static void registerSpawns(SpawnPlacementRegisterEvent event) {
+		event.register(GOLDEN_MOTH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GoldenMoth.getSpawnRules(), SpawnPlacementRegisterEvent.Operation.REPLACE);
+		event.register(SPINEFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Spinefish.getSpawnRules(), SpawnPlacementRegisterEvent.Operation.REPLACE);
+		event.register(ANGLERFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Anglerfish.getSpawnRules(), SpawnPlacementRegisterEvent.Operation.REPLACE);
+		event.register(MAW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Maw.getSpawnRules(), SpawnPlacementRegisterEvent.Operation.REPLACE );
+		event.register(TORTURED_SOUL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, TorturedSoul.getSpawnRules(), SpawnPlacementRegisterEvent.Operation.REPLACE );
+		event.register(PILLAGERS_PATROL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PillagersPatrol.getSpawnRules(), SpawnPlacementRegisterEvent.Operation.REPLACE);
 	}
 }

@@ -182,5 +182,10 @@ public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 		this.wing1LeftBottom.zRot = this.wing1LeftTop.zRot;
 		this.wing2RightBottom.zRot = this.wing2RightTop.zRot;
 		this.wing2LeftBottom.zRot = this.wing2LeftTop.zRot;
+
+		HekateLib.i(jaw1, 0, 0, 10F, 10F, 0, 0, speed * 4, 0F, ageInTicks, HekateLib.effect.cyclicPause(ageInTicks, 0.02F, -1F));
+		HekateLib.i(jaw2, 0, 0, -10F, -10F, 0, 0, speed * 4, 0F, ageInTicks, HekateLib.effect.cyclicPause(ageInTicks, 0.02F, -1F));
+		HekateLib.i(jaw3, 0, 0, 15F, 5F, 0, 0, speed * 6, 0F, ageInTicks, HekateLib.effect.cyclicPause(ageInTicks, 0.02F, 0F));
+		HekateLib.i(jaw4, 0, 0, -15F, -5F, 0, 0, speed * 6, 0F, ageInTicks, HekateLib.effect.cyclicPause(ageInTicks, 0.02F, 0F));
 	}
 }

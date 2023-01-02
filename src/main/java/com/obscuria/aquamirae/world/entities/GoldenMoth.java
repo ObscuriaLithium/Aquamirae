@@ -134,6 +134,10 @@ public class GoldenMoth extends PathfinderMob implements IShipGraveyardEntity {
 		this.setNoGravity(true);
 	}
 
+	public static SpawnPlacements.SpawnPredicate<GoldenMoth> getSpawnRules() {
+		return (entityType, level, spawnType, pos, random) -> level instanceof Level world && !world.isDay();
+	}
+
 	public static AttributeSupplier.@NotNull Builder createAttributes() {
 		return Mob.createMobAttributes()
 				.add(Attributes.FLYING_SPEED, 0.4)

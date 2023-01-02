@@ -4,7 +4,6 @@ import com.obscuria.aquamirae.registry.*;
 import com.obscuria.aquamirae.world.events.AquamiraeEvents;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.utils.ItemHelper;
 import com.obscuria.obscureapi.world.classes.ObscureClass;
 import com.obscuria.obscureapi.world.classes.TooltipHandler;
 import net.minecraft.core.Registry;
@@ -52,8 +51,6 @@ public class AquamiraeMod {
 	private static final String PROTOCOL_VERSION = "1";
 	public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 	private static int messageID = 0;
-	private static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-	private static final IEventBus EVENT_BUS = MinecraftForge.EVENT_BUS;
 	public static final ObscureClass SEA_WOLF = ObscureAPI.Classes.register(new ObscureClass(AquamiraeMod.MODID, "sea_wolf"));
 	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "ice_maze"));
 	public static final TagKey<Block> EEL_MOVE = BlockTags.create(new ResourceLocation(MODID, "eel_move"));
@@ -63,35 +60,30 @@ public class AquamiraeMod {
 		@Override public @NotNull ItemStack makeIcon() {
 			return AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance();
 		}
-
-		@Override public boolean hasSearchBar() {
-			return false;
-		}
 	};
 
 	public AquamiraeMod() {
-		EVENT_BUS.register(this);
+		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		AquamiraeConfig.load();
-		AquamiraeFeatures.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeSounds.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeBlocks.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeEntities.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeItems.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeMobEffects.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraePotions.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeParticleTypes.REGISTRY.register(MOD_EVENT_BUS);
+		AquamiraeFeatures.REGISTRY.register(bus);
+		AquamiraeSounds.REGISTRY.register(bus);
+		AquamiraeBlocks.REGISTRY.register(bus);
+		AquamiraeEntities.REGISTRY.register(bus);
+		AquamiraeItems.REGISTRY.register(bus);
+		AquamiraeMobEffects.REGISTRY.register(bus);
+		AquamiraePotions.REGISTRY.register(bus);
+		AquamiraeParticleTypes.REGISTRY.register(bus);
 
-		MOD_EVENT_BUS.addListener(this::commonSetup);
-		EVENT_BUS.addListener(AquamiraeEvents::onPlayerTick);
-		EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
-		EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
-		EVENT_BUS.addListener(AquamiraeEvents::onEntityDeath);
+		MinecraftForge.EVENT_BUS.register(this);
+		bus.addListener(this::commonSetup);
+		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onPlayerTick);
+		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
+		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
+		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityDeath);
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
-		ObscureAPI.collectionMod(AquamiraeMod.MODID, "ob-aquamirae");
-
 		TooltipHandler.Lore.add("aquamirae:sea_casserole");
 		TooltipHandler.Lore.add("aquamirae:sea_stew");
 		TooltipHandler.Lore.add("aquamirae:poseidons_breakfast");

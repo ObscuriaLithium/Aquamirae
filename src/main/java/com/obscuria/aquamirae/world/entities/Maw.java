@@ -111,6 +111,11 @@ public class Maw extends Monster implements IShipGraveyardEntity, IHekateProvide
 		return super.finalizeSpawn(world, difficulty, reason, data, tag);
 	}
 
+	public static SpawnPlacements.SpawnPredicate<Maw> getSpawnRules() {
+		return (entityType, level, spawnType, pos, random) -> pos.getY() < level.getSeaLevel() + 6 &&
+				Monster.checkAnyLightMonsterSpawnRules(entityType, level, spawnType, pos, random);
+	}
+
 	public static AttributeSupplier.@NotNull Builder createAttributes() {
 		return Mob.createMobAttributes()
 				.add(ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.DEFAULT_MAW_SWIM_SPEED)

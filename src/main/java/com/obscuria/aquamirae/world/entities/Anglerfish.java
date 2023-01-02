@@ -14,7 +14,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -192,6 +194,11 @@ public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekate
 	@Override public boolean isPushedByFluid(FluidType type) {
 		if (type == ForgeMod.WATER_TYPE.get()) return false;
 		return super.isPushedByFluid(type);
+	}
+
+	public static SpawnPlacements.SpawnPredicate<Anglerfish> getSpawnRules() {
+		return (entityType, level, spawnType, pos, random) -> level.getFluidState(pos).is(FluidTags.WATER) &&
+				level.getDifficulty() != Difficulty.PEACEFUL;
 	}
 
 	public static AttributeSupplier.@NotNull Builder createAttributes() {

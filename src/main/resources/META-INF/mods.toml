@@ -4,20 +4,18 @@ license="Obscuria Lithium (c) 2023, All Rights Reserved."
 
 [[mods]]
 modId="aquamirae"
-version="5.api10"
+version="5.3.api11"
 displayName="Aquamirae"
-credits="Krossy, The Exiled Fellow and everyone who supports us on Patreon!"
-displayURL="https://www.curseforge.com/members/obscuriaofficial/projects"
+credits="Krossy and everyone who supports us on Patreon!"
+updateJSONURL="https://raw.githubusercontent.com/ObscuriaLithium/Home/main/aquamirae/versions.json"
 logoFile="logo.png"
 authors="Obscuria, Pluvia"
-description='''
-Ship graveyard with terrible deep sea creatures
-'''
+description="   Ship graveyard with terrible deep sea creatures."
 
 [[dependencies.aquamirae]]
     modId="forge"
     mandatory=true
-    versionRange="[43,)"
+    versionRange="[43.2.0,)"
     ordering="NONE"
     side="BOTH"
 
@@ -31,7 +29,7 @@ Ship graveyard with terrible deep sea creatures
 [[dependencies.aquamirae]]
     modId="obscure_api"
     mandatory=true
-    versionRange="[10,]"
+    versionRange="[11,]"
     ordering="NONE"
     side="BOTH"
 

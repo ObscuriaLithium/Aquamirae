@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Pillager;
@@ -39,6 +40,10 @@ public class PillagersPatrol extends Monster {
 		}
 		if (!this.level.isClientSide()) this.discard();
 		super.baseTick();
+	}
+
+	public static SpawnPlacements.SpawnPredicate<PillagersPatrol> getSpawnRules() {
+		return Monster::checkAnyLightMonsterSpawnRules;
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {

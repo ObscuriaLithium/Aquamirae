@@ -6,7 +6,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.AbstractSchoolingFish;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PlayMessages;
@@ -40,5 +42,9 @@ public class Spinefish extends AbstractSchoolingFish implements IShipGraveyardEn
 
     protected @NotNull SoundEvent getFlopSound() {
         return SoundEvents.COD_FLOP;
+    }
+
+    public static SpawnPlacements.SpawnPredicate<Spinefish> getSpawnRules() {
+        return WaterAnimal::checkSurfaceWaterAnimalSpawnRules;
     }
 }

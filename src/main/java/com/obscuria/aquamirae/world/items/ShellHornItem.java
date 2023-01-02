@@ -8,7 +8,6 @@ import com.obscuria.aquamirae.world.entities.CaptainCornelia;
 import com.obscuria.obscureapi.utils.EventHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -46,7 +45,7 @@ public class ShellHornItem extends Item {
 			final int sx = entity.getBlockX() + ix;
 			for (int iz = -6; iz <= 6; iz++) {
 				final int sz = entity.getBlockZ() + iz;
-				if (entity.getLevel().getBiome(new BlockPos(sx, 58, sz)).is(new ResourceLocation("deep_frozen_ocean"))) {
+				if (entity.getLevel().getBiome(new BlockPos(sx, 58, sz)).is(AquamiraeMod.ICE_MAZE)) {
 					if ((entity.getLevel().getBlockState(new BlockPos(sx, 62, sz))).getBlock() == Blocks.WATER
 							&& (entity.getLevel().getBlockState(new BlockPos(sx, 58, sz))).getBlock() == Blocks.WATER
 							&& (entity.getLevel().getBlockState(new BlockPos(sx - 1, 62, sz))).getBlock() == Blocks.WATER

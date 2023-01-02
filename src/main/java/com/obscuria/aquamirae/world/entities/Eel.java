@@ -283,6 +283,7 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 				.add(Attributes.ARMOR, AquamiraeConfig.DEFAULT_EEL_ARMOR)
 				.add(Attributes.ATTACK_DAMAGE, AquamiraeConfig.DEFAULT_EEL_ATTACK_DAMAGE)
 				.add(Attributes.FOLLOW_RANGE, AquamiraeConfig.DEFAULT_EEL_FOLLOW_RANGE)
-				.add(Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.DEFAULT_EEL_ATTACK_KNOCKBACK);
+				.add(Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.DEFAULT_EEL_ATTACK_KNOCKBACK)
+				.add(Attributes.KNOCKBACK_RESISTANCE, 100.0);
 	}
 }

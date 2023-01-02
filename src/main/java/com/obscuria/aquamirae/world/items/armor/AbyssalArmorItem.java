@@ -152,7 +152,7 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 
 		@Override
 		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/abyssal_helmet.png";
+			return "aquamirae:textures/entity/armor/abyssal_heaume.png";
 		}
 	}
 

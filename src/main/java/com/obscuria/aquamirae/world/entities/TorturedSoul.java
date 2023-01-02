@@ -137,6 +137,10 @@ public class TorturedSoul extends Monster implements IShipGraveyardEntity, IHeka
 		super.baseTick();
 	}
 
+	public static SpawnPlacements.SpawnPredicate<TorturedSoul> getSpawnRules() {
+		return Monster::checkMonsterSpawnRules;
+	}
+
 	public static AttributeSupplier.@NotNull Builder createAttributes() {
 		return Mob.createMobAttributes()
 				.add(ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.DEFAULT_SOUL_SWIM_SPEED)
