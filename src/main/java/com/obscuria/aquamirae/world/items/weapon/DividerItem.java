@@ -4,18 +4,17 @@ package com.obscuria.aquamirae.world.items.weapon;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
-import com.obscuria.obscureapi.ObscureAPI;
-import com.obscuria.obscureapi.world.classes.*;
+import com.obscuria.obscureapi.api.classes.Ability;
+import com.obscuria.obscureapi.api.classes.ClassAbility;
+import com.obscuria.obscureapi.api.classes.ClassItem;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
-
-public class DividerItem extends SwordItem implements IClassItem, IAbilityItem {
+@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+public class DividerItem extends SwordItem {
 	public DividerItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -45,19 +44,8 @@ public class DividerItem extends SwordItem implements IClassItem, IAbilityItem {
 		}, 3, -2.6f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
-	public final ObscureAbility ABILITY = new ObscureAbility(this, "divider", ObscureAbility.Cost.NONE, 0, 10);
-
-	public List<ObscureAbility> getObscureAbilities() {
-		return Collections.singletonList(ABILITY);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.WEAPON;
-	}
+	@ClassAbility
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("divider").variables(10).build(this);
 
 	@Override
 	public boolean hurtEnemy(@NotNull ItemStack itemstack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
@@ -65,9 +53,9 @@ public class DividerItem extends SwordItem implements IClassItem, IAbilityItem {
 		if (hurt) {
 			final MobEffectInstance EFFECT = entity.getEffect(AquamiraeMobEffects.HEALTH_DECREASE.get());
 			if (EFFECT != null) entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.HEALTH_DECREASE.get(),
-						20 * ABILITY.getAmount(source, 0), Math.min(9, EFFECT.getAmplifier() + 1), false, false));
+						20 * ABILITY.getVariable(source, 1), Math.min(9, EFFECT.getAmplifier() + 1), false, false));
 			else entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.HEALTH_DECREASE.get(),
-						20 * ABILITY.getAmount(source, 0), 0, false, false));
+						20 * ABILITY.getVariable(source, 1), 0, false, false));
 		}
 		return hurt;
 	}

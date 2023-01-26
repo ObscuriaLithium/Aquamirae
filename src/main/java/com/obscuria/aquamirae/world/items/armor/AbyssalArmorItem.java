@@ -5,8 +5,8 @@ import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.armor.ModelAbyssalArmor;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
-import com.obscuria.obscureapi.ObscureAPI;
-import com.obscuria.obscureapi.world.classes.*;
+import com.obscuria.obscureapi.api.classes.*;
+import com.obscuria.obscureapi.utils.ItemUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -25,14 +25,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
-	public final EquipmentSlot BONUS_SLOT;
+public abstract class AbyssalArmorItem extends ArmorItem {
 
 	public AbyssalArmorItem(EquipmentSlot slot, Item.Properties properties) {
 		super(new ArmorMaterial() {
@@ -77,56 +74,32 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 				return 0.1f;
 			}
 		}, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
-		this.BONUS_SLOT = slot;
 	}
 
-	public final ObscureAbility ABILITY_HALFSET = new ObscureAbility(this, "abyssal_armor_half", ObscureAbility.Cost.NONE, 0);
-	public final ObscureAbility ABILITY_FULLSET_1 = new ObscureAbility(this, "abyssal_armor_full_1", ObscureAbility.Cost.NONE, 0, 90);
-	public final ObscureAbility ABILITY_FULLSET_2 = new ObscureAbility(this, "abyssal_armor_full_2", ObscureAbility.Cost.NONE, 0);
-	public final ObscureBonus BONUS_HEAD = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.POWER, ObscureBonus.Operation.AMOUNT, 3);
-	public final ObscureBonus BONUS_CHEST = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 25);
-	public final ObscureBonus BONUS_LEGS = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 25);
-	public final ObscureBonus BONUS_FEET = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.POWER, ObscureBonus.Operation.AMOUNT, 3);
-
-	public List<ObscureAbility> getObscureAbilities() {
-		return Arrays.asList(ABILITY_FULLSET_2, ABILITY_FULLSET_1, ABILITY_HALFSET);
-	}
-
-	public List<ObscureBonus> getObscureBonuses() {
-		if (this.BONUS_SLOT == EquipmentSlot.HEAD) return Collections.singletonList(BONUS_HEAD);
-		if (this.BONUS_SLOT == EquipmentSlot.CHEST) return Collections.singletonList(BONUS_CHEST);
-		if (this.BONUS_SLOT == EquipmentSlot.LEGS) return Collections.singletonList(BONUS_LEGS);
-		return Collections.singletonList(BONUS_FEET);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.ARMOR;
-	}
+	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_half").build(this);
+	public final Ability ABILITY_FULLSET_1 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_1").variables(90).build(this);
+	public final Ability ABILITY_FULLSET_2 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_2").build(this);
+	public final Bonus BONUS_1 = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
+	public final Bonus BONUS_2 = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(25).build();
 
 	@Override
 	public void onArmorTick(ItemStack itemstack, Level world, Player player) {
-		final boolean HEAD = player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AbyssalArmorItem
-				|| player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AbyssalTiaraItem;
-		final boolean CHEST = player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AbyssalArmorItem;
-		final boolean LEGS = player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof AbyssalArmorItem;
-		final boolean FEET = player.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof AbyssalArmorItem;
-		final int TOTAL = (HEAD ? 1 : 0) + (CHEST ? 1 : 0) + (LEGS ? 1 : 0) + (FEET ? 1 : 0);
-		if (TOTAL >= 2) {
+		if (ItemUtils.getArmorPieces(player, AbyssalArmorItem.class, AbyssalArmorExtraItem.class) >= 2) {
 			final MobEffectInstance EFFECT = player.getEffect(AquamiraeMobEffects.STRONG_ARMOR.get());
-			if (EFFECT != null) {
-				EFFECT.update(new MobEffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
-			} else {
-				player.addEffect(new MobEffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
-			}
+			if (EFFECT != null) EFFECT.update(new MobEffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
+			else player.addEffect(new MobEffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
 		}
 	}
 
-	public static class Helmet extends AbyssalArmorItem {
-		public Helmet() {
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
+	public static class Heaume extends AbyssalArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
+		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
+		@ClassBonus public final Bonus BONUS = super.BONUS_1;
+
+		public Heaume() {
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
 
@@ -156,8 +129,15 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 		}
 	}
 
-	public static class Chestplate extends AbyssalArmorItem {
-		public Chestplate() {
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
+	public static class Brigantine extends AbyssalArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
+		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
+		@ClassBonus public final Bonus BONUS = super.BONUS_2;
+
+		public Brigantine() {
 			super(EquipmentSlot.CHEST, new Item.Properties());
 		}
 
@@ -188,7 +168,14 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 		}
 	}
 
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Leggings extends AbyssalArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
+		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
+		@ClassBonus public final Bonus BONUS = super.BONUS_2;
+
 		public Leggings() {
 			super(EquipmentSlot.LEGS, new Item.Properties());
 		}
@@ -220,7 +207,14 @@ public abstract class AbyssalArmorItem extends ArmorItem implements IClassItem, 
 		}
 	}
 
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Boots extends AbyssalArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
+		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
+		@ClassBonus public final Bonus BONUS = super.BONUS_1;
+
 		public Boots() {
 			super(EquipmentSlot.FEET, new Item.Properties());
 		}

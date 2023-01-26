@@ -2,10 +2,11 @@ package com.obscuria.aquamirae.world.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.obscureapi.client.animations.HekateProvider;
-import com.obscuria.obscureapi.client.animations.IHekateProvider;
+import com.obscuria.obscureapi.api.animations.AnimationProvider;
+import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
 import com.obscuria.obscureapi.world.ai.MeleeAttackGoal;
 import com.obscuria.obscureapi.world.ai.attack.SimpleMeleeAttack;
 import net.minecraft.core.BlockPos;
@@ -50,8 +51,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekateProvider {
-	private final HekateProvider ANIMATIONS = new HekateProvider(this);
+@ShipGraveyardEntity
+public class Anglerfish extends Monster implements IAnimatedEntity {
+	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
 	private int attackTick = 0;
 	public Anglerfish(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.ANGLERFISH.get(), world);
@@ -94,7 +96,7 @@ public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekate
 		};
 	}
 
-	@Override public HekateProvider getHekateProvider() {
+	@Override public AnimationProvider getAnimationProvider() {
 		return this.ANIMATIONS;
 	}
 
@@ -177,7 +179,7 @@ public class Anglerfish extends Monster implements IShipGraveyardEntity, IHekate
 			if (this.getTarget() != null) this.lookControl.setLookAt(this.getTarget());
 			if (ANIMATIONS.getTick("attack") > 12) this.setDeltaMovement(this.getDeltaMovement().scale(0.9F));
 			if (ANIMATIONS.getTick("attack") == 12 && this.getTarget() != null) this.setDeltaMovement(this.getDeltaMovement()
-					.add(this.getPosition(1F).vectorTo(this.getTarget().getPosition(1F)).scale(0.4F)));
+					.add(this.position().vectorTo(this.getTarget().position()).scale(0.4F)));
 		} else this.attackTick--;
 		super.baseTick();
 	}

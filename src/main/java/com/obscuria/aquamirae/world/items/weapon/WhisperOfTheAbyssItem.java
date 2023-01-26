@@ -6,8 +6,9 @@ import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
-import com.obscuria.obscureapi.ObscureAPI;
-import com.obscuria.obscureapi.world.classes.*;
+import com.obscuria.obscureapi.api.classes.Ability;
+import com.obscuria.obscureapi.api.classes.ClassAbility;
+import com.obscuria.obscureapi.api.classes.ClassItem;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,11 +19,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
-public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbilityItem {
+@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+public class WhisperOfTheAbyssItem extends SwordItem {
 	public WhisperOfTheAbyssItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -52,19 +52,8 @@ public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbi
 		}, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
-	public final ObscureAbility ABILITY = new ObscureAbility(this, "whisper_of_the_abyss", ObscureAbility.Cost.NONE, 0, 10);
-
-	public List<ObscureAbility> getObscureAbilities() {
-		return Collections.singletonList(ABILITY);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.WEAPON;
-	}
+	@ClassAbility
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("whisper_of_the_abyss").variables(10).build(this);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
@@ -84,9 +73,9 @@ public class WhisperOfTheAbyssItem extends SwordItem implements IClassItem, IAbi
 		if (hurt) {
 			final MobEffectInstance EFFECT = entity.getEffect(AquamiraeMobEffects.ARMOR_DECREASE.get());
 			if (EFFECT != null) entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
-						20 * ABILITY.getAmount(source, 0), Math.min(4, EFFECT.getAmplifier() + 1), false, false));
+						20 * ABILITY.getVariable(source, 1), Math.min(4, EFFECT.getAmplifier() + 1), false, false));
 			else entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
-						20 * ABILITY.getAmount(source, 0), 0, false, false));
+						20 * ABILITY.getVariable(source, 1), 0, false, false));
 		}
 		return hurt;
 	}

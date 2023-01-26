@@ -4,7 +4,7 @@ package com.obscuria.aquamirae.world.items.weapon;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.obscureapi.world.classes.ObscureRarity;
+import com.obscuria.obscureapi.world.items.ObscureRarity;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;

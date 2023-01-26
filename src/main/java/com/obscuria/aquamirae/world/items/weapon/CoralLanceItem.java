@@ -6,9 +6,9 @@ import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.obscureapi.ObscureAPI;
+import com.obscuria.obscureapi.api.classes.*;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.world.classes.*;
+import com.obscuria.obscureapi.world.items.ObscureRarity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -19,11 +19,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
-public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityItem, IBonusItem {
+@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+public class CoralLanceItem extends SwordItem {
 	public CoralLanceItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -52,24 +51,10 @@ public class CoralLanceItem extends SwordItem implements IClassItem, IAbilityIte
 		}, 3, -2.8f, new Item.Properties().fireResistant().rarity(ObscureRarity.MYTHIC).tab(AquamiraeMod.TAB));
 	}
 
-	public final ObscureAbility ABILITY = new ObscureAbility(this, "coral_lance", ObscureAbility.Cost.NONE, 0, 50);
-	public final ObscureBonus BONUS = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.ARMOR, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 50);
-
-	public List<ObscureAbility> getObscureAbilities() {
-		return Collections.singletonList(ABILITY);
-	}
-
-	public List<ObscureBonus> getObscureBonuses() {
-		return Collections.singletonList(BONUS);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.WEAPON;
-	}
+	@ClassAbility
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("coral_lance").variables(50).build(this);
+	@ClassBonus
+	public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(50).build();
 
 	@Override
 	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {

@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.world.entities;
 
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
@@ -32,7 +33,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
-public class GoldenMoth extends PathfinderMob implements IShipGraveyardEntity {
+@ShipGraveyardEntity
+public class GoldenMoth extends PathfinderMob {
 	public GoldenMoth(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.GOLDEN_MOTH.get(), world);
 	}

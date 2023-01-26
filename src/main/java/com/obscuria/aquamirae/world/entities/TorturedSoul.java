@@ -3,9 +3,10 @@ package com.obscuria.aquamirae.world.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.obscureapi.client.animations.HekateProvider;
-import com.obscuria.obscureapi.client.animations.IHekateProvider;
+import com.obscuria.obscureapi.api.animations.AnimationProvider;
+import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -35,8 +36,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class TorturedSoul extends Monster implements IShipGraveyardEntity, IHekateProvider {
-	private final HekateProvider ANIMATIONS = new HekateProvider(this);
+@ShipGraveyardEntity
+public class TorturedSoul extends Monster implements IAnimatedEntity {
+	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
 	public TorturedSoul(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.TORTURED_SOUL.get(), world);
 	}
@@ -63,7 +65,7 @@ public class TorturedSoul extends Monster implements IShipGraveyardEntity, IHeka
 		this.targetSelector.addGoal(9, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
 	}
 
-	@Override public HekateProvider getHekateProvider() {
+	@Override public AnimationProvider getAnimationProvider() {
 		return this.ANIMATIONS;
 	}
 

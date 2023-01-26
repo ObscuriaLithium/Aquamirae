@@ -6,9 +6,10 @@ import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.obscureapi.ObscureAPI;
+import com.obscuria.obscureapi.api.classes.Ability;
+import com.obscuria.obscureapi.api.classes.ClassAbility;
+import com.obscuria.obscureapi.api.classes.ClassItem;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.world.classes.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,11 +22,10 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
-public class TerribleSwordItem extends SwordItem implements IClassItem, IAbilityItem {
+@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+public class TerribleSwordItem extends SwordItem {
 	public TerribleSwordItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -54,19 +54,8 @@ public class TerribleSwordItem extends SwordItem implements IClassItem, IAbility
 		}, 3, -3f, new Item.Properties().tab(AquamiraeMod.TAB));
 	}
 
-	public final ObscureAbility ABILITY = new ObscureAbility(this, "terrible_sword", ObscureAbility.Cost.NONE, 0, 1);
-
-	public List<ObscureAbility> getObscureAbilities() {
-		return Collections.singletonList(ABILITY);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.WEAPON;
-	}
+	@ClassAbility
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_sword").variables(1).build(this);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
@@ -84,7 +73,7 @@ public class TerribleSwordItem extends SwordItem implements IClassItem, IAbility
 
 	@Override
 	public boolean hurtEnemy(@NotNull ItemStack itemstack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
-		if (entity.getHealth() > 0) source.hurt(DamageSource.DRAGON_BREATH, ABILITY.getAmount(source, 0));
+		if (entity.getHealth() > 0) source.hurt(DamageSource.DRAGON_BREATH, ABILITY.getVariable(source, 1));
 		return super.hurtEnemy(itemstack, entity, source);
 	}
 }

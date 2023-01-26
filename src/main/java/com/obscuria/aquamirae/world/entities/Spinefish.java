@@ -1,5 +1,6 @@
 package com.obscuria.aquamirae.world.entities;
 
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import net.minecraft.sounds.SoundEvent;
@@ -14,7 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
-public class Spinefish extends AbstractSchoolingFish implements IShipGraveyardEntity {
+@ShipGraveyardEntity
+public class Spinefish extends AbstractSchoolingFish {
 
     public Spinefish(EntityType<? extends Spinefish> type, Level level) {
         super(type, level);

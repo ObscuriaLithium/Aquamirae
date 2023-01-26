@@ -4,8 +4,7 @@ package com.obscuria.aquamirae.world.items.armor;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.armor.ModelTerribleArmor;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.obscureapi.ObscureAPI;
-import com.obscuria.obscureapi.world.classes.*;
+import com.obscuria.obscureapi.api.classes.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -25,15 +24,12 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber
-public abstract class TerribleArmorItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
-	public final EquipmentSlot BONUS_SLOT;
+public abstract class TerribleArmorItem extends ArmorItem {
 
 	public TerribleArmorItem(EquipmentSlot slot, Item.Properties properties) {
 		super(new ArmorMaterial() {
@@ -78,36 +74,19 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 				return 0f;
 			}
 		}, slot, properties.tab(AquamiraeMod.TAB));
-		this.BONUS_SLOT = slot;
 	}
 
-	public final ObscureAbility ABILITY_HALFSET = new ObscureAbility(this, "terrible_armor_half", ObscureAbility.Cost.COOLDOWN, 10, 120, 6);
-	public final ObscureAbility ABILITY_FULLSET = new ObscureAbility(this, "terrible_armor_full", ObscureAbility.Cost.NONE, 0, 4);
-	public final ObscureBonus BONUS_HEAD = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 20);
-	public final ObscureBonus BONUS_CHEST = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 10);
-	public final ObscureBonus BONUS_LEGS = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.COOLDOWN, ObscureBonus.Operation.PERCENT, -10);
-	public final ObscureBonus BONUS_FEET = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.COOLDOWN, ObscureBonus.Operation.PERCENT, -20);
+	public final Ability.Builder ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_half").cost(Ability.Cost.COOLDOWN, 10).variables(120, 6);
+	public final Ability.Builder ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_full").variables(4);
 
-	public List<ObscureAbility> getObscureAbilities() {
-		return Arrays.asList(ABILITY_FULLSET, ABILITY_HALFSET);
-	}
-
-	public List<ObscureBonus> getObscureBonuses() {
-		if (this.BONUS_SLOT == EquipmentSlot.HEAD) return Collections.singletonList(BONUS_HEAD);
-		if (this.BONUS_SLOT == EquipmentSlot.CHEST) return Collections.singletonList(BONUS_CHEST);
-		if (this.BONUS_SLOT == EquipmentSlot.LEGS) return Collections.singletonList(BONUS_LEGS);
-		return Collections.singletonList(BONUS_FEET);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.ARMOR;
-	}
-
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Helmet extends TerribleArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_HALFSET.build(this);
+		@ClassBonus
+		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(20).build();
+
 		public Helmet() {
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
@@ -138,7 +117,14 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 		}
 	}
 
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Chestplate extends TerribleArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_HALFSET.build(this);
+		@ClassBonus
+		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(10).build();
+
 		public Chestplate() {
 			super(EquipmentSlot.CHEST, new Item.Properties());
 		}
@@ -170,7 +156,14 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 		}
 	}
 
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Leggings extends TerribleArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_HALFSET.build(this);
+		@ClassBonus
+		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-10).build();
+
 		public Leggings() {
 			super(EquipmentSlot.LEGS, new Item.Properties());
 		}
@@ -202,7 +195,14 @@ public abstract class TerribleArmorItem extends ArmorItem implements IClassItem,
 		}
 	}
 
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Boots extends TerribleArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_HALFSET.build(this);
+		@ClassBonus
+		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-20).build();
+
 		public Boots() {
 			super(EquipmentSlot.FEET, new Item.Properties());
 		}

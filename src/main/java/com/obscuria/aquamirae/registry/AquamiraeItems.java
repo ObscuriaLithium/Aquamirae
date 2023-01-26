@@ -4,12 +4,12 @@ package com.obscuria.aquamirae.registry;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.world.items.*;
 import com.obscuria.aquamirae.world.items.armor.AbyssalArmorItem;
-import com.obscuria.aquamirae.world.items.armor.AbyssalTiaraItem;
+import com.obscuria.aquamirae.world.items.armor.AbyssalArmorExtraItem;
 import com.obscuria.aquamirae.world.items.armor.TerribleArmorItem;
 import com.obscuria.aquamirae.world.items.armor.ThreeBoltArmorItem;
 import com.obscuria.aquamirae.world.items.weapon.*;
 import com.obscuria.obscureapi.registry.ObscureAPIMobEffects;
-import com.obscuria.obscureapi.world.classes.ObscureRarity;
+import com.obscuria.obscureapi.world.items.ObscureRarity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -47,11 +47,11 @@ public class AquamiraeItems {
 					new Item.Properties().tab(AquamiraeMod.TAB)));
 	public static final RegistryObject<Item> DIVIDER = REGISTRY.register("divider", DividerItem::new);
 	public static final RegistryObject<Item> WHISPER_OF_THE_ABYSS = REGISTRY.register("whisper_of_the_abyss", WhisperOfTheAbyssItem::new);
-	public static final RegistryObject<Item> ABYSSAL_HEAUME = REGISTRY.register("abyssal_heaume", AbyssalArmorItem.Helmet::new);
-	public static final RegistryObject<Item> ABYSSAL_BRIGANTINE = REGISTRY.register("abyssal_brigantine", AbyssalArmorItem.Chestplate::new);
+	public static final RegistryObject<Item> ABYSSAL_HEAUME = REGISTRY.register("abyssal_heaume", AbyssalArmorItem.Heaume::new);
+	public static final RegistryObject<Item> ABYSSAL_BRIGANTINE = REGISTRY.register("abyssal_brigantine", AbyssalArmorItem.Brigantine::new);
 	public static final RegistryObject<Item> ABYSSAL_LEGGINGS = REGISTRY.register("abyssal_leggings", AbyssalArmorItem.Leggings::new);
 	public static final RegistryObject<Item> ABYSSAL_BOOTS = REGISTRY.register("abyssal_boots", AbyssalArmorItem.Boots::new);
-	public static final RegistryObject<Item> ABYSSAL_TIARA = REGISTRY.register("abyssal_tiara", AbyssalTiaraItem.Helmet::new);
+	public static final RegistryObject<Item> ABYSSAL_TIARA = REGISTRY.register("abyssal_tiara", AbyssalArmorExtraItem.Tiara::new);
 	public static final RegistryObject<Item> MAZE_MOTHER_SPAWN_EGG = REGISTRY.register("maze_mother_spawn_egg",
 			() -> new ForgeSpawnEggItem(AquamiraeEntities.MAZE_MOTHER, -10092442, -39169,
 					new Item.Properties().tab(AquamiraeMod.TAB)));

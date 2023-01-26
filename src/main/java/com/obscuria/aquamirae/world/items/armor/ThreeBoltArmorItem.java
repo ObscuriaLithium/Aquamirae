@@ -10,8 +10,7 @@ import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.armor.ModelThreeBoltArmor;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.obscureapi.ObscureAPI;
-import com.obscuria.obscureapi.world.classes.*;
+import com.obscuria.obscureapi.api.classes.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -38,12 +37,10 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem, IAbilityItem, IBonusItem {
-	public final EquipmentSlot BONUS_SLOT;
+public abstract class ThreeBoltArmorItem extends ArmorItem {
 
 	public ThreeBoltArmorItem(EquipmentSlot slot, Item.Properties properties) {
 		super(new ArmorMaterial() {
@@ -87,32 +84,19 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 				return 0.1f;
 			}
 		}, slot, properties.tab(AquamiraeMod.TAB));
-		this.BONUS_SLOT = slot;
 	}
 
-	public final ObscureAbility ABILITY_HALFSET = new ObscureAbility(this, "three_bolt_armor_half", ObscureAbility.Cost.NONE, 0);
-	public final ObscureAbility ABILITY_FULLSET = new ObscureAbility(this, "three_bolt_armor_full", ObscureAbility.Cost.NONE, 0);
-	public final ObscureBonus BONUS_TOP = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.ARMOR, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 30);
-	public final ObscureBonus BONUS_BOTTOM = new ObscureBonus(AquamiraeMod.SEA_WOLF, ObscureAPI.Types.WEAPON, ObscureBonus.Type.POWER, ObscureBonus.Operation.PERCENT, 30);
+	public final Ability.Builder ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("three_bolt_armor_half");
+	public final Ability.Builder ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("three_bolt_armor_full");
+	public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(30).build();
 
-	public List<ObscureAbility> getObscureAbilities() {
-		return List.of(ABILITY_FULLSET, ABILITY_HALFSET);
-	}
-
-	public List<ObscureBonus> getObscureBonuses() {
-		if (this.BONUS_SLOT == EquipmentSlot.HEAD || this.BONUS_SLOT == EquipmentSlot.CHEST) return Collections.singletonList(BONUS_TOP);
-		return Collections.singletonList(BONUS_BOTTOM);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.ARMOR;
-	}
-
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Helmet extends ThreeBoltArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET.build(this);
+		@ClassBonus public final Bonus BONUS = super.BONUS;
+
 		public Helmet() {
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
@@ -165,7 +149,13 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 		}
 	}
 
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Chestplate extends ThreeBoltArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET.build(this);
+		@ClassBonus public final Bonus BONUS = super.BONUS;
+
 		public Chestplate() {
 			super(EquipmentSlot.CHEST, new Item.Properties());
 		}
@@ -212,7 +202,13 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 		}
 	}
 
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Leggings extends ThreeBoltArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET.build(this);
+		@ClassBonus public final Bonus BONUS = super.BONUS;
+
 		public Leggings() {
 			super(EquipmentSlot.LEGS, new Item.Properties());
 		}
@@ -244,7 +240,13 @@ public abstract class ThreeBoltArmorItem extends ArmorItem implements IClassItem
 		}
 	}
 
+	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Boots extends ThreeBoltArmorItem {
+
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET.build(this);
+		@ClassBonus public final Bonus BONUS = super.BONUS;
+
 		public Boots() {
 			super(EquipmentSlot.FEET, new Item.Properties());
 		}

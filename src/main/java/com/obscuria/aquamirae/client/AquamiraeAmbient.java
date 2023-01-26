@@ -2,6 +2,7 @@ package com.obscuria.aquamirae.client;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.AquamiraeUtils;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,7 +27,7 @@ public class AquamiraeAmbient {
 		if (biomeMusic > 0) biomeMusic--;
 		if (corneliaMusic > 0) corneliaMusic--;
 		final Player player = Minecraft.getInstance().player;
-		if (player.getLevel().getBiome(player.blockPosition()).is(AquamiraeMod.ICE_MAZE)) {
+		if (AquamiraeUtils.isInIceMaze(player)) {
 			playAmbientSounds(player, true);
 			playBiomeMusic(player);
 			spawnParticles(player);

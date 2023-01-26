@@ -3,11 +3,14 @@ package com.obscuria.aquamirae.world.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.obscureapi.client.animations.HekateLib;
-import com.obscuria.obscureapi.client.animations.HekateProvider;
-import com.obscuria.obscureapi.client.animations.IHekateProvider;
+import com.obscuria.obscureapi.api.VFX;
+import com.obscuria.obscureapi.api.animations.AnimationProvider;
+import com.obscuria.obscureapi.api.animations.HekateLib;
+import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
+import com.obscuria.obscureapi.utils.EventUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -39,8 +42,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvider {
-	private final HekateProvider ANIMATIONS = new HekateProvider(this);
+@ShipGraveyardEntity
+public class Eel extends Monster implements IAnimatedEntity {
+	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
 	private static final EntityDataAccessor<Integer> MOVE_COOLDOWN = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Float> POS_X = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Float> POS_Y = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
@@ -108,7 +112,7 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 		this.getEntityData().set(POS_Z, data.getFloat("z"));
 	}
 
-	public HekateProvider getHekateProvider() {
+	public AnimationProvider getAnimationProvider() {
 		return this.ANIMATIONS;
 	}
 
@@ -150,8 +154,20 @@ public class Eel extends Monster implements IShipGraveyardEntity, IHekateProvide
 					this.doHurtTarget(target);
 					if (target.getHealth() < hp) this.heal((hp - target.getHealth()) * 2);
 				}
-				//KNOCKBACK
+				//ROAR
 				if (!target.getLevel().isClientSide() && ANIMATIONS.isPlaying("roar") && ANIMATIONS.getTick("roar") <= 40) {
+					if (this.tickCount % 5 == 0) {
+						final Vec3 pos = EventUtils.getRelativePos(this, 4f, 0f, 0f);
+						VFX.Builder.create(20).owner(this).texture(AquamiraeMod.MODID, "roar")
+								.pos(pos.add(0, this.getEyeY() - pos.y - 0.2, 0))
+								.relativeRot(this, true, true)
+								.xRot(90f, 0f, 0f)
+								.zRot((float) (360 * Math.random()), 0, 0)
+								.moveForward(0f, 3f, 0.03f)
+								.scale(0.4f, 0.1f, 0.01f)
+								.alpha(0.25f, -0.0025f, -0.0025f)
+								.build(this.level);
+					}
 					if (distance < 150) {
 						final Vec3 thisVec = new Vec3(this.getX(), this.getY(), this.getZ());
 						final Vec3 targetVec = new Vec3(target.getX(), target.getY(), target.getZ());

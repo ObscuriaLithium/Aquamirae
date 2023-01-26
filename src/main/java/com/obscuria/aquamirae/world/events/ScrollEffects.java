@@ -75,7 +75,7 @@ public class ScrollEffects {
         final Drowned drowned = new Drowned(EntityType.DROWNED, PLAYER.level);
         if (PLAYER.level instanceof ServerLevel serverLevel) {
             drowned.finalizeSpawn(serverLevel, PLAYER.level.getCurrentDifficultyAt(PLAYER.blockPosition()), MobSpawnType.EVENT, null, null);
-            drowned.moveTo(PLAYER.getPosition(0f));
+            drowned.moveTo(PLAYER.position());
             drowned.setItemSlot(EquipmentSlot.HEAD, PLAYER.getItemBySlot(EquipmentSlot.HEAD));
             drowned.setItemSlot(EquipmentSlot.CHEST, PLAYER.getItemBySlot(EquipmentSlot.CHEST));
             drowned.setItemSlot(EquipmentSlot.LEGS, PLAYER.getItemBySlot(EquipmentSlot.LEGS));
@@ -99,7 +99,7 @@ public class ScrollEffects {
     }
 
     private boolean shelter() {
-        final Vec3 center = PLAYER.getPosition(1F);
+        final Vec3 center = PLAYER.position();
         List<Eel> eels = PLAYER.level.getEntitiesOfClass(Eel.class, new AABB(center, center).inflate(128), e -> true).stream()
                 .sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
         if (!eels.isEmpty()) { PLAYER.moveTo(eels.get(0).position()); return true; }
@@ -107,8 +107,7 @@ public class ScrollEffects {
     }
 
     private void chakras() {
-        for (float i = 0f; i < 1f; i += 0.1F)
-            ChakraEntity.summonChakra(PLAYER, AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER.level, null, 20, i, 6000, 1);
+        for (float i = 0f; i < 1f; i += 0.1F) ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER, PLAYER.level, null, 20, i, 6000, 1);
     }
 
     public static class MoveUp {
@@ -153,7 +152,7 @@ public class ScrollEffects {
             if (TICKS >= 20) MinecraftForge.EVENT_BUS.unregister(this);
             if (TICKS == 0) { PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(new Vec3(0, 1.5f, 0))); PLAYER.hurtMarked = true; }
             if (TICKS == 20) {
-                PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(PLAYER.getPosition(1f).vectorTo(new Vec3(PLAYER.getX() +
+                PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(PLAYER.position().vectorTo(new Vec3(PLAYER.getX() +
                         Math.cos(PLAYER.getXRot()) * 3f, PLAYER.getY() + 0.5f, PLAYER.getZ() + Math.sin(PLAYER.getXRot()) * 3f))));
                 PLAYER.hurtMarked = true;
             }

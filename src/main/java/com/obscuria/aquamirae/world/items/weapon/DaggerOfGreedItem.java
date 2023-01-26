@@ -2,8 +2,9 @@
 package com.obscuria.aquamirae.world.items.weapon;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.ObscureAPI;
-import com.obscuria.obscureapi.world.classes.*;
+import com.obscuria.obscureapi.api.classes.Ability;
+import com.obscuria.obscureapi.api.classes.ClassAbility;
+import com.obscuria.obscureapi.api.classes.ClassItem;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -18,11 +19,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
-public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbilityItem {
+@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+public class DaggerOfGreedItem extends SwordItem {
 	public DaggerOfGreedItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -51,21 +51,12 @@ public class DaggerOfGreedItem extends SwordItem implements IClassItem, IAbility
 		}, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB));
 	}
 
-	public final ObscureAbility ABILITY_1 = new ObscureAbility(this, "dagger_of_greed_1", ObscureAbility.Cost.NONE, 0);
-	public final ObscureAbility ABILITY_2 = new ObscureAbility(this, "dagger_of_greed_2", ObscureAbility.Cost.NONE, 0);
-	public final ObscureAbility ABILITY_3 = new ObscureAbility(this, "dagger_of_greed_3", ObscureAbility.Cost.NONE, 0);
-
-	public List<ObscureAbility> getObscureAbilities() {
-		return Arrays.asList(ABILITY_3, ABILITY_2, ABILITY_1);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.WEAPON;
-	}
+	@ClassAbility
+	public final Ability ABILITY_1 = Ability.Builder.create(AquamiraeMod.MODID).description("dagger_of_greed_1").build(this);
+	@ClassAbility
+	public final Ability ABILITY_2 = Ability.Builder.create(AquamiraeMod.MODID).description("dagger_of_greed_2").build(this);
+	@ClassAbility
+	public final Ability ABILITY_3 = Ability.Builder.create(AquamiraeMod.MODID).description("dagger_of_greed_3").build(this);
 
 	public void inventoryTick(ItemStack stack, @NotNull Level level, @NotNull Entity entity, int i, boolean flag) {
 		if (stack.getDamageValue() != stack.getOrCreateTag().getInt("DamageValue"))

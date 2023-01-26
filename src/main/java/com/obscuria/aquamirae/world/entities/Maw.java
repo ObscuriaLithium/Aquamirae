@@ -3,10 +3,11 @@ package com.obscuria.aquamirae.world.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.obscureapi.client.animations.HekateProvider;
-import com.obscuria.obscureapi.client.animations.IHekateProvider;
+import com.obscuria.obscureapi.api.animations.AnimationProvider;
+import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -35,9 +36,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class Maw extends Monster implements IShipGraveyardEntity, IHekateProvider {
+@ShipGraveyardEntity
+public class Maw extends Monster implements IAnimatedEntity {
 
-	private final HekateProvider ANIMATIONS = new HekateProvider(this);
+	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
 
 	public Maw(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.MAW.get(), world);
@@ -64,7 +66,7 @@ public class Maw extends Monster implements IShipGraveyardEntity, IHekateProvide
 		this.goalSelector.addGoal(7, new FloatGoal(this));
 	}
 
-	@Override public HekateProvider getHekateProvider() {
+	@Override public AnimationProvider getAnimationProvider() {
 		return this.ANIMATIONS;
 	}
 

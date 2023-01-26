@@ -3,8 +3,9 @@ package com.obscuria.aquamirae.world.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.obscureapi.utils.EventHelper;
+import com.obscuria.obscureapi.utils.EventUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -45,7 +46,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class MazeMother extends Monster implements IShipGraveyardEntity {
+@ShipGraveyardEntity
+public class MazeMother extends Monster {
 	public MazeMother(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.MAZE_MOTHER.get(), world);
 	}
@@ -147,16 +149,16 @@ public class MazeMother extends Monster implements IShipGraveyardEntity {
 		AquamiraeMod.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.motherFollowRange.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
-		final Vec3 center = this.getPosition(1F);
+		final Vec3 center = this.position();
 		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
-		if (AquamiraeConfig.Common.notifications.get()) players.forEach(player -> EventHelper.sendMessage(player,
+		if (AquamiraeConfig.Common.notifications.get()) players.forEach(player -> EventUtils.sendMessage(player,
 				Component.translatable("icon.info").getString() + Component.translatable("info.maze_mother_spawn").getString()));
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 
 	@Override protected void updateNoActionTime() {
-		final Vec3 center = this.getPosition(1F);
+		final Vec3 center = this.position();
 		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(128), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 		if (!players.isEmpty()) this.setNoActionTime(0);

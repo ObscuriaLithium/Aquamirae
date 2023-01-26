@@ -3,13 +3,16 @@ package com.obscuria.aquamirae.world.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.client.AquamiraeAmbient;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.obscureapi.client.animations.HekateProvider;
-import com.obscuria.obscureapi.client.animations.IHekateProvider;
+import com.obscuria.obscureapi.api.VFX;
+import com.obscuria.obscureapi.api.animations.AnimationProvider;
+import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
+import com.obscuria.obscureapi.utils.EventUtils;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -54,8 +57,9 @@ import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IHekateProvider {
-	private final HekateProvider ANIMATIONS = new HekateProvider(this);
+@ShipGraveyardEntity
+public class CaptainCornelia extends Monster implements IAnimatedEntity {
+	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
 	private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(CaptainCornelia.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> REGENERATION = SynchedEntityData.defineId(CaptainCornelia.class,
 			EntityDataSerializers.INT);
@@ -115,7 +119,7 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 		this.getEntityData().set(REGENERATION, data.getInt("Regeneration"));
 	}
 
-	public HekateProvider getHekateProvider() {
+	public AnimationProvider getAnimationProvider() {
 		return this.ANIMATIONS;
 	}
 
@@ -144,8 +148,18 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 			if (ANIMATIONS.getTick("attack") == 8 || ANIMATIONS.getTick("attack") == 28)
 				this.setDeltaMovement(new Vec3(this.getX(), this.getY(), this.getZ())
 						.vectorTo(new Vec3(target.getX(), target.getY() + 0.1F, target.getZ())).scale(0.2F));
-			if (ANIMATIONS.getTick("attack") == 26 && distance < 9) this.doHurtTarget(target);
+			if (ANIMATIONS.getTick("attack") == 26 && distance < 9) EventUtils.getRelativeEntities(this, LivingEntity.class,
+					4f, 0f, 0f, 5f, true, true).forEach(e -> { if (e != this) this.doHurtTarget(e); });
 			if (ANIMATIONS.getTick("attack") == 6 && distance < 12) this.doHurtTarget(target);
+			if (ANIMATIONS.getTick("attack") == 28)
+				VFX.Builder.create(30).owner(this).texture(AquamiraeMod.MODID, "swing")
+						.relativePos(this, 1f, 0f, -0.7f)
+						.relativeRot(this, false, true)
+						.yRot(-90f, 0, 0)
+						.moveForward(0f, 3f, -0.2f)
+						.scale(0.4f, 0.4f, -0.013f)
+						.alpha(1f, -0.01f, -0.01f)
+						.build(this.level);
 
 			if (this.isUnderWater() && !this.hasEffect(MobEffects.LEVITATION)) this.setDeltaMovement(new Vec3(this.getX(), this.getY(), this.getZ())
 					.vectorTo(new Vec3(target.getX(), target.getY(), target.getZ())).scale(0.04F));
@@ -197,7 +211,7 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 					0.15, 0.1, 0.15, 0.1);
 		}
 		//
-		final Vec3 center = this.getPosition(1F);
+		final Vec3 center = this.position();
 		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(32), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 		players.forEach(player -> { if (player.getLevel().isClientSide()) AquamiraeAmbient.playCorneliaMusic(player); });
@@ -216,9 +230,9 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 			serverLevel.addFreshEntity(entityToSpawn);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_RAGE.get(), SoundSource.HOSTILE, 4, 1);
-			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0F, 600, 1000);
-			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0.33F, 600, 1000);
-			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0.66F, 600, 1000);
+			ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0F, 600, 1000);
+			ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0.33F, 600, 1000);
+			ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0.66F, 600, 1000);
 		}
 	}
 

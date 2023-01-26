@@ -3,8 +3,9 @@ package com.obscuria.aquamirae.world.items.weapon;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.obscureapi.ObscureAPI;
-import com.obscuria.obscureapi.world.classes.*;
+import com.obscuria.obscureapi.api.classes.Ability;
+import com.obscuria.obscureapi.api.classes.ClassAbility;
+import com.obscuria.obscureapi.api.classes.ClassItem;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,10 +17,8 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
-
-public class PoisonedBladeItem extends SwordItem implements IClassItem, IAbilityItem {
+@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+public class PoisonedBladeItem extends SwordItem {
 	public PoisonedBladeItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -49,19 +48,8 @@ public class PoisonedBladeItem extends SwordItem implements IClassItem, IAbility
 		}, 3, -1f, new Item.Properties().tab(AquamiraeMod.TAB));
 	}
 
-	public final ObscureAbility ABILITY = new ObscureAbility(this, "poisoned_blade", ObscureAbility.Cost.COOLDOWN, 10, 5);
-
-	public List<ObscureAbility> getObscureAbilities() {
-		return Collections.singletonList(ABILITY);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.WEAPON;
-	}
+	@ClassAbility
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("poisoned_blade").cost(Ability.Cost.COOLDOWN, 10).variables(5).build(this);
 
 	@Override
 	public boolean hurtEnemy(@NotNull ItemStack itemstack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
@@ -69,8 +57,8 @@ public class PoisonedBladeItem extends SwordItem implements IClassItem, IAbility
 		if (hurt)
 			if (source instanceof Player player) if (!player.getCooldowns().isOnCooldown(this)) {
 					player.getCooldowns().addCooldown(this, 20 * ABILITY.getCost(source));
-					entity.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * ABILITY.getAmount(source, 0), 1)); }
-			else entity.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * ABILITY.getAmount(source, 0), 1));
+					entity.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * ABILITY.getVariable(source, 1), 1)); }
+			else entity.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * ABILITY.getVariable(source, 1), 1));
 		return hurt;
 	}
 }

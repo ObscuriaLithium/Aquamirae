@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.client.animations.HekateLib;
+import com.obscuria.obscureapi.api.animations.HekateLib;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

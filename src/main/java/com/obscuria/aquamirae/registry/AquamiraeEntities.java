@@ -44,10 +44,10 @@ public class AquamiraeEntities {
 					.setCustomClientFactory(Eel::new).sized(2.4f, 3.4f));
 	public static final RegistryObject<EntityType<MazeRose>> MAZE_ROSE = register("maze_rose",
 			EntityType.Builder.<MazeRose>of(MazeRose::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(128)
-					.setUpdateInterval(3).setCustomClientFactory(MazeRose::new).sized(0.7f, 0.125f));
+					.setUpdateInterval(3).setCustomClientFactory(MazeRose::new).sized(1.3f, 0.15f));
 	public static final RegistryObject<EntityType<PoisonedChakra>> POISONED_CHAKRA = register("poisoned_chakra",
 			EntityType.Builder.<PoisonedChakra>of(PoisonedChakra::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true)
-					.setTrackingRange(128).setUpdateInterval(3).setCustomClientFactory(PoisonedChakra::new).sized(0.7f, 0.125f));
+					.setTrackingRange(128).setUpdateInterval(3).setCustomClientFactory(PoisonedChakra::new).sized(1.3f, 0.15f));
 	public static final RegistryObject<EntityType<Spinefish>> SPINEFISH = register("spinefish",
 			EntityType.Builder.<Spinefish>of(Spinefish::new, MobCategory.WATER_AMBIENT).setShouldReceiveVelocityUpdates(true)
 					.setTrackingRange(128).setUpdateInterval(3).setCustomClientFactory(Spinefish::new).sized(0.7f, 0.7f));
@@ -71,9 +71,8 @@ public class AquamiraeEntities {
 		event.put(EEL.get(), Eel.createAttributes().build());
 		event.put(SPINEFISH.get(), Mob.createMobAttributes().build());
 		event.put(LUMINOUS_JELLY.get(), Mob.createMobAttributes().build());
-
-		event.put(POISONED_CHAKRA.get(), Mob.createMobAttributes().build());
-		event.put(MAZE_ROSE.get(), Mob.createMobAttributes().build());
+		event.put(POISONED_CHAKRA.get(), LivingEntity.createLivingAttributes().build());
+		event.put(MAZE_ROSE.get(), LivingEntity.createLivingAttributes().build());
 	}
 
 	@SubscribeEvent

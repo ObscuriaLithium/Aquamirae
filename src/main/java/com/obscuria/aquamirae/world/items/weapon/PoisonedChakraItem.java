@@ -8,9 +8,10 @@ import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeCreativeTab;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.obscureapi.ObscureAPI;
+import com.obscuria.obscureapi.api.classes.Ability;
+import com.obscuria.obscureapi.api.classes.ClassAbility;
+import com.obscuria.obscureapi.api.classes.ClassItem;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.world.classes.*;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;
 import com.obscuria.obscureapi.world.items.ChakraItem;
 import net.minecraft.core.NonNullList;
@@ -29,11 +30,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
-public class PoisonedChakraItem extends ChakraItem implements IClassItem, IAbilityItem {
+@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+public class PoisonedChakraItem extends ChakraItem {
 	public PoisonedChakraItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -63,19 +63,8 @@ public class PoisonedChakraItem extends ChakraItem implements IClassItem, IAbili
 		}, new Item.Properties().tab(AquamiraeMod.TAB));
 	}
 
-	public final ObscureAbility ABILITY = new ObscureAbility(this, "poisoned_chakra", ObscureAbility.Cost.COOLDOWN, 30, 3, 30);
-
-	public List<ObscureAbility> getObscureAbilities() {
-		return Collections.singletonList(ABILITY);
-	}
-
-	public ObscureClass getObscureClass() {
-		return AquamiraeMod.SEA_WOLF;
-	}
-
-	public ObscureType getObscureType() {
-		return ObscureAPI.Types.WEAPON;
-	}
+	@ClassAbility
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("poisoned_chakra").cost(Ability.Cost.COOLDOWN, 30).variables(3, 30).build(this);
 
 	@Override
 	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
@@ -101,8 +90,8 @@ public class PoisonedChakraItem extends ChakraItem implements IClassItem, IAbili
 		final ItemStack stack = entity.getItemInHand(hand);
 		if (world instanceof ServerLevel) {
 			stack.hurt(3, entity.getRandom(), null);
-			ChakraEntity.summonChakra(entity, AquamiraeEntities.POISONED_CHAKRA.get(), world, stack, ABILITY.getAmount(entity, 0), 0F,
-					20 * ABILITY.getAmount(entity, 1), 1000);
+			ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), entity, world, stack, ABILITY.getVariable(entity, 1), 0F,
+					20 * ABILITY.getVariable(entity, 2), 1000);
 			entity.getCooldowns().addCooldown(this, 20 * ABILITY.getCost(entity));
 			return InteractionResultHolder.success(stack);
 		}

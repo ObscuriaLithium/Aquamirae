@@ -2,10 +2,11 @@
 package com.obscuria.aquamirae.world.items;
 
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.AquamiraeUtils;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.aquamirae.world.entities.CaptainCornelia;
-import com.obscuria.obscureapi.utils.EventHelper;
+import com.obscuria.obscureapi.utils.EventUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -45,7 +46,7 @@ public class ShellHornItem extends Item {
 			final int sx = entity.getBlockX() + ix;
 			for (int iz = -6; iz <= 6; iz++) {
 				final int sz = entity.getBlockZ() + iz;
-				if (entity.getLevel().getBiome(new BlockPos(sx, 58, sz)).is(AquamiraeMod.ICE_MAZE)) {
+				if (AquamiraeUtils.isInIceMaze(entity)) {
 					if ((entity.getLevel().getBlockState(new BlockPos(sx, 62, sz))).getBlock() == Blocks.WATER
 							&& (entity.getLevel().getBlockState(new BlockPos(sx, 58, sz))).getBlock() == Blocks.WATER
 							&& (entity.getLevel().getBlockState(new BlockPos(sx - 1, 62, sz))).getBlock() == Blocks.WATER
@@ -79,7 +80,7 @@ public class ShellHornItem extends Item {
 					if (this.ticks >= this.waitTicks) {
 						if (summon) { spawn();
 						} else if (!summoner.getLevel().isClientSide()) {
-							EventHelper.sendMessage(summoner, Component.translatable("icon.boss").getString() + ""
+							EventUtils.sendMessage(summoner, Component.translatable("icon.boss").getString() + ""
 									+ Component.translatable("info.captain_spawn_fail").getString());
 						}
 						MinecraftForge.EVENT_BUS.unregister(this);
@@ -96,7 +97,7 @@ public class ShellHornItem extends Item {
 					summoner.getLevel().addFreshEntity(cornelia);
 				}
 				if (!summoner.getLevel().isClientSide()) {
-					EventHelper.sendMessage(summoner,
+					EventUtils.sendMessage(summoner,
 							Component.translatable("icon.boss").getString() + "" + Component.translatable("info.captain_spawn").getString());
 				}
 			}

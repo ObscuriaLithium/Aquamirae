@@ -3,9 +3,9 @@ package com.obscuria.aquamirae;
 import com.obscuria.aquamirae.registry.*;
 import com.obscuria.aquamirae.world.events.AquamiraeEvents;
 import com.obscuria.obscureapi.ObscureAPI;
+import com.obscuria.obscureapi.api.classes.ObscureClass;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.world.classes.ObscureClass;
-import com.obscuria.obscureapi.world.classes.TooltipHandler;
+import com.obscuria.obscureapi.utils.ItemUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -84,21 +84,21 @@ public class AquamiraeMod {
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
-		TooltipHandler.Lore.add("aquamirae:sea_casserole");
-		TooltipHandler.Lore.add("aquamirae:sea_stew");
-		TooltipHandler.Lore.add("aquamirae:poseidons_breakfast");
-		TooltipHandler.Lore.add("aquamirae:ship_graveyard_echo");
-		TooltipHandler.Lore.add("aquamirae:pirate_pouch");
-		TooltipHandler.Lore.add("aquamirae:treasure_pouch");
-		TooltipHandler.Lore.add("aquamirae:luminescent_bubble");
-		TooltipHandler.Lore.add("aquamirae:luminescent_lamp");
-		TooltipHandler.Lore.add("aquamirae:shell_horn");
-		TooltipHandler.Lore.add("aquamirae:dead_sea_scroll");
-		TooltipHandler.Lore.add("aquamirae:frozen_key");
-		TooltipHandler.Lore.add("aquamirae:wisteria_niveis");
-		TooltipHandler.Lore.add("aquamirae:golden_moth_in_a_jar");
-		TooltipHandler.Lore.add("aquamirae:rune_of_the_storm");
-		TooltipHandler.Lore.add("aquamirae:oxygelium");
+		ItemUtils.addLore("aquamirae:sea_casserole");
+		ItemUtils.addLore("aquamirae:sea_stew");
+		ItemUtils.addLore("aquamirae:poseidons_breakfast");
+		ItemUtils.addLore("aquamirae:ship_graveyard_echo");
+		ItemUtils.addLore("aquamirae:pirate_pouch");
+		ItemUtils.addLore("aquamirae:treasure_pouch");
+		ItemUtils.addLore("aquamirae:luminescent_bubble");
+		ItemUtils.addLore("aquamirae:luminescent_lamp");
+		ItemUtils.addLore("aquamirae:shell_horn");
+		ItemUtils.addLore("aquamirae:dead_sea_scroll");
+		ItemUtils.addLore("aquamirae:frozen_key");
+		ItemUtils.addLore("aquamirae:wisteria_niveis");
+		ItemUtils.addLore("aquamirae:golden_moth_in_a_jar");
+		ItemUtils.addLore("aquamirae:rune_of_the_storm");
+		ItemUtils.addLore("aquamirae:oxygelium");
 	}
 
 	public static void loadFromConfig(LivingEntity entity, Attribute attribute, double amount) {

@@ -1,14 +1,15 @@
 package com.obscuria.aquamirae.world.events;
 
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.AquamiraeUtils;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
-import com.obscuria.aquamirae.world.entities.IShipGraveyardEntity;
 import com.obscuria.aquamirae.world.items.armor.AbyssalArmorItem;
 import com.obscuria.aquamirae.world.items.armor.TerribleArmorItem;
 import com.obscuria.aquamirae.world.items.armor.ThreeBoltArmorItem;
 import com.obscuria.aquamirae.world.items.weapon.CoralLanceItem;
 import com.obscuria.aquamirae.world.items.weapon.FinCutterItem;
 import com.obscuria.aquamirae.world.items.weapon.RemnantsSaberItem;
+import com.obscuria.obscureapi.utils.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -27,9 +28,9 @@ public class AquamiraeEvents {
 
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END || event.player.level.isClientSide || event.player.isCreative() || event.player.isSpectator()) return;
-        if (event.player.level.getBiome(event.player.blockPosition()).is(AquamiraeMod.ICE_MAZE))
+        if (AquamiraeUtils.isInIceMaze(event.player))
             if (event.player.isInWaterOrBubble() && event.player.getTicksFrozen() <= event.player.getTicksRequiredToFreeze() * 3)
-                if (countArmor(event.player, ThreeBoltArmorItem.class) < 4)
+                if (ItemUtils.getArmorPieces(event.player, ThreeBoltArmorItem.class) < 4)
                     event.player.setTicksFrozen(event.player.getTicksFrozen() + 4);
     }
 
@@ -38,21 +39,21 @@ public class AquamiraeEvents {
         if (event.getSource().getEntity() instanceof LivingEntity source && source.getMainHandItem().getItem() instanceof FinCutterItem item) {
             final int emptyHP = (int) Math.floor((source.getMaxHealth() - source.getHealth()) / 2);
             event.setAmount(event.getAmount() + event.getAmount() *
-                    Math.min(item.ABILITY.getAmount(source, 1) * 0.01F, emptyHP * item.ABILITY.getAmount(source, 0) * 0.01F));
+                    Math.min(item.ABILITY.getVariable(source, 2) * 0.01F, emptyHP * item.ABILITY.getVariable(source, 1) * 0.01F));
         }
         //Terrible Armor
         if (event.getEntity() instanceof Player player) {
-            final int TOTAL = countArmor(player, TerribleArmorItem.class);
+            final int TOTAL = ItemUtils.getArmorPieces(player, TerribleArmorItem.class);
             if (TOTAL >= 2) {
                 final ItemStack piece = getArmor(player, TerribleArmorItem.class);
                 if (player.isInWater() && !player.getCooldowns().isOnCooldown(piece.getItem()) && piece.getItem() instanceof TerribleArmorItem item) {
-                    player.addEffect(new MobEffectInstance(AquamiraeMobEffects.SWIM_SPEED.get(), 20 * item.ABILITY_HALFSET.getAmount(player, 1),
-                            Math.min(19, item.ABILITY_HALFSET.getAmount(player, 0) / 10 - 1), false, false));
-                    final int cooldown = 20 * item.ABILITY_HALFSET.getCost(player);
+                    player.addEffect(new MobEffectInstance(AquamiraeMobEffects.SWIM_SPEED.get(), 20 * item.ABILITY_HALFSET.build(item).getVariable(player, 2),
+                            Math.min(19, item.ABILITY_HALFSET.build(item).getVariable(player, 1) / 10 - 1), false, false));
+                    final int cooldown = 20 * item.ABILITY_HALFSET.build(item).getCost(player);
                     cooldown(player, TerribleArmorItem.class, cooldown);
                 }
                 if (TOTAL >= 4 && event.getSource().getEntity() instanceof LivingEntity source && piece.getItem() instanceof TerribleArmorItem item) {
-                    source.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * item.ABILITY_FULLSET.getAmount(player, 0), 1, false, false));
+                    source.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * item.ABILITY_FULLSET.build(item).getVariable(player, 1), 1, false, false));
                 }
             }
         }
@@ -62,11 +63,11 @@ public class AquamiraeEvents {
         //Remnants Saber
         if (event.getSource().getEntity() instanceof LivingEntity source && source.isInWater()
                 && source.getMainHandItem().getItem() instanceof RemnantsSaberItem item)
-            event.setAmount(event.getAmount() * (1F + item.ABILITY.getAmount(source, 0) * 0.01F));
+            event.setAmount(event.getAmount() * (1F + item.ABILITY.getVariable(source, 1) * 0.01F));
         //Coral Lance
         if (event.getSource().getEntity() instanceof LivingEntity source && source.getMainHandItem().getItem() instanceof CoralLanceItem item
-                && event.getEntity() instanceof IShipGraveyardEntity) {
-            event.setAmount(event.getAmount() * (1F + item.ABILITY.getAmount(source, 0) * 0.01F));
+                && AquamiraeUtils.isShipGraveyardEntity(event.getEntity())) {
+            event.setAmount(event.getAmount() * (1F + item.ABILITY.getVariable(source, 1) * 0.01F));
         }
     }
 
@@ -74,13 +75,13 @@ public class AquamiraeEvents {
         //Abyssal Armor
         if (event != null && event.getEntity() != null) {
             final LivingEntity entity = event.getEntity();
-            final int TOTAL = countArmor(entity, AbyssalArmorItem.class);
+            final int TOTAL = ItemUtils.getArmorPieces(entity, AbyssalArmorItem.class);
             if (TOTAL >= 4 && !entity.hasEffect(AquamiraeMobEffects.CRYSTALLIZATION.get())) {
                 final AbyssalArmorItem item = (AbyssalArmorItem) getArmor(entity, AbyssalArmorItem.class).getItem();
                 if (!entity.getPersistentData().getBoolean("crystallization")) {
                     event.setCanceled(true);
                     entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.CRYSTALLIZATION.get(),
-                            20 * item.ABILITY_FULLSET_1.getAmount(entity, 0), 0, true, true));
+                            20 * item.ABILITY_FULLSET_1.getVariable(entity, 1), 0, true, true));
                     entity.setHealth(entity.getMaxHealth());
                     if (entity.getLevel() instanceof ServerLevel level) level.playSound(null, new BlockPos(entity.getX(),
                                     entity.getY() + 1, entity.getZ()), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1, 1);
@@ -95,14 +96,6 @@ public class AquamiraeEvents {
                 }
             }
         }
-    }
-
-    private static int countArmor(LivingEntity entity, Class<?> armor) {
-        final boolean HEAD = armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.HEAD).getItem().getClass());
-        final boolean CHEST = armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.CHEST).getItem().getClass());
-        final boolean LEGS = armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.LEGS).getItem().getClass());
-        final boolean FEET = armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.FEET).getItem().getClass());
-        return (HEAD ? 1 : 0) + (CHEST ? 1 : 0) + (LEGS ? 1 : 0) + (FEET ? 1 : 0);
     }
 
     private static ItemStack getArmor(LivingEntity entity, Class<?> armor) {

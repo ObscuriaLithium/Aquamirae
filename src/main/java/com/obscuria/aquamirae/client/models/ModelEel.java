@@ -1,23 +1,18 @@
 package com.obscuria.aquamirae.client.models;
 
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.client.animations.AnimatedPart;
-import com.obscuria.obscureapi.client.animations.HekateLib;
-import com.obscuria.obscureapi.client.animations.KeyFrame;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.EntityModel;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.obscureapi.api.animations.HekateLib;
+import com.obscuria.obscureapi.client.animations.AnimatedPart;
+import com.obscuria.obscureapi.client.animations.KeyFrame;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class ModelEel<T extends Entity> extends EntityModel<T> {

@@ -3,6 +3,8 @@ package com.obscuria.aquamirae.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.obscureapi.api.animations.HekateLib;
+import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
 import com.obscuria.obscureapi.client.animations.*;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -146,8 +148,8 @@ public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
 		HekateLib.m(lamp4, 8F, -50F, 0, 0, 0, 0, speed2, -0.15F, ageInTicks, move);
 		HekateLib.m(lamp5, 10F, -30F, 0, 0, 0, 0, speed2, -0.2F, ageInTicks, move);
 
-		if (entity instanceof IHekateProvider iHekateProvider)
-			this.main.y = 5F + 5F * iHekateProvider.getHekateProvider().getModifier("onGround1");
+		if (entity instanceof IAnimatedEntity animatedEntity)
+			this.main.y = 5F + 5F * animatedEntity.getAnimationProvider().getModifier("onGround1");
 		HekateLib.render.animation(entity, "onGround", ageInTicks,
 				new KeyFrame(20, 0, 5F, 5F,
 						new AnimatedPart(main, 0, 0, 90),
@@ -179,7 +181,7 @@ public class ModelAnglerfish<T extends Entity> extends EntityModel<T> {
 						new AnimatedPart(tail4, 0, 0, 25F, 0, 0, 0, speed2, -0.2F),
 						new AnimatedPart(tail5, 0, 0, 25F, 0, 0, 0, speed2, -0.25F),
 						new AnimatedPart(tail6, 0, 0, 25F, 0, 0, 0, speed2, -0.3F)));
-		final float headMod = entity instanceof IHekateProvider provider ? 1F - provider.getHekateProvider().getModifier("onGround1") : 1F;
+		final float headMod = entity instanceof IAnimatedEntity animatedEntity ? 1F - animatedEntity.getAnimationProvider().getModifier("onGround1") : 1F;
 		this.main.xRot += HekateLib.render.head(headPitch, headMod);
 		this.main.yRot += HekateLib.render.head(netHeadYaw, headMod);
 		this.main.xRot += HekateLib.render.head(netHeadYaw, 1F - headMod);
