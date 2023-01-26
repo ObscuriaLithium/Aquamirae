@@ -2,13 +2,13 @@
 package com.obscuria.aquamirae.world.entities.chakras;
 
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.obscureapi.world.entities.ChakraEntity;
+import com.obscuria.obscureapi.api.DynamicProjectile;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PlayMessages;
 
-public class MazeRose extends ChakraEntity {
+public class MazeRose extends DynamicProjectile {
 
 	public MazeRose(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.MAZE_ROSE.get(), world);

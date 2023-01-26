@@ -9,11 +9,11 @@ import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
+import com.obscuria.obscureapi.api.DynamicProjectile;
 import com.obscuria.obscureapi.api.VFX;
 import com.obscuria.obscureapi.api.animations.AnimationProvider;
 import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
 import com.obscuria.obscureapi.utils.EventUtils;
-import com.obscuria.obscureapi.world.entities.ChakraEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -230,9 +230,9 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 			serverLevel.addFreshEntity(entityToSpawn);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_RAGE.get(), SoundSource.HOSTILE, 4, 1);
-			ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0F, 600, 1000);
-			ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0.33F, 600, 1000);
-			ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0.66F, 600, 1000);
+			DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0F, 600, 1000);
+			DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0.33F, 600, 1000);
+			DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0.66F, 600, 1000);
 		}
 	}
 

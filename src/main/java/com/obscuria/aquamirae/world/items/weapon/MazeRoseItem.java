@@ -8,12 +8,12 @@ import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeCreativeTab;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.obscureapi.api.DynamicProjectile;
+import com.obscuria.obscureapi.api.DynamicProjectileItem;
 import com.obscuria.obscureapi.api.classes.Ability;
 import com.obscuria.obscureapi.api.classes.ClassAbility;
 import com.obscuria.obscureapi.api.classes.ClassItem;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.world.entities.ChakraEntity;
-import com.obscuria.obscureapi.world.items.ChakraItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 @ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
-public class MazeRoseItem extends ChakraItem {
+@DynamicProjectileItem(mirror = true, distance = true, fastSpin = true)
+public class MazeRoseItem extends TieredItem implements Vanishable {
 	public MazeRoseItem() {
 		super(new Tier() {
 			public int getUses() {
@@ -87,7 +88,7 @@ public class MazeRoseItem extends ChakraItem {
 		final ItemStack stack = entity.getItemInHand(hand);
 		if (world instanceof ServerLevel) {
 			stack.hurt(3, entity.getRandom(), null);
-			ChakraEntity.create(AquamiraeEntities.MAZE_ROSE.get(), entity, world, stack, ABILITY.getVariable(entity, 1), 0F,
+			DynamicProjectile.create(AquamiraeEntities.MAZE_ROSE.get(), entity, world, stack, ABILITY.getVariable(entity, 1), 0F,
 					20 * ABILITY.getVariable(entity, 2), 1000);
 			entity.getCooldowns().addCooldown(this, 20 * ABILITY.getCost(entity));
 			return InteractionResultHolder.success(stack);

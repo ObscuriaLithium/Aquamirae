@@ -5,7 +5,7 @@ import com.obscuria.aquamirae.network.ScrollMessage;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.world.entities.Eel;
-import com.obscuria.obscureapi.world.entities.ChakraEntity;
+import com.obscuria.obscureapi.api.DynamicProjectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -107,7 +107,7 @@ public class ScrollEffects {
     }
 
     private void chakras() {
-        for (float i = 0f; i < 1f; i += 0.1F) ChakraEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER, PLAYER.level, null, 20, i, 6000, 1);
+        for (float i = 0f; i < 1f; i += 0.1F) DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER, PLAYER.level, null, 20, i, 6000, 1);
     }
 
     public static class MoveUp {
