@@ -1,6 +1,5 @@
 package com.obscuria.aquamirae.world.events;
 
-import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.AquamiraeUtils;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
 import com.obscuria.aquamirae.world.items.armor.AbyssalArmorItem;
@@ -47,13 +46,13 @@ public class AquamiraeEvents {
             if (TOTAL >= 2) {
                 final ItemStack piece = getArmor(player, TerribleArmorItem.class);
                 if (player.isInWater() && !player.getCooldowns().isOnCooldown(piece.getItem()) && piece.getItem() instanceof TerribleArmorItem item) {
-                    player.addEffect(new MobEffectInstance(AquamiraeMobEffects.SWIM_SPEED.get(), 20 * item.ABILITY_HALFSET.build(item).getVariable(player, 2),
-                            Math.min(19, item.ABILITY_HALFSET.build(item).getVariable(player, 1) / 10 - 1), false, false));
-                    final int cooldown = 20 * item.ABILITY_HALFSET.build(item).getCost(player);
+                    player.addEffect(new MobEffectInstance(AquamiraeMobEffects.SWIM_SPEED.get(), 20 * item.ABILITY_HALFSET.getVariable(player, 2),
+                            Math.min(19, item.ABILITY_HALFSET.getVariable(player, 1) / 10 - 1), false, false));
+                    final int cooldown = 20 * item.ABILITY_HALFSET.getCost(player);
                     cooldown(player, TerribleArmorItem.class, cooldown);
                 }
                 if (TOTAL >= 4 && event.getSource().getEntity() instanceof LivingEntity source && piece.getItem() instanceof TerribleArmorItem item) {
-                    source.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * item.ABILITY_FULLSET.build(item).getVariable(player, 1), 1, false, false));
+                    source.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * item.ABILITY_FULLSET.getVariable(player, 1), 1, false, false));
                 }
             }
         }

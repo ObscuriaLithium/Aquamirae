@@ -76,14 +76,14 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		}, slot, properties.tab(AquamiraeMod.TAB));
 	}
 
-	public final Ability.Builder ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_half").cost(Ability.Cost.COOLDOWN, 10).variables(120, 6);
-	public final Ability.Builder ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_full").variables(4);
+	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_half").cost(Ability.Cost.COOLDOWN, 10).variables(120, 6).build(this);
+	public final Ability ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_full").variables(4).build(this);
 
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Helmet extends TerribleArmorItem {
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
 		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(20).build();
 
@@ -120,8 +120,8 @@ public abstract class TerribleArmorItem extends ArmorItem {
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Chestplate extends TerribleArmorItem {
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
 		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(10).build();
 
@@ -159,8 +159,8 @@ public abstract class TerribleArmorItem extends ArmorItem {
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Leggings extends TerribleArmorItem {
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
 		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-10).build();
 
@@ -198,8 +198,8 @@ public abstract class TerribleArmorItem extends ArmorItem {
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Boots extends TerribleArmorItem {
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_HALFSET.build(this);
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
 		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-20).build();
 

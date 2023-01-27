@@ -86,15 +86,15 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		}, slot, properties.tab(AquamiraeMod.TAB));
 	}
 
-	public final Ability.Builder ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("three_bolt_armor_half");
-	public final Ability.Builder ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("three_bolt_armor_full");
+	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("three_bolt_armor_half").build(this);
+	public final Ability ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("three_bolt_armor_full").build(this);
 	public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(30).build();
 
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Helmet extends ThreeBoltArmorItem {
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET.build(this);
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus public final Bonus BONUS = super.BONUS;
 
 		public Helmet() {
@@ -152,8 +152,8 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Chestplate extends ThreeBoltArmorItem {
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET.build(this);
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus public final Bonus BONUS = super.BONUS;
 
 		public Chestplate() {
@@ -205,8 +205,8 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Leggings extends ThreeBoltArmorItem {
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET.build(this);
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus public final Bonus BONUS = super.BONUS;
 
 		public Leggings() {
@@ -243,8 +243,8 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Boots extends ThreeBoltArmorItem {
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET.build(this);
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET.build(this);
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus public final Bonus BONUS = super.BONUS;
 
 		public Boots() {
