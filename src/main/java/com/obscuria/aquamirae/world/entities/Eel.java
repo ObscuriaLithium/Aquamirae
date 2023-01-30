@@ -102,7 +102,8 @@ public class Eel extends Monster implements IAnimatedEntity {
 	@Override
 	public void readAdditionalSaveData(@NotNull CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
-		CompoundTag data = tag.getCompound("EelData");
+		CompoundTag data = (CompoundTag) tag.get("EelData");
+		if (data == null) return;
 		this.getEntityData().set(MOVE_COOLDOWN, data.getInt("MoveCooldown"));
 		this.getEntityData().set(HIT_SERIES, data.getInt("Hits"));
 		this.getEntityData().set(SCALE, data.getFloat("Scale"));

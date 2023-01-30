@@ -7,8 +7,9 @@ import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.aquamirae.world.entities.CaptainCornelia;
 import com.obscuria.obscureapi.utils.EventUtils;
+import com.obscuria.obscureapi.utils.Icons;
+import com.obscuria.obscureapi.utils.TextUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -80,8 +81,7 @@ public class ShellHornItem extends Item {
 					if (this.ticks >= this.waitTicks) {
 						if (summon) { spawn();
 						} else if (!summoner.getLevel().isClientSide()) {
-							EventUtils.sendMessage(summoner, Component.translatable("icon.boss").getString() + ""
-									+ Component.translatable("info.captain_spawn_fail").getString());
+							EventUtils.sendMessage(summoner, Icons.BOSS.get() + TextUtils.translation("info.captain_spawn_fail"));
 						}
 						MinecraftForge.EVENT_BUS.unregister(this);
 					}
@@ -97,8 +97,7 @@ public class ShellHornItem extends Item {
 					summoner.getLevel().addFreshEntity(cornelia);
 				}
 				if (!summoner.getLevel().isClientSide()) {
-					EventUtils.sendMessage(summoner,
-							Component.translatable("icon.boss").getString() + "" + Component.translatable("info.captain_spawn").getString());
+					EventUtils.sendMessage(summoner, Icons.BOSS.get() + TextUtils.translation("info.captain_spawn"));
 				}
 			}
 		}.start(60, entity, pos, summon);

@@ -6,9 +6,10 @@ import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.utils.EventUtils;
+import com.obscuria.obscureapi.utils.Icons;
+import com.obscuria.obscureapi.utils.TextUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -153,7 +154,7 @@ public class MazeMother extends Monster {
 		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 		if (AquamiraeConfig.Common.notifications.get()) players.forEach(player -> EventUtils.sendMessage(player,
-				Component.translatable("icon.info").getString() + Component.translatable("info.maze_mother_spawn").getString()));
+				Icons.INFO.get() + TextUtils.translation("info.maze_mother_spawn")));
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 

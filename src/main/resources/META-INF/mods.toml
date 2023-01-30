@@ -4,7 +4,7 @@ license="Obscuria Lithium (c) 2023, All Rights Reserved."
 
 [[mods]]
 modId="aquamirae"
-version="5.4.API12"
+version="5.5.API13"
 displayName="Aquamirae"
 credits="Krossy and everyone who supports us on Patreon!"
 updateJSONURL="https://raw.githubusercontent.com/ObscuriaLithium/Home/main/aquamirae/versions.json"
@@ -29,7 +29,7 @@ description="   Ship graveyard with terrible deep sea creatures."
 [[dependencies.aquamirae]]
     modId="obscure_api"
     mandatory=true
-    versionRange="[12,)"
+    versionRange="[13,)"
     ordering="NONE"
     side="BOTH"
 

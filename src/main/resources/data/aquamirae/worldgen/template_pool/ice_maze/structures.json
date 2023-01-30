@@ -5,7 +5,7 @@
     {
       "weight": 8,
       "element": {
-        "location": "aquamirae:none",
+        "location": "aquamirae:blank",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
