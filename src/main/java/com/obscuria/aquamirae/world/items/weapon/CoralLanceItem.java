@@ -52,7 +52,7 @@ public class CoralLanceItem extends SwordItem {
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("coral_lance").variables(50).build(this);
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("coral_lance").variables(50).modifiers("%").build(this);
 	@ClassBonus
 	public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(50).build();
 

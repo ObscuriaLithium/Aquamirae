@@ -49,7 +49,8 @@ public class PoisonedBladeItem extends SwordItem {
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("poisoned_blade").cost(Ability.Cost.COOLDOWN, 10).variables(5).build(this);
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("poisoned_blade").cost(Ability.Cost.COOLDOWN, 10)
+			.variables(5).modifiers("s").build(this);
 
 	@Override
 	public boolean hurtEnemy(@NotNull ItemStack itemstack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {

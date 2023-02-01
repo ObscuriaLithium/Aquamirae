@@ -1,7 +1,7 @@
 package com.obscuria.aquamirae;
 
 import com.obscuria.aquamirae.registry.*;
-import com.obscuria.aquamirae.world.events.AquamiraeEvents;
+import com.obscuria.aquamirae.world.AquamiraeEvents;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.api.classes.ObscureClass;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;

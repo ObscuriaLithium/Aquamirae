@@ -56,7 +56,7 @@ public class DaggerOfGreedItem extends SwordItem {
 	@ClassAbility
 	public final Ability ABILITY_2 = Ability.Builder.create(AquamiraeMod.MODID).description("dagger_of_greed_2").build(this);
 	@ClassAbility
-	public final Ability ABILITY_3 = Ability.Builder.create(AquamiraeMod.MODID).description("dagger_of_greed_3").build(this);
+	public final Ability ABILITY_3 = Ability.Builder.create(AquamiraeMod.MODID).description("dagger_of_greed_3").style(Ability.Style.EPIC).build(this);
 
 	public void inventoryTick(ItemStack stack, @NotNull Level level, @NotNull Entity entity, int i, boolean flag) {
 		if (stack.getDamageValue() != stack.getOrCreateTag().getInt("DamageValue"))

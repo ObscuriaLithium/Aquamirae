@@ -62,7 +62,8 @@ public class PoisonedChakraItem extends TieredItem implements Vanishable {
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("poisoned_chakra").cost(Ability.Cost.COOLDOWN, 30).variables(3, 30).build(this);
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("poisoned_chakra").cost(Ability.Cost.COOLDOWN, 30)
+			.variables(3, 30).modifiers("", "s").build(this);
 
 	@Override
 	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {

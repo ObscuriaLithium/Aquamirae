@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.world.events;
+package com.obscuria.aquamirae.world;
 
 import com.obscuria.aquamirae.AquamiraeUtils;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;

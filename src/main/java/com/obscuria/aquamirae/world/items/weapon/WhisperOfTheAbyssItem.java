@@ -53,7 +53,7 @@ public class WhisperOfTheAbyssItem extends SwordItem {
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("whisper_of_the_abyss").variables(10).build(this);
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("whisper_of_the_abyss").variables(10).modifiers("s").build(this);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);

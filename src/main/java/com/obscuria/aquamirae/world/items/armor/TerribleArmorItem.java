@@ -76,8 +76,10 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		}, slot, properties.tab(AquamiraeMod.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_half").cost(Ability.Cost.COOLDOWN, 10).variables(120, 6).build(this);
-	public final Ability ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_full").variables(4).build(this);
+	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_half").cost(Ability.Cost.COOLDOWN, 10)
+			.variables(120, 6).modifiers("%", "s").build(this);
+	public final Ability ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_full").variables(4)
+			.modifiers("s").build(this);
 
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Helmet extends TerribleArmorItem {

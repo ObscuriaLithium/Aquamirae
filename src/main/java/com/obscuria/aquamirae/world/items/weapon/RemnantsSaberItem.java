@@ -54,7 +54,7 @@ public class RemnantsSaberItem extends SwordItem {
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("remnants_saber").variables(100).build(this);
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("remnants_saber").variables(100).modifiers("%").build(this);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);

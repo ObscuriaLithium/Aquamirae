@@ -100,7 +100,7 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 	@Override protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.getEntityData().define(ATTACK, 0);
-		this.getEntityData().define(REGENERATION, AquamiraeConfig.Common.corneliaSkillRegeneration.get());
+		this.getEntityData().define(REGENERATION, AquamiraeConfig.Common.corneliaRegenerationAbility.get());
 	}
 
 	@Override public void addAdditionalSaveData(@NotNull CompoundTag tag) {
@@ -173,7 +173,7 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 		if (ANIMATIONS.getTick("attack") > 10)
 			this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, 3, false, false));
 
-		if (this.hasEffect(MobEffects.LEVITATION) && !this.getLevel().isClientSide()) {
+		if (this.hasEffect(MobEffects.LEVITATION) && AquamiraeConfig.Common.corneliaSpinAbility.get() && !this.getLevel().isClientSide()) {
 			final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
 			List<LivingEntity> list = this.getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(10), e -> true).stream()
 					.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();

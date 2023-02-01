@@ -41,5 +41,5 @@ public class FinCutterItem extends SwordItem {
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("fin_cutter").variables(15, 150).build(this);
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("fin_cutter").variables(15, 150).modifiers("%", "%").build(this);
 }

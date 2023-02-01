@@ -79,8 +79,10 @@ public abstract class AbyssalArmorExtraItem extends ArmorItem {
 		}, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_half").build(this);
-	public final Ability ABILITY_FULLSET_1 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_1").variables(90).build(this);
+	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_half")
+			.style(Ability.Style.ATTRIBUTE).build(this);
+	public final Ability ABILITY_FULLSET_1 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_1").variables(90)
+			.modifiers("s").build(this);
 	public final Ability ABILITY_FULLSET_2 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_2").build(this);
 	public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
 

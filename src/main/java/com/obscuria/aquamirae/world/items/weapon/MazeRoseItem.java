@@ -62,7 +62,8 @@ public class MazeRoseItem extends TieredItem implements Vanishable {
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("maze_rose").cost(Ability.Cost.COOLDOWN, 40).variables(5, 40).build(this);
+	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("maze_rose").cost(Ability.Cost.COOLDOWN, 40)
+			.variables(5, 40).modifiers("", "s").build(this);
 
 	@Override
 	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
