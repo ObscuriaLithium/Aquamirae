@@ -77,9 +77,8 @@ public class AquamiraeEntities {
 		event.put(EEL.get(), Eel.createAttributes().build());
 		event.put(SPINEFISH.get(), Mob.createMobAttributes().build());
 		event.put(LUMINOUS_JELLY.get(), Mob.createMobAttributes().build());
-
-		event.put(POISONED_CHAKRA.get(), Mob.createMobAttributes().build());
-		event.put(MAZE_ROSE.get(), Mob.createMobAttributes().build());
+		event.put(POISONED_CHAKRA.get(), Mob.createLivingAttributes().build());
+		event.put(MAZE_ROSE.get(), Mob.createLivingAttributes().build());
 	}
 
 	@SubscribeEvent

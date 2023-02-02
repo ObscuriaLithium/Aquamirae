@@ -3,15 +3,16 @@ package com.obscuria.aquamirae.world.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.client.AquamiraeAmbient;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.obscureapi.client.animations.HekateProvider;
-import com.obscuria.obscureapi.client.animations.IHekateProvider;
-import com.obscuria.obscureapi.utils.TextHelper;
-import com.obscuria.obscureapi.world.entities.ChakraEntity;
+import com.obscuria.obscureapi.api.DynamicProjectile;
+import com.obscuria.obscureapi.api.animations.AnimationProvider;
+import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
+import com.obscuria.obscureapi.utils.TextUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Style;
@@ -54,12 +55,13 @@ import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IHekateProvider {
-	private final HekateProvider ANIMATIONS = new HekateProvider(this);
+@ShipGraveyardEntity
+public class CaptainCornelia extends Monster implements IAnimatedEntity {
+	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
 	private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(CaptainCornelia.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> REGENERATION = SynchedEntityData.defineId(CaptainCornelia.class,
 			EntityDataSerializers.INT);
-	private final ServerBossEvent bossInfo = new ServerBossEvent(AquamiraeConfig.Common.stylizedBossbar.get() ? TextHelper.component("1")
+	private final ServerBossEvent bossInfo = new ServerBossEvent(AquamiraeConfig.Common.stylizedBossbar.get() ? TextUtils.component("1")
 			.withStyle(Style.EMPTY.withFont(new ResourceLocation(AquamiraeMod.MODID, "bossbars"))) : this.getDisplayName(),
 			ServerBossEvent.BossBarColor.BLUE, ServerBossEvent.BossBarOverlay.PROGRESS);
 
@@ -96,7 +98,7 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 	@Override protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.getEntityData().define(ATTACK, 0);
-		this.getEntityData().define(REGENERATION, AquamiraeConfig.Common.corneliaSkillRegeneration.get());
+		this.getEntityData().define(REGENERATION, AquamiraeConfig.Common.corneliaRegenerationAbility.get());
 	}
 
 	@Override public void addAdditionalSaveData(@NotNull CompoundTag tag) {
@@ -115,7 +117,7 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 		this.getEntityData().set(REGENERATION, data.getInt("Regeneration"));
 	}
 
-	public HekateProvider getHekateProvider() {
+	public AnimationProvider getAnimationProvider() {
 		return this.ANIMATIONS;
 	}
 
@@ -216,9 +218,9 @@ public class CaptainCornelia extends Monster implements IShipGraveyardEntity, IH
 			serverLevel.addFreshEntity(entityToSpawn);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_RAGE.get(), SoundSource.HOSTILE, 4, 1);
-			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0F, 600, 1000);
-			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0.33F, 600, 1000);
-			ChakraEntity.summonChakra(this, AquamiraeEntities.POISONED_CHAKRA.get(), this.level, null, 5, 0.66F, 600, 1000);
+			DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0F, 600, 1000);
+			DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0.33F, 600, 1000);
+			DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), this, this.level, null, 5, 0.66F, 600, 1000);
 		}
 	}
 

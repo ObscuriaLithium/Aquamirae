@@ -1,8 +1,8 @@
 package com.obscuria.aquamirae.client.models;
 
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.obscureapi.api.animations.HekateLib;
 import com.obscuria.obscureapi.client.animations.AnimatedPart;
-import com.obscuria.obscureapi.client.animations.HekateLib;
 import com.obscuria.obscureapi.client.animations.KeyFrame;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.resources.ResourceLocation;
