@@ -96,7 +96,7 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:'+project.minecraft_version+'-'+project.forge_version
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    implementation fg.deobf('obscuria:obscure_api:14')
+    implementation fg.deobf('obscuria:obscure_api:15')
 }
 
 jar {

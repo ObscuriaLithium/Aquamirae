@@ -5,14 +5,14 @@ import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.client.AquamiraeAmbient;
+import com.obscuria.aquamirae.client.animations.CaptainCorneliaAnimations;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.api.DynamicProjectile;
 import com.obscuria.obscureapi.api.VFX;
-import com.obscuria.obscureapi.api.animations.AnimationProvider;
-import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
+import com.obscuria.obscureapi.api.animations.IAnimated;
 import com.obscuria.obscureapi.utils.EventUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -58,8 +58,8 @@ import java.util.Comparator;
 import java.util.List;
 
 @ShipGraveyardEntity
-public class CaptainCornelia extends Monster implements IAnimatedEntity {
-	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
+public class CaptainCornelia extends Monster implements IAnimated {
+	private final CaptainCorneliaAnimations ANIMATIONS = new CaptainCorneliaAnimations(this);
 	private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(CaptainCornelia.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> REGENERATION = SynchedEntityData.defineId(CaptainCornelia.class,
 			EntityDataSerializers.INT);
@@ -119,11 +119,12 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 		this.getEntityData().set(REGENERATION, data.getInt("Regeneration"));
 	}
 
-	public AnimationProvider getAnimationProvider() {
+	public CaptainCorneliaAnimations getAnimations() {
 		return this.ANIMATIONS;
 	}
 
-	@Override public void baseTick() {
+	@Override
+	public void baseTick() {
 		final int attack = this.getEntityData().get(ATTACK);
 		this.getEntityData().set(ATTACK, attack - 1);
 
@@ -133,25 +134,25 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 		if (this.getTarget() != null) {
 			final LivingEntity target = this.getTarget();
 			final double distance = this.distanceToSqr(target);
+			this.modifyYRot(EventUtils.getYAngleBetween(this, target), this.isOnGround() ? 0.1f : 0.3f);
 			this.lookControl.setLookAt(target);
-			this.yBodyRot = this.yHeadRot;
-			if (!ANIMATIONS.isPlaying("attack")) {
-				if ((distance < 3 || this.hasEffect(MobEffects.LEVITATION))) ANIMATIONS.play("attack", Math.random() < 0.5 ? 40 : 20);
-				else if (distance < 25 && random.nextInt(100) == 1) ANIMATIONS.play("attack", Math.random() < 0.5 ? 40 : 20);
-				else if (distance < 600 && random.nextInt(200) == 1) ANIMATIONS.play("attack", 60);
+			if (!ANIMATIONS.ATTACK.isPlaying()) {
+				if ((distance < 3 || this.hasEffect(MobEffects.LEVITATION))) ANIMATIONS.ATTACK.play(this, Math.random() < 0.5 ? 40 : 20);
+				else if (distance < 25 && random.nextInt(100) == 1) ANIMATIONS.ATTACK.play(this, Math.random() < 0.5 ? 40 : 20);
+				else if (distance < 600 && random.nextInt(200) == 1) ANIMATIONS.ATTACK.play(this, 60);
 			}
-			if (ANIMATIONS.getTick("attack") == 50) {
+			if (ANIMATIONS.ATTACK.getTick() == 50) {
 				target.setDeltaMovement(new Vec3(target.getX(), target.getY(), target.getZ())
 						.vectorTo(new Vec3(this.getX(), this.getY() + 0.5F, this.getZ())).scale(0.25F));
 				if (target instanceof Player player) player.hurtMarked = true;
 			}
-			if (ANIMATIONS.getTick("attack") == 8 || ANIMATIONS.getTick("attack") == 28)
+			if (ANIMATIONS.ATTACK.getTick() == 8 || ANIMATIONS.ATTACK.getTick() == 28)
 				this.setDeltaMovement(new Vec3(this.getX(), this.getY(), this.getZ())
 						.vectorTo(new Vec3(target.getX(), target.getY() + 0.1F, target.getZ())).scale(0.2F));
-			if (ANIMATIONS.getTick("attack") == 26 && distance < 9) EventUtils.getRelativeEntities(this, LivingEntity.class,
+			if (ANIMATIONS.ATTACK.getTick() == 26 && distance < 9) EventUtils.getRelativeEntities(this, LivingEntity.class,
 					4f, 0f, 0f, 5f, true, true).forEach(e -> { if (e != this) this.doHurtTarget(e); });
-			if (ANIMATIONS.getTick("attack") == 6 && distance < 12) this.doHurtTarget(target);
-			if (ANIMATIONS.getTick("attack") == 28)
+			if (ANIMATIONS.ATTACK.getTick() == 6 && distance < 12) this.doHurtTarget(target);
+			if (ANIMATIONS.ATTACK.getTick() == 28)
 				VFX.Builder.create(30).owner(this).texture(AquamiraeMod.MODID, "swing")
 						.relativePos(this, 1f, 0f, -0.7f)
 						.relativeRot(this, false, true)
@@ -167,10 +168,7 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 					.vectorTo(new Vec3(target.getX(), target.getY(), target.getZ())).scale(0.04F).add(0F, 0.08F, 0F));
 		}
 
-		ANIMATIONS.playSound("attack", 40, "aquamirae:entity.captain_cornelia.attack_1", SoundSource.HOSTILE, 2F, 1F);
-		ANIMATIONS.playSound("attack", 20, "aquamirae:entity.captain_cornelia.attack_2", SoundSource.HOSTILE, 2F, 1F);
-
-		if (ANIMATIONS.getTick("attack") > 10)
+		if (ANIMATIONS.ATTACK.getTick() > 10)
 			this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, 3, false, false));
 
 		if (this.hasEffect(MobEffects.LEVITATION) && AquamiraeConfig.Common.corneliaSpinAbility.get() && !this.getLevel().isClientSide()) {
@@ -216,6 +214,11 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 		players.forEach(player -> { if (player.getLevel().isClientSide()) AquamiraeAmbient.playCorneliaMusic(player); });
 		super.baseTick();
+	}
+
+	private void modifyYRot(float rotation, float mod) {
+		this.yRotO = this.getYRot();
+		this.setYRot(this.getYRot() + (rotation - this.getYRot()) * mod);
 	}
 
 	public void rage() {

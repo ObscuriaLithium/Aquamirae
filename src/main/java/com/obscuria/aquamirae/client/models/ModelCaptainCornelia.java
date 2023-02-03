@@ -3,9 +3,10 @@ package com.obscuria.aquamirae.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.client.animations.CaptainCorneliaAnimations;
 import com.obscuria.obscureapi.api.animations.HekateLib;
-import com.obscuria.obscureapi.client.animations.AnimatedPart;
-import com.obscuria.obscureapi.client.animations.KeyFrame;
+import com.obscuria.obscureapi.api.animations.IAnimated;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -217,119 +218,38 @@ public class ModelCaptainCornelia<T extends Entity> extends EntityModel<T> {
 	}
 
 	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		final float idle = HekateLib.mod.idle(limbSwingAmount, 3F);
-		final float move = HekateLib.mod.move(limbSwingAmount, 3F);
-		final float s1 = 0.1F;
-		final float s2 = 0.4F;
-
-		HekateLib.render.tick(entity);
-		HekateLib.render.prepare(main, bodyTopZ, bodyBottomZ, bodyTop, bodyTop2, bodyBottom, head, rightBooby, leftBooby, rightArm, leftArm, rightLeg,
-				leftLeg, rightArmBottom, leftArmBottom, rightLegBottom, leftLegBottom, item, ten1, ten1_1, ten1_2, ten1_3, ten1_4, ten2, ten2_1,
-				ten2_2, ten2_3, ten2_4, ten3, ten3_1, ten3_2, ten3_3, ten3_4);
-
-		HekateLib.i(this.main, 0.6F, 1.2F, 0F, 0F, 0F, 0F, s1, 0F, ageInTicks, idle);
-		HekateLib.i(this.bodyBottom, 15F, 20F, 0F, 0F, 0F, 0F, s1, -0.9F, ageInTicks, idle);
-		HekateLib.i(this.bodyTop2, 6F, -6F, 0F, 0F, 0F, 0F, s1, 0.9F, ageInTicks, idle);
-		HekateLib.i(this.head, 4F, -6F, 0F, 0F, 0F, 0F, s1, 0.8F, ageInTicks, idle);
-		HekateLib.i(this.rightArm, 12F, -9F, 9F, -27F, 6F, 20F, s1, -0.95F, ageInTicks, idle);
-		HekateLib.i(this.rightArmBottom, -16F, 20F, 0F, 0F, 0F, 0F, s1, -0.90F, ageInTicks, idle);
-		HekateLib.i(this.item, -5F, -35F, 0F, 0F, 0F, 0F, s1, -0.85F, ageInTicks, idle);
-		HekateLib.i(this.leftArm, 12F, -9F, -9F, 27F, -9F, -27F, s1, -0.95F, ageInTicks, idle);
-		HekateLib.i(this.leftArmBottom, -24F, 30F, 0F, 0F, 0F, 0F, s1, -0.90F, ageInTicks, idle);
-		HekateLib.i(this.rightLeg, 12F, 24F, 0.6F, -3F, 0.6F, -3F, s1, -0.8F, ageInTicks, idle);
-		HekateLib.i(this.rightLegBottom, -12F, -48F, 0F, 0F, 0F, 0F, s1, -0.6F, ageInTicks, idle);
-		HekateLib.i(this.leftLeg, 6F, -12F, 0.6F, 3F, 0.6F, 3F, s1, -0.8F, ageInTicks, idle);
-		HekateLib.i(this.leftLegBottom, -24F, -27F, 0F, 0F, 0F, 0F, s1, -0.7F, ageInTicks, idle);
-		HekateLib.i(this.ten1, 16F, -20F, 0F, 0F, 0F, 0F, s1, 0.35F, ageInTicks, idle);
-		HekateLib.i(this.ten1_1, 16F, -12F, 0F, 0F, 0F, 0F, s1, 0.30F, ageInTicks, idle);
-		HekateLib.i(this.ten1_2, 16F, -6F, 0F, 0F, 0F, 0F, s1, 0.25F, ageInTicks, idle);
-		HekateLib.i(this.ten1_3, 16F, 0F, 0F, 0F, 0F, 0F, s1, 0.20F, ageInTicks, idle);
-		HekateLib.i(this.ten1_4, 16F, 0F, 0F, 0F, 0F, 0F, s1, 0.15F, ageInTicks, idle);
-		HekateLib.i(this.ten2, 16F, -20F, 0F, -29F, 0F, 0F, s1, 0.25F, ageInTicks, idle);
-		HekateLib.i(this.ten2_1, 16F, -12F, 0F, 0F, 0F, 0F, s1, 0.20F, ageInTicks, idle);
-		HekateLib.i(this.ten2_2, 16F, -6F, 0F, 0F, 0F, 0F, s1, 0.15F, ageInTicks, idle);
-		HekateLib.i(this.ten2_3, 16F, 0F, 0F, 0F, 0F, 0F, s1, 0.10F, ageInTicks, idle);
-		HekateLib.i(this.ten2_4, 16F, 0F, 0F, 0F, 0F, 0F, s1, 0.05F, ageInTicks, idle);
-		HekateLib.i(this.ten3, 16F, -20F, 0F, 29F, 0F, 0F, s1, 0.45F, ageInTicks, idle);
-		HekateLib.i(this.ten3_1, 16F, -12F, 0F, 0F, 0F, 0F, s1, 0.40F, ageInTicks, idle);
-		HekateLib.i(this.ten3_2, 16F, -6F, 0F, 0F, 0F, 0F, s1, 0.35F, ageInTicks, idle);
-		HekateLib.i(this.ten3_3, 16F, 0F, 0F, 0F, 0F, 0F, s1, 0.30F, ageInTicks, idle);
-		HekateLib.i(this.ten3_4, 16F, 0F, 0F, 0F, 0F, 0F, s1, 0.25F, ageInTicks, idle);
-		HekateLib.m(this.main, -1.4F, 1.8F, 0F, 0F, 0F, 0F, s2, 0F, limbSwing, move);
-		HekateLib.m(this.bodyTop, 6F, -24F, 0F, 0F, 0F, 0F, s2, 0F, limbSwing, move);
-		HekateLib.m(this.bodyTop2, 6F, 12F, 0F, 0F, 0F, 0F, s2, 0F, limbSwing, move);
-		HekateLib.m(this.bodyBottom, 6F, -36F, 0F, 0F, 0F, 0F, s2, 0F, limbSwing, move);
-		HekateLib.m(this.rightArm, 12F, -9F, 9F, -27F, -9F, 27F, s2, 0.05F, limbSwing, move);
-		HekateLib.m(this.rightArmBottom, 24F, 30F, 0F, 0F, 0F, 0F, s2, 0F, limbSwing, move);
-		HekateLib.m(this.leftArm, 12F, -9F, -9F, 27F, 9F, -27F, s2, 0.05F, limbSwing, move);
-		HekateLib.m(this.leftArmBottom, 24F, 30F, 0F, 0F, 0F, 0F, s2, 0F, limbSwing, move);
-		HekateLib.m(this.rightLeg, 24F, 12F, 0.6F, -6F, 0.6F, -6F, s2, 0.5F, limbSwing, move);
-		HekateLib.m(this.rightLegBottom, 24F, -74F, 0F, 0F, 0F, 0F, s2, 0.7F, limbSwing, move);
-		HekateLib.m(this.leftLeg, 24F, 0F, -0.6F, 6F, -0.6F, 6F, s2, 0.5F, limbSwing, move);
-		HekateLib.m(this.leftLegBottom, 24F, -30F, 0F, 0F, 0F, 0F, s2, 0.8F, limbSwing, move);
-		HekateLib.m(this.ten1, -14F, -29F, 0F, 0F, 0F, 0F, s2, 0.25F, limbSwing, move);
-		HekateLib.m(this.ten1_1, -14F, -18F, 0F, 0F, 0F, 0F, s2, 0.20F, limbSwing, move);
-		HekateLib.m(this.ten1_2, -14F, -12F, 0F, 0F, 0F, 0F, s2, 0.15F, limbSwing, move);
-		HekateLib.m(this.ten1_3, -14F, -6F, 0F, 0F, 0F, 0F, s2, 0.10F, limbSwing, move);
-		HekateLib.m(this.ten1_4, -14F, -6F, 0F, 0F, 0F, 0F, s2, 0.05F, limbSwing, move);
-		HekateLib.m(this.ten2, -14F, -29F, 0F, -29F, 0F, 0F, s2, 0.25F, limbSwing, move);
-		HekateLib.m(this.ten2_1, -14F, -18F, 0F, 0F, 0F, 0F, s2, 0.20F, limbSwing, move);
-		HekateLib.m(this.ten2_2, -14F, -12F, 0F, 0F, 0F, 0F, s2, 0.15F, limbSwing, move);
-		HekateLib.m(this.ten2_3, -14F, -6F, 0F, 0F, 0F, 0F, s2, 0.10F, limbSwing, move);
-		HekateLib.m(this.ten2_4, -14F, -6F, 0F, 0F, 0F, 0F, s2, 0.05F, limbSwing, move);
-		HekateLib.m(this.ten3, -14F, -29F, 0F, 29F, 0F, 0F, s2, 0.25F, limbSwing, move);
-		HekateLib.m(this.ten3_1, -14F, -18F, 0F, 0F, 0F, 0F, s2, 0.20F, limbSwing, move);
-		HekateLib.m(this.ten3_2, -14F, -12F, 0F, 0F, 0F, 0F, s2, 0.15F, limbSwing, move);
-		HekateLib.m(this.ten3_3, -14F, -6F, 0F, 0F, 0F, 0F, s2, 0.10F, limbSwing, move);
-		HekateLib.m(this.ten3_4, -14F, -6F, 0F, 0F, 0F, 0F, s2, 0.05F, limbSwing, move);
-
-		HekateLib.render.animation(entity, "attack", ageInTicks,
-
-				new KeyFrame(60, 50, 8F, 6F, new AnimatedPart(this.main, 2F, 0F, 0F), new AnimatedPart(this.bodyTop, 0F, -17.5F, 0F),
-						new AnimatedPart(this.bodyTop2, 0F, -32.5F, 0F), new AnimatedPart(this.head, -10F, 46F, -3.5F),
-						new AnimatedPart(this.leftArm, 30F, 35F, -32F), new AnimatedPart(this.leftArmBottom, 25F, 0F, 0F),
-						new AnimatedPart(this.rightArm, 5.5F, 28F, 19.5F), new AnimatedPart(this.rightArmBottom, 25F, 0F, 0F),
-						new AnimatedPart(this.item, -50F, 0F, 0F), new AnimatedPart(this.bodyBottom, 27.5F, 0F, 0F),
-						new AnimatedPart(this.rightLeg, 25F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -60F, 0F, 0F),
-						new AnimatedPart(this.leftLeg, -2.5F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -17.5F, 0F, 0F)),
-				new KeyFrame(50, 40, 6F, 6F, new AnimatedPart(this.main, 1.5F, 0F, 0F), new AnimatedPart(this.bodyTop, 0F, -7.5F, 0F),
-						new AnimatedPart(this.bodyTop2, 10F, -15F, 0F), new AnimatedPart(this.head, -15F, 27F, 0F),
-						new AnimatedPart(this.leftArm, -19F, 12.5F, -31F), new AnimatedPart(this.leftArmBottom, 105F, 0F, 0F),
-						new AnimatedPart(this.rightArm, -10F, 1F, 20F), new AnimatedPart(this.rightArmBottom, 52F, 0F, 0F),
-						new AnimatedPart(this.item, -50F, 0F, 0F), new AnimatedPart(this.bodyBottom, -22.5F, 0F, 0F),
-						new AnimatedPart(this.rightLeg, 25F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -70F, 0F, 0F),
-						new AnimatedPart(this.leftLeg, -2.5F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -17.5F, 0F, 0F)),
-
-				new KeyFrame(40, 28, 6F, 20F, new AnimatedPart(this.main, 2.5F, 0F, 0F), new AnimatedPart(this.bodyTop, -14F, 42F, -2F),
-						new AnimatedPart(this.bodyTop2, 0F, 25F, 0F), new AnimatedPart(this.head, 3F, -56F, -8F),
-						new AnimatedPart(this.leftArm, -21F, 12F, -18.5F), new AnimatedPart(this.leftArmBottom, 70F, 0F, 0F),
-						new AnimatedPart(this.rightArm, 57F, 25F, 74F), new AnimatedPart(this.rightArmBottom, 75F, 0F, 0F),
-						new AnimatedPart(this.item, -45F, 0F, 0F), new AnimatedPart(this.bodyBottom, 25F, 0F, 0F),
-						new AnimatedPart(this.rightLeg, 57F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -90F, 0F, 0F),
-						new AnimatedPart(this.leftLeg, -2.5F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -17.5F, 0F, 0F)),
-				new KeyFrame(28, 20, 20F, 6F, new AnimatedPart(this.main, 1.5F, 0F, 0F), new AnimatedPart(this.bodyTop, -10F, -4F, 8F),
-						new AnimatedPart(this.bodyTop2, 0F, -20F, 0F), new AnimatedPart(this.head, 2F, 24F, -4.5F),
-						new AnimatedPart(this.leftArm, -50F, 30F, -35F), new AnimatedPart(this.leftArmBottom, 100F, 0F, 0F),
-						new AnimatedPart(this.rightArm, 35F, 12F, 47F), new AnimatedPart(this.rightArmBottom, 10F, 0F, 0F),
-						new AnimatedPart(this.item, -82F, 0F, 0F), new AnimatedPart(this.bodyBottom, -32F, 2F, -4F),
-						new AnimatedPart(this.rightLeg, 57F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -90F, 0F, 0F),
-						new AnimatedPart(this.leftLeg, -2.5F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -17.5F, 0F, 0F)),
-
-				new KeyFrame(20, 8, 6F, 20F, new AnimatedPart(this.main, 2.5F, 0F, 0F), new AnimatedPart(this.bodyTop, 0F, -17.5F, 0F),
-						new AnimatedPart(this.bodyTop2, 0F, -27.5F, 0F), new AnimatedPart(this.head, -22F, 42F, -9F),
-						new AnimatedPart(this.leftArm, 33.5F, 12F, -18.5F), new AnimatedPart(this.leftArmBottom, 67F, 0F, 0F),
-						new AnimatedPart(this.rightArm, -48F, -10.5F, 57F), new AnimatedPart(this.rightArmBottom, 75F, 0F, 0F),
-						new AnimatedPart(this.item, -45F, 0F, 0F), new AnimatedPart(this.bodyBottom, 25F, 0F, 0F),
-						new AnimatedPart(this.rightLeg, 32.4F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -90F, 0F, 0F),
-						new AnimatedPart(this.leftLeg, 0F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -38F, 0F, 0F)),
-				new KeyFrame(8, 0, 20F, 2F, new AnimatedPart(this.main, 1.5F, 0F, 0F), new AnimatedPart(this.bodyTop, -12.5F, 35F, 0F),
-						new AnimatedPart(this.bodyTop2, 0F, 7.5F, 0F), new AnimatedPart(this.head, 1F, -38F, 0F),
-						new AnimatedPart(this.leftArm, -21.5F, 12F, -18.5F), new AnimatedPart(this.leftArmBottom, 70F, 0F, 0F),
-						new AnimatedPart(this.rightArm, 24F, -10.5F, 57F), new AnimatedPart(this.rightArmBottom, 12.5F, 0F, 0F),
-						new AnimatedPart(this.item, -60F, 0F, 0F), new AnimatedPart(this.bodyBottom, -28F, 10F, -2F),
-						new AnimatedPart(this.rightLeg, 57F, 2.6F, -4.2F), new AnimatedPart(this.rightLegBottom, -90F, 0F, 0F),
-						new AnimatedPart(this.leftLeg, -2.5F, 0F, 2.5F), new AnimatedPart(this.leftLegBottom, -17.5F, 0F, 0F)));
-
+		if (entity instanceof IAnimated iAnimated && iAnimated.getAnimations() instanceof CaptainCorneliaAnimations animations) {
+			final float partialTicks = Minecraft.getInstance().getPartialTick();
+			animations.MAIN.apply(this.main, partialTicks);
+			animations.HEAD.apply(this.head, partialTicks);
+			animations.BODY_TOP.apply(this.bodyTop, partialTicks);
+			animations.BODY_TOP_2.apply(this.bodyTop2, partialTicks);
+			animations.BODY_BOTTOM.apply(this.bodyBottom, partialTicks);
+			animations.LEFT_ARM.apply(this.leftArm, partialTicks);
+			animations.LEFT_ARM_BOTTOM.apply(this.leftArmBottom, partialTicks);
+			animations.RIGHT_ARM.apply(this.rightArm, partialTicks);
+			animations.RIGHT_ARM_BOTTOM.apply(this.rightArmBottom, partialTicks);
+			animations.WEAPON.apply(this.item, partialTicks);
+			animations.LEFT_LEG.apply(this.leftLeg, partialTicks);
+			animations.LEFT_LEG_BOTTOM.apply(this.leftLegBottom, partialTicks);
+			animations.RIGHT_LEG.apply(this.rightLeg, partialTicks);
+			animations.RIGHT_LEG_BOTTOM.apply(this.rightLegBottom, partialTicks);
+			animations.TENTACLE_1.apply(this.ten1, partialTicks);
+			animations.TENTACLE_1_1.apply(this.ten1_1, partialTicks);
+			animations.TENTACLE_1_2.apply(this.ten1_2, partialTicks);
+			animations.TENTACLE_1_3.apply(this.ten1_3, partialTicks);
+			animations.TENTACLE_1_4.apply(this.ten1_4, partialTicks);
+			animations.TENTACLE_2.apply(this.ten2, partialTicks);
+			animations.TENTACLE_2_1.apply(this.ten2_1, partialTicks);
+			animations.TENTACLE_2_2.apply(this.ten2_2, partialTicks);
+			animations.TENTACLE_2_3.apply(this.ten2_3, partialTicks);
+			animations.TENTACLE_2_4.apply(this.ten2_4, partialTicks);
+			animations.TENTACLE_3.apply(this.ten3, partialTicks);
+			animations.TENTACLE_3_1.apply(this.ten3_1, partialTicks);
+			animations.TENTACLE_3_2.apply(this.ten3_2, partialTicks);
+			animations.TENTACLE_3_3.apply(this.ten3_3, partialTicks);
+			animations.TENTACLE_3_4.apply(this.ten3_4, partialTicks);
+		}
 		this.head.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
 		this.bodyTop.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
 		this.bodyTop2.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
