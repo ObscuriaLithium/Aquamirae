@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.aquamirae.world.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.classes.Ability;
 import com.obscuria.obscureapi.api.classes.ClassAbility;
 import com.obscuria.obscureapi.api.classes.ClassItem;
@@ -18,8 +18,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -27,35 +25,11 @@ import java.util.UUID;
 @ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
 public class TerribleSwordItem extends SwordItem {
 	public TerribleSwordItem() {
-		super(new Tier() {
-			public int getUses() {
-				return 750;
-			}
-
-			public float getSpeed() {
-				return 4f;
-			}
-
-			public float getAttackDamageBonus() {
-				return 2f;
-			}
-
-			public int getLevel() {
-				return 3;
-			}
-
-			public int getEnchantmentValue() {
-				return 18;
-			}
-
-			public @NotNull Ingredient getRepairIngredient() {
-				return Ingredient.of(new ItemStack(AquamiraeItems.ANGLERS_FANG.get()), new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()));
-			}
-		}, 3, -3f, new Item.Properties().tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.TERRIBLE_SWORD, 3, -3f, new Item.Properties().tab(AquamiraeMod.TAB));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_sword").variables(1).build(this);
+	public final Ability ABILITY = Ability.create(AquamiraeMod.MODID).description("terrible_sword").variables(1).build(this);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);

@@ -1,10 +1,10 @@
 
 package com.obscuria.aquamirae.world.entities;
 
+import com.obscuria.aquamirae.AquamiraeClient;
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.api.ShipGraveyardEntity;
-import com.obscuria.aquamirae.client.AquamiraeAmbient;
 import com.obscuria.aquamirae.client.animations.CaptainCorneliaAnimations;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
@@ -46,6 +46,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
@@ -209,10 +210,10 @@ public class CaptainCornelia extends Monster implements IAnimated {
 					0.15, 0.1, 0.15, 0.1);
 		}
 		//
-		final Vec3 center = this.position();
-		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(32), e -> true).stream()
-				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
-		players.forEach(player -> { if (player.getLevel().isClientSide()) AquamiraeAmbient.playCorneliaMusic(player); });
+		if (this.level.isClientSide) {
+			final Vec3 center = this.position();
+			this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(32)).forEach(AquamiraeClient::playCorneliaMusic);
+		}
 		super.baseTick();
 	}
 
@@ -239,12 +240,22 @@ public class CaptainCornelia extends Monster implements IAnimated {
 		}
 	}
 
-	@Override protected void dropEquipment() {
-		if (Math.random() <= 0.2F) {
-			final ItemEntity item = new ItemEntity(EntityType.ITEM, this.level);
-			item.setItem(this.getMainHandItem());
-			item.moveTo(this.position());
-			this.level.addFreshEntity(item);
+	@Override
+	protected void dropEquipment() {
+		if (this.level instanceof ServerLevel server) {
+			if (Math.random() <= 0.2F) {
+				final ItemEntity item = new ItemEntity(EntityType.ITEM, server);
+				item.setItem(this.getMainHandItem());
+				item.moveTo(this.position());
+				server.addFreshEntity(item);
+			}
+			final ItemStack map = AquamiraeMod.getStructureMap(AquamiraeMod.SHELTER, server, this);
+			if (!map.isEmpty()) {
+				final ItemEntity item = new ItemEntity(EntityType.ITEM, server);
+				item.setItem(map);
+				item.moveTo(this.position());
+				server.addFreshEntity(item);
+			}
 		}
 	}
 

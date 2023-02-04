@@ -1,7 +1,7 @@
 package com.obscuria.aquamirae.network;
 
+import com.obscuria.aquamirae.AquamiraeClient;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.events.ScrollClient;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,7 +28,7 @@ public class ScrollMessage {
 
     public static void handler(ScrollMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> ScrollClient.effect(message.type));
+        context.enqueueWork(() -> AquamiraeClient.scrollEffect(message.type));
         context.setPacketHandled(true);
     }
 

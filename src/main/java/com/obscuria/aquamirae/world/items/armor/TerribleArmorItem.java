@@ -3,21 +3,17 @@ package com.obscuria.aquamirae.world.items.armor;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.armor.ModelTerribleArmor;
-import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.aquamirae.world.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.classes.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -31,54 +27,13 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber
 public abstract class TerribleArmorItem extends ArmorItem {
 
-	public TerribleArmorItem(EquipmentSlot slot, Item.Properties properties) {
-		super(new ArmorMaterial() {
-			@Override
-			public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 25;
-			}
-
-			@Override
-			public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-				return new int[]{2, 3, 7, 5}[slot.getIndex()];
-			}
-
-			@Override
-			public int getEnchantmentValue() {
-				return 12;
-			}
-
-			@Override
-			public @NotNull SoundEvent getEquipSound() {
-				return SoundEvents.ARMOR_EQUIP_IRON;
-			}
-
-			@Override
-			public @NotNull Ingredient getRepairIngredient() {
-				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
-						new ItemStack(AquamiraeItems.ANGLERS_FANG.get()));
-			}
-
-			@Override
-			public @NotNull String getName() {
-				return "terrible";
-			}
-
-			@Override
-			public float getToughness() {
-				return 0f;
-			}
-
-			@Override
-			public float getKnockbackResistance() {
-				return 0f;
-			}
-		}, slot, properties.tab(AquamiraeMod.TAB));
+	public TerribleArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
+		super(AquamiraeTiers.TERRIBLE_ARMOR, slot, properties.tab(AquamiraeMod.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_half").cost(Ability.Cost.COOLDOWN, 10)
+	public final Ability ABILITY_HALFSET = Ability.create(AquamiraeMod.MODID).description("terrible_armor_half").cost(Ability.Cost.COOLDOWN, 10)
 			.variables(120, 6).modifiers("%", "s").build(this);
-	public final Ability ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("terrible_armor_full").variables(4)
+	public final Ability ABILITY_FULLSET = Ability.create(AquamiraeMod.MODID).description("terrible_armor_full").variables(4)
 			.modifiers("s").build(this);
 
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
@@ -87,13 +42,13 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
-		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(20).build();
+		public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(20).build();
 
 		public Helmet() {
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
@@ -125,13 +80,13 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
-		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(10).build();
+		public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(10).build();
 
 		public Chestplate() {
 			super(EquipmentSlot.CHEST, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -164,13 +119,13 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
-		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-10).build();
+		public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-10).build();
 
 		public Leggings() {
 			super(EquipmentSlot.LEGS, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -203,13 +158,13 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
-		public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-20).build();
+		public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-20).build();
 
 		public Boots() {
 			super(EquipmentSlot.FEET, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)

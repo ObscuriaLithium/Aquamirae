@@ -5,6 +5,7 @@ import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.armor.ModelAbyssalArmor;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
+import com.obscuria.aquamirae.world.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.classes.*;
 import com.obscuria.obscureapi.utils.ItemUtils;
 import net.minecraft.client.Minecraft;
@@ -31,58 +32,17 @@ import java.util.function.Consumer;
 
 public abstract class AbyssalArmorItem extends ArmorItem {
 
-	public AbyssalArmorItem(EquipmentSlot slot, Item.Properties properties) {
-		super(new ArmorMaterial() {
-			@Override
-			public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 40;
-			}
-
-			@Override
-			public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-				return new int[]{2, 4, 4, 6}[slot.getIndex()];
-			}
-
-			@Override
-			public int getEnchantmentValue() {
-				return 12;
-			}
-
-			@Override
-			public @NotNull SoundEvent getEquipSound() {
-				return SoundEvents.ARMOR_EQUIP_NETHERITE;
-			}
-
-			@Override
-			public @NotNull Ingredient getRepairIngredient() {
-				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
-						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
-			}
-
-			@Override
-			public @NotNull String getName() {
-				return "abyssal";
-			}
-
-			@Override
-			public float getToughness() {
-				return 3f;
-			}
-
-			@Override
-			public float getKnockbackResistance() {
-				return 0.1f;
-			}
-		}, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
+	public AbyssalArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
+		super(AquamiraeTiers.ABYSSAL_ARMOR, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_half")
+	public final Ability ABILITY_HALFSET = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_half")
 			.style(Ability.Style.ATTRIBUTE).build(this);
-	public final Ability ABILITY_FULLSET_1 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_1").variables(90)
+	public final Ability ABILITY_FULLSET_1 = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_full_1").variables(90)
 			.modifiers("s").build(this);
-	public final Ability ABILITY_FULLSET_2 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_2").build(this);
-	public final Bonus BONUS_1 = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
-	public final Bonus BONUS_2 = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(25).build();
+	public final Ability ABILITY_FULLSET_2 = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_full_2").build(this);
+	public final Bonus BONUS_1 = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
+	public final Bonus BONUS_2 = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(25).build();
 
 	@Override
 	public void onArmorTick(ItemStack itemstack, Level world, Player player) {
@@ -105,7 +65,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
@@ -143,7 +103,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 			super(EquipmentSlot.CHEST, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -182,7 +142,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 			super(EquipmentSlot.LEGS, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -221,7 +181,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 			super(EquipmentSlot.FEET, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)

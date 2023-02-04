@@ -3,24 +3,24 @@ package com.obscuria.aquamirae.world.items.armor;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.armor.ModelAbyssalArmor;
-import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
+import com.obscuria.aquamirae.world.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.classes.*;
 import com.obscuria.obscureapi.utils.ItemUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -34,57 +34,16 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbyssalArmorExtraItem extends ArmorItem {
-	public AbyssalArmorExtraItem(EquipmentSlot slot, Item.Properties properties) {
-		super(new ArmorMaterial() {
-			@Override
-			public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 40;
-			}
-
-			@Override
-			public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-				return new int[]{3, 6, 8, 2}[slot.getIndex()];
-			}
-
-			@Override
-			public int getEnchantmentValue() {
-				return 12;
-			}
-
-			@Override
-			public @NotNull SoundEvent getEquipSound() {
-				return SoundEvents.ARMOR_EQUIP_NETHERITE;
-			}
-
-			@Override
-			public @NotNull Ingredient getRepairIngredient() {
-				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
-						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
-			}
-
-			@Override
-			public @NotNull String getName() {
-				return "abyssal";
-			}
-
-			@Override
-			public float getToughness() {
-				return 0f;
-			}
-
-			@Override
-			public float getKnockbackResistance() {
-				return 0f;
-			}
-		}, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
+	public AbyssalArmorExtraItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
+		super(AquamiraeTiers.ABYSSAL_ARMOR_EXTRA, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_half")
+	public final Ability ABILITY_HALFSET = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_half")
 			.style(Ability.Style.ATTRIBUTE).build(this);
-	public final Ability ABILITY_FULLSET_1 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_1").variables(90)
+	public final Ability ABILITY_FULLSET_1 = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_full_1").variables(90)
 			.modifiers("s").build(this);
-	public final Ability ABILITY_FULLSET_2 = Ability.Builder.create(AquamiraeMod.MODID).description("abyssal_armor_full_2").build(this);
-	public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
+	public final Ability ABILITY_FULLSET_2 = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_full_2").build(this);
+	public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
 
 	@Override
 	public void onArmorTick(ItemStack itemstack, Level world, Player entity) {
@@ -113,7 +72,7 @@ public abstract class AbyssalArmorExtraItem extends ArmorItem {
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {

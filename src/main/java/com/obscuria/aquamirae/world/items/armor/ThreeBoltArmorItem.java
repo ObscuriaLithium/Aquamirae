@@ -10,6 +10,7 @@ import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.armor.ModelThreeBoltArmor;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
+import com.obscuria.aquamirae.world.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.classes.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -17,8 +18,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -26,10 +25,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -42,53 +39,13 @@ import java.util.function.Consumer;
 
 public abstract class ThreeBoltArmorItem extends ArmorItem {
 
-	public ThreeBoltArmorItem(EquipmentSlot slot, Item.Properties properties) {
-		super(new ArmorMaterial() {
-			@Override
-			public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-				return new int[]{13, 15, 16, 11}[slot.getIndex()] * 75;
-			}
-
-			@Override
-			public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-				return new int[]{3, 5, 5, 7}[slot.getIndex()];
-			}
-
-			@Override
-			public int getEnchantmentValue() {
-				return 9;
-			}
-
-			@Override
-			public @NotNull SoundEvent getEquipSound() {
-				return SoundEvents.ARMOR_EQUIP_IRON;
-			}
-
-			@Override
-			public @NotNull Ingredient getRepairIngredient() {
-				return Ingredient.EMPTY;
-			}
-
-			@Override
-			public @NotNull String getName() {
-				return "three_bolt";
-			}
-
-			@Override
-			public float getToughness() {
-				return 2f;
-			}
-
-			@Override
-			public float getKnockbackResistance() {
-				return 0.1f;
-			}
-		}, slot, properties.tab(AquamiraeMod.TAB));
+	public ThreeBoltArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
+		super(AquamiraeTiers.THREE_BOLT_ARMOR, slot, properties.tab(AquamiraeMod.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.Builder.create(AquamiraeMod.MODID).description("three_bolt_armor_half").build(this);
-	public final Ability ABILITY_FULLSET = Ability.Builder.create(AquamiraeMod.MODID).description("three_bolt_armor_full").build(this);
-	public final Bonus BONUS = Bonus.Builder.create().target(AquamiraeMod.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(30).build();
+	public final Ability ABILITY_HALFSET = Ability.create(AquamiraeMod.MODID).description("three_bolt_armor_half").build(this);
+	public final Ability ABILITY_FULLSET = Ability.create(AquamiraeMod.MODID).description("three_bolt_armor_full").build(this);
+	public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(30).build();
 
 	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Helmet extends ThreeBoltArmorItem {
@@ -101,7 +58,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 			super(EquipmentSlot.HEAD, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
@@ -160,7 +117,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 			super(EquipmentSlot.CHEST, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -187,7 +144,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		}
 
 		@Override
-		public void onArmorTick(ItemStack stack, Level world, Player entity) {
+		public void onArmorTick(ItemStack stack, Level world, @NotNull Player entity) {
 			if (entity.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ThreeBoltArmorItem) {
 				if (entity.getAirSupply() <= 0) {
 					entity.setAirSupply(280);
@@ -213,7 +170,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 			super(EquipmentSlot.LEGS, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -251,7 +208,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 			super(EquipmentSlot.FEET, new Item.Properties());
 		}
 
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
 			consumer.accept(new IClientItemExtensions() {
 				@Override
 				@OnlyIn(Dist.CLIENT)

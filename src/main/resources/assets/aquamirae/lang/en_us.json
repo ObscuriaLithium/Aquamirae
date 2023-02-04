@@ -69,7 +69,7 @@
   "lore.aquamirae.sea_stew": "The power of the sea in your stomach! > §9Fury III (2:00) > §9Strength (2:00) > > §5When Consumed: > §9+30% Ability Power > §9+3 Attack Damage",
   "lore.aquamirae.shell_horn": "{B}§dSummons Captain Cornelia. > Can be used near water in an Ice Maze.",
   "lore.aquamirae.ship_graveyard_echo": "If you listen carefully, you can hear the horns of hundreds of ships lost in the Ice Maze...",
-  "lore.aquamirae.treasure_pouch": "{I}Press {U} to open. > Once valuable loot, now worthless trinkets under the ice...",
+  "lore.aquamirae.treasure_pouch": "{I}Press {U} to open. > Once valuable loot, now worthless trinkets under the ice... May contain a Ship or Outpost map.",
   "lore.aquamirae.wisteria_niveis": "Even in the midst of an icy wasteland, a wonderful life can appear. Can be placed.",
   "lore.aquamirae.oxygelium": "Can be placed.",
 
@@ -162,6 +162,10 @@
   "set.aquamirae.twilight_grotto_helmet": "Helm of the Twilight Grotto",
   "set.aquamirae.twilight_grotto_leggings": "Leggings of the Twilight Grotto",
   "set.aquamirae.twilight_grotto_pants": "Pants of the Twilight Grotto",
+
+  "filled_map.aquamirae.ship": "§fIce Maze Ship Map",
+  "filled_map.aquamirae.outpost": "§fIce Maze Outpost Map",
+  "filled_map.aquamirae.shelter": "§eIce Maze Shelter Map",
 
   "block.aquamirae.elodea": "Elodea",
   "block.aquamirae.frozen_chest": "Frozen Chest",

@@ -163,6 +163,10 @@
   "set.aquamirae.twilight_grotto_leggings": "Поножи Сумеречного грота",
   "set.aquamirae.twilight_grotto_pants": "Штаны Сумеречного грота",
 
+  "filled_map.aquamirae.ship": "§fКарта корабля Ледяного Лабиринта",
+  "filled_map.aquamirae.outpost": "§fКарта аванпоста Ледяного Лабиринта",
+  "filled_map.aquamirae.shelter": "§eКарта убежища Ледяного Лабиринта",
+
   "block.aquamirae.elodea": "Элодея",
   "block.aquamirae.frozen_chest": "Замороженный сундук",
   "block.aquamirae.golden_moth_in_a_jar": "Золотой мотылёк в банке",

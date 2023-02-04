@@ -215,7 +215,7 @@ public class AquamiraeConfig {
 		}
 	}
 
-	public static void load() {
+	public static void register() {
 		Path configPath = FMLPaths.CONFIGDIR.get();
 		Path modConfigPath = Paths.get(configPath.toAbsolutePath().toString(), "Obscuria");
 		try { Files.createDirectory(modConfigPath); }

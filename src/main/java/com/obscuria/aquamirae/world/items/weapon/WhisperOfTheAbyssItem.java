@@ -4,8 +4,8 @@ package com.obscuria.aquamirae.world.items.weapon;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
+import com.obscuria.aquamirae.world.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.classes.Ability;
 import com.obscuria.obscureapi.api.classes.ClassAbility;
 import com.obscuria.obscureapi.api.classes.ClassItem;
@@ -14,8 +14,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,36 +26,11 @@ import java.util.UUID;
 @ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
 public class WhisperOfTheAbyssItem extends SwordItem {
 	public WhisperOfTheAbyssItem() {
-		super(new Tier() {
-			public int getUses() {
-				return 1400;
-			}
-
-			public float getSpeed() {
-				return 6f;
-			}
-
-			public float getAttackDamageBonus() {
-				return 10f;
-			}
-
-			public int getLevel() {
-				return 3;
-			}
-
-			public int getEnchantmentValue() {
-				return 14;
-			}
-
-			public @NotNull Ingredient getRepairIngredient() {
-				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
-						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
-			}
-		}, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.WHISPER_OF_tHE_ABYSS, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("whisper_of_the_abyss").variables(10).modifiers("s").build(this);
+	public final Ability ABILITY = Ability.create(AquamiraeMod.MODID).description("whisper_of_the_abyss").variables(10).modifiers("s").build(this);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);

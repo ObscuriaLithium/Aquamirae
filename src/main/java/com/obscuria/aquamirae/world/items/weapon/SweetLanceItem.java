@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.world.items.weapon;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.aquamirae.world.items.AquamiraeTiers;
 import com.obscuria.obscureapi.world.items.ObscureRarity;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -14,8 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
@@ -25,31 +23,7 @@ import java.util.UUID;
 
 public class SweetLanceItem extends SwordItem {
 	public SweetLanceItem() {
-		super(new Tier() {
-			public int getUses() {
-				return 1400;
-			}
-
-			public float getSpeed() {
-				return 6f;
-			}
-
-			public float getAttackDamageBonus() {
-				return 10f;
-			}
-
-			public int getLevel() {
-				return 3;
-			}
-
-			public int getEnchantmentValue() {
-				return 14;
-			}
-
-			public @NotNull Ingredient getRepairIngredient() {
-				return Ingredient.of(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get().getDefaultInstance());
-			}
-		}, 3, -3.0f, new Properties().fireResistant().rarity(ObscureRarity.MYTHIC)
+		super(AquamiraeTiers.SWEET_LANCE, 3, -3.0f, new Properties().fireResistant().rarity(ObscureRarity.MYTHIC)
 				.food((new FoodProperties.Builder()).nutrition(2).saturationMod(0.3f).build()));
 	}
 

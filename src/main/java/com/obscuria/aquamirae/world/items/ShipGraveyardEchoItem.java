@@ -1,8 +1,8 @@
 
 package com.obscuria.aquamirae.world.items;
 
+import com.obscuria.aquamirae.AquamiraeClient;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.client.AquamiraeAmbient;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -27,7 +27,7 @@ public class ShipGraveyardEchoItem extends Item {
 	@Override
 	public void inventoryTick(@NotNull ItemStack itemstack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
 		super.inventoryTick(itemstack, world, entity, slot, selected);
-		if (selected && entity instanceof Player player && player.level.isClientSide() && Math.random() <= 0.01)
-			AquamiraeAmbient.playAmbientSounds(player, false);
+		if (entity instanceof Player player && player.level.isClientSide() && selected && Math.random() <= 0.01)
+			AquamiraeClient.playAmbientSounds(player, false);
 	}
 }

@@ -7,7 +7,7 @@ import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeCreativeTab;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.aquamirae.world.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.DynamicProjectile;
 import com.obscuria.obscureapi.api.DynamicProjectileItem;
 import com.obscuria.obscureapi.api.classes.Ability;
@@ -23,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,36 +32,11 @@ import java.util.UUID;
 @DynamicProjectileItem(mirror = true, distance = true, fastSpin = true)
 public class MazeRoseItem extends TieredItem implements Vanishable {
 	public MazeRoseItem() {
-		super(new Tier() {
-			public int getUses() {
-				return 1800;
-			}
-
-			public float getSpeed() {
-				return 4f;
-			}
-
-			public float getAttackDamageBonus() {
-				return -1f;
-			}
-
-			public int getLevel() {
-				return 2;
-			}
-
-			public int getEnchantmentValue() {
-				return 12;
-			}
-
-			public @NotNull Ingredient getRepairIngredient() {
-				return Ingredient.of(new ItemStack(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get()),
-						new ItemStack(AquamiraeItems.ABYSSAL_AMETHYST.get()));
-			}
-		}, new Item.Properties().tab(AquamiraeMod.TAB).rarity(Rarity.UNCOMMON));
+		super(AquamiraeTiers.MAZE_ROSE, new Item.Properties().tab(AquamiraeMod.TAB).rarity(Rarity.UNCOMMON));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.Builder.create(AquamiraeMod.MODID).description("maze_rose").cost(Ability.Cost.COOLDOWN, 40)
+	public final Ability ABILITY = Ability.create(AquamiraeMod.MODID).description("maze_rose").cost(Ability.Cost.COOLDOWN, 40)
 			.variables(5, 40).modifiers("", "s").build(this);
 
 	@Override
@@ -85,7 +59,7 @@ public class MazeRoseItem extends TieredItem implements Vanishable {
 	}
 
 	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player entity, @NotNull InteractionHand hand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player entity, @NotNull InteractionHand hand) {
 		final ItemStack stack = entity.getItemInHand(hand);
 		if (world instanceof ServerLevel) {
 			stack.hurt(3, entity.getRandom(), null);
