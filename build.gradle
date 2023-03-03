@@ -78,6 +78,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
     //implementation fg.deobf('curse.maven:obscure_api-638417:4172155')
     implementation fg.deobf('obscuria:obscure_api:10')

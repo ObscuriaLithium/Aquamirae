@@ -4,10 +4,7 @@ package com.obscuria.aquamirae.common.entities;
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.AquamiraeAmbient;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.aquamirae.registry.AquamiraeParticles;
-import com.obscuria.aquamirae.registry.AquamiraeSounds;
+import com.obscuria.aquamirae.registry.*;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
 import com.obscuria.obscureapi.client.animations.IHekateProvider;
 import com.obscuria.obscureapi.utils.TextHelper;
@@ -25,6 +22,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.MapItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -223,6 +221,12 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 	}
 
 	@Override protected void dropEquipment() {
+		if (this.level instanceof ServerWorld) {
+			final ItemEntity map = new ItemEntity(EntityType.ITEM, this.level);
+			map.setItem(AquamiraeMod.getStructureMap(AquamiraeStructures.SHELTER.get(), (ServerWorld) this.level, this));
+			map.moveTo(this.position());
+			this.level.addFreshEntity(map);
+		}
 		if (Math.random() <= 0.2F) {
 			final ItemEntity item = new ItemEntity(EntityType.ITEM, this.level);
 			item.setItem(this.getMainHandItem());

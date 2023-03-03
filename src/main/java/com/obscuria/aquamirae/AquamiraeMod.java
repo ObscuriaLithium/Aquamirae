@@ -8,22 +8,29 @@ import com.obscuria.obscureapi.world.classes.ObscureClass;
 import com.obscuria.obscureapi.world.classes.TooltipHandler;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.MapData;
+import net.minecraft.world.storage.MapDecoration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -37,8 +44,8 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -58,8 +65,8 @@ public class AquamiraeMod {
 	public static final Tags.IOptionalNamedTag<Block> MAZE_MOTHER_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "maze_mother_destroy"));
 	public static final Tags.IOptionalNamedTag<Block> SCROLL_DESTROY = BlockTags.createOptional(new ResourceLocation(MODID, "scroll_destroy"));
 	public static final ItemGroup TAB = new ItemGroup(MODID) {
-		@Override @Nonnull
-		public ItemStack makeIcon() {
+		@Override
+		public @NotNull ItemStack makeIcon() {
 			return AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance();
 		}
 
@@ -113,7 +120,7 @@ public class AquamiraeMod {
 		TooltipHandler.Lore.add("aquamirae:oxygelium");
 	}
 
-	private void addStructures(final BiomeLoadingEvent event) {
+	private void addStructures(final @NotNull BiomeLoadingEvent event) {
 		if (event.getName() != null && ICE_MAZE.contains(event.getName())) {
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_ICE_MAZE);
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_SHIP);
@@ -122,10 +129,32 @@ public class AquamiraeMod {
 		}
 	}
 
-	public static void loadFromConfig(LivingEntity entity, Attribute attribute, double amount) {
+	public static void loadFromConfig(@NotNull LivingEntity entity, Attribute attribute, double amount) {
 		final ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance != null) attributeInstance.setBaseValue(amount);
 		if (attribute == Attributes.MAX_HEALTH) entity.setHealth(entity.getMaxHealth());
+	}
+
+	public static ItemStack getStructureMap(@NotNull Structure<?> structure, @NotNull ServerWorld server, @NotNull Entity source) {
+		BlockPos pos = server.findNearestMapFeature(structure, source.blockPosition(), 100, false);
+		if (pos != null) {
+			final TextComponent name = structure == AquamiraeStructures.SHIP.get() ? new TranslationTextComponent("filled_map.aquamirae.ship")
+					: structure == AquamiraeStructures.OUTPOST.get() ? new TranslationTextComponent("filled_map.aquamirae.outpost")
+					: structure == AquamiraeStructures.SHELTER.get() ? new TranslationTextComponent("filled_map.aquamirae.shelter")
+					: new TranslationTextComponent("filled_map.buried_treasure");
+			final ItemStack map = FilledMapItem.create(server, pos.getX(), pos.getZ(), (byte) 2, true, true);
+			FilledMapItem.renderBiomePreviewMap(server, map);
+			MapData.addTargetDecoration(map, pos, "+", MapDecoration.Type.RED_X);
+			map.setHoverName(name);
+			final CompoundNBT display = map.getOrCreateTag().getCompound("display");
+			final ListNBT lore = new ListNBT();
+			lore.add(StringNBT.valueOf("{\"text\":\"§7x: " + pos.getX() + "\"}"));
+			lore.add(StringNBT.valueOf("{\"text\":\"§7z: " + pos.getZ() + "\"}"));
+			display.put("Lore", lore);
+			map.addTagElement("display", display);
+			return map;
+		}
+		return ItemStack.EMPTY;
 	}
 
 	public static boolean winterEvent() {
@@ -136,9 +165,9 @@ public class AquamiraeMod {
 		PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer); messageID++;
 	}
 
-	public static class LootBuilder {
+	public static class SetBuilder {
 
-		public static List<ItemStack> common() {
+		public static @NotNull List<ItemStack> common() {
 			final int c1 = getColor(10, 220, 160);
 			final int c2 = getColor(10, 190, 220);
 			final int c3 = getColor(10, 130, 220);
@@ -158,7 +187,7 @@ public class AquamiraeMod {
 			return list;
 		}
 
-		public static List<ItemStack> rare() {
+		public static @NotNull List<ItemStack> rare() {
 			List<ItemStack> list = new ArrayList<>();
 			add(list, Items.IRON_HELMET, EquipmentSlotType.HEAD, 2, 2, 0, "dead_sea_helmet", Attributes.ATTACK_DAMAGE);
 			add(list, Items.IRON_HELMET, EquipmentSlotType.HEAD, 2, 2, 0, "twilight_grotto_helmet", ObscureAPIAttributes.PENETRATION.get());

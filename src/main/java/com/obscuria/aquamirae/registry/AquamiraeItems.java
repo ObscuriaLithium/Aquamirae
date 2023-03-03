@@ -145,8 +145,8 @@ public class AquamiraeItems {
 				public void fillItemCategory(ItemGroup tab, NonNullList<ItemStack> list) {
 					super.fillItemCategory(tab, list);
 					if (tab == AquamiraeMod.TAB) {
-						list.addAll(AquamiraeMod.LootBuilder.common());
-						list.addAll(AquamiraeMod.LootBuilder.rare());
+						list.addAll(AquamiraeMod.SetBuilder.common());
+						list.addAll(AquamiraeMod.SetBuilder.rare());
 					}
 				}
 			});
