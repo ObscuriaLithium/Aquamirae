@@ -78,7 +78,7 @@ public class ScrollEffects {
         if (PLAYER.level instanceof ServerWorld) {
             final ServerWorld serverLevel = (ServerWorld) PLAYER.level;
             drowned.finalizeSpawn(serverLevel, PLAYER.level.getCurrentDifficultyAt(PLAYER.blockPosition()), SpawnReason.EVENT, null, null);
-            drowned.moveTo(PLAYER.getPosition(0f));
+            drowned.moveTo(PLAYER.position());
             drowned.setItemSlot(EquipmentSlotType.HEAD, PLAYER.getItemBySlot(EquipmentSlotType.HEAD));
             drowned.setItemSlot(EquipmentSlotType.CHEST, PLAYER.getItemBySlot(EquipmentSlotType.CHEST));
             drowned.setItemSlot(EquipmentSlotType.LEGS, PLAYER.getItemBySlot(EquipmentSlotType.LEGS));
@@ -102,7 +102,7 @@ public class ScrollEffects {
     }
 
     private boolean shelter() {
-        final Vector3d center = PLAYER.getPosition(1F);
+        final Vector3d center = PLAYER.position();
         List<Eel> eels = PLAYER.level.getEntitiesOfClass(Eel.class, new AxisAlignedBB(center, center).inflate(128), e -> true).stream()
                 .sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
         if (!eels.isEmpty()) { PLAYER.moveTo(eels.get(0).position()); return true; }
@@ -156,7 +156,7 @@ public class ScrollEffects {
             if (TICKS >= 20) MinecraftForge.EVENT_BUS.unregister(this);
             if (TICKS == 0) { PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(new Vector3d(0, 1.5f, 0))); PLAYER.hurtMarked = true; }
             if (TICKS == 20) {
-                PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(PLAYER.getPosition(1f).vectorTo(new Vector3d(PLAYER.getX() +
+                PLAYER.setDeltaMovement(PLAYER.getDeltaMovement().add(PLAYER.position().vectorTo(new Vector3d(PLAYER.getX() +
                         Math.cos(PLAYER.xRot) * 3f, PLAYER.getY() + 0.5f, PLAYER.getZ() + Math.sin(PLAYER.xRot) * 3f))));
                 PLAYER.hurtMarked = true;
             }
