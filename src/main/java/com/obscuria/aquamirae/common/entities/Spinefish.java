@@ -1,5 +1,6 @@
 package com.obscuria.aquamirae.common.entities;
 
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import net.minecraft.entity.EntityType;
@@ -11,9 +12,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
-import javax.annotation.Nonnull;
-
-public class Spinefish extends AbstractGroupFishEntity implements IShipGraveyardEntity {
+@ShipGraveyardEntity
+public class Spinefish extends AbstractGroupFishEntity {
 
     public Spinefish(EntityType<? extends Spinefish> type, World level) {
         super(type, level);
@@ -23,7 +23,7 @@ public class Spinefish extends AbstractGroupFishEntity implements IShipGraveyard
         this(AquamiraeEntities.SPINEFISH.get(), level);
     }
 
-    public @Nonnull ItemStack getBucketItemStack() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(AquamiraeItems.SPINEFISH_BUCKET.get());
     }
 
@@ -35,11 +35,11 @@ public class Spinefish extends AbstractGroupFishEntity implements IShipGraveyard
         return SoundEvents.COD_DEATH;
     }
 
-    protected SoundEvent getHurtSound(@Nonnull DamageSource source) {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.COD_HURT;
     }
 
-    @Nonnull protected SoundEvent getFlopSound() {
+    protected SoundEvent getFlopSound() {
         return SoundEvents.COD_FLOP;
     }
 }

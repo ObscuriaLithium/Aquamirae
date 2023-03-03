@@ -36,7 +36,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,18 +55,18 @@ public class LuminescentBubbleBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull OffsetType getOffsetType() {
+	public OffsetType getOffsetType() {
 		return OffsetType.XYZ;
 	}
 
 	@Override
-	public void onPlace(@Nonnull BlockState blockstate, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState oldState, boolean moving) {
+	public void onPlace(BlockState blockstate, World world, BlockPos pos, BlockState oldState, boolean moving) {
 		super.onPlace(blockstate, world, pos, oldState, moving);
 		world.getBlockTicks().scheduleTick(pos, this, 20);
 	}
 
 	@Override
-	public void tick(@Nonnull BlockState blockstate, @Nonnull ServerWorld world, @Nonnull BlockPos pos, @Nonnull Random random) {
+	public void tick(BlockState blockstate, ServerWorld world, BlockPos pos, Random random) {
 		super.tick(blockstate, world, pos, random);
 		world.getBlockTicks().scheduleTick(pos, this, 20);
 		final Vector3d center = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
@@ -77,17 +76,17 @@ public class LuminescentBubbleBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
 		return state.getFluidState().isEmpty();
 	}
 
 	@Override
-	public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+	public int getLightBlock(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return 0;
 	}
 
 	@Override
-	public @Nonnull VoxelShape getShape(BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		Vector3d offset = state.getOffset(world, pos);
 		return box(3.3, 1, 3.3, 12.7, 15, 12.7).move(offset.x, offset.y, offset.z);
 	}
@@ -104,20 +103,19 @@ public class LuminescentBubbleBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull FluidState getFluidState(BlockState state) {
+	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public @Nonnull BlockState updateShape(BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull IWorld world, @Nonnull BlockPos currentPos,
-										   @Nonnull BlockPos facingPos) {
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos,
+										   BlockPos facingPos) {
 		if (state.getValue(WATERLOGGED)) world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack getCloneItemStack(@Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull BlockState state) {
+	public ItemStack getCloneItemStack(IBlockReader world, BlockPos pos, BlockState state) {
 		return AquamiraeItems.LUMINESCENT_BUBBLE.get().getDefaultInstance();
 	}
 
@@ -127,13 +125,13 @@ public class LuminescentBubbleBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		return Collections.singletonList(AquamiraeItems.LUMINESCENT_BUBBLE.get().getDefaultInstance());
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void animateTick(@Nonnull BlockState blockstate, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Random random) {
+	public void animateTick(BlockState blockstate, World world, BlockPos pos, Random random) {
 		super.animateTick(blockstate, world, pos, random);
 		for (int l = 0; l < 3; ++l) {
 			double x0 = pos.getX() + random.nextFloat();
@@ -147,7 +145,7 @@ public class LuminescentBubbleBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull ActionResultType use(@Nonnull BlockState blockstate, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull PlayerEntity entity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult hit) {
+	public ActionResultType use(BlockState blockstate, World world, BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult hit) {
 		super.use(blockstate, world, pos, entity, hand, hit);
 		world.destroyBlock(pos, false);
 		ItemStack stack = new ItemStack(AquamiraeItems.LUMINESCENT_BUBBLE.get(), 1);

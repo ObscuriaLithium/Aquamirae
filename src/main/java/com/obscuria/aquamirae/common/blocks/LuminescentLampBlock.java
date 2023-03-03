@@ -22,7 +22,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -37,17 +36,17 @@ public class LuminescentLampBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
 		return state.getFluidState().isEmpty();
 	}
 
 	@Override
-	public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+	public int getLightBlock(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return 0;
 	}
 
 	@Override
-	public @Nonnull VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		return box(5, 0, 5, 11, 32, 11);
 	}
 
@@ -63,25 +62,25 @@ public class LuminescentLampBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull FluidState getFluidState(BlockState state) {
+	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public @Nonnull BlockState updateShape(BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull IWorld world, @Nonnull BlockPos currentPos,
-										   @Nonnull BlockPos facingPos) {
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos,
+										   BlockPos facingPos) {
 		if (state.getValue(WATERLOGGED)) world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 	}
 
 	@Override
-	public @Nonnull List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		return Collections.singletonList(new ItemStack(this));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void animateTick(@Nonnull BlockState blockstate, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Random random) {
+	public void animateTick(BlockState blockstate, World world, BlockPos pos, Random random) {
 		super.animateTick(blockstate, world, pos, random);
 		if (random.nextFloat() < 0.2) world.addParticle(AquamiraeParticles.GHOST_SHINE.get(),
 					pos.getX() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, pos.getY() + 1.6 + (random.nextFloat() - 0.5) * 0.05D,

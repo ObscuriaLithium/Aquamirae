@@ -24,16 +24,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import javax.annotation.Nonnull;
-
 public class ShellHornItem extends Item {
 	public ShellHornItem() {
 		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB));
 	}
 
 	@Override
-	@Nonnull
-	public ActionResult<ItemStack> use(@Nonnull World world, @Nonnull PlayerEntity entity, @Nonnull Hand hand) {
+	public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {
 		ActionResult<ItemStack> ar = super.use(world, entity, hand);
 		if (entity.level instanceof ServerWorld)
 			entity.level.playSound(null, new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()),

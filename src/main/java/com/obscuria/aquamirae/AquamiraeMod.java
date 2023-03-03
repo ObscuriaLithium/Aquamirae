@@ -1,9 +1,13 @@
 package com.obscuria.aquamirae;
 
-import com.obscuria.aquamirae.common.events.features.OxygeliumFeature;
-import com.obscuria.aquamirae.common.events.features.WisteriaFeature;
+import com.obscuria.aquamirae.common.features.OxygeliumFeature;
+import com.obscuria.aquamirae.common.features.WisteriaFeature;
+import com.obscuria.aquamirae.common.items.armor.AbyssalArmorItem;
+import com.obscuria.aquamirae.common.items.armor.TerribleArmorItem;
+import com.obscuria.aquamirae.common.items.weapon.CoralLanceItem;
+import com.obscuria.aquamirae.common.items.weapon.FinCutterItem;
+import com.obscuria.aquamirae.common.items.weapon.RemnantsSaberItem;
 import com.obscuria.aquamirae.registry.*;
-import com.obscuria.aquamirae.common.events.AquamiraeEvents;
 import com.obscuria.obscureapi.ObscureAPI;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.world.classes.ObscureClass;
@@ -17,14 +21,19 @@ import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponent;
@@ -39,8 +48,9 @@ import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -52,7 +62,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -98,9 +111,9 @@ public class AquamiraeMod {
 		eventBus.addListener(this::commonSetup);
 
 		MinecraftForge.EVENT_BUS.addListener(this::modifyBiomes);
-		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
-		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
-		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityDeath);
+		MinecraftForge.EVENT_BUS.addListener(this::onEntityAttacked);
+		MinecraftForge.EVENT_BUS.addListener(this::onEntityHurt);
+		MinecraftForge.EVENT_BUS.addListener(this::onEntityDeath);
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
@@ -175,6 +188,111 @@ public class AquamiraeMod {
 
 	public static boolean winterEvent() {
 		return Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER || Calendar.getInstance().get(Calendar.MONTH) == Calendar.JANUARY;
+	}
+
+	private void onEntityAttacked(@NotNull LivingHurtEvent event) {
+		//Fin Cutter
+		if (event.getSource().getEntity() instanceof LivingEntity && ((LivingEntity)event.getSource().getEntity()).getMainHandItem().getItem() instanceof FinCutterItem) {
+			final LivingEntity source = (LivingEntity) event.getSource().getEntity();
+			final FinCutterItem item = (FinCutterItem) source.getMainHandItem().getItem();
+			final int emptyHP = (int) Math.floor((source.getMaxHealth() - source.getHealth()) / 2);
+			event.setAmount(event.getAmount() + event.getAmount() *
+					Math.min(item.ABILITY.getAmount(source, 1) * 0.01F, emptyHP * item.ABILITY.getAmount(source, 0) * 0.01F));
+		}
+		//Terrible Armor
+		if (event.getEntity() instanceof PlayerEntity) {
+			final PlayerEntity player = (PlayerEntity) event.getEntity();
+			final int TOTAL = countArmor(player, TerribleArmorItem.class);
+			if (TOTAL >= 2) {
+				final ItemStack piece = getArmor(player, TerribleArmorItem.class);
+				if (player.isInWater() && !player.getCooldowns().isOnCooldown(piece.getItem()) && piece.getItem() instanceof TerribleArmorItem) {
+					final TerribleArmorItem item = (TerribleArmorItem) piece.getItem();
+					player.addEffect(new EffectInstance(AquamiraeMobEffects.SWIM_SPEED.get(), 20 * item.ABILITY_HALFSET.getAmount(player, 1),
+							Math.min(19, item.ABILITY_HALFSET.getAmount(player, 0) / 10 - 1), false, false));
+					final int cooldown = 20 * item.ABILITY_HALFSET.getCost(player);
+					cooldown(player, TerribleArmorItem.class, cooldown);
+				}
+				if (TOTAL >= 4 && event.getSource().getEntity() instanceof LivingEntity && piece.getItem() instanceof TerribleArmorItem) {
+					final LivingEntity source = (LivingEntity) event.getSource().getEntity();
+					final TerribleArmorItem item = (TerribleArmorItem) piece.getItem();
+					source.addEffect(new EffectInstance(Effects.POISON, 20 * item.ABILITY_FULLSET.getAmount(player, 0), 1, false, false));
+				}
+			}
+		}
+	}
+
+	private void onEntityHurt(@NotNull LivingHurtEvent event) {
+		//Remnants Saber
+		if (event.getSource().getEntity() instanceof LivingEntity && event.getSource().getEntity().isInWater()
+				&& ((LivingEntity)event.getSource().getEntity()).getMainHandItem().getItem() instanceof RemnantsSaberItem) {
+			final LivingEntity source = (LivingEntity)event.getSource().getEntity();
+			final RemnantsSaberItem item = (RemnantsSaberItem) source.getMainHandItem().getItem();
+			event.setAmount(event.getAmount() * (1F + item.ABILITY.getAmount(source, 0) * 0.01F));
+		}
+		//Coral Lance
+		if (event.getSource().getEntity() instanceof LivingEntity && ((LivingEntity) event.getSource().getEntity()).getMainHandItem().getItem() instanceof CoralLanceItem
+				&& AquamiraeUtils.isShipGraveyardEntity(event.getEntity())) {
+			final LivingEntity source = (LivingEntity) event.getSource().getEntity();
+			final CoralLanceItem item = (CoralLanceItem) source.getMainHandItem().getItem();
+			event.setAmount(event.getAmount() * (1F + item.ABILITY.getAmount(source, 0) * 0.01F));
+		}
+	}
+
+	private void onEntityDeath(LivingDeathEvent event) {
+		//Abyssal Armor
+		if (event != null && event.getEntity() != null) {
+			final LivingEntity entity = event.getEntityLiving();
+			final int TOTAL = countArmor(entity, AbyssalArmorItem.class);
+			if (TOTAL >= 4 && !entity.hasEffect(AquamiraeMobEffects.CRYSTALLIZATION.get())) {
+				final AbyssalArmorItem item = (AbyssalArmorItem) getArmor(entity, AbyssalArmorItem.class).getItem();
+				if (!entity.getPersistentData().getBoolean("crystallization")) {
+					event.setCanceled(true);
+					entity.addEffect(new EffectInstance(AquamiraeMobEffects.CRYSTALLIZATION.get(),
+							20 * item.ABILITY_FULLSET_1.getAmount(entity, 0), 0, true, true));
+					entity.setHealth(entity.getMaxHealth());
+					if (entity.level instanceof ServerWorld) entity.level.playSound(null, new BlockPos(entity.getX(),
+							entity.getY() + 1, entity.getZ()), SoundEvents.TOTEM_USE, SoundCategory.PLAYERS, 1, 1);
+					final ItemStack head = entity.getItemBySlot(EquipmentSlotType.HEAD);
+					final ItemStack chest = entity.getItemBySlot(EquipmentSlotType.CHEST);
+					final ItemStack legs = entity.getItemBySlot(EquipmentSlotType.LEGS);
+					final ItemStack feet = entity.getItemBySlot(EquipmentSlotType.FEET);
+					if (head.hurt(50, entity.getRandom(), null)) { head.shrink(1); head.setDamageValue(0); }
+					if (chest.hurt(50, entity.getRandom(), null)) { chest.shrink(1); chest.setDamageValue(0); }
+					if (legs.hurt(50, entity.getRandom(), null)) { legs.shrink(1); legs.setDamageValue(0); }
+					if (feet.hurt(50, entity.getRandom(), null)) { feet.shrink(1); feet.setDamageValue(0); }
+				}
+			}
+		}
+	}
+
+	private static int countArmor(@NotNull LivingEntity entity, @NotNull Class<?> armor) {
+		final boolean HEAD = armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlotType.HEAD).getItem().getClass());
+		final boolean CHEST = armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlotType.CHEST).getItem().getClass());
+		final boolean LEGS = armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlotType.LEGS).getItem().getClass());
+		final boolean FEET = armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlotType.FEET).getItem().getClass());
+		return (HEAD ? 1 : 0) + (CHEST ? 1 : 0) + (LEGS ? 1 : 0) + (FEET ? 1 : 0);
+	}
+
+	private static ItemStack getArmor(@NotNull LivingEntity entity, @NotNull Class<?> armor) {
+		return armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlotType.HEAD).getItem().getClass()) ?
+				entity.getItemBySlot(EquipmentSlotType.HEAD) :
+				armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlotType.CHEST).getItem().getClass()) ?
+						entity.getItemBySlot(EquipmentSlotType.CHEST) :
+						armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlotType.LEGS).getItem().getClass()) ?
+								entity.getItemBySlot(EquipmentSlotType.LEGS) :
+								armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlotType.FEET).getItem().getClass()) ?
+										entity.getItemBySlot(EquipmentSlotType.FEET) : ItemStack.EMPTY;
+	}
+
+	private static void cooldown(@NotNull PlayerEntity player, @NotNull Class<?> armor, int cooldown) {
+		if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlotType.HEAD).getItem().getClass()))
+			player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlotType.HEAD).getItem(), cooldown);
+		if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlotType.CHEST).getItem().getClass()))
+			player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlotType.CHEST).getItem(), cooldown);
+		if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlotType.LEGS).getItem().getClass()))
+			player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlotType.LEGS).getItem(), cooldown);
+		if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlotType.FEET).getItem().getClass()))
+			player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlotType.FEET).getItem(), cooldown);
 	}
 
 	public static <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, PacketBuffer> encoder, Function<PacketBuffer, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {

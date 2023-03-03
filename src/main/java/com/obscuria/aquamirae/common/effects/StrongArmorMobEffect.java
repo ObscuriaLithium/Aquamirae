@@ -6,8 +6,6 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 
-import javax.annotation.Nonnull;
-
 public class StrongArmorMobEffect extends Effect {
 	public StrongArmorMobEffect() {
 		super(EffectType.BENEFICIAL, -3407668);
@@ -16,7 +14,6 @@ public class StrongArmorMobEffect extends Effect {
 	}
 
 	@Override
-	@Nonnull
 	public String getDescriptionId() {
 		return "effect.aquamirae.strong_armor";
 	}

@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.common.events.features;
+package com.obscuria.aquamirae.common.features;
 
 import com.google.common.collect.ImmutableList;
 import com.obscuria.aquamirae.AquamiraeMod;
@@ -21,7 +21,6 @@ import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.structure.*;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class IceMazeFeature extends Structure<NoFeatureConfig> {
@@ -30,13 +29,11 @@ public class IceMazeFeature extends Structure<NoFeatureConfig> {
    }
 
    @Override
-   @Nonnull
    public  IStartFactory<NoFeatureConfig> getStartFactory() {
       return IceMazeFeature.Start::new;
    }
 
    @Override
-   @Nonnull
    public GenerationStage.Decoration step() {
       return GenerationStage.Decoration.LAKES;
    }
@@ -53,8 +50,8 @@ public class IceMazeFeature extends Structure<NoFeatureConfig> {
    }
 
    @Override
-   protected boolean isFeatureChunk(@Nonnull ChunkGenerator chunkGenerator, @Nonnull BiomeProvider biomeSource, long seed, @Nonnull SharedSeedRandom chunkRandom, int chunkX,
-                                    int chunkZ, @Nonnull Biome biome, @Nonnull ChunkPos chunkPos, @Nonnull NoFeatureConfig featureConfig) {
+   protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeProvider biomeSource, long seed, SharedSeedRandom chunkRandom, int chunkX,
+                                    int chunkZ, Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
       return true;
    }
 
@@ -64,8 +61,8 @@ public class IceMazeFeature extends Structure<NoFeatureConfig> {
       }
 
       @Override
-      public void generatePieces(@Nonnull DynamicRegistries dynamicRegistryManager, @Nonnull ChunkGenerator chunkGenerator, @Nonnull TemplateManager templateManagerIn,
-                                 int chunkX, int chunkZ, @Nonnull Biome biomeIn, @Nonnull NoFeatureConfig config) {
+      public void generatePieces(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator, TemplateManager templateManagerIn,
+                                 int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
          int x = chunkX * 16;
          int z = chunkZ * 16;
 

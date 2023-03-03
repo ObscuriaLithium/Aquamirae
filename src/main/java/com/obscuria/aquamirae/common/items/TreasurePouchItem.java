@@ -3,6 +3,7 @@ package com.obscuria.aquamirae.common.items;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
+import com.obscuria.aquamirae.registry.AquamiraeStructures;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,23 +33,24 @@ public class TreasurePouchItem extends Item {
 		ItemStack stack = resultHolder.getObject();
 		player.swing(hand);
 		if (!world.isClientSide) {
-			world.playSound(player, new BlockPos(player.getX(), player.getY() + 1, player.getZ()), AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundCategory.PLAYERS, 1, 1);
+			world.playSound(player, new BlockPos(player.getX(), player.getY() + 1, player.getZ()),
+					AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundCategory.PLAYERS, 1, 1);
 			final List<ItemStack> loot = AquamiraeMod.SetBuilder.rare();
 			player.addItem(loot.get(player.getRandom().nextInt(loot.size() - 1)));
-			//
 			final MinecraftServer minecraftServer = player.level.getServer();
 			if (minecraftServer != null && player.level instanceof ServerWorld) {
 				final ServerWorld server = (ServerWorld) player.level;
-				ResourceLocation location = new ResourceLocation(AquamiraeMod.MODID, "gameplay/treasure_pouch");
-				LootTable lootTable = minecraftServer.getLootTables().get(location);
-				LootContext.Builder lootContext$Builder = new LootContext.Builder(server).withRandom(player.getRandom())
-						.withParameter(LootParameters.THIS_ENTITY, player).withParameter(LootParameters.ORIGIN, player.position())
-						.withParameter(LootParameters.DAMAGE_SOURCE, DamageSource.OUT_OF_WORLD);
-				LootContext lootContext = lootContext$Builder.create(LootParameterSets.ENTITY);
-				lootTable.getRandomItems(lootContext).forEach(player::addItem);
+				LootContext lootContext = new LootContext.Builder(server)
+						.withRandom(player.getRandom())
+						.withParameter(LootParameters.THIS_ENTITY, player)
+						.withParameter(LootParameters.ORIGIN, player.position())
+						.create(LootParameterSets.GIFT);
+				LootTable treasure = minecraftServer.getLootTables().get(new ResourceLocation(AquamiraeMod.MODID, "gameplay/treasure_pouch"));
+				treasure.getRandomItems(lootContext).forEach(player::addItem);
+				if (Math.random() <= 0.1f) player.addItem(AquamiraeMod.getStructureMap(player.getRandom().nextBoolean() ?
+						AquamiraeStructures.SHIP.get() : AquamiraeStructures.OUTPOST.get(), server, player));
 			}
 		}
-		//
 		stack.shrink(1);
 		return resultHolder;
 	}

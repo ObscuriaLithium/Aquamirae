@@ -1,6 +1,7 @@
 
 package com.obscuria.aquamirae.common.entities;
 
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeParticles;
@@ -26,10 +27,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class GoldenMoth extends CreatureEntity implements IShipGraveyardEntity {
+@ShipGraveyardEntity
+public class GoldenMoth extends CreatureEntity {
 	public GoldenMoth(FMLPlayMessages.SpawnEntity packet, World world) {
 		this(AquamiraeEntities.GOLDEN_MOTH.get(), world);
 	}
@@ -40,8 +41,8 @@ public class GoldenMoth extends CreatureEntity implements IShipGraveyardEntity {
 		this.moveControl = new FlyingMovementController(this, 10, true);
 	}
 
-	@Override @Nonnull
-	protected PathNavigator createNavigation(@Nonnull World world) {
+	@Override
+	protected PathNavigator createNavigation(World world) {
 		return new FlyingPathNavigator(this, world);
 	}
 
@@ -62,7 +63,7 @@ public class GoldenMoth extends CreatureEntity implements IShipGraveyardEntity {
 		return world instanceof World && !((World)world).isDay();
 	}
 
-	@Override @Nonnull public CreatureAttribute getMobType() {
+	@Override public CreatureAttribute getMobType() {
 		return CreatureAttribute.UNDEFINED;
 	}
 
@@ -70,7 +71,7 @@ public class GoldenMoth extends CreatureEntity implements IShipGraveyardEntity {
 		return AquamiraeSounds.ENTITY_GOLDEN_MOTH_AMBIENT.get();
 	}
 
-	@Override public SoundEvent getHurtSound(@Nonnull DamageSource source) {
+	@Override public SoundEvent getHurtSound(DamageSource source) {
 		return SoundEvents.GENERIC_HURT;
 	}
 
@@ -93,7 +94,7 @@ public class GoldenMoth extends CreatureEntity implements IShipGraveyardEntity {
 		return super.hurt(source, amount);
 	}
 
-	@Override @Nonnull public ActionResultType mobInteract(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
+	@Override public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
 		super.mobInteract(player, hand);
 		final ItemStack stack = player.getItemInHand(hand);
 		if (stack.getItem() == Items.GLASS_BOTTLE) {
@@ -123,7 +124,7 @@ public class GoldenMoth extends CreatureEntity implements IShipGraveyardEntity {
 		super.baseTick();
 	}
 
-	@Override protected void checkFallDamage(double y, boolean onGroundIn, @Nonnull BlockState state, @Nonnull BlockPos pos) {
+	@Override protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
 	}
 
 	@Override public void setNoGravity(boolean ignored) {

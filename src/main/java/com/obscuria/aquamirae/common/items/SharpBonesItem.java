@@ -10,8 +10,6 @@ import net.minecraft.item.Rarity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-
 public class SharpBonesItem extends Item {
 	public SharpBonesItem() {
 		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64).rarity(Rarity.COMMON)
@@ -19,13 +17,12 @@ public class SharpBonesItem extends Item {
 	}
 
 	@Override
-	public int getUseDuration(@Nonnull ItemStack itemstack) {
+	public int getUseDuration(ItemStack itemstack) {
 		return 24;
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack finishUsingItem(@Nonnull ItemStack itemstack, @Nonnull World world, LivingEntity entity) {
+	public ItemStack finishUsingItem(ItemStack itemstack, World world, LivingEntity entity) {
 		entity.hurt(DamageSource.STARVE, 1);
 		return super.finishUsingItem(itemstack, world, entity);
 	}

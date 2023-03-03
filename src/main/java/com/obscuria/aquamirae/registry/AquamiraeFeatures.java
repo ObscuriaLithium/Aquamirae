@@ -2,8 +2,8 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.common.events.features.OxygeliumFeature;
-import com.obscuria.aquamirae.common.events.features.WisteriaFeature;
+import com.obscuria.aquamirae.common.features.OxygeliumFeature;
+import com.obscuria.aquamirae.common.features.WisteriaFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;

@@ -3,6 +3,7 @@ package com.obscuria.aquamirae.common.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.client.AquamiraeAmbient;
 import com.obscuria.aquamirae.registry.*;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
@@ -22,7 +23,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.MapItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -45,13 +45,13 @@ import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEntity, IHekateProvider {
+@ShipGraveyardEntity
+public class CaptainCornelia extends MonsterEntity implements IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
 	private static final DataParameter<Integer> ATTACK = EntityDataManager.defineId(CaptainCornelia.class, DataSerializers.INT);
 	private static final DataParameter<Integer> REGENERATION = EntityDataManager.defineId(CaptainCornelia.class, DataSerializers.INT);
@@ -80,7 +80,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		super.registerGoals();
 		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false) {
 			@Override
-			protected double getAttackReachSqr(@Nonnull LivingEntity entity) {
+			protected double getAttackReachSqr(LivingEntity entity) {
 				return 0;
 			}
 		});
@@ -96,7 +96,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		this.getEntityData().define(REGENERATION, AquamiraeConfig.Common.corneliaSkillRegeneration.get());
 	}
 
-	@Override public void addAdditionalSaveData(@Nonnull CompoundNBT tag) {
+	@Override public void addAdditionalSaveData(CompoundNBT tag) {
 		super.addAdditionalSaveData(tag);
 		CompoundNBT data = new CompoundNBT();
 		data.putInt("Attack", this.getEntityData().get(ATTACK));
@@ -104,7 +104,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		tag.put("CorneliaData", data);
 	}
 
-	@Override public void readAdditionalSaveData(@Nonnull CompoundNBT tag) {
+	@Override public void readAdditionalSaveData(CompoundNBT tag) {
 		super.readAdditionalSaveData(tag);
 		CompoundNBT data = tag.getCompound("CorneliaData");
 		if (data.isEmpty()) return;
@@ -156,7 +156,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		if (ANIMATIONS.getTick("attack") > 10)
 			this.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 5, 3, false, false));
 
-		if (this.hasEffect(Effects.LEVITATION) && !this.level.isClientSide()) {
+		if (this.hasEffect(Effects.LEVITATION) && AquamiraeConfig.Common.corneliaSpinAbility.get() && !this.level.isClientSide()) {
 			final Vector3d center = new Vector3d(this.getX(), this.getY(), this.getZ());
 			List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(center, center).inflate(10), e -> true).stream()
 					.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
@@ -179,20 +179,12 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 				}
 			});
 
-			this.getPersistentData().putDouble("Par1", this.getPersistentData().getDouble("Par1") + 1);
-			if (this.level instanceof ServerWorld && this.getPersistentData().getDouble("Par1") > 1) {
-				this.getPersistentData().putDouble("Par1", 0);
-				((ServerWorld) this.level).sendParticles(AquamiraeParticles.GHOST.get(), this.getX(), this.getY() - 0.2, this.getZ(), 1,
-						0.3, 0.1, 0.3, 0.1);
-			}
+			if (this.level instanceof ServerWorld && this.tickCount % 2 == 0) ((ServerWorld) this.level).sendParticles(AquamiraeParticles.GHOST.get(),
+					this.getX(), this.getY() - 0.2, this.getZ(), 1, 0.3, 0.1, 0.3, 0.1);
 			if (this.isInWater()) this.setDeltaMovement(new Vector3d(0F, 0.4F, 0F));
 		}
-		this.getPersistentData().putDouble("Par2", this.getPersistentData().getDouble("Par2") + 1);
-		if (this.level instanceof ServerWorld && this.getPersistentData().getDouble("Par2") > 9) {
-			this.getPersistentData().putDouble("Par2", 0);
-			((ServerWorld) this.level).sendParticles(AquamiraeParticles.GHOST_SHINE.get(), this.getX(), this.getY() + 1.7, this.getZ(), 1,
-					0.15, 0.1, 0.15, 0.1);
-		}
+		if (this.level instanceof ServerWorld && this.tickCount % 10 == 0) ((ServerWorld) this.level).sendParticles(AquamiraeParticles.GHOST_SHINE.get(),
+				this.getX(), this.getY() + 1.7, this.getZ(), 1, 0.15, 0.1, 0.15, 0.1);
 		//
 		final Vector3d center = this.position();
 		List<PlayerEntity> players = this.level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(center, center).inflate(32), e -> true).stream()
@@ -235,7 +227,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		}
 	}
 
-	@Override @Nonnull public CreatureAttribute getMobType() {
+	@Override public CreatureAttribute getMobType() {
 		return CreatureAttribute.WATER;
 	}
 
@@ -247,7 +239,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		return AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_AMBIENT.get();
 	}
 
-	@Override public SoundEvent getHurtSound(@Nonnull DamageSource source) {
+	@Override public SoundEvent getHurtSound(DamageSource source) {
 		return AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HURT.get();
 	}
 
@@ -266,7 +258,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		return super.hurt(source, amount);
 	}
 
-	@Override public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason reason, @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
+	@Override public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
 		if (this.level instanceof ServerWorld) this.level.playSound(null, new BlockPos(this.getX(), this.getY(), this.getZ()),
 					AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundCategory.HOSTILE, 3, 1);
 		this.addEffect(new EffectInstance(Effects.LEVITATION, 120, 0, false, false));
@@ -284,12 +276,12 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 		return false;
 	}
 
-	@Override public void startSeenByPlayer(@Nonnull ServerPlayerEntity player) {
+	@Override public void startSeenByPlayer(ServerPlayerEntity player) {
 		super.startSeenByPlayer(player);
 		this.bossInfo.addPlayer(player);
 	}
 
-	@Override public void stopSeenByPlayer(@Nonnull ServerPlayerEntity player) {
+	@Override public void stopSeenByPlayer(ServerPlayerEntity player) {
 		super.stopSeenByPlayer(player);
 		this.bossInfo.removePlayer(player);
 	}

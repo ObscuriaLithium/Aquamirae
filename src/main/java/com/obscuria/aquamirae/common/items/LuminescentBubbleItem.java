@@ -16,16 +16,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import javax.annotation.Nonnull;
-
 public class LuminescentBubbleItem extends Item {
 	public LuminescentBubbleItem() {
 		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(16).rarity(Rarity.COMMON));
 	}
 
 	@Override
-	@Nonnull
-	public ActionResult<ItemStack> use(World world, PlayerEntity entity, @Nonnull Hand hand) {
+	public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {
 		ItemStack stack = entity.getItemInHand(hand);
 		if (world.getBlockState(new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ())).getMaterial().isLiquid()) {
 			stack.shrink(1);

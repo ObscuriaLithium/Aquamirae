@@ -10,9 +10,7 @@ credits="Krossy, The Exiled Fellow and everyone who supports us on Patreon!"
 displayURL="https://www.curseforge.com/members/obscuriaofficial/projects"
 logoFile="logo.png"
 authors="Obscuria, Pluvia"
-description='''
-Ship graveyard with terrible deep sea creatures
-'''
+description="    Ship graveyard with terrible deep sea creatures"
 
 [[dependencies.aquamirae]]
     modId="forge"

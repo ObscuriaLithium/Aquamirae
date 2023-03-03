@@ -76,6 +76,7 @@ public class AquamiraeConfig {
 		public static final ForgeConfigSpec.DoubleValue corneliaKnockbackResistance;
 		public static final ForgeConfigSpec.DoubleValue corneliaAttackKnockback;
 		public static final ForgeConfigSpec.DoubleValue corneliaFollowRange;
+		public static final ForgeConfigSpec.BooleanValue corneliaSpinAbility;
 		public static final ForgeConfigSpec.IntValue corneliaSkillRegeneration;
 
 		public static final ForgeConfigSpec.DoubleValue eelMaxHealth;
@@ -134,6 +135,7 @@ public class AquamiraeConfig {
 			corneliaKnockbackResistance = BUILDER.worldRestart().defineInRange("knockbackResistance", DEFAULT_CORNELIA_KNOCKBACK_RESISTANCE, 0.0, 10.0);
 			corneliaAttackKnockback = BUILDER.worldRestart().defineInRange("attackKnockback", DEFAULT_CORNELIA_ATTACK_KNOCKBACK, 0.0, 10.0);
 			corneliaFollowRange = BUILDER.worldRestart().defineInRange("followRange", DEFAULT_CORNELIA_FOLLOW_RANGE, 1.0, 256.0);
+			corneliaSpinAbility = BUILDER.worldRestart().define("pullAndSpinTargets", true);
 			corneliaSkillRegeneration = BUILDER.worldRestart().defineInRange("regenerationSkillUses", DEFAULT_CORNELIA_SKILL_USES, 0, 1000);
 			BUILDER.pop();
 

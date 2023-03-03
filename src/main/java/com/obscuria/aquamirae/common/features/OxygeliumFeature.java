@@ -1,5 +1,5 @@
 
-package com.obscuria.aquamirae.common.events.features;
+package com.obscuria.aquamirae.common.features;
 
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.common.blocks.OxygeliumBlock;
@@ -20,7 +20,6 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.placement.IPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -41,7 +40,7 @@ public class OxygeliumFeature extends Feature<NoFeatureConfig> {
 	}
 
 	@Override
-	public boolean place(@Nonnull ISeedReader seedReader, @Nonnull ChunkGenerator chunkGenerator, @Nonnull Random random, @Nonnull BlockPos origin, @Nonnull NoFeatureConfig config) {
+	public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random random, BlockPos origin, NoFeatureConfig config) {
 		if (random.nextInt(3) != 1) return false;
 		final int ox = origin.getX() - 6 + random.nextInt(12);
 		final int oz = origin.getZ() - 6 + random.nextInt(12);

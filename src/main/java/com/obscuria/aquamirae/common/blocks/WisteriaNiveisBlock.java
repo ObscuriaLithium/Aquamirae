@@ -15,7 +15,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +30,6 @@ public class WisteriaNiveisBlock extends DoublePlantBlock {
 	}
 
 	@Override
-	@Nonnull
 	public OffsetType getOffsetType() {
 		return OffsetType.XYZ;
 	}
@@ -43,13 +41,12 @@ public class WisteriaNiveisBlock extends DoublePlantBlock {
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack getCloneItemStack(@Nonnull IBlockReader world,@Nonnull BlockPos pos,@Nonnull BlockState state) {
+	public ItemStack getCloneItemStack(IBlockReader world,BlockPos pos,BlockState state) {
 		return AquamiraeItems.WISTERIA_NIVEIS.get().getDefaultInstance();
 	}
 
 	@Override
-	protected boolean mayPlaceOn(@Nonnull BlockState state, @Nonnull IBlockReader level, @Nonnull BlockPos pos) {
+	protected boolean mayPlaceOn(BlockState state, IBlockReader level, BlockPos pos) {
 		return state.is(Blocks.SNOW_BLOCK) || super.mayPlaceOn(state, level, pos);
 	}
 
@@ -62,13 +59,13 @@ public class WisteriaNiveisBlock extends DoublePlantBlock {
 	}
 
 	@Override
-	public @Nonnull List<ItemStack> getDrops(@Nonnull BlockState state,@Nonnull LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state,LootContext.Builder builder) {
 		return state.getValue(HALF) == DoubleBlockHalf.LOWER ? state.getValue(LOOT) ? super.getDrops(state, builder)
 				: Collections.singletonList(AquamiraeItems.WISTERIA_NIVEIS.get().getDefaultInstance()) : new ArrayList<>();
 	}
 
 	@Override
-	public void onPlace(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState oldState, boolean moving) {
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moving) {
 		if (state.getValue(HALF) == DoubleBlockHalf.LOWER && world.isEmptyBlock(pos.above()))
 			world.setBlock(pos.above(), AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER).setValue(LOOT, false), 3);
 	}

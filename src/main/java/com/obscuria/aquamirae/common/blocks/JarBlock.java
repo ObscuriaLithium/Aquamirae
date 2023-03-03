@@ -27,8 +27,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import javax.annotation.Nonnull;
-
 public class JarBlock extends Block implements IWaterLoggable {
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -39,18 +37,17 @@ public class JarBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
 		return state.getFluidState().isEmpty();
 	}
 
 	@Override
-	public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos) {
+	public int getLightBlock(BlockState state, IBlockReader world, BlockPos pos) {
 		return 0;
 	}
 
 	@Override
-	@Nonnull
-	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		return VoxelShapes.join(
 				VoxelShapes.or(
 						box(3, 0, 3, 13, 12, 13),
@@ -71,19 +68,19 @@ public class JarBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull FluidState getFluidState(BlockState state) {
+	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public @Nonnull BlockState updateShape(BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull IWorld world, @Nonnull BlockPos currentPos,
-										   @Nonnull BlockPos facingPos) {
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos,
+										   BlockPos facingPos) {
 		if (state.getValue(WATERLOGGED)) world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 	}
 
 	@Override
-	public void setPlacedBy(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState blockstate, LivingEntity entity, @Nonnull ItemStack itemstack) {
+	public void setPlacedBy(World world, BlockPos pos, BlockState blockstate, LivingEntity entity, ItemStack itemstack) {
 		super.setPlacedBy(world, pos, blockstate, entity, itemstack);
 		if (world instanceof ServerWorld) {
 			final ServerWorld server = (ServerWorld) world;

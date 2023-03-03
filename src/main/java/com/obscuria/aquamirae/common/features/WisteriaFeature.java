@@ -1,5 +1,5 @@
 
-package com.obscuria.aquamirae.common.events.features;
+package com.obscuria.aquamirae.common.features;
 
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.common.blocks.WisteriaNiveisBlock;
@@ -16,7 +16,6 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.placement.IPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class WisteriaFeature extends Feature<NoFeatureConfig> {
@@ -33,7 +32,7 @@ public class WisteriaFeature extends Feature<NoFeatureConfig> {
 	}
 
 	@Override
-	public boolean place(@Nonnull ISeedReader seedReader,@Nonnull ChunkGenerator chunkGenerator,@Nonnull Random random,@Nonnull BlockPos origin,@Nonnull NoFeatureConfig config) {
+	public boolean place(ISeedReader seedReader,ChunkGenerator chunkGenerator,Random random,BlockPos origin,NoFeatureConfig config) {
 		if (random.nextInt(4) != 1) return false;
 		boolean placed = false;
 		final int count = 4 + random.nextInt(8);

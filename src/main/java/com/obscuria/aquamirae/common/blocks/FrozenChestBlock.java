@@ -30,7 +30,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,17 +44,17 @@ public class FrozenChestBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
 		return state.getFluidState().isEmpty();
 	}
 
 	@Override
-	public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+	public int getLightBlock(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return 0;
 	}
 
 	@Override
-	public @Nonnull VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		return box(0.9, 0, 0.9, 15.1, 14.1, 15.1);
 	}
 
@@ -64,11 +63,11 @@ public class FrozenChestBlock extends Block implements IWaterLoggable {
 		builder.add(FACING, WATERLOGGED);
 	}
 
-	public @Nonnull BlockState rotate(BlockState state, Rotation rot) {
+	public BlockState rotate(BlockState state, Rotation rot) {
 		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
-	public @Nonnull BlockState mirror(BlockState state, Mirror mirrorIn) {
+	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}
 
@@ -79,24 +78,24 @@ public class FrozenChestBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull FluidState getFluidState(BlockState state) {
+	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public @Nonnull BlockState updateShape(BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull IWorld world, @Nonnull BlockPos currentPos,
-										   @Nonnull BlockPos facingPos) {
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos,
+										   BlockPos facingPos) {
 		if (state.getValue(WATERLOGGED)) world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 	}
 
 	@Override
-	public @Nonnull PushReaction getPistonPushReaction(@Nonnull BlockState state) {
+	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
 	}
 
 	@Override
-	public @Nonnull List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		List<ItemStack> dropsOriginal = super.getDrops(state, builder);
 		if (!dropsOriginal.isEmpty())
 			return dropsOriginal;
@@ -114,7 +113,7 @@ public class FrozenChestBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull ActionResultType use(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult hit) {
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		final ItemStack stack = player.getItemInHand(hand);
 		if (stack.getItem() == AquamiraeItems.FROZEN_KEY.get()) {
 			stack.shrink(1);

@@ -35,7 +35,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -58,17 +57,17 @@ public class OxygeliumBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
 		return state.getFluidState().isEmpty();
 	}
 
 	@Override
-	public @Nonnull List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		return Collections.singletonList(AquamiraeItems.OXYGELIUM.get().getDefaultInstance());
 	}
 
 	@Override
-	public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+	public int getLightBlock(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return 0;
 	}
 
@@ -84,20 +83,19 @@ public class OxygeliumBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public @Nonnull FluidState getFluidState(BlockState state) {
+	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public @Nonnull BlockState updateShape(BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull IWorld world, @Nonnull BlockPos currentPos,
-										   @Nonnull BlockPos facingPos) {
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos,
+										   BlockPos facingPos) {
 		if (state.getValue(WATERLOGGED)) world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack getCloneItemStack(@Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull BlockState state) {
+	public ItemStack getCloneItemStack(IBlockReader world, BlockPos pos, BlockState state) {
 		return AquamiraeItems.OXYGELIUM.get().getDefaultInstance();
 	}
 
@@ -114,7 +112,7 @@ public class OxygeliumBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public void neighborChanged(@Nonnull BlockState blockstate, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Block neighborBlock, @Nonnull BlockPos fromPos, boolean moving) {
+	public void neighborChanged(BlockState blockstate, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
 		super.neighborChanged(blockstate, world, pos, neighborBlock, fromPos, moving);
 		if (world.getBlockState(pos.below()).canOcclude()) return;
 		if (world.getBlockState(pos.below()).hasProperty(TYPE) && world.getBlockState(pos.below()).getValue(TYPE) == Type.STEM) return;
@@ -123,7 +121,7 @@ public class OxygeliumBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public void tick(@Nonnull BlockState state, @Nonnull ServerWorld world, @Nonnull BlockPos pos, @Nonnull Random random) {
+	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		if (state.getValue(TYPE) != Type.EMPTY_BUD) return;
 		if (Math.random() < 0.1) {
 			if (!world.isClientSide()) world.playSound(null, pos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundCategory.BLOCKS, 5, 1);
@@ -139,7 +137,7 @@ public class OxygeliumBlock extends Block implements IWaterLoggable {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void animateTick(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Random random) {
+	public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
 		super.animateTick(state, world, pos, random);
 		if (state.getValue(TYPE) != Type.BUD && state.getValue(TYPE) != Type.RARE_BUD) return;
 		int x = pos.getX();
@@ -155,27 +153,27 @@ public class OxygeliumBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public void attack(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull PlayerEntity entity) {
+	public void attack(BlockState state, World world, BlockPos pos, PlayerEntity entity) {
 		super.attack(state, world, pos, entity);
 		if (state.getValue(TYPE) == Type.BUD) useBud(state, world, pos, entity);
 		else if (state.getValue(TYPE) == Type.RARE_BUD) useRareBud(state, world, pos, entity);
 	}
 
 	@Override
-	public void entityInside(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
+	public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
 		super.entityInside(state, world, pos, entity);
 		if (entity instanceof LivingEntity && state.getValue(TYPE) == Type.BUD) useBud(state, world, pos, (LivingEntity) entity);
 		else if (entity instanceof LivingEntity && state.getValue(TYPE) == Type.RARE_BUD) useRareBud(state, world, pos, (LivingEntity) entity);
 	}
 
 	@Override
-	public @Nonnull ActionResultType use(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull PlayerEntity entity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult hit) {
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult hit) {
 		if (state.getValue(TYPE) == Type.BUD) return useBud(state, world, pos, entity);
 		else if (state.getValue(TYPE) == Type.RARE_BUD) return useRareBud(state, world, pos, entity);
 		else return super.use(state, world, pos, entity, hand, hit);
 	}
 
-	private @Nonnull ActionResultType useBud(BlockState state, World world, BlockPos pos, LivingEntity entity) {
+	private ActionResultType useBud(BlockState state, World world, BlockPos pos, LivingEntity entity) {
 		if (!world.isClientSide()) world.playSound(null, pos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundCategory.BLOCKS, 5, 1);
 		world.setBlock(pos, AquamiraeBlocks.OXYGELIUM.get().defaultBlockState().setValue(TYPE, Type.EMPTY_BUD).setValue(WATERLOGGED, state.getValue(WATERLOGGED)), 3);
 		if (world instanceof ServerWorld) ((ServerWorld) world).sendParticles(ParticleTypes.BUBBLE,
@@ -191,7 +189,7 @@ public class OxygeliumBlock extends Block implements IWaterLoggable {
 		return ActionResultType.SUCCESS;
 	}
 
-	private @Nonnull ActionResultType useRareBud(BlockState state, World world, BlockPos pos, LivingEntity entity) {
+	private ActionResultType useRareBud(BlockState state, World world, BlockPos pos, LivingEntity entity) {
 		if (!world.isClientSide()) {
 			world.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.6F, 1);
 			world.addFreshEntity(new ExperienceOrbEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 8));
@@ -212,7 +210,7 @@ public class OxygeliumBlock extends Block implements IWaterLoggable {
 			this.NAME = name;
 		}
 
-		public @Nonnull String getSerializedName() {
+		public String getSerializedName() {
 			return this.NAME;
 		}
 	}

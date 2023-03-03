@@ -3,6 +3,7 @@ package com.obscuria.aquamirae.common.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
 import com.obscuria.obscureapi.client.animations.IHekateProvider;
@@ -30,10 +31,10 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TorturedSoul extends MonsterEntity implements IShipGraveyardEntity, IHekateProvider {
+@ShipGraveyardEntity
+public class TorturedSoul extends MonsterEntity implements IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
 	public TorturedSoul(FMLPlayMessages.SpawnEntity packet, World world) {
 		this(AquamiraeEntities.TORTURED_SOUL.get(), world);
@@ -47,7 +48,7 @@ public class TorturedSoul extends MonsterEntity implements IShipGraveyardEntity,
 	@Override protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false) {
-			@Override protected double getAttackReachSqr(@Nonnull LivingEntity entity) {
+			@Override protected double getAttackReachSqr(LivingEntity entity) {
 				return 4.0 + entity.getBbWidth() * entity.getBbWidth();
 			}
 		});
@@ -65,7 +66,7 @@ public class TorturedSoul extends MonsterEntity implements IShipGraveyardEntity,
 		return this.ANIMATIONS;
 	}
 
-	@Override @Nonnull
+	@Override
 	public CreatureAttribute getMobType() {
 		return CreatureAttribute.ILLAGER;
 	}
@@ -74,7 +75,7 @@ public class TorturedSoul extends MonsterEntity implements IShipGraveyardEntity,
 		return SoundEvents.ILLUSIONER_AMBIENT;
 	}
 
-	@Override public SoundEvent getHurtSound(@Nonnull DamageSource source) {
+	@Override public SoundEvent getHurtSound(DamageSource source) {
 		return SoundEvents.ILLUSIONER_HURT;
 	}
 
@@ -88,13 +89,13 @@ public class TorturedSoul extends MonsterEntity implements IShipGraveyardEntity,
 		return super.hurt(source, amount);
 	}
 
-	@Override public boolean doHurtTarget(@Nonnull Entity entity) {
+	@Override public boolean doHurtTarget(Entity entity) {
 		ANIMATIONS.play("attack", 5);
 		return super.doHurtTarget(entity);
 	}
 
 	@Override
-	public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason spawnType,
+	public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason spawnType,
 										   @Nullable ILivingEntityData spawnGroupData, @Nullable CompoundNBT tag) {
 		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.soulSwimSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.soulSpeed.get());

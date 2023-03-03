@@ -2,6 +2,7 @@ package com.obscuria.aquamirae.common.entities;
 
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.client.animations.HekateProvider;
@@ -46,7 +47,8 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Random;
 
-public class Anglerfish extends MonsterEntity implements IShipGraveyardEntity, IHekateProvider {
+@ShipGraveyardEntity
+public class Anglerfish extends MonsterEntity implements IHekateProvider {
 	private final HekateProvider ANIMATIONS = new HekateProvider(this);
 	private int attackTick = 0;
 	public Anglerfish(FMLPlayMessages.SpawnEntity packet, World world) {

@@ -12,15 +12,12 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
-
 public class OxygeliumItem extends Item {
 	public OxygeliumItem() {
 		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(64).rarity(Rarity.COMMON));
 	}
 
 	@Override
-	@Nonnull
 	public ActionResultType useOn(ItemUseContext context) {
 		if (context.getClickedFace() == Direction.UP) {
 			if (context.getLevel().getBlockState(context.getClickedPos()).getMaterial().isSolid() &&
