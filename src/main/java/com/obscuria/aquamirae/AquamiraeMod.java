@@ -1,15 +1,17 @@
 package com.obscuria.aquamirae;
 
+import com.obscuria.aquamirae.common.items.armor.AbyssalArmorItem;
+import com.obscuria.aquamirae.common.items.armor.TerribleArmorItem;
+import com.obscuria.aquamirae.common.items.armor.ThreeBoltArmorItem;
+import com.obscuria.aquamirae.common.items.weapon.CoralLanceItem;
+import com.obscuria.aquamirae.common.items.weapon.FinCutterItem;
+import com.obscuria.aquamirae.common.items.weapon.RemnantsSaberItem;
 import com.obscuria.aquamirae.registry.*;
-import com.obscuria.aquamirae.world.items.armor.AbyssalArmorItem;
-import com.obscuria.aquamirae.world.items.armor.TerribleArmorItem;
-import com.obscuria.aquamirae.world.items.armor.ThreeBoltArmorItem;
-import com.obscuria.aquamirae.world.items.weapon.CoralLanceItem;
-import com.obscuria.aquamirae.world.items.weapon.FinCutterItem;
-import com.obscuria.aquamirae.world.items.weapon.RemnantsSaberItem;
-import com.obscuria.obscureapi.api.classes.ObscureClass;
+import com.obscuria.obscureapi.api.ClassManager;
+import com.obscuria.obscureapi.api.common.classes.ObscureClass;
+import com.obscuria.obscureapi.event.ObscureAPIEnchantmentsEvent;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.utils.ItemUtils;
+import com.obscuria.obscureapi.util.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -44,6 +46,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -69,7 +72,7 @@ public class AquamiraeMod {
 	private static final String PROTOCOL_VERSION = "1";
 	public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 	private static int messageID = 0;
-	public static final ObscureClass SEA_WOLF = ObscureClass.register(AquamiraeMod.MODID, "sea_wolf");
+	public static final ObscureClass SEA_WOLF = ClassManager.register(AquamiraeMod.MODID, "sea_wolf");
 	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "ice_maze"));
 	public static final TagKey<Structure> SHIP = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "ship"));
 	public static final TagKey<Structure> OUTPOST = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "outpost"));
@@ -97,10 +100,18 @@ public class AquamiraeMod {
 		AquamiraeParticleTypes.REGISTRY.register(MOD_BUS);
 
 		MOD_BUS.addListener(this::commonSetup);
+		MOD_BUS.addListener(EventPriority.HIGHEST, this::registerEnchantments);
+
 		MinecraftForge.EVENT_BUS.addListener(this::onPlayerTick);
 		MinecraftForge.EVENT_BUS.addListener(this::onEntityAttacked);
 		MinecraftForge.EVENT_BUS.addListener(this::onEntityHurt);
 		MinecraftForge.EVENT_BUS.addListener(this::onEntityDeath);
+	}
+
+	private void registerEnchantments(final ObscureAPIEnchantmentsEvent event) {
+		event.registerMirror(true);
+		event.registerDistance(true);
+		event.registerFastSpin(true);
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.RenderType;
 
-import com.obscuria.aquamirae.world.entities.Eel;
+import com.obscuria.aquamirae.common.entities.Eel;
 import com.obscuria.aquamirae.client.models.ModelEel;
 import org.jetbrains.annotations.NotNull;
 

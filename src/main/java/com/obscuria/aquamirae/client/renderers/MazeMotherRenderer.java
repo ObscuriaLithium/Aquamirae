@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.RenderType;
 
-import com.obscuria.aquamirae.world.entities.MazeMother;
+import com.obscuria.aquamirae.common.entities.MazeMother;
 import com.obscuria.aquamirae.client.models.ModelMazeMother;
 import org.jetbrains.annotations.NotNull;
 

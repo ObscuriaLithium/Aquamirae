@@ -2,14 +2,14 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.items.*;
-import com.obscuria.aquamirae.world.items.armor.AbyssalArmorItem;
-import com.obscuria.aquamirae.world.items.armor.AbyssalArmorExtraItem;
-import com.obscuria.aquamirae.world.items.armor.TerribleArmorItem;
-import com.obscuria.aquamirae.world.items.armor.ThreeBoltArmorItem;
-import com.obscuria.aquamirae.world.items.weapon.*;
+import com.obscuria.aquamirae.common.items.*;
+import com.obscuria.aquamirae.common.items.armor.AbyssalArmorExtraItem;
+import com.obscuria.aquamirae.common.items.armor.AbyssalArmorItem;
+import com.obscuria.aquamirae.common.items.armor.TerribleArmorItem;
+import com.obscuria.aquamirae.common.items.armor.ThreeBoltArmorItem;
+import com.obscuria.aquamirae.common.items.weapon.*;
+import com.obscuria.obscureapi.common.items.ObscureRarity;
 import com.obscuria.obscureapi.registry.ObscureAPIMobEffects;
-import com.obscuria.obscureapi.world.items.ObscureRarity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelCaptainCornelia;
-import com.obscuria.aquamirae.world.entities.CaptainCornelia;
+import com.obscuria.aquamirae.common.entities.CaptainCornelia;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,9 +25,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-public class CaptainCorneliaRenderer extends MobRenderer<CaptainCornelia, ModelCaptainCornelia<CaptainCornelia>> {
+public class CaptainCorneliaRenderer extends MobRenderer<CaptainCornelia, ModelCaptainCornelia> {
 	public CaptainCorneliaRenderer(EntityRendererProvider.Context context) {
-		super(context, new ModelCaptainCornelia<>(context.bakeLayer(ModelCaptainCornelia.LAYER_LOCATION)), 0.5f);
+		super(context, new ModelCaptainCornelia(context.bakeLayer(ModelCaptainCornelia.LAYER_LOCATION)), 0.5f);
 		this.addLayer(new EyesLayer<>(this) {
 			@Override
 			public @NotNull RenderType renderType() {
@@ -53,7 +52,7 @@ public class CaptainCorneliaRenderer extends MobRenderer<CaptainCornelia, ModelC
 			ItemStack stack = entity.getItemBySlot(EquipmentSlot.MAINHAND);
 			if (!stack.isEmpty()) {
 				pose.pushPose();
-				if (this.getParentModel() instanceof ModelCaptainCornelia<? extends Entity> model) model.translateToHand(HumanoidArm.RIGHT, pose);
+				if (this.getParentModel() instanceof ModelCaptainCornelia model) model.translateToHand(HumanoidArm.RIGHT, pose);
 				pose.scale(1F, 1F, 1F);
 				pose.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
 				pose.mulPose(Vector3f.YP.rotationDegrees(180.0F));

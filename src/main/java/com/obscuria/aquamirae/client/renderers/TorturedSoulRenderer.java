@@ -2,7 +2,7 @@
 package com.obscuria.aquamirae.client.renderers;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.entities.TorturedSoul;
+import com.obscuria.aquamirae.common.entities.TorturedSoul;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.MobRenderer;

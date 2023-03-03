@@ -3,61 +3,57 @@ package com.obscuria.aquamirae.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.client.animations.CaptainCorneliaAnimations;
+import com.obscuria.aquamirae.common.entities.CaptainCornelia;
 import com.obscuria.obscureapi.api.animations.HekateLib;
-import com.obscuria.obscureapi.api.animations.IAnimated;
-import net.minecraft.client.Minecraft;
+import com.obscuria.obscureapi.api.animations.NamedModelPart;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.NotNull;
 
-public class ModelCaptainCornelia<T extends Entity> extends EntityModel<T> {
+public class ModelCaptainCornelia extends EntityModel<CaptainCornelia> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "captain_cornelia"),
 			"main");
-	public final ModelPart main, bodyTopZ, bodyBottomZ, bodyTop, bodyTop2, bodyBottom, head, rightBooby, leftBooby, rightArm, leftArm, rightLeg,
+	public final NamedModelPart main, bodyTop, bodyTop2, bodyBottom, head, rightBooby, leftBooby, rightArm, leftArm, rightLeg,
 			leftLeg, rightArmBottom, leftArmBottom, rightLegBottom, leftLegBottom, item, ten1, ten1_1, ten1_2, ten1_3, ten1_4, ten2, ten2_1, ten2_2,
 			ten2_3, ten2_4, ten3, ten3_1, ten3_2, ten3_3, ten3_4;
 
 	public ModelCaptainCornelia(ModelPart root) {
-		this.main = root.getChild("main");
-		this.bodyTopZ = main.getChild("body_top_Z");
-		this.bodyBottomZ = main.getChild("body_bottom_Z");
-		this.bodyTop = bodyTopZ.getChild("body_top");
-		this.bodyTop2 = bodyTop.getChild("body_top2");
-		this.bodyBottom = bodyBottomZ.getChild("body_bottom");
-		this.head = bodyTop2.getChild("head");
-		this.rightBooby = bodyTop2.getChild("right_booby");
-		this.leftBooby = bodyTop2.getChild("left_booby");
-		this.rightArm = bodyTop2.getChild("right_arm");
-		this.leftArm = bodyTop2.getChild("left_arm");
-		this.rightArmBottom = rightArm.getChild("right_arm_bottom");
-		this.leftArmBottom = leftArm.getChild("left_arm_bottom");
-		this.rightLeg = bodyBottom.getChild("right_leg");
-		this.leftLeg = bodyBottom.getChild("left_leg");
-		this.rightLegBottom = rightLeg.getChild("right_leg_bottom");
-		this.leftLegBottom = leftLeg.getChild("left_leg_bottom");
-		this.item = rightArmBottom.getChild("bone");
-		this.ten1 = bodyTop2.getChild("ten1");
-		this.ten1_1 = ten1.getChild("ten1_1");
-		this.ten1_2 = ten1_1.getChild("ten1_2");
-		this.ten1_3 = ten1_2.getChild("ten1_3");
-		this.ten1_4 = ten1_3.getChild("ten1_4");
-		this.ten2 = bodyTop2.getChild("ten2");
-		this.ten2_1 = ten2.getChild("ten2_1");
-		this.ten2_2 = ten2_1.getChild("ten2_2");
-		this.ten2_3 = ten2_2.getChild("ten2_3");
-		this.ten2_4 = ten2_3.getChild("ten2_4");
-		this.ten3 = bodyTop2.getChild("ten3");
-		this.ten3_1 = ten3.getChild("ten3_1");
-		this.ten3_2 = ten3_1.getChild("ten3_2");
-		this.ten3_3 = ten3_2.getChild("ten3_3");
-		this.ten3_4 = ten3_3.getChild("ten3_4");
+		this.main = NamedModelPart.create(root.getChild("main"), "main");
+		this.bodyTop = NamedModelPart.create(main.PART.getChild("body_top_Z").getChild("body_top"), "bodyTop");
+		this.bodyTop2 = NamedModelPart.create(bodyTop.PART.getChild("body_top2"), "bodyTop2");
+		this.bodyBottom = NamedModelPart.create(main.PART.getChild("body_bottom_Z").getChild("body_bottom"), "bodyBottom");
+		this.head = NamedModelPart.create(bodyTop2.PART.getChild("head"), "head");
+		this.rightBooby = NamedModelPart.create(bodyTop2.PART.getChild("right_booby"), "rightBooby");
+		this.leftBooby = NamedModelPart.create(bodyTop2.PART.getChild("left_booby"), "leftBooby");
+		this.rightArm = NamedModelPart.create(bodyTop2.PART.getChild("right_arm"), "rightArm");
+		this.leftArm = NamedModelPart.create(bodyTop2.PART.getChild("left_arm"), "leftArm");
+		this.rightArmBottom = NamedModelPart.create(rightArm.PART.getChild("right_arm_bottom"), "rightArmBottom");
+		this.leftArmBottom = NamedModelPart.create(leftArm.PART.getChild("left_arm_bottom"), "leftArmBottom");
+		this.rightLeg = NamedModelPart.create(bodyBottom.PART.getChild("right_leg"), "rightLeg");
+		this.leftLeg = NamedModelPart.create(bodyBottom.PART.getChild("left_leg"), "leftLeg");
+		this.rightLegBottom = NamedModelPart.create(rightLeg.PART.getChild("right_leg_bottom"), "rightLegBottom");
+		this.leftLegBottom = NamedModelPart.create(leftLeg.PART.getChild("left_leg_bottom"), "leftLegBottom");
+		this.item = NamedModelPart.create(rightArmBottom.PART.getChild("bone"), "weapon");
+		this.ten1 = NamedModelPart.create(bodyTop2.PART.getChild("ten1"), "ten1");
+		this.ten1_1 = NamedModelPart.create(ten1.PART.getChild("ten1_1"), "ten1_1");
+		this.ten1_2 = NamedModelPart.create(ten1_1.PART.getChild("ten1_2"), "ten1_2");
+		this.ten1_3 = NamedModelPart.create(ten1_2.PART.getChild("ten1_3"), "ten1_3");
+		this.ten1_4 = NamedModelPart.create(ten1_3.PART.getChild("ten1_4"), "ten1_4");
+		this.ten2 = NamedModelPart.create(bodyTop2.PART.getChild("ten2"), "ten2");
+		this.ten2_1 = NamedModelPart.create(ten2.PART.getChild("ten2_1"), "ten2_1");
+		this.ten2_2 = NamedModelPart.create(ten2_1.PART.getChild("ten2_2"), "ten2_2");
+		this.ten2_3 = NamedModelPart.create(ten2_2.PART.getChild("ten2_3"), "ten2_3");
+		this.ten2_4 = NamedModelPart.create(ten2_3.PART.getChild("ten2_4"), "ten2_4");
+		this.ten3 = NamedModelPart.create(bodyTop2.PART.getChild("ten3"), "ten3");
+		this.ten3_1 = NamedModelPart.create(ten3.PART.getChild("ten3_1"), "ten3_1");
+		this.ten3_2 = NamedModelPart.create(ten3_1.PART.getChild("ten3_2"), "ten3_2");
+		this.ten3_3 = NamedModelPart.create(ten3_2.PART.getChild("ten3_3"), "ten3_3");
+		this.ten3_4 = NamedModelPart.create(ten3_3.PART.getChild("ten3_4"), "ten3_4");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -196,62 +192,33 @@ public class ModelCaptainCornelia<T extends Entity> extends EntityModel<T> {
 	}
 
 	public void translateToHand(HumanoidArm arm, PoseStack pose) {
-		this.main.translateAndRotate(pose);
-		this.bodyTopZ.translateAndRotate(pose);
-		this.bodyTop.translateAndRotate(pose);
-		this.bodyTop2.translateAndRotate(pose);
+		this.main.PART.translateAndRotate(pose);
+		this.main.PART.getChild("body_top_Z").translateAndRotate(pose);
+		this.bodyTop.PART.translateAndRotate(pose);
+		this.bodyTop2.PART.translateAndRotate(pose);
 		if (arm == HumanoidArm.LEFT) {
-			this.leftArm.translateAndRotate(pose);
-			this.leftArmBottom.translateAndRotate(pose);
-			this.item.translateAndRotate(pose);
+			this.leftArm.PART.translateAndRotate(pose);
+			this.leftArmBottom.PART.translateAndRotate(pose);
+			this.item.PART.translateAndRotate(pose);
 		} else {
-			this.rightArm.translateAndRotate(pose);
-			this.rightArmBottom.translateAndRotate(pose);
-			this.item.translateAndRotate(pose);
+			this.rightArm.PART.translateAndRotate(pose);
+			this.rightArmBottom.PART.translateAndRotate(pose);
+			this.item.PART.translateAndRotate(pose);
 		}
 	}
 
 	@Override
 	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
 							   float blue, float alpha) {
-		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		main.PART.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		if (entity instanceof IAnimated iAnimated && iAnimated.getAnimations() instanceof CaptainCorneliaAnimations animations) {
-			final float partialTicks = Minecraft.getInstance().getPartialTick();
-			animations.MAIN.apply(this.main, partialTicks);
-			animations.HEAD.apply(this.head, partialTicks);
-			animations.BODY_TOP.apply(this.bodyTop, partialTicks);
-			animations.BODY_TOP_2.apply(this.bodyTop2, partialTicks);
-			animations.BODY_BOTTOM.apply(this.bodyBottom, partialTicks);
-			animations.LEFT_ARM.apply(this.leftArm, partialTicks);
-			animations.LEFT_ARM_BOTTOM.apply(this.leftArmBottom, partialTicks);
-			animations.RIGHT_ARM.apply(this.rightArm, partialTicks);
-			animations.RIGHT_ARM_BOTTOM.apply(this.rightArmBottom, partialTicks);
-			animations.WEAPON.apply(this.item, partialTicks);
-			animations.LEFT_LEG.apply(this.leftLeg, partialTicks);
-			animations.LEFT_LEG_BOTTOM.apply(this.leftLegBottom, partialTicks);
-			animations.RIGHT_LEG.apply(this.rightLeg, partialTicks);
-			animations.RIGHT_LEG_BOTTOM.apply(this.rightLegBottom, partialTicks);
-			animations.TENTACLE_1.apply(this.ten1, partialTicks);
-			animations.TENTACLE_1_1.apply(this.ten1_1, partialTicks);
-			animations.TENTACLE_1_2.apply(this.ten1_2, partialTicks);
-			animations.TENTACLE_1_3.apply(this.ten1_3, partialTicks);
-			animations.TENTACLE_1_4.apply(this.ten1_4, partialTicks);
-			animations.TENTACLE_2.apply(this.ten2, partialTicks);
-			animations.TENTACLE_2_1.apply(this.ten2_1, partialTicks);
-			animations.TENTACLE_2_2.apply(this.ten2_2, partialTicks);
-			animations.TENTACLE_2_3.apply(this.ten2_3, partialTicks);
-			animations.TENTACLE_2_4.apply(this.ten2_4, partialTicks);
-			animations.TENTACLE_3.apply(this.ten3, partialTicks);
-			animations.TENTACLE_3_1.apply(this.ten3_1, partialTicks);
-			animations.TENTACLE_3_2.apply(this.ten3_2, partialTicks);
-			animations.TENTACLE_3_3.apply(this.ten3_3, partialTicks);
-			animations.TENTACLE_3_4.apply(this.ten3_4, partialTicks);
-		}
-		this.head.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
-		this.bodyTop.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
-		this.bodyTop2.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
+	public void setupAnim(@NotNull CaptainCornelia entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		entity.getAnimations().apply(main, bodyTop, bodyTop2, bodyBottom, head, rightBooby, leftBooby, rightArm, leftArm, rightLeg,
+				leftLeg, rightArmBottom, leftArmBottom, rightLegBottom, leftLegBottom, item, ten1, ten1_1, ten1_2, ten1_3, ten1_4, ten2, ten2_1, ten2_2,
+				ten2_3, ten2_4, ten3, ten3_1, ten3_2, ten3_3, ten3_4);
+		this.head.PART.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
+		this.bodyTop.PART.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
+		this.bodyTop2.PART.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
 	}
 }

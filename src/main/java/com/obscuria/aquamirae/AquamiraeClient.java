@@ -1,7 +1,7 @@
 package com.obscuria.aquamirae;
 
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.obscureapi.utils.ItemUtils;
+import com.obscuria.obscureapi.util.ItemUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;

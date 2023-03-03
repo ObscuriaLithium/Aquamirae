@@ -4,7 +4,7 @@ license="Obscuria Lithium (c) 2023, All Rights Reserved."
 
 [[mods]]
     modId="aquamirae"
-    version="5.6.API14"
+    version="6.API15"
     displayName="Aquamirae"
     credits="Krossy and everyone who supports us on Patreon!"
     updateJSONURL="https://raw.githubusercontent.com/ObscuriaLithium/Home/main/aquamirae/versions.json"
@@ -30,7 +30,7 @@ license="Obscuria Lithium (c) 2023, All Rights Reserved."
 [[dependencies.aquamirae]]
     modId="obscure_api"
     mandatory=true
-    versionRange="[14,)"
+    versionRange="[15,)"
     ordering="NONE"
     side="BOTH"
 

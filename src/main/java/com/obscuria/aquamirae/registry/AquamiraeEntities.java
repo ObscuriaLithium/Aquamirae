@@ -2,9 +2,9 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.entities.*;
-import com.obscuria.aquamirae.world.entities.chakras.MazeRose;
-import com.obscuria.aquamirae.world.entities.chakras.PoisonedChakra;
+import com.obscuria.aquamirae.common.entities.*;
+import com.obscuria.aquamirae.common.entities.projectiles.MazeRose;
+import com.obscuria.aquamirae.common.entities.projectiles.PoisonedChakra;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
