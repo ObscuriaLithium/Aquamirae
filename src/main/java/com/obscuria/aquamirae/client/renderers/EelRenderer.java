@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.renderers;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelEel;
-import com.obscuria.aquamirae.world.entities.Eel;
+import com.obscuria.aquamirae.common.entities.Eel;
 import com.obscuria.obscureapi.client.ScalableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;

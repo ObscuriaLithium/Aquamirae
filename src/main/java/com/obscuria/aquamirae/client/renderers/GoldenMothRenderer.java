@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.renderers;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelGoldenMoth;
-import com.obscuria.aquamirae.world.entities.GoldenMoth;
+import com.obscuria.aquamirae.common.entities.GoldenMoth;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;

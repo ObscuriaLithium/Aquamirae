@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.renderers;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelMazeMother;
-import com.obscuria.aquamirae.world.entities.MazeMother;
+import com.obscuria.aquamirae.common.entities.MazeMother;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;

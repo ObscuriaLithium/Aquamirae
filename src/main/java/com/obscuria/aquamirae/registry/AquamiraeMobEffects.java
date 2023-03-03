@@ -2,7 +2,7 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.effects.*;
+import com.obscuria.aquamirae.common.effects.*;
 import net.minecraft.potion.Effect;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;

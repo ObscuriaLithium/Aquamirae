@@ -1,7 +1,7 @@
 package com.obscuria.aquamirae.network;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.events.ScrollClient;
+import com.obscuria.aquamirae.common.events.ScrollClient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

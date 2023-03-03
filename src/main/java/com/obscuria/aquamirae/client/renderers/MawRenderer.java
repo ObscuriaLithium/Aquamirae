@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.renderers;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelMaw;
-import com.obscuria.aquamirae.world.entities.Maw;
+import com.obscuria.aquamirae.common.entities.Maw;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;

@@ -2,9 +2,9 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.entities.*;
-import com.obscuria.aquamirae.world.entities.chakras.MazeRose;
-import com.obscuria.aquamirae.world.entities.chakras.PoisonedChakra;
+import com.obscuria.aquamirae.common.entities.*;
+import com.obscuria.aquamirae.common.entities.chakras.MazeRose;
+import com.obscuria.aquamirae.common.entities.chakras.PoisonedChakra;
 import net.minecraft.entity.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.fish.AbstractFishEntity;

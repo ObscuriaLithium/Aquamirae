@@ -2,7 +2,7 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.world.blocks.*;
+import com.obscuria.aquamirae.common.blocks.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;

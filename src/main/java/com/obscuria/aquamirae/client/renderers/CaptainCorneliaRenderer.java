@@ -4,7 +4,7 @@ package com.obscuria.aquamirae.client.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelCaptainCornelia;
-import com.obscuria.aquamirae.world.entities.CaptainCornelia;
+import com.obscuria.aquamirae.common.entities.CaptainCornelia;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

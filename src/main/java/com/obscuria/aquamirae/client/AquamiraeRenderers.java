@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.renderers.*;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.aquamirae.world.entities.PillagersPatrol;
+import com.obscuria.aquamirae.common.entities.PillagersPatrol;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.util.ResourceLocation;

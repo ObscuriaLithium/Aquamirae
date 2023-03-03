@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.renderers;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelAnglerfish;
-import com.obscuria.aquamirae.world.entities.Anglerfish;
+import com.obscuria.aquamirae.common.entities.Anglerfish;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
