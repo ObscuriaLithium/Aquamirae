@@ -134,7 +134,7 @@ public class Eel extends MonsterEntity implements IShipGraveyardEntity, IHekateP
 			if (this.getTarget() != null) {
 				final LivingEntity target = this.getTarget();
 				final double distance = this.distanceToSqr(target);
-				this.lookControl.setLookAt(target.getPosition(1F));
+				this.lookControl.setLookAt(target.position());
 				//ATTACK
 				if (this.getEntityData().get(HIT_SERIES) <= 0 && distance <= 30 && random.nextInt(60) == 1) {
 					this.getEntityData().set(HIT_SERIES, 1 + new Random().nextInt(2));

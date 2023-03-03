@@ -194,7 +194,7 @@ public class CaptainCornelia extends MonsterEntity implements IShipGraveyardEnti
 					0.15, 0.1, 0.15, 0.1);
 		}
 		//
-		final Vector3d center = this.getPosition(1F);
+		final Vector3d center = this.position();
 		List<PlayerEntity> players = this.level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(center, center).inflate(32), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
 		players.forEach(player -> { if (player.level.isClientSide()) AquamiraeAmbient.playCorneliaMusic(player); });

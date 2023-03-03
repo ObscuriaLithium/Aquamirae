@@ -1,5 +1,5 @@
 
-package com.obscuria.aquamirae.common.entities.chakras;
+package com.obscuria.aquamirae.common.entities.projectiles;
 
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.world.entities.ChakraEntity;

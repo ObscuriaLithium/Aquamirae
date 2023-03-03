@@ -1,5 +1,7 @@
 package com.obscuria.aquamirae;
 
+import com.obscuria.aquamirae.common.events.features.OxygeliumFeature;
+import com.obscuria.aquamirae.common.events.features.WisteriaFeature;
 import com.obscuria.aquamirae.registry.*;
 import com.obscuria.aquamirae.common.events.AquamiraeEvents;
 import com.obscuria.obscureapi.ObscureAPI;
@@ -9,6 +11,7 @@ import com.obscuria.obscureapi.world.classes.TooltipHandler;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -27,6 +30,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.MobSpawnInfo;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.MapData;
@@ -76,26 +82,25 @@ public class AquamiraeMod {
 	};
 
 	public AquamiraeMod() {
-		final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-		final IEventBus EVENT_BUS = MinecraftForge.EVENT_BUS;
+		final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		AquamiraeConfig.load();
-		AquamiraeFeatures.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeStructures.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeSounds.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeBlocks.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeEntities.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeParticles.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeItems.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraeMobEffects.REGISTRY.register(MOD_EVENT_BUS);
-		AquamiraePotions.REGISTRY.register(MOD_EVENT_BUS);
+		AquamiraeFeatures.REGISTRY.register(eventBus);
+		AquamiraeStructures.REGISTRY.register(eventBus);
+		AquamiraeSounds.REGISTRY.register(eventBus);
+		AquamiraeBlocks.REGISTRY.register(eventBus);
+		AquamiraeEntities.REGISTRY.register(eventBus);
+		AquamiraeParticles.REGISTRY.register(eventBus);
+		AquamiraeItems.REGISTRY.register(eventBus);
+		AquamiraeMobEffects.REGISTRY.register(eventBus);
+		AquamiraePotions.REGISTRY.register(eventBus);
 
-		EVENT_BUS.register(this);
-		MOD_EVENT_BUS.addListener(this::commonSetup);
-		EVENT_BUS.addListener(EventPriority.HIGH, this::addStructures);
-		EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
-		EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
-		EVENT_BUS.addListener(AquamiraeEvents::onEntityDeath);
+		eventBus.addListener(this::commonSetup);
+
+		MinecraftForge.EVENT_BUS.addListener(this::modifyBiomes);
+		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityAttacked);
+		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityHurt);
+		MinecraftForge.EVENT_BUS.addListener(AquamiraeEvents::onEntityDeath);
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
@@ -120,12 +125,23 @@ public class AquamiraeMod {
 		TooltipHandler.Lore.add("aquamirae:oxygelium");
 	}
 
-	private void addStructures(final @NotNull BiomeLoadingEvent event) {
-		if (event.getName() != null && ICE_MAZE.contains(event.getName())) {
+	private void modifyBiomes(final @NotNull BiomeLoadingEvent event) {
+		if (AquamiraeUtils.isIceMaze(event.getName())) {
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_ICE_MAZE);
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_SHIP);
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_OUTPOST);
 			event.getGeneration().getStructures().add(() -> AquamiraeConfiguredStructures.CONFIGURED_SHELTER);
+
+			event.getGeneration().getFeatures(GenerationStage.Decoration.LOCAL_MODIFICATIONS).add(() -> WisteriaFeature.CONFIGURED_FEATURE);
+			event.getGeneration().getFeatures(GenerationStage.Decoration.RAW_GENERATION).add(() -> OxygeliumFeature.CONFIGURED_FEATURE);
+			event.getGeneration().getFeatures(GenerationStage.Decoration.RAW_GENERATION).add(() -> Features.KELP_COLD);
+			event.getGeneration().getFeatures(GenerationStage.Decoration.RAW_GENERATION).add(() -> Features.SEAGRASS_DEEP_COLD);
+			event.getGeneration().getFeatures(GenerationStage.Decoration.RAW_GENERATION).add(() -> Features.SEAGRASS_NORMAL);
+
+			event.getSpawns().addSpawn(EntityClassification.WATER_CREATURE, new MobSpawnInfo.Spawners(AquamiraeEntities.ANGLERFISH.get(), 100, 1, 2));
+			event.getSpawns().addSpawn(EntityClassification.WATER_AMBIENT, new MobSpawnInfo.Spawners(AquamiraeEntities.SPINEFISH.get(), 500, 3, 9));
+			event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(AquamiraeEntities.TORTURED_SOUL.get(), 20, 1, 4));
+			event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(AquamiraeEntities.PILLAGERS_PATROL.get(), 5, 1, 1));
 		}
 	}
 

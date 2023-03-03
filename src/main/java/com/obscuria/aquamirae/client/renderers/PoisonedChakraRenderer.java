@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.renderers;
 
 import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.client.models.ModelPoisonedChakra;
-import com.obscuria.aquamirae.common.entities.chakras.PoisonedChakra;
+import com.obscuria.aquamirae.common.entities.projectiles.PoisonedChakra;
 import com.obscuria.obscureapi.client.ScalableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;

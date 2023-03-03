@@ -140,7 +140,7 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		return super.hurt(source, amount);
 	}
 
-	@Override public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld world, @Nonnull DifficultyInstance difficulty, @Nonnull SpawnReason reason, ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
+	@Override public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT tag) {
 		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.motherSwimSpeed.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.motherMaxHealth.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.motherArmor.get());
@@ -148,7 +148,7 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 		AquamiraeMod.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.motherFollowRange.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
 		AquamiraeMod.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
-		final Vector3d center = this.getPosition(1F);
+		final Vector3d center = this.position();
 		List<PlayerEntity> players = this.level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(center, center).inflate(100), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
 		if (AquamiraeConfig.Common.notifications.get()) players.forEach(player -> EventHelper.sendMessage(player,
@@ -157,7 +157,7 @@ public class MazeMother extends MonsterEntity implements IShipGraveyardEntity {
 	}
 
 	@Override protected void updateNoActionTime() {
-		final Vector3d center = this.getPosition(1F);
+		final Vector3d center = this.position();
 		List<PlayerEntity> players = this.level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(center, center).inflate(128), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).collect(Collectors.toList());
 		if (!players.isEmpty()) this.setNoActionTime(0);

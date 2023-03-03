@@ -2,20 +2,24 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.AquamiraeUtils;
 import com.obscuria.aquamirae.common.entities.*;
-import com.obscuria.aquamirae.common.entities.chakras.MazeRose;
-import com.obscuria.aquamirae.common.entities.chakras.PoisonedChakra;
+import com.obscuria.aquamirae.common.entities.projectiles.MazeRose;
+import com.obscuria.aquamirae.common.entities.projectiles.PoisonedChakra;
 import net.minecraft.entity.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.fish.AbstractFishEntity;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AquamiraeEntities {
@@ -59,7 +63,7 @@ public class AquamiraeEntities {
 	}
 
 	@SubscribeEvent
-	public static void registerAttributes(EntityAttributeCreationEvent event) {
+	public static void registerAttributes(@NotNull EntityAttributeCreationEvent event) {
 		event.put(GOLDEN_MOTH.get(), GoldenMoth.createAttributes().build());
 		event.put(MAW.get(), Maw.createAttributes().build());
 		event.put(ANGLERFISH.get(), Anglerfish.createAttributes().build());
@@ -74,12 +78,12 @@ public class AquamiraeEntities {
 	}
 
 	@SubscribeEvent
-	public static void registerSpawns(FMLCommonSetupEvent event) {
+	public static void registerSpawnRules(@NotNull FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			EntitySpawnPlacementRegistry.register(AquamiraeEntities.GOLDEN_MOTH.get(), EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GoldenMoth::checkGoldenMothSpawnRules);
 			EntitySpawnPlacementRegistry.register(AquamiraeEntities.SPINEFISH.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractFishEntity::checkFishSpawnRules);
 			EntitySpawnPlacementRegistry.register(AquamiraeEntities.MAW.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, Maw::checkMawSpawnRules);
-			EntitySpawnPlacementRegistry.register(AquamiraeEntities.ANGLERFISH.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
+			EntitySpawnPlacementRegistry.register(AquamiraeEntities.ANGLERFISH.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, Anglerfish::checkAnglerfishSpawnRules);
 			EntitySpawnPlacementRegistry.register(AquamiraeEntities.PILLAGERS_PATROL.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, Maw::checkMawSpawnRules);
 			EntitySpawnPlacementRegistry.register(AquamiraeEntities.TORTURED_SOUL.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
 		});
