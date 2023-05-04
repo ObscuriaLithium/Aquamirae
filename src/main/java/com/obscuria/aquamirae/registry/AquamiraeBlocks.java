@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.registry;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.blocks.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
@@ -9,7 +9,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class AquamiraeBlocks {
-	public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, AquamiraeMod.MODID);
+	public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, Aquamirae.MODID);
 	public static final RegistryObject<Block> PAINTING_ANGLERFISH = REGISTRY.register("painting_anglerfish", CollectiblePaintingBlock::new);
 	public static final RegistryObject<Block> PAINTING_OXYGELIUM = REGISTRY.register("painting_oxygelium", CollectiblePaintingBlock::new);
 	public static final RegistryObject<Block> PAINTING_TORTURED_SOUL = REGISTRY.register("painting_tortured_soul", CollectiblePaintingBlock::new);

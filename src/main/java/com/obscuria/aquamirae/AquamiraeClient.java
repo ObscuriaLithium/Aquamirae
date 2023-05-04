@@ -1,6 +1,9 @@
 package com.obscuria.aquamirae;
 
+import com.obscuria.aquamirae.client.AquamiraeBossBars;
+import com.obscuria.aquamirae.client.screen.ConfigScreen;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
+import com.obscuria.obscureapi.event.ObscureAPIRegisterBossBarsEvent;
 import com.obscuria.obscureapi.util.ItemUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
@@ -9,7 +12,7 @@ import net.minecraft.sounds.Music;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -18,11 +21,18 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
-@OnlyIn(Dist.CLIENT)
+/**
+ *  {@link Aquamirae} Client Proxy
+ */
 public final class AquamiraeClient {
     private static int biomeMusic = 0;
     private static int corneliaMusic = 0;
+
+    public static Supplier<ConfigScreenHandler.ConfigScreenFactory> getConfig() {
+        return  () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new ConfigScreen(screen));
+    }
 
     public static void scrollEffect(int type) {
         if (Minecraft.getInstance().player == null) return;
@@ -30,7 +40,7 @@ public final class AquamiraeClient {
     }
 
     public static void spawnParticles(Player player) {
-        if (AquamiraeConfig.Client.partictes.get()) player.getLevel().addParticle(ParticleTypes.WHITE_ASH, false,
+        if (AquamiraeConfig.Client.particles.get()) player.getLevel().addParticle(ParticleTypes.WHITE_ASH, false,
                 player.getX() - 6D + 12D * player.getRandom().nextDouble(), player.getY() + 4 - 3D * player.getRandom().nextDouble(),
                 player.getZ() - 6D + 12D * player.getRandom().nextDouble(), 0, 100, 0);
     }
@@ -60,6 +70,16 @@ public final class AquamiraeClient {
             Minecraft.getInstance().getMusicManager().stopPlaying();
             Minecraft.getInstance().getMusicManager().startPlaying(
                     new Music(AquamiraeSounds.MUSIC_ICE_MAZE_THEME.get(), 10, 100, true));
+        }
+    }
+
+    @Mod.EventBusSubscriber(value = {Dist.CLIENT}, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class ModEvents {
+
+        @SubscribeEvent
+        public static void registerBossBars(ObscureAPIRegisterBossBarsEvent event) {
+            if (AquamiraeConfig.Client.stylizedBossbar.get())
+                event.register("entity.aquamirae.captain_cornelia", false, true, true, AquamiraeBossBars::cornelia);
         }
     }
 

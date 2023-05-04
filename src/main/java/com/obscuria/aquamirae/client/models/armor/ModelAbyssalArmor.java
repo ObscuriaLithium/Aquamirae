@@ -2,19 +2,13 @@ package com.obscuria.aquamirae.client.models.armor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 
 public class ModelAbyssalArmor<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "abyssal_armor"),
-			"main");
 	public final ModelPart tiara;
 	public final ModelPart helmet;
 	public final ModelPart body;
@@ -76,7 +70,7 @@ public class ModelAbyssalArmor<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
 							   float blue, float alpha) {
 		tiara.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 		helmet.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
@@ -89,6 +83,6 @@ public class ModelAbyssalArmor<T extends Entity> extends EntityModel<T> {
 		right_boot.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 	}
 }

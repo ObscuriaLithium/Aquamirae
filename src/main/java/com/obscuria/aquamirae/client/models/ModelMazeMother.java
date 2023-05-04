@@ -2,19 +2,14 @@ package com.obscuria.aquamirae.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.api.animations.HekateLib;
+import com.obscuria.aquamirae.common.entities.MazeMother;
+import com.obscuria.obscureapi.api.hekate.HekateLib;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 
-public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "maze_mother"), "main");
+public class ModelMazeMother extends EntityModel<MazeMother> {
 	public final ModelPart main, main2, bodyTop, bodyBottom, tail1, tail2, tail3, tail4, tail5, jaw1, jaw2, jaw3, jaw4,
 			wing1LeftTop, wing1LeftBottom, wing1RightTop, wing1RightBottom, wing2LeftTop, wing2LeftBottom, wing2RightTop, wing2RightBottom;
 
@@ -151,8 +146,7 @@ public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-							   float blue, float alpha) {
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		poseStack.pushPose();
 		poseStack.scale(5f, 5f, 5f);
 		poseStack.translate(0F, -1F, 0F);
@@ -160,32 +154,30 @@ public class ModelMazeMother<T extends Entity> extends EntityModel<T> {
 		poseStack.popPose();
 	}
 
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		final float speed = 0.06F;
+	public void setupAnim(MazeMother entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		HekateLib.reset(main, main2, bodyTop, bodyBottom, tail1, tail2, tail3, tail4, tail5, wing1LeftTop, wing1LeftBottom,
+				wing1RightTop, wing1RightBottom, wing2LeftTop, wing2LeftBottom, wing2RightTop, wing2RightBottom, jaw1, jaw2, jaw3, jaw4);
+		HekateLib.push(ageInTicks, 0.1f, 1f, HekateLib.Mode.DEFINITION)
+				.keyframe(bodyTop, k -> k.xRot(-10F, 0))
+				.keyframe(bodyBottom, k -> k.xRot(-10F, 0, -0.1f))
+				.keyframe(tail1, k -> k.xRot(-10F, 0, -0.2f))
+				.keyframe(tail2, k -> k.xRot(-10F, 0, -0.3f))
+				.keyframe(tail3, k -> k.xRot(-10F, 0, -0.4f))
+				.keyframe(tail4, k -> k.xRot(-10F, 0, -0.5f))
+				.keyframe(tail5, k -> k.xRot(-10F, 0, -0.6f))
+				.keyframe(wing1RightTop, k -> k.zRot(15F, 0, -0.1f))
+				.keyframe(wing1LeftTop, k -> k.zRot(-15F, 0, -0.1f))
+				.keyframe(wing2RightTop, k -> k.zRot(15F, 0, -0.2f))
+				.keyframe(wing2LeftTop, k -> k.zRot(-15F, 0, -0.2f));
 
-		HekateLib.render.tick(entity);
-		HekateLib.render.prepare(main, main2, bodyTop, bodyBottom, tail1, tail2, tail3, tail4, tail5, jaw1, jaw2, jaw3, jaw4,
-				wing1LeftTop, wing1LeftBottom, wing1RightTop, wing1RightBottom, wing2LeftTop, wing2LeftBottom, wing2RightTop, wing2RightBottom);
-
-		HekateLib.i(bodyTop, -10F, 0, 0, 0, 0, 0, speed, 0F, ageInTicks, 1F);
-		HekateLib.i(bodyBottom, -10F, 0, 0, 0, 0, 0, speed, -0.1F, ageInTicks, 1F);
-		HekateLib.i(tail1, -10F, 0, 0, 0, 0, 0, speed, -0.2F, ageInTicks, 1F);
-		HekateLib.i(tail2, -10F, 0, 0, 0, 0, 0, speed, -0.3F, ageInTicks, 1F);
-		HekateLib.i(tail3, -10F, 0, 0, 0, 0, 0, speed, -0.4F, ageInTicks, 1F);
-		HekateLib.i(tail4, -10F, 0, 0, 0, 0, 0, speed, -0.5F, ageInTicks, 1F);
-		HekateLib.i(tail5, -10F, 0, 0, 0, 0, 0, speed, -0.6F, ageInTicks, 1F);
-		HekateLib.i(wing1RightTop, 0, 0, 0, 0, 15F, 0, speed, -0.1F, ageInTicks, 1F);
-		HekateLib.i(wing1LeftTop, 0, 0, 0, 0, -15F, 0, speed, -0.1F, ageInTicks, 1F);
-		HekateLib.i(wing2RightTop, 0, 0, 0, 0, 15F, 0, speed, -0.2F, ageInTicks, 1F);
-		HekateLib.i(wing2LeftTop, 0, 0, 0, 0, -15F, 0, speed, -0.2F, ageInTicks, 1F);
 		this.wing1RightBottom.zRot = this.wing1RightTop.zRot;
 		this.wing1LeftBottom.zRot = this.wing1LeftTop.zRot;
 		this.wing2RightBottom.zRot = this.wing2RightTop.zRot;
 		this.wing2LeftBottom.zRot = this.wing2LeftTop.zRot;
 
-		HekateLib.i(jaw1, 0, 0, 10F, 10F, 0, 0, speed * 4, 0F, ageInTicks, HekateLib.effect.cyclicPause(ageInTicks, 0.02F, -1F));
-		HekateLib.i(jaw2, 0, 0, -10F, -10F, 0, 0, speed * 4, 0F, ageInTicks, HekateLib.effect.cyclicPause(ageInTicks, 0.02F, -1F));
-		HekateLib.i(jaw3, 0, 0, 15F, 5F, 0, 0, speed * 6, 0F, ageInTicks, HekateLib.effect.cyclicPause(ageInTicks, 0.02F, 0F));
-		HekateLib.i(jaw4, 0, 0, -15F, -5F, 0, 0, speed * 6, 0F, ageInTicks, HekateLib.effect.cyclicPause(ageInTicks, 0.02F, 0F));
+		HekateLib.math.i(jaw1, 0, 0, 10F, 10F, 0, 0, 0.4f, 0F, ageInTicks, HekateLib.math.cycle(ageInTicks, 0.02F, -1F));
+		HekateLib.math.i(jaw2, 0, 0, -10F, -10F, 0, 0, 0.4f, 0F, ageInTicks, HekateLib.math.cycle(ageInTicks, 0.02F, -1F));
+		HekateLib.math.i(jaw3, 0, 0, 15F, 5F, 0, 0, 0.6f, 0F, ageInTicks, HekateLib.math.cycle(ageInTicks, 0.02F, 0F));
+		HekateLib.math.i(jaw4, 0, 0, -15F, -5F, 0, 0, 0.6f, 0F, ageInTicks, HekateLib.math.cycle(ageInTicks, 0.02F, 0F));
 	}
 }

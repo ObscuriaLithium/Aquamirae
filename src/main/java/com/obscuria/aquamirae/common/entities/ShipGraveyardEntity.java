@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.api;
+package com.obscuria.aquamirae.common.entities;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

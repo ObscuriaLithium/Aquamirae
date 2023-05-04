@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeUtils;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ShellHornItem extends Item {
 	public ShellHornItem() {
-		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB));
+		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).tab(Aquamirae.TAB));
 	}
 
 	@Override

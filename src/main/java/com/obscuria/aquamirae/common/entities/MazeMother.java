@@ -1,9 +1,8 @@
 
 package com.obscuria.aquamirae.common.entities;
 
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.api.utils.Icons;
 import com.obscuria.obscureapi.util.PlayerUtils;
@@ -91,19 +90,23 @@ public class MazeMother extends Monster {
 		};
 	}
 
-	@Override public @NotNull AABB getBoundingBoxForCulling() {
+	@Override
+	public @NotNull AABB getBoundingBoxForCulling() {
 		return super.getBoundingBoxForCulling().inflate(10F);
 	}
 
-	@Override public boolean removeWhenFarAway(double distance) {
+	@Override
+	public boolean removeWhenFarAway(double distance) {
 		return distance > 200;
 	}
 
-	@Override protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
+	@Override
+	protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
 		return new WaterBoundPathNavigation(this, world);
 	}
 
-	@Override protected void registerGoals() {
+	@Override
+	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false) {
 			@Override protected double getAttackReachSqr(@NotNull LivingEntity entity) {
@@ -117,39 +120,46 @@ public class MazeMother extends Monster {
 		this.goalSelector.addGoal(6, new RandomSwimmingGoal(this, 1, 40));
 	}
 
-	@Override public @NotNull MobType getMobType() {
+	@Override
+	public @NotNull MobType getMobType() {
 		return MobType.WATER;
 	}
 
-	@Override public double getPassengersRidingOffset() {
+	@Override
+	public double getPassengersRidingOffset() {
 		return super.getPassengersRidingOffset() + 0.8;
 	}
 
-	@Override public SoundEvent getAmbientSound() {
+	@Override
+	public SoundEvent getAmbientSound() {
 		return SoundEvents.ELDER_GUARDIAN_AMBIENT;
 	}
 
-	@Override public SoundEvent getHurtSound(@NotNull DamageSource source) {
+	@Override
+	public SoundEvent getHurtSound(@NotNull DamageSource source) {
 		return SoundEvents.ELDER_GUARDIAN_HURT;
 	}
 
-	@Override public SoundEvent getDeathSound() {
+	@Override
+	public SoundEvent getDeathSound() {
 		return SoundEvents.ELDER_GUARDIAN_DEATH;
 	}
 
-	@Override public boolean hurt(@NotNull DamageSource source, float amount) {
+	@Override
+	public boolean hurt(@NotNull DamageSource source, float amount) {
 		if (source == DamageSource.DROWN) return false;
 		return super.hurt(source, amount);
 	}
 
-	@Override public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.motherSwimSpeed.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.motherMaxHealth.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.motherArmor.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.motherAttackDamage.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.motherFollowRange.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
+	@Override
+	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
+		Aquamirae.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.motherSwimSpeed.get());
+		Aquamirae.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.motherMaxHealth.get());
+		Aquamirae.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.motherArmor.get());
+		Aquamirae.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.motherAttackDamage.get());
+		Aquamirae.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.motherFollowRange.get());
+		Aquamirae.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
+		Aquamirae.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
 		final Vec3 center = this.position();
 		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
@@ -158,7 +168,8 @@ public class MazeMother extends Monster {
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 
-	@Override protected void updateNoActionTime() {
+	@Override
+	protected void updateNoActionTime() {
 		final Vec3 center = this.position();
 		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(128), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
@@ -166,7 +177,8 @@ public class MazeMother extends Monster {
 		super.updateNoActionTime();
 	}
 
-	@Override public void baseTick() {
+	@Override
+	public void baseTick() {
 		if (this.isInWater()) this.setDeltaMovement(this.getDeltaMovement().add(0, -0.001, 0));
 		if (!this.level.isClientSide) {
 			this.getPersistentData().putDouble("breakIce", (this.getPersistentData().getDouble("breakIce") + 1));
@@ -184,7 +196,7 @@ public class MazeMother extends Monster {
 		for (int ix = -6; ix <= 6; ix++)
 			for (int iz = -6; iz <= 6; iz++) {
 				final BlockPos pos = new BlockPos(this.getBlockX() + ix, this.getBlockY() + offset, this.getBlockZ() + iz);
-				if (this.level.getBlockState(pos.above()).getMaterial() == Material.AIR && this.level.getBlockState(pos).is(AquamiraeMod.MAZE_MOTHER_DESTROY)) {
+				if (this.level.getBlockState(pos.above()).getMaterial() == Material.AIR && this.level.getBlockState(pos).is(Aquamirae.MAZE_MOTHER_DESTROY)) {
 					if (this.random.nextBoolean())
 						if (this.level.getBlockState(pos).is(Blocks.ICE) || this.level.getBlockState(pos).is(Blocks.FROSTED_ICE)) {
 							this.level.destroyBlock(pos, true);
@@ -194,16 +206,19 @@ public class MazeMother extends Monster {
 			}
 	}
 
-	@Override public boolean canDrownInFluidType(FluidType type) {
+	@Override
+	public boolean canDrownInFluidType(FluidType type) {
 		if (type == ForgeMod.WATER_TYPE.get()) return false;
 		return super.canDrownInFluidType(type);
 	}
 
-	@Override public boolean checkSpawnObstruction(@NotNull LevelReader world) {
+	@Override
+	public boolean checkSpawnObstruction(@NotNull LevelReader world) {
 		return world.isUnobstructed(this);
 	}
 
-	@Override public boolean isPushedByFluid(FluidType type) {
+	@Override
+	public boolean isPushedByFluid(FluidType type) {
 		if (type == ForgeMod.WATER_TYPE.get()) return false;
 		return super.isPushedByFluid(type);
 	}

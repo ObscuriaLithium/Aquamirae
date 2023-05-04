@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.client.renderers.*;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.common.entities.PillagersPatrol;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class AquamiraeRenderers {
 
 	@SubscribeEvent
-	public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+	public static void registerEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
 		event.registerEntityRenderer(AquamiraeEntities.GOLDEN_MOTH.get(), GoldenMothRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.MAW.get(), MawRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.ANGLERFISH.get(), AnglerfishRenderer::new);
@@ -40,7 +40,7 @@ public class AquamiraeRenderers {
 					@Override public void renderToBuffer(@NotNull PoseStack pose, @NotNull VertexConsumer consumer, int i1, int i2, float f1, float f2, float f3, float f4) {}
 				}, 0F) {
 					@Override @NotNull public ResourceLocation getTextureLocation(@NotNull PillagersPatrol entity) {
-						return new ResourceLocation(AquamiraeMod.MODID, "textures/entity/blank.png");
+						return new ResourceLocation(Aquamirae.MODID, "textures/entity/blank.png");
 					}
 				});
 	}

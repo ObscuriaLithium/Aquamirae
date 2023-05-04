@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class AquamiraeConfig {
 
-	public static final double DEFAULT_CORNELIA_MAX_HEALTH = 160.0;
+	public static final double DEFAULT_CORNELIA_MAX_HEALTH = 200.0;
 	public static final double DEFAULT_CORNELIA_ARMOR = 16.0;
 	public static final double DEFAULT_CORNELIA_ATTACK_DAMAGE = 1.0;
 	public static final double DEFAULT_CORNELIA_ATTACK_KNOCKBACK = 2.0;
@@ -66,7 +66,6 @@ public class AquamiraeConfig {
 	public static class Common {
 		public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 		public static final ForgeConfigSpec COMMON_SPEC;
-		public static final ForgeConfigSpec.BooleanValue stylizedBossbar;
 		public static final ForgeConfigSpec.BooleanValue notifications;
 
 		public static final ForgeConfigSpec.DoubleValue corneliaMovementSpeed;
@@ -121,7 +120,6 @@ public class AquamiraeConfig {
 
 		static {
 			BUILDER.push("General");
-			stylizedBossbar = BUILDER.worldRestart().define("stylizedBossbar", true);
 			notifications = BUILDER.worldRestart().define("chatNotifications", true);
 			BUILDER.pop();
 
@@ -196,7 +194,8 @@ public class AquamiraeConfig {
 	public static class Client {
 		public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 		public static final ForgeConfigSpec CLIENT_SPEC;
-		public static final ForgeConfigSpec.BooleanValue partictes;
+		public static final ForgeConfigSpec.BooleanValue stylizedBossbar;
+		public static final ForgeConfigSpec.BooleanValue particles;
 		public static final ForgeConfigSpec.BooleanValue ambientSounds;
 		public static final ForgeConfigSpec.BooleanValue biomeMusic;
 		public static final ForgeConfigSpec.BooleanValue bossMusic;
@@ -204,9 +203,10 @@ public class AquamiraeConfig {
 		static {
 			BUILDER.push("General");
 			overlay = BUILDER.worldRestart().define("renderThreeBoltHelmetOverlay", true);
+			stylizedBossbar = BUILDER.worldRestart().define("stylizedBossbar", true);
 			BUILDER.pop();
 			BUILDER.push("IceMazeAmbient");
-			partictes = BUILDER.worldRestart().define("spawnParticles", true);
+			particles = BUILDER.worldRestart().define("spawnParticles", true);
 			ambientSounds = BUILDER.worldRestart().define("playAmbientSounds", true);
 			biomeMusic = BUILDER.worldRestart().define("playBiomeMusic", true);
 			bossMusic = BUILDER.worldRestart().define("playCorneliaMusic", true);
@@ -220,7 +220,7 @@ public class AquamiraeConfig {
 		Path modConfigPath = Paths.get(configPath.toAbsolutePath().toString(), "Obscuria");
 		try { Files.createDirectory(modConfigPath); }
 		catch (FileAlreadyExistsException ignored) {}
-		catch (IOException e) { AquamiraeMod.LOGGER.warn("Failed to create Obscuria config directory", e); }
+		catch (IOException e) { Aquamirae.LOGGER.warn("Failed to create Obscuria config directory", e); }
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Common.COMMON_SPEC, "Obscuria/aquamirae-common.toml");
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Client.CLIENT_SPEC, "Obscuria/aquamirae-client.toml");
 	}

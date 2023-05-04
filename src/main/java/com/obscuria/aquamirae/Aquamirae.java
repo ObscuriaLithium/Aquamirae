@@ -30,10 +30,13 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Pillager;
+import net.minecraft.world.entity.monster.Vindicator;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -42,15 +45,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -65,18 +73,18 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Mod(AquamiraeMod.MODID)
-public class AquamiraeMod {
-	public static final Logger LOGGER = LogManager.getLogger(AquamiraeMod.class);
+@Mod(Aquamirae.MODID)
+public class Aquamirae {
+	public static final Logger LOGGER = LogManager.getLogger(Aquamirae.class);
 	public static final String MODID = "aquamirae";
 	private static final String PROTOCOL_VERSION = "1";
 	public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 	private static int messageID = 0;
-	public static final ObscureClass SEA_WOLF = ClassManager.register(AquamiraeMod.MODID, "sea_wolf");
-	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "ice_maze"));
-	public static final TagKey<Structure> SHIP = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "ship"));
-	public static final TagKey<Structure> OUTPOST = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "outpost"));
-	public static final TagKey<Structure> SHELTER = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(AquamiraeMod.MODID, "shelter"));
+	public static final ObscureClass SEA_WOLF = ClassManager.register(Aquamirae.MODID, "sea_wolf");
+	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Aquamirae.MODID, "ice_maze"));
+	public static final TagKey<Structure> SHIP = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Aquamirae.MODID, "ship"));
+	public static final TagKey<Structure> OUTPOST = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Aquamirae.MODID, "outpost"));
+	public static final TagKey<Structure> SHELTER = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Aquamirae.MODID, "shelter"));
 	public static final TagKey<Block> EEL_MOVE = BlockTags.create(new ResourceLocation(MODID, "eel_move"));
 	public static final TagKey<Block> MAZE_MOTHER_DESTROY = BlockTags.create(new ResourceLocation(MODID, "maze_mother_destroy"));
 	public static final TagKey<Block> SCROLL_DESTROY = BlockTags.create(new ResourceLocation(MODID, "scroll_destroy"));
@@ -86,26 +94,30 @@ public class AquamiraeMod {
 		}
 	};
 
-	public AquamiraeMod() {
-		final IEventBus MOD_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+	public Aquamirae() {
+		final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		AquamiraeConfig.register();
-		AquamiraeFeatures.REGISTRY.register(MOD_BUS);
-		AquamiraeSounds.REGISTRY.register(MOD_BUS);
-		AquamiraeBlocks.REGISTRY.register(MOD_BUS);
-		AquamiraeEntities.REGISTRY.register(MOD_BUS);
-		AquamiraeItems.REGISTRY.register(MOD_BUS);
-		AquamiraeMobEffects.REGISTRY.register(MOD_BUS);
-		AquamiraePotions.REGISTRY.register(MOD_BUS);
-		AquamiraeParticleTypes.REGISTRY.register(MOD_BUS);
+		AquamiraeFeatures.REGISTRY.register(modBus);
+		AquamiraeSounds.REGISTRY.register(modBus);
+		AquamiraeBlocks.REGISTRY.register(modBus);
+		AquamiraeEntities.REGISTRY.register(modBus);
+		AquamiraeItems.REGISTRY.register(modBus);
+		AquamiraeMobEffects.REGISTRY.register(modBus);
+		AquamiraePotions.REGISTRY.register(modBus);
+		AquamiraeParticleTypes.REGISTRY.register(modBus);
 
-		MOD_BUS.addListener(this::commonSetup);
-		MOD_BUS.addListener(EventPriority.HIGHEST, this::registerEnchantments);
+		modBus.addListener(this::commonSetup);
+		modBus.addListener(EventPriority.HIGHEST, this::registerEnchantments);
 
+		MinecraftForge.EVENT_BUS.addListener(this::onEntitySpawn);
 		MinecraftForge.EVENT_BUS.addListener(this::onPlayerTick);
 		MinecraftForge.EVENT_BUS.addListener(this::onEntityAttacked);
 		MinecraftForge.EVENT_BUS.addListener(this::onEntityHurt);
 		MinecraftForge.EVENT_BUS.addListener(this::onEntityDeath);
+
+		if (FMLEnvironment.dist == Dist.CLIENT)
+			ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, AquamiraeClient.getConfig());
 	}
 
 	private void registerEnchantments(final ObscureAPIEnchantmentsEvent event) {
@@ -162,6 +174,17 @@ public class AquamiraeMod {
 
 	public static boolean winterEvent() {
 		return Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER || Calendar.getInstance().get(Calendar.MONTH) == Calendar.JANUARY;
+	}
+
+	private void onEntitySpawn(@NotNull LivingSpawnEvent event) {
+		final Mob mob = event.getEntity();
+		if (mob instanceof Pillager) this.modifyLootTable(mob, "entities/maze_pillager");
+		if (mob instanceof Vindicator) this.modifyLootTable(mob, "entities/maze_vindicator");
+	}
+
+	private void modifyLootTable(@NotNull Mob mob, String loot) {
+		if (!AquamiraeUtils.isInIceMaze(mob) || mob.getLootTable().toString().endsWith("captain")) return;
+		mob.getPersistentData().putString("DeathLootTable", Aquamirae.MODID + ":" + loot);
 	}
 
 	private void onPlayerTick(final TickEvent.@NotNull PlayerTickEvent event) {

@@ -3,19 +3,14 @@ package com.obscuria.aquamirae.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.api.animations.HekateLib;
+import com.obscuria.obscureapi.api.hekate.HekateLib;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 
 public class ModelSpinefish<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "spinefish"), "main");
 	private final ModelPart main, bodyTop, bodyBottom, head, tail;
 
 	public ModelSpinefish(ModelPart root) {
@@ -51,18 +46,18 @@ public class ModelSpinefish<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		final float speed = 0.5F;
 		this.main.zRot = entity.isInWater() ? 0 : (float) Math.toRadians(-90F);
 		this.main.y = entity.isInWater() ? 17.5F : 22F;
-		this.bodyTop.yRot = HekateLib.render.idle(8F, 0F, speed, 0F, ageInTicks, 1F);
-		this.head.yRot = HekateLib.render.idle(8F, 0F, speed, 0.1F, ageInTicks, 1F);
-		this.bodyBottom.yRot = HekateLib.render.idle(-16F, 0F, speed, 0.1F, ageInTicks, 1F);
-		this.tail.yRot = HekateLib.render.idle(-18F, 0F, speed, 0.2F, ageInTicks, 1F);
+		this.bodyTop.yRot = HekateLib.math.idle(8F, 0F, speed, 0F, ageInTicks, 1F);
+		this.head.yRot = HekateLib.math.idle(8F, 0F, speed, 0.1F, ageInTicks, 1F);
+		this.bodyBottom.yRot = HekateLib.math.idle(-16F, 0F, speed, 0.1F, ageInTicks, 1F);
+		this.tail.yRot = HekateLib.math.idle(-18F, 0F, speed, 0.2F, ageInTicks, 1F);
 	}
 
 	@Override
-	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 }

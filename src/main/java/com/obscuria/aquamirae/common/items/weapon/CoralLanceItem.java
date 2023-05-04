@@ -4,7 +4,7 @@ package com.obscuria.aquamirae.common.items.weapon;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.common.classes.*;
 import com.obscuria.obscureapi.common.items.ObscureRarity;
@@ -23,16 +23,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class CoralLanceItem extends SwordItem {
 	public CoralLanceItem() {
-		super(AquamiraeTiers.CORAL_LANCE, 3, -2.8f, new Item.Properties().fireResistant().rarity(ObscureRarity.MYTHIC).tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.CORAL_LANCE, 3, -2.8f, new Item.Properties().fireResistant().rarity(ObscureRarity.MYTHIC).tab(Aquamirae.TAB));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.create(AquamiraeMod.MODID).description("coral_lance").variables(50).modifiers("%").build(this);
+	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "coral_lance").var(50, "%").build(CoralLanceItem.class);
 	@ClassBonus
-	public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(50).build();
+	public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(50).build();
 
 	@Override
 	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {

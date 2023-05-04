@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.common.items.weapon;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.common.classes.Ability;
@@ -23,14 +23,23 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class WhisperOfTheAbyssItem extends SwordItem {
 	public WhisperOfTheAbyssItem() {
-		super(AquamiraeTiers.WHISPER_OF_tHE_ABYSS, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.WHISPER_OF_tHE_ABYSS, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(Aquamirae.TAB));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.create(AquamiraeMod.MODID).description("whisper_of_the_abyss").variables(10).modifiers("s").build(this);
+	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "whisper_of_the_abyss").action(
+			(stack, entity, target, context, values) -> {
+				if (target == null) return false;
+				final MobEffectInstance EFFECT = target.getEffect(AquamiraeMobEffects.ARMOR_DECREASE.get());
+				if (EFFECT != null) target.addEffect(new MobEffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
+						20 * values.get(0), Math.min(4, EFFECT.getAmplifier() + 1), false, false));
+				else target.addEffect(new MobEffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
+						20 * values.get(0), 0, false, false));
+				return true;
+			}).var(10, "s").build(WhisperOfTheAbyssItem.class);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
@@ -45,15 +54,9 @@ public class WhisperOfTheAbyssItem extends SwordItem {
 	}
 
 	@Override
-	public boolean hurtEnemy(@NotNull ItemStack itemstack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
-		final boolean hurt = super.hurtEnemy(itemstack, entity, source);
-		if (hurt) {
-			final MobEffectInstance EFFECT = entity.getEffect(AquamiraeMobEffects.ARMOR_DECREASE.get());
-			if (EFFECT != null) entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
-						20 * ABILITY.getVariable(source, 1), Math.min(4, EFFECT.getAmplifier() + 1), false, false));
-			else entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.ARMOR_DECREASE.get(),
-						20 * ABILITY.getVariable(source, 1), 0, false, false));
-		}
+	public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
+		final boolean hurt = super.hurtEnemy(stack, entity, source);
+		if (hurt) ABILITY.use(stack, source, entity, null);
 		return hurt;
 	}
 }

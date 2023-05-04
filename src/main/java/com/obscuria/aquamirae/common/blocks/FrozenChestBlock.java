@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.common.blocks;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
@@ -127,7 +127,7 @@ public class FrozenChestBlock extends Block implements SimpleWaterloggedBlock {
 			final BlockState chest = Blocks.CHEST.defaultBlockState().setValue(FACING, state.getValue(FACING));
 			world.setBlock(pos, chest, 3);
 			RandomizableContainerBlockEntity.setLootTable(world, player.getRandom(), pos,
-					new ResourceLocation(AquamiraeMod.MODID, "chests/frozen_chest"));
+					new ResourceLocation(Aquamirae.MODID, "chests/frozen_chest"));
 			world.playSound(player, pos, AquamiraeSounds.BLOCK_FROZEN_CHEST_UNLOCK.get(), SoundSource.BLOCKS, 1f, 1f);
 			for(int i = 0; i < 12; ++i) {
 				double d0 = pos.getX() - 0.1D + 1.2D * player.getRandom().nextDouble();

@@ -1,6 +1,5 @@
 package com.obscuria.aquamirae.common.entities;
 
-import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import net.minecraft.sounds.SoundEvent;

@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class TreasurePouchItem extends Item {
 	public TreasurePouchItem() {
-		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(16).rarity(Rarity.UNCOMMON));
+		super(new Item.Properties().tab(Aquamirae.TAB).stacksTo(16).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class TreasurePouchItem extends Item {
 		if (!world.isClientSide) {
 			world.playSound(player, new BlockPos(player.getX(), player.getY() + 1, player.getZ()),
 					AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundSource.PLAYERS, 1, 1);
-			final List<ItemStack> loot = AquamiraeMod.SetBuilder.rare();
+			final List<ItemStack> loot = Aquamirae.SetBuilder.rare();
 			player.addItem(loot.get(player.getRandom().nextInt(0, loot.size() - 1)));
 			final MinecraftServer minecraftServer = player.level.getServer();
 			if (minecraftServer != null && player.level instanceof ServerLevel server) {
@@ -45,10 +45,10 @@ public class TreasurePouchItem extends Item {
 						.withParameter(LootContextParams.THIS_ENTITY, player)
 						.withParameter(LootContextParams.ORIGIN, player.position())
 						.create(LootContextParamSets.GIFT);
-				LootTable treasure = minecraftServer.getLootTables().get(new ResourceLocation(AquamiraeMod.MODID, "gameplay/treasure_pouch"));
+				LootTable treasure = minecraftServer.getLootTables().get(new ResourceLocation(Aquamirae.MODID, "gameplay/treasure_pouch"));
 				treasure.getRandomItems(lootContext).forEach(player::addItem);
 				if (Math.random() <= 0.1f)
-					player.addItem(AquamiraeMod.getStructureMap(player.getRandom().nextBoolean() ? AquamiraeMod.SHIP : AquamiraeMod.OUTPOST, server, player));
+					player.addItem(Aquamirae.getStructureMap(player.getRandom().nextBoolean() ? Aquamirae.SHIP : Aquamirae.OUTPOST, server, player));
 			}
 		}
 		stack.shrink(1);

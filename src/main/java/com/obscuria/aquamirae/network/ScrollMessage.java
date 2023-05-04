@@ -1,7 +1,7 @@
 package com.obscuria.aquamirae.network;
 
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeClient;
-import com.obscuria.aquamirae.AquamiraeMod;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -34,6 +34,6 @@ public class ScrollMessage {
 
     @SubscribeEvent
     public static void registerMessage(FMLCommonSetupEvent event) {
-        AquamiraeMod.addNetworkMessage(ScrollMessage.class, ScrollMessage::buffer, ScrollMessage::new, ScrollMessage::handler);
+        Aquamirae.addNetworkMessage(ScrollMessage.class, ScrollMessage::buffer, ScrollMessage::new, ScrollMessage::handler);
     }
 }

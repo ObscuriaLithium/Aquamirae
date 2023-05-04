@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PiratePouchItem extends Item {
 	public PiratePouchItem() {
-		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(16).rarity(Rarity.COMMON));
+		super(new Item.Properties().tab(Aquamirae.TAB).stacksTo(16).rarity(Rarity.COMMON));
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class PiratePouchItem extends Item {
 		if (entity.getLevel() instanceof ServerLevel level)
 			level.playSound(null, new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()), AquamiraeSounds.ITEM_POUCH_OPEN.get(),
 					SoundSource.PLAYERS, 1, 1);
-		final List<ItemStack> loot = AquamiraeMod.SetBuilder.common();
+		final List<ItemStack> loot = Aquamirae.SetBuilder.common();
 		entity.addItem(loot.get(new Random().nextInt(0, loot.size() - 1)));
 		sourceStack.shrink(1);
 		return ar;

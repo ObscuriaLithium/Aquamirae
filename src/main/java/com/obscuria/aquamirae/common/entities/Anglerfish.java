@@ -1,14 +1,12 @@
 package com.obscuria.aquamirae.common.entities;
 
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.obscureapi.api.animations.AnimationProvider;
-import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
-import com.obscuria.obscureapi.common.ai.MeleeAttackGoal;
-import com.obscuria.obscureapi.common.ai.attack.SimpleMeleeAttack;
+import com.obscuria.obscureapi.api.hekate.Animation;
+import com.obscuria.obscureapi.api.hekate.AnimationHelper;
+import com.obscuria.obscureapi.api.hekate.IAnimated;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -27,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -50,11 +49,15 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 
 @ShipGraveyardEntity
-public class Anglerfish extends Monster implements IAnimatedEntity {
-	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
-	private int attackTick = 0;
+public class Anglerfish extends Monster implements IAnimated {
+	public final Animation ATTACK = new Animation(1);
+	public int attackTick = 0;
+	public float groundMod = 0;
+	public float groundModLerp = 0;
+
 	public Anglerfish(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.ANGLERFISH.get(), world);
 	}
@@ -96,25 +99,30 @@ public class Anglerfish extends Monster implements IAnimatedEntity {
 		};
 	}
 
-	@Override public AnimationProvider getAnimationProvider() {
-		return this.ANIMATIONS;
+	@Override
+	public Optional<Animation> getAnimation(byte id) {
+		return id == 1 ? Optional.of(ATTACK) : Optional.empty();
 	}
 
 	@Override
 	public boolean doHurtTarget(@NotNull Entity entity) {
 		final boolean hurt = super.doHurtTarget(entity);
-		if (hurt && entity instanceof LivingEntity living) living.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
+		if (hurt && entity instanceof LivingEntity living)
+			living.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
 		return hurt;
 	}
 
-	@Override protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
+	@Override
+	protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
 		return new WaterBoundPathNavigation(this, world);
 	}
 
-	@Override protected void registerGoals() {
+	@Override
+	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false,
-				new SimpleMeleeAttack("attack", 30, 9, 10, 30, 4, 3.5)));
+		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 3f, false) {
+			@Override protected double getAttackReachSqr(@NotNull LivingEntity entity) { return 0; }
+		});
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
 		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Animal.class, false, false));
@@ -127,73 +135,85 @@ public class Anglerfish extends Monster implements IAnimatedEntity {
 		});
 	}
 
-	@Override public @NotNull MobType getMobType() {
+	@Override
+	public void baseTick() {
+		AnimationHelper.handle(ATTACK);
+		ATTACK.sound(this, 6, AquamiraeSounds.ENTITY_EEL_BITE, SoundSource.HOSTILE, 2f, 1f);
+		this.groundModLerp = this.groundMod;
+		if (this.isInWater()) {
+			this.setDeltaMovement(this.getDeltaMovement().add(0, -0.001F, 0));
+			this.groundMod += (0f - this.groundMod) * 0.2f;
+		} else this.groundMod += (1f - this.groundMod) * 0.2f;
+		if (ATTACK.isPlaying()) {
+			attackTick = 10;
+			if (this.getTarget() != null) this.lookControl.setLookAt(this.getTarget());
+			if (ATTACK.getTick() < 18) this.setDeltaMovement(this.getDeltaMovement().scale(0.9F));
+			if (ATTACK.getTick() == 18 && this.getTarget() != null) this.setDeltaMovement(this.getDeltaMovement()
+					.add(this.position().vectorTo(this.getTarget().position()).scale(0.4F)));
+			if (ATTACK.getTick() == 21 && this.getTarget() != null && this.getTarget().position().distanceTo(this.position()) <= 2.5D)
+				this.doHurtTarget(this.getTarget());
+		} else if (this.attackTick <= 0 && this.getTarget() != null && this.getTarget().position().distanceTo(this.position()) <= 5D) {
+			this.ATTACK.play(this, 40);
+		} else this.attackTick--;
+		super.baseTick();
+	}
+
+	@Override
+	public @NotNull MobType getMobType() {
 		return MobType.WATER;
 	}
 
-	@Override public SoundEvent getAmbientSound() {
+	@Override
+	public SoundEvent getAmbientSound() {
 		return AquamiraeSounds.ENTITY_DEEP_AMBIENT.get();
 	}
 
-	@Override public SoundEvent getHurtSound(@NotNull DamageSource source) {
+	@Override
+	public SoundEvent getHurtSound(@NotNull DamageSource source) {
 		return AquamiraeSounds.ENTITY_DEEP_HURT.get();
 	}
 
-	@Override public SoundEvent getDeathSound() {
+	@Override
+	public SoundEvent getDeathSound() {
 		return AquamiraeSounds.ENTITY_DEEP_DEATH.get();
 	}
 
-	@Override public void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
+	@Override
+	public void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
 		this.playSound(SoundEvents.GUARDIAN_FLOP, 0.15f, 1);
 	}
 
-	@Override public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
+	@Override
+	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
 		if (world instanceof ServerLevel server && spawnType == MobSpawnType.NATURAL && this.random.nextInt(1, 200) == 1) {
 			MazeMother mazeMother = new MazeMother(AquamiraeEntities.MAZE_MOTHER.get(), server);
 			mazeMother.moveTo(this.position());
 			mazeMother.finalizeSpawn(server, difficulty, spawnType, null, null);
 			world.addFreshEntity(mazeMother);
 		}
-		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.anglerfishSwimSpeed.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.anglerfishMaxHealth.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.anglerfishArmor.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.anglerfishAttackDamage.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.anglerfishFollowRange.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.anglerfishAttackKnockback.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.anglerfishKnockbackResistance.get());
+		Aquamirae.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.anglerfishSwimSpeed.get());
+		Aquamirae.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.anglerfishMaxHealth.get());
+		Aquamirae.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.anglerfishArmor.get());
+		Aquamirae.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.anglerfishAttackDamage.get());
+		Aquamirae.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.anglerfishFollowRange.get());
+		Aquamirae.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.anglerfishAttackKnockback.get());
+		Aquamirae.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.anglerfishKnockbackResistance.get());
 		return super.finalizeSpawn(world, difficulty, spawnType, spawnGroupData, tag);
 	}
 
-	@Override public void baseTick() {
-		ANIMATIONS.playSound("attack", 24, "aquamirae:entity.eel.bite", SoundSource.HOSTILE, 1F, 1F);
-		if (this.isInWater()) this.setDeltaMovement(this.getDeltaMovement().add(0, -0.001F, 0));
-		else {
-			if (ANIMATIONS.isPlaying("onGround")) {
-				if (ANIMATIONS.getTick("onGround") <= 2) ANIMATIONS.play("onGround", 20);
-			} else {
-				if (this.tickCount > 1 && this.attackTick <= 0) ANIMATIONS.play("onGround", 20);
-			}
-		}
-		if (ANIMATIONS.isPlaying("attack")) {
-			attackTick = 10;
-			if (this.getTarget() != null) this.lookControl.setLookAt(this.getTarget());
-			if (ANIMATIONS.getTick("attack") > 12) this.setDeltaMovement(this.getDeltaMovement().scale(0.9F));
-			if (ANIMATIONS.getTick("attack") == 12 && this.getTarget() != null) this.setDeltaMovement(this.getDeltaMovement()
-					.add(this.position().vectorTo(this.getTarget().position()).scale(0.4F)));
-		} else this.attackTick--;
-		super.baseTick();
-	}
-
-	@Override public boolean canDrownInFluidType(FluidType type) {
+	@Override
+	public boolean canDrownInFluidType(FluidType type) {
 		if (type == ForgeMod.WATER_TYPE.get()) return false;
 		return super.canDrownInFluidType(type);
 	}
 
-	@Override public boolean checkSpawnObstruction(LevelReader world) {
+	@Override
+	public boolean checkSpawnObstruction(LevelReader world) {
 		return world.isUnobstructed(this);
 	}
 
-	@Override public boolean isPushedByFluid(FluidType type) {
+	@Override
+	public boolean isPushedByFluid(FluidType type) {
 		if (type == ForgeMod.WATER_TYPE.get()) return false;
 		return super.isPushedByFluid(type);
 	}

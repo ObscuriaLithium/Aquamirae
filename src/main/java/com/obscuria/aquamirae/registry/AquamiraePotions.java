@@ -9,10 +9,10 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 
 public class AquamiraePotions {
-	public static final DeferredRegister<Potion> REGISTRY = DeferredRegister.create(ForgeRegistries.POTIONS, AquamiraeMod.MODID);
+	public static final DeferredRegister<Potion> REGISTRY = DeferredRegister.create(ForgeRegistries.POTIONS, Aquamirae.MODID);
 	public static final RegistryObject<Potion> SPECTRAL_POTION = REGISTRY.register("spectral_potion",
 			() -> new Potion(new MobEffectInstance(MobEffects.GLOWING, 2400, 0, false, true)));
 	public static final RegistryObject<Potion> POTION_OF_TENACITY = REGISTRY.register("potion_of_tenacity",

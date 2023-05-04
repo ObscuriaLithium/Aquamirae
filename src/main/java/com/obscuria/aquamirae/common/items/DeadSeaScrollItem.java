@@ -1,8 +1,8 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.common.events.ScrollEffects;
+import com.obscuria.aquamirae.Aquamirae;
+import com.obscuria.aquamirae.common.ScrollEffects;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import net.minecraft.client.Minecraft;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DeadSeaScrollItem extends Item {
 	public DeadSeaScrollItem() {
-		super(new Item.Properties().tab(AquamiraeMod.TAB).stacksTo(8).rarity(Rarity.UNCOMMON));
+		super(new Item.Properties().tab(Aquamirae.TAB).stacksTo(8).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override

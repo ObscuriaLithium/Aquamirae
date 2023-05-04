@@ -6,8 +6,9 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.models.armor.ModelThreeBoltArmor;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
@@ -37,17 +38,17 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "armor")
 public abstract class ThreeBoltArmorItem extends ArmorItem {
 
 	public ThreeBoltArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.THREE_BOLT_ARMOR, slot, properties.tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.THREE_BOLT_ARMOR, slot, properties.tab(Aquamirae.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.create(AquamiraeMod.MODID).description("three_bolt_armor_half").build(this);
-	public final Ability ABILITY_FULLSET = Ability.create(AquamiraeMod.MODID).description("three_bolt_armor_full").build(this);
-	public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(30).build();
+	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "three_bolt_armor_half").build(ThreeBoltArmorItem.class);
+	public final Ability ABILITY_FULLSET = Ability.create(Aquamirae.MODID, "three_bolt_armor_full").build(ThreeBoltArmorItem.class);
+	public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "armor").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(30).build();
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Helmet extends ThreeBoltArmorItem {
 
 		@ClassAbility
@@ -65,7 +66,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 				@Override
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"head", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).head,
+							"head", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).head,
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -86,7 +87,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 					RenderSystem.defaultBlendFunc();
 					RenderSystem.setShader(GameRenderer::getPositionTexShader);
 					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-					RenderSystem.setShaderTexture(0, new ResourceLocation(AquamiraeMod.MODID,"textures/screens/three_bolt_overlay.png"));
+					RenderSystem.setShaderTexture(0, new ResourceLocation(Aquamirae.MODID,"textures/screens/three_bolt_overlay.png"));
 					Tesselator tesselator = Tesselator.getInstance();
 					BufferBuilder bufferbuilder = tesselator.getBuilder();
 					bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -108,7 +109,6 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Chestplate extends ThreeBoltArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
@@ -125,9 +125,9 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 				@OnlyIn(Dist.CLIENT)
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
-							Map.of("body", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).body,
-									"left_arm", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).left_arm,
-									"right_arm", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).right_arm,
+							Map.of("body", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).body,
+									"left_arm", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).left_arm,
+									"right_arm", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).right_arm,
 									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -161,7 +161,6 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Leggings extends ThreeBoltArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
@@ -178,13 +177,13 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 				@OnlyIn(Dist.CLIENT)
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
-							Map.of("body", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).leggings_body,
+							Map.of("body", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).leggings_body,
 									"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"right_leg", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).right_leg,
-									"left_leg", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).left_leg)));
+									"right_leg", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).right_leg,
+									"left_leg", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).left_leg)));
 					armorModel.crouching = living.isShiftKeyDown();
 					armorModel.riding = defaultModel.riding;
 					armorModel.young = living.isBaby();
@@ -199,7 +198,6 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Boots extends ThreeBoltArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
@@ -221,8 +219,8 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 									"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"right_leg", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).right_boot,
-									"left_leg", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelThreeBoltArmor.LAYER_LOCATION)).left_boot)));
+									"right_leg", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).right_boot,
+									"left_leg", new ModelThreeBoltArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.THREE_BOLT_ARMOR)).left_boot)));
 					armorModel.crouching = living.isShiftKeyDown();
 					armorModel.riding = defaultModel.riding;
 					armorModel.young = living.isBaby();

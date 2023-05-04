@@ -38,9 +38,7 @@ public class SpectralPotionRecipe implements IBrewingRecipe {
 
 	@Override
 	public @NotNull ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack ingredient) {
-		if (isInput(input) && isIngredient(ingredient)) {
-			return PotionUtils.setPotion(new ItemStack(input.getItem()), AquamiraePotions.SPECTRAL_POTION.get());
-		}
+		if (isInput(input) && isIngredient(ingredient)) return PotionUtils.setPotion(new ItemStack(input.getItem()), AquamiraePotions.SPECTRAL_POTION.get());
 		return ItemStack.EMPTY;
 	}
 }

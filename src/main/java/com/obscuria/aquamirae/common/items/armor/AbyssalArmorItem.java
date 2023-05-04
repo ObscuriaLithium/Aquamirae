@@ -1,7 +1,8 @@
 
 package com.obscuria.aquamirae.common.items.armor;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
+import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.models.armor.ModelAbyssalArmor;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
@@ -29,19 +30,21 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "armor")
 public abstract class AbyssalArmorItem extends ArmorItem {
 
 	public AbyssalArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.ABYSSAL_ARMOR, slot, properties.rarity(Rarity.EPIC).tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.ABYSSAL_ARMOR, slot, properties.rarity(Rarity.EPIC).tab(Aquamirae.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_half")
-			.style(Ability.Style.ATTRIBUTE).build(this);
-	public final Ability ABILITY_FULLSET_1 = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_full_1").variables(90)
-			.modifiers("s").build(this);
-	public final Ability ABILITY_FULLSET_2 = Ability.create(AquamiraeMod.MODID).description("abyssal_armor_full_2").build(this);
-	public final Bonus BONUS_1 = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
-	public final Bonus BONUS_2 = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(25).build();
+	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "abyssal_armor_half").style(Ability.Style.ATTRIBUTE)
+			.build(AbyssalArmorItem.class);
+	public final Ability ABILITY_FULLSET_1 = Ability.create(Aquamirae.MODID, "abyssal_armor_full_1").var(90, "s")
+			.build(AbyssalArmorItem.class);
+	public final Ability ABILITY_FULLSET_2 = Ability.create(Aquamirae.MODID, "abyssal_armor_full_2")
+			.build(AbyssalArmorItem.class);
+	public final Bonus BONUS_1 = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
+	public final Bonus BONUS_2 = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(25).build();
 
 	@Override
 	public void onArmorTick(ItemStack itemstack, Level world, Player player) {
@@ -52,15 +55,12 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Heaume extends AbyssalArmorItem {
 
-		@ClassAbility
-		public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
+		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
 		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
-		@ClassBonus
-		public final Bonus BONUS = super.BONUS_1;
+		@ClassBonus public final Bonus BONUS = super.BONUS_1;
 
 		public Heaume() {
 			super(EquipmentSlot.HEAD, new Item.Properties());
@@ -71,7 +71,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 				@Override
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"head", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).helmet,
+							"head", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).helmet,
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -92,7 +92,6 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Brigantine extends AbyssalArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
@@ -110,9 +109,9 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 				@OnlyIn(Dist.CLIENT)
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"body", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).body,
-							"left_arm", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).left_arm,
-							"right_arm", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).right_arm,
+							"body", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).body,
+							"left_arm", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).left_arm,
+							"right_arm", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).right_arm,
 							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -131,7 +130,6 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Leggings extends AbyssalArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
@@ -149,8 +147,8 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 				@OnlyIn(Dist.CLIENT)
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"left_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).left_leg,
-							"right_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).right_leg,
+							"left_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).left_leg,
+							"right_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).right_leg,
 							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -170,7 +168,6 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Boots extends AbyssalArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
@@ -188,8 +185,8 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 				@OnlyIn(Dist.CLIENT)
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"left_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).left_boot,
-							"right_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelAbyssalArmor.LAYER_LOCATION)).right_boot,
+							"left_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).left_boot,
+							"right_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).right_boot,
 							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),

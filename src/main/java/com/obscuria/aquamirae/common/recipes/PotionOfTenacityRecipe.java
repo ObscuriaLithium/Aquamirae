@@ -34,9 +34,7 @@ public class PotionOfTenacityRecipe implements IBrewingRecipe {
 
 	@Override
 	public @NotNull ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack ingredient) {
-		if (isInput(input) && isIngredient(ingredient)) {
-			return PotionUtils.setPotion(new ItemStack(Items.POTION), AquamiraePotions.POTION_OF_TENACITY.get());
-		}
+		if (isInput(input) && isIngredient(ingredient)) return PotionUtils.setPotion(new ItemStack(Items.POTION), AquamiraePotions.POTION_OF_TENACITY.get());
 		return ItemStack.EMPTY;
 	}
 }

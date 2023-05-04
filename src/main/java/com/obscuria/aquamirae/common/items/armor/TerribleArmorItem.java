@@ -1,7 +1,8 @@
 
 package com.obscuria.aquamirae.common.items.armor;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
+import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.models.armor.ModelTerribleArmor;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.common.classes.*;
@@ -25,25 +26,25 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "armor")
 public abstract class TerribleArmorItem extends ArmorItem {
 
 	public TerribleArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.TERRIBLE_ARMOR, slot, properties.tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.TERRIBLE_ARMOR, slot, properties.tab(Aquamirae.TAB));
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.create(AquamiraeMod.MODID).description("terrible_armor_half").cost(Ability.Cost.COOLDOWN, 10)
-			.variables(120, 6).modifiers("%", "s").build(this);
-	public final Ability ABILITY_FULLSET = Ability.create(AquamiraeMod.MODID).description("terrible_armor_full").variables(4)
-			.modifiers("s").build(this);
+	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "terrible_armor_half").cost(Ability.Cost.Type.COOLDOWN, 10)
+			.var(120, "%").var(6, "s").build(TerribleArmorItem.class);
+	public final Ability ABILITY_FULLSET = Ability.create(Aquamirae.MODID, "terrible_armor_full").var(4, "s")
+			.build(TerribleArmorItem.class);
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Helmet extends TerribleArmorItem {
 
 		@ClassAbility
 		public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
-		public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(20).build();
+		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(20).build();
 
 		public Helmet() {
 			super(EquipmentSlot.HEAD, new Item.Properties());
@@ -54,7 +55,7 @@ public abstract class TerribleArmorItem extends ArmorItem {
 				@Override
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"head", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).head,
+							"head", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).head,
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -75,13 +76,12 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Chestplate extends TerribleArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
-		public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(10).build();
+		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(10).build();
 
 		public Chestplate() {
 			super(EquipmentSlot.CHEST, new Item.Properties());
@@ -93,9 +93,9 @@ public abstract class TerribleArmorItem extends ArmorItem {
 				@OnlyIn(Dist.CLIENT)
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"body", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).body,
-							"left_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_arm,
-							"right_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).right_arm,
+							"body", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).body,
+							"left_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).left_arm,
+							"right_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).right_arm,
 							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -114,13 +114,12 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Leggings extends TerribleArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
-		public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-10).build();
+		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-10).build();
 
 		public Leggings() {
 			super(EquipmentSlot.LEGS, new Item.Properties());
@@ -132,8 +131,8 @@ public abstract class TerribleArmorItem extends ArmorItem {
 				@OnlyIn(Dist.CLIENT)
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
-							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_shoe2,
-									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).right_shoe2,
+							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).left_shoe2,
+									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).right_shoe2,
 									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
@@ -153,13 +152,12 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		}
 	}
 
-	@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "armor")
 	public static class Boots extends TerribleArmorItem {
 
 		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
 		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
 		@ClassBonus
-		public final Bonus BONUS = Bonus.create().target(AquamiraeMod.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-20).build();
+		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-20).build();
 
 		public Boots() {
 			super(EquipmentSlot.FEET, new Item.Properties());
@@ -171,8 +169,8 @@ public abstract class TerribleArmorItem extends ArmorItem {
 				@OnlyIn(Dist.CLIENT)
 				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
 					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
-							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).left_shoe,
-									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(ModelTerribleArmor.LAYER_LOCATION)).right_shoe,
+							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).left_shoe,
+									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).right_shoe,
 									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
 									"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),

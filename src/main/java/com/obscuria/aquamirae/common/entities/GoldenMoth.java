@@ -1,7 +1,6 @@
 
 package com.obscuria.aquamirae.common.entities;
 
-import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;

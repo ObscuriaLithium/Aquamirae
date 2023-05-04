@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.registry;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.entities.*;
 import com.obscuria.aquamirae.common.entities.projectiles.MazeRose;
 import com.obscuria.aquamirae.common.entities.projectiles.PoisonedChakra;
@@ -17,7 +17,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AquamiraeEntities {
-	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, AquamiraeMod.MODID);
+	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Aquamirae.MODID);
 	public static final RegistryObject<EntityType<GoldenMoth>> GOLDEN_MOTH = register("golden_moth",
 			EntityType.Builder.<GoldenMoth>of(GoldenMoth::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(128)
 					.setUpdateInterval(3).setCustomClientFactory(GoldenMoth::new).fireImmune().sized(0.5f, 0.2f));

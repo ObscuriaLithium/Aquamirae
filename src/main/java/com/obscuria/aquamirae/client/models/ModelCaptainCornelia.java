@@ -2,58 +2,53 @@ package com.obscuria.aquamirae.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
 import com.obscuria.aquamirae.common.entities.CaptainCornelia;
-import com.obscuria.obscureapi.api.animations.HekateLib;
-import com.obscuria.obscureapi.api.animations.NamedModelPart;
+import com.obscuria.obscureapi.api.hekate.Animation;
+import com.obscuria.obscureapi.api.hekate.HekateLib;
+import com.obscuria.obscureapi.api.hekate.Interpolations;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.HumanoidArm;
-import org.jetbrains.annotations.NotNull;
 
 public class ModelCaptainCornelia extends EntityModel<CaptainCornelia> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "captain_cornelia"),
-			"main");
-	public final NamedModelPart main, bodyTop, bodyTop2, bodyBottom, head, rightBooby, leftBooby, rightArm, leftArm, rightLeg,
+	public final ModelPart main, bodyTop, bodyTop2, bodyBottom, head, rightBooby, leftBooby, rightArm, leftArm, rightLeg,
 			leftLeg, rightArmBottom, leftArmBottom, rightLegBottom, leftLegBottom, item, ten1, ten1_1, ten1_2, ten1_3, ten1_4, ten2, ten2_1, ten2_2,
 			ten2_3, ten2_4, ten3, ten3_1, ten3_2, ten3_3, ten3_4;
 
 	public ModelCaptainCornelia(ModelPart root) {
-		this.main = NamedModelPart.create(root.getChild("main"), "main");
-		this.bodyTop = NamedModelPart.create(main.PART.getChild("body_top_Z").getChild("body_top"), "bodyTop");
-		this.bodyTop2 = NamedModelPart.create(bodyTop.PART.getChild("body_top2"), "bodyTop2");
-		this.bodyBottom = NamedModelPart.create(main.PART.getChild("body_bottom_Z").getChild("body_bottom"), "bodyBottom");
-		this.head = NamedModelPart.create(bodyTop2.PART.getChild("head"), "head");
-		this.rightBooby = NamedModelPart.create(bodyTop2.PART.getChild("right_booby"), "rightBooby");
-		this.leftBooby = NamedModelPart.create(bodyTop2.PART.getChild("left_booby"), "leftBooby");
-		this.rightArm = NamedModelPart.create(bodyTop2.PART.getChild("right_arm"), "rightArm");
-		this.leftArm = NamedModelPart.create(bodyTop2.PART.getChild("left_arm"), "leftArm");
-		this.rightArmBottom = NamedModelPart.create(rightArm.PART.getChild("right_arm_bottom"), "rightArmBottom");
-		this.leftArmBottom = NamedModelPart.create(leftArm.PART.getChild("left_arm_bottom"), "leftArmBottom");
-		this.rightLeg = NamedModelPart.create(bodyBottom.PART.getChild("right_leg"), "rightLeg");
-		this.leftLeg = NamedModelPart.create(bodyBottom.PART.getChild("left_leg"), "leftLeg");
-		this.rightLegBottom = NamedModelPart.create(rightLeg.PART.getChild("right_leg_bottom"), "rightLegBottom");
-		this.leftLegBottom = NamedModelPart.create(leftLeg.PART.getChild("left_leg_bottom"), "leftLegBottom");
-		this.item = NamedModelPart.create(rightArmBottom.PART.getChild("bone"), "weapon");
-		this.ten1 = NamedModelPart.create(bodyTop2.PART.getChild("ten1"), "ten1");
-		this.ten1_1 = NamedModelPart.create(ten1.PART.getChild("ten1_1"), "ten1_1");
-		this.ten1_2 = NamedModelPart.create(ten1_1.PART.getChild("ten1_2"), "ten1_2");
-		this.ten1_3 = NamedModelPart.create(ten1_2.PART.getChild("ten1_3"), "ten1_3");
-		this.ten1_4 = NamedModelPart.create(ten1_3.PART.getChild("ten1_4"), "ten1_4");
-		this.ten2 = NamedModelPart.create(bodyTop2.PART.getChild("ten2"), "ten2");
-		this.ten2_1 = NamedModelPart.create(ten2.PART.getChild("ten2_1"), "ten2_1");
-		this.ten2_2 = NamedModelPart.create(ten2_1.PART.getChild("ten2_2"), "ten2_2");
-		this.ten2_3 = NamedModelPart.create(ten2_2.PART.getChild("ten2_3"), "ten2_3");
-		this.ten2_4 = NamedModelPart.create(ten2_3.PART.getChild("ten2_4"), "ten2_4");
-		this.ten3 = NamedModelPart.create(bodyTop2.PART.getChild("ten3"), "ten3");
-		this.ten3_1 = NamedModelPart.create(ten3.PART.getChild("ten3_1"), "ten3_1");
-		this.ten3_2 = NamedModelPart.create(ten3_1.PART.getChild("ten3_2"), "ten3_2");
-		this.ten3_3 = NamedModelPart.create(ten3_2.PART.getChild("ten3_3"), "ten3_3");
-		this.ten3_4 = NamedModelPart.create(ten3_3.PART.getChild("ten3_4"), "ten3_4");
+		this.main = root.getChild("main");
+		this.bodyTop = main.getChild("body_top_Z").getChild("body_top");
+		this.bodyTop2 = bodyTop.getChild("body_top2");
+		this.bodyBottom = main.getChild("body_bottom_Z").getChild("body_bottom");
+		this.head = bodyTop2.getChild("head");
+		this.rightBooby = bodyTop2.getChild("right_booby");
+		this.leftBooby = bodyTop2.getChild("left_booby");
+		this.rightArm = bodyTop2.getChild("right_arm");
+		this.leftArm = bodyTop2.getChild("left_arm");
+		this.rightArmBottom = rightArm.getChild("right_arm_bottom");
+		this.leftArmBottom = leftArm.getChild("left_arm_bottom");
+		this.rightLeg = bodyBottom.getChild("right_leg");
+		this.leftLeg = bodyBottom.getChild("left_leg");
+		this.rightLegBottom = rightLeg.getChild("right_leg_bottom");
+		this.leftLegBottom = leftLeg.getChild("left_leg_bottom");
+		this.item = rightArmBottom.getChild("bone");
+		this.ten1 = bodyTop2.getChild("ten1");
+		this.ten1_1 = ten1.getChild("ten1_1");
+		this.ten1_2 = ten1_1.getChild("ten1_2");
+		this.ten1_3 = ten1_2.getChild("ten1_3");
+		this.ten1_4 = ten1_3.getChild("ten1_4");
+		this.ten2 = bodyTop2.getChild("ten2");
+		this.ten2_1 = ten2.getChild("ten2_1");
+		this.ten2_2 = ten2_1.getChild("ten2_2");
+		this.ten2_3 = ten2_2.getChild("ten2_3");
+		this.ten2_4 = ten2_3.getChild("ten2_4");
+		this.ten3 = bodyTop2.getChild("ten3");
+		this.ten3_1 = ten3.getChild("ten3_1");
+		this.ten3_2 = ten3_1.getChild("ten3_2");
+		this.ten3_3 = ten3_2.getChild("ten3_3");
+		this.ten3_4 = ten3_3.getChild("ten3_4");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -192,33 +187,237 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCornelia> {
 	}
 
 	public void translateToHand(HumanoidArm arm, PoseStack pose) {
-		this.main.PART.translateAndRotate(pose);
-		this.main.PART.getChild("body_top_Z").translateAndRotate(pose);
-		this.bodyTop.PART.translateAndRotate(pose);
-		this.bodyTop2.PART.translateAndRotate(pose);
+		this.main.translateAndRotate(pose);
+		this.main.getChild("body_top_Z").translateAndRotate(pose);
+		this.bodyTop.translateAndRotate(pose);
+		this.bodyTop2.translateAndRotate(pose);
 		if (arm == HumanoidArm.LEFT) {
-			this.leftArm.PART.translateAndRotate(pose);
-			this.leftArmBottom.PART.translateAndRotate(pose);
-			this.item.PART.translateAndRotate(pose);
+			this.leftArm.translateAndRotate(pose);
+			this.leftArmBottom.translateAndRotate(pose);
 		} else {
-			this.rightArm.PART.translateAndRotate(pose);
-			this.rightArmBottom.PART.translateAndRotate(pose);
-			this.item.PART.translateAndRotate(pose);
+			this.rightArm.translateAndRotate(pose);
+			this.rightArmBottom.translateAndRotate(pose);
+			this.item.translateAndRotate(pose);
 		}
 	}
 
 	@Override
-	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-							   float blue, float alpha) {
-		main.PART.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
-	public void setupAnim(@NotNull CaptainCornelia entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		entity.getAnimations().apply(main, bodyTop, bodyTop2, bodyBottom, head, rightBooby, leftBooby, rightArm, leftArm, rightLeg,
+	public void setupAnim(CaptainCornelia entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		HekateLib.reset(main, bodyTop, bodyTop2, bodyBottom, head, rightBooby, leftBooby, rightArm, leftArm, rightLeg,
 				leftLeg, rightArmBottom, leftArmBottom, rightLegBottom, leftLegBottom, item, ten1, ten1_1, ten1_2, ten1_3, ten1_4, ten2, ten2_1, ten2_2,
 				ten2_3, ten2_4, ten3, ten3_1, ten3_2, ten3_3, ten3_4);
-		this.head.PART.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
-		this.bodyTop.PART.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
-		this.bodyTop2.PART.yRot += HekateLib.render.head(netHeadYaw, 0.33F);
+		this.animateIdleAndMove(ageInTicks, limbSwingAmount);
+		this.animateAttack(entity.SWITCH_WEAPON, entity.PULL_ATTACK, entity.SWING_ATTACK, entity.THRUST_ATTACK, ageInTicks);
+		this.animateDeath(entity.DEATH, ageInTicks);
+		this.head.yRot += HekateLib.mod.head(netHeadYaw, 0.333F);
+		this.bodyTop.yRot += HekateLib.mod.head(netHeadYaw, 0.333F);
+		this.bodyTop2.yRot += HekateLib.mod.head(netHeadYaw, 0.333F);
+	}
+
+	private void animateIdleAndMove(float ageInTicks, float limbSwingAmount) {
+		HekateLib.push(ageInTicks, 0.1f, HekateLib.mod.idle(limbSwingAmount, 5f), HekateLib.Mode.DEFINITION)
+				.keyframe(main, k -> k.xRot(0.6F, 1.2F))
+				.keyframe(bodyBottom, k -> k.xRot(15F, 20F, -0.9f))
+				.keyframe(bodyTop2, k -> k.xRot(6F, -6F, 0.9f))
+				.keyframe(head, k -> k.xRot(4F, -6F, 0.8f))
+				.keyframe(rightArm, k -> k.rotation(12F, -9F, 9F, -27F, 6F, 20F, -0.95F))
+				.keyframe(rightArmBottom, k -> k.xRot(-16F, 20F, -0.9f))
+				.keyframe(item, k -> k.xRot(-5F, -35F, 0.85f))
+				.keyframe(leftArm, k -> k.rotation(12F, -9F, -9F, 27F, -9F, -27F, -0.95F))
+				.keyframe(leftArmBottom, k -> k.xRot(-24F, 30F, -0.9f))
+				.keyframe(rightLeg, k -> k.rotation(12F, 24F, 0.6F, -3F, 0.6F, -3F, -0.8F))
+				.keyframe(rightLegBottom, k -> k.xRot(-12F, -48F, -0.6f))
+				.keyframe(leftLeg, k -> k.rotation(6F, -12F, 0.6F, 3F, 0.6F, 3F, -0.8f))
+				.keyframe(leftLegBottom, k -> k.xRot(-24F, -27F, -0.7f))
+				.keyframe(ten1, k -> k.xRot(16F, -20F, 0.35f))
+				.keyframe(ten1_1, k -> k.xRot(16F, -12F, 0.3f))
+				.keyframe(ten1_2, k -> k.xRot(16F, -6F, 0.25f))
+				.keyframe(ten1_3, k -> k.xRot(16F, 0F, 0.2f))
+				.keyframe(ten1_4, k -> k.xRot(16F, 0F, 0.15f))
+				.keyframe(ten2, k -> k.xRot(16F, -20F, 0.25f).yRot(-30))
+				.keyframe(ten2_1, k -> k.xRot(16F, -12F, 0.2f))
+				.keyframe(ten2_2, k -> k.xRot(16F, -6F, 0.15f))
+				.keyframe(ten2_3, k -> k.xRot(16F, 0F, 0.1f))
+				.keyframe(ten2_4, k -> k.xRot(16F, 0F, 0.05f))
+				.keyframe(ten3, k -> k.xRot(16F, -20F, 0.45f).yRot(30))
+				.keyframe(ten3_1, k -> k.xRot(16F, -12F, 0.4f))
+				.keyframe(ten3_2, k -> k.xRot(16F, -6F, 0.35f))
+				.keyframe(ten3_3, k -> k.xRot(16F, 0F, 0.3f))
+				.keyframe(ten3_4, k -> k.xRot(16F, 0F, 0.25f));
+		HekateLib.push(ageInTicks, 0.2f, HekateLib.mod.move(limbSwingAmount, 5f), HekateLib.Mode.ADDITION)
+				.keyframe(main, k -> k.xRot(-1.4F, 1.8F))
+				.keyframe(bodyBottom, k -> k.xRot(6F, -36F))
+				.keyframe(bodyTop, k -> k.xRot(6F, -24F))
+				.keyframe(bodyTop2, k -> k.xRot(6F, 12F))
+				.keyframe(rightArm, k -> k.rotation(12F, -9F, 9F, -27F, -9F, 27F, 0.05F))
+				.keyframe(rightArmBottom, k -> k.xRot(24F, 30F))
+				.keyframe(leftArm, k -> k.rotation(12F, -9F, -9F, 27F, 9F, -27F, 0.05F))
+				.keyframe(leftArmBottom, k -> k.xRot(24F, 30F))
+				.keyframe(rightLeg, k -> k.rotation(24F, 12F, 0.6F, -6F, 0.6F, -6F, 0.5F))
+				.keyframe(rightLegBottom, k -> k.xRot(24F, -74F, 0.7f))
+				.keyframe(leftLeg, k -> k.rotation(24F, 0F, -0.6F, 6F, -0.6F, 6F, 0.5F))
+				.keyframe(leftLegBottom, k -> k.xRot(24F, -30F, 0.8f))
+				.keyframe(ten1, k -> k.xRot(-14F, -29F, 0.25f))
+				.keyframe(ten1_1, k -> k.xRot(-14F, -18F, 0.2f))
+				.keyframe(ten1_2, k -> k.xRot(-14F, -12F, 0.15f))
+				.keyframe(ten1_3, k -> k.xRot(-14F, -6F, 0.1f))
+				.keyframe(ten1_4, k -> k.xRot(-14F, -6F, 0.05f))
+				.keyframe(ten2, k -> k.xRot(-14F, -29F, 0.25f).yRot(-30))
+				.keyframe(ten2_1, k -> k.xRot(-14F, -18F, 0.2f))
+				.keyframe(ten2_2, k -> k.xRot(-14F, -12F, 0.15f))
+				.keyframe(ten2_3, k -> k.xRot(-14F, -6F, 0.1f))
+				.keyframe(ten2_4, k -> k.xRot(-14F, -6F, 0.05f))
+				.keyframe(ten3, k -> k.xRot(-14F, -29F, 0.25f).yRot(30))
+				.keyframe(ten3_1, k -> k.xRot(-14F, -18F, 0.2f))
+				.keyframe(ten3_2, k -> k.xRot(-14F, -12F, 0.15f))
+				.keyframe(ten3_3, k -> k.xRot(-14F, -6F, 0.1f))
+				.keyframe(ten3_4, k -> k.xRot(-14F, -6F, 0.05f));
+	}
+
+	private void animateAttack(Animation weapon, Animation pull, Animation swing, Animation thrust, float ageInTicks) {
+		HekateLib.push(10, 10, Interpolations.EASE_OUT_BACK.scale(0.95f), Interpolations.EASE_OUT_CUBIC)
+				.pose(0, 20, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(bodyTop, k -> k.rotation(-20F, 22F, 0F))
+						.keyframe(bodyTop2, k -> k.rotation(-12F, 20F, 0F))
+						.keyframe(head, k -> k.rotation(-12F, 0F, 0F))
+						.keyframe(leftArm, k -> k.rotation(-20F, 0F, -17F))
+						.keyframe(leftArmBottom, k -> k.rotation(55F, 0F, 0F))
+						.keyframe(rightArm, k -> k.rotation(90F, 45F, 90F))
+						.keyframe(rightArmBottom, k -> k.rotation(40F, 0F, 0F))
+						.keyframe(item, k -> k.rotation(-45F, 0F, 0F)))
+				.animate(weapon);
+
+		HekateLib.push(10, 10, Interpolations.EASE_OUT_SINE, Interpolations.EASE_OUT_CUBIC)
+				.pose(0, 10, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(2F, 0F, 0F))
+						.keyframe(bodyTop, k -> k.rotation(0F, -17.5F, 0F))
+						.keyframe(bodyTop2, k -> k.rotation(0F, -32.5F, 0F))
+						.keyframe(head, k -> k.rotation(-10F, 46F, -3.5F))
+						.keyframe(leftArm, k -> k.rotation(30F, 35F, -32F))
+						.keyframe(leftArmBottom, k -> k.rotation(25F, 0F, 0F))
+						.keyframe(rightArm, k -> k.rotation(5.5F, 28F, 19.5F))
+						.keyframe(rightArmBottom, k -> k.rotation(25F, 0F, 0F))
+						.keyframe(item, k -> k.rotation(-50F, 0F, 0F))
+						.keyframe(bodyBottom, k -> k.rotation(27.5F, 0F, 0F))
+						.keyframe(rightLeg, k -> k.rotation(25F, 2.6F, -4.2F))
+						.keyframe(rightLegBottom, k -> k.rotation(-60F, 0F, 0F))
+						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
+						.keyframe(leftLegBottom, k -> k.rotation(-17.5F, 0F, 0F)))
+				.pose(10, 30, Interpolations.EASE_OUT_EXPO.scale(0.5f), ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(1.5F, 0F, 0F))
+						.keyframe(bodyTop, k -> k.rotation(0F, -7.5F, 0F))
+						.keyframe(bodyTop2, k -> k.rotation(10F, -15F, 0F))
+						.keyframe(head, k -> k.rotation(-15F, 27F, 0F))
+						.keyframe(leftArm, k -> k.rotation(-19F, 12.5F, -31F))
+						.keyframe(leftArmBottom, k -> k.rotation(105F, 0F, 0F))
+						.keyframe(rightArm, k -> k.rotation(-10F, 1F, 20F))
+						.keyframe(rightArmBottom, k -> k.rotation(52F, 0F, 0F))
+						.keyframe(item, k -> k.rotation(-50F, 0F, 0F))
+						.keyframe(bodyBottom, k -> k.rotation(-22.5F, 0F, 0F))
+						.keyframe(rightLeg, k -> k.rotation(25F, 2.6F, -4.2F))
+						.keyframe(rightLegBottom, k -> k.rotation(-70F, 0F, 0F))
+						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
+						.keyframe(leftLegBottom, k -> k.rotation(-17.5F, 0F, 0F)))
+				.animate(pull);
+		HekateLib.push(12, 20, Interpolations.EASE_OUT_SINE, Interpolations.EASE_OUT_CUBIC)
+				.pose(0, 12, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(2.5F, 0F, 0F))
+						.keyframe(bodyTop, k -> k.rotation(-14F, 42F, -2F))
+						.keyframe(bodyTop2, k -> k.rotation(0F, 25F, 0F))
+						.keyframe(head, k -> k.rotation(3F, -56F, -8F))
+						.keyframe(leftArm, k -> k.rotation(-21F, 12F, -18.5F))
+						.keyframe(leftArmBottom, k -> k.rotation(70F, 0F, 0F))
+						.keyframe(rightArm, k -> k.rotation(57F, 25F, 74F))
+						.keyframe(rightArmBottom, k -> k.rotation(75F, 0F, 0F))
+						.keyframe(item, k -> k.rotation(-35F, 0F, 0F))
+						.keyframe(bodyBottom, k -> k.rotation(25F, 0F, 0F))
+						.keyframe(rightLeg, k -> k.rotation(57F, 2.6F, -4.2F))
+						.keyframe(rightLegBottom, k -> k.rotation(-90F, 0F, 0F))
+						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
+						.keyframe(leftLegBottom, k -> k.rotation(-17.5F, 0F, 0F)))
+				.pose(12, 40, Interpolations.EASE_OUT_EXPO.scale(0.2f), ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(1.5F, 0F, 0F))
+						.keyframe(bodyTop, k -> k.rotation(-10F, -4F, 8F))
+						.keyframe(bodyTop2, k -> k.rotation(0F, -20F, 0F))
+						.keyframe(head, k -> k.rotation(2F, 24F, -4.5F))
+						.keyframe(leftArm, k -> k.rotation(-50F, 30F, -35F))
+						.keyframe(leftArmBottom, k -> k.rotation(100F, 0F, 0F))
+						.keyframe(rightArm, k -> k.rotation(35F, 12F, 47F))
+						.keyframe(rightArmBottom, k -> k.rotation(10F, 0F, 0F))
+						.keyframe(item, k -> k.rotation(-82F, 0F, 0F))
+						.keyframe(bodyBottom, k -> k.rotation(-32F, 2F, -4F))
+						.keyframe(rightLeg, k -> k.rotation(57F, 2.6F, -4.2F))
+						.keyframe(rightLegBottom, k -> k.rotation(-90F, 0F, 0F))
+						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
+						.keyframe(leftLegBottom, k -> k.rotation(-17.5F, 0F, 0F)))
+						.animate(swing);
+		HekateLib.push(12, 20, Interpolations.EASE_OUT_SINE, Interpolations.EASE_OUT_CUBIC)
+				.pose(0, 12, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(2.5F, 0F, 0F))
+						.keyframe(bodyTop, k -> k.rotation(0F, -17.5F, 0F))
+						.keyframe(bodyTop2, k -> k.rotation(0F, -27.5F, 0F))
+						.keyframe(head, k -> k.rotation(-22F, 42F, -9F))
+						.keyframe(leftArm, k -> k.rotation(33.5F, 12F, -18.5F))
+						.keyframe(leftArmBottom, k -> k.rotation(67F, 0F, 0F))
+						.keyframe(rightArm, k -> k.rotation(-48F, -10.5F, 57F))
+						.keyframe(rightArmBottom, k -> k.rotation(75F, 0F, 0F))
+						.keyframe(item, k -> k.rotation(-45F, 0F, 0F))
+						.keyframe(bodyBottom, k -> k.rotation(25F, 0F, 0F))
+						.keyframe(rightLeg, k -> k.rotation(32.4F, 2.6F, -4.2F))
+						.keyframe(rightLegBottom, k -> k.rotation(-90F, 0F, 0F))
+						.keyframe(leftLeg, k -> k.rotation(0F, 0F, 2.5F))
+						.keyframe(leftLegBottom, k -> k.rotation(-38F, 0F, 0F)))
+				.pose(12, 40, Interpolations.EASE_OUT_EXPO.scale(0.2f), ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(1.5F, 0F, 0F))
+						.keyframe(bodyTop, k -> k.rotation(-12.5F, 35F, 0F))
+						.keyframe(bodyTop2, k -> k.rotation(0F, 7.5F, 0F))
+						.keyframe(head, k -> k.rotation(1F, -38F, 0F))
+						.keyframe(leftArm, k -> k.rotation(-21.5F, 12F, -18.5F))
+						.keyframe(leftArmBottom, k -> k.rotation(70F, 0F, 0F))
+						.keyframe(rightArm, k -> k.rotation(24F, -10.5F, 57F))
+						.keyframe(rightArmBottom, k -> k.rotation(12.5F, 0F, 0F))
+						.keyframe(item, k -> k.rotation(-60F, 0F, 0F))
+						.keyframe(bodyBottom, k -> k.rotation(-28F, 10F, -2F))
+						.keyframe(rightLeg, k -> k.rotation(57F, 2.6F, -4.2F))
+						.keyframe(rightLegBottom, k -> k.rotation(-90F, 0F, 0F))
+						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
+						.keyframe(leftLegBottom, k -> k.rotation(-17.5F, 0F, 0F)))
+				.animate(thrust);
+	}
+
+	private void animateDeath(Animation death, float ageInTicks) {
+		HekateLib.push(10, 0, Interpolations.EASE_OUT_BACK, Interpolations.CEIL)
+				.pose(0, 10, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(5F, 0, 0))
+						.keyframe(bodyTop, k -> k.rotation(10, 0, 0))
+						.keyframe(head, k -> k.rotation(10, 0, 0))
+						.keyframe(leftArm, k -> k.rotation(-35, 0, -30))
+						.keyframe(leftArmBottom, k -> k.rotation(45, 0, 0))
+						.keyframe(rightArm, k -> k.rotation(-35, 0, 30))
+						.keyframe(rightArmBottom, k -> k.rotation(45, 0, 0))
+						.keyframe(bodyBottom, k -> k.rotation(-5, 0, 0))
+						.keyframe(rightLeg, k -> k.rotation(0, 0, -3))
+						.keyframe(rightLegBottom, k -> k.rotation(-23, 0, 0))
+						.keyframe(leftLeg, k -> k.rotation(-8, 0, 3)))
+				.pose(10, 60, Interpolations.EASE_OUT_BOUNCE.scale(0.5f), ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(-5F, 0F, 0F))
+						.keyframe(bodyTop, k -> k.rotation(-82.5F, 0F, 0F))
+						.keyframe(bodyTop2, k -> k.rotation(12.5F, 0F, 0F))
+						.keyframe(head, k -> k.rotation(-27F, 34F, -16F))
+						.keyframe(leftArm, k -> k.rotation(47F, 55F, 5F))
+						.keyframe(leftArmBottom, k -> k.rotation(82F, 0F, 0F))
+						.keyframe(rightArm, k -> k.rotation(37F, -56F, 22F))
+						.keyframe(rightArmBottom, k -> k.rotation(62F, 0F, 0F))
+						.keyframe(item, k -> k.rotation(-40F, 0F, 0F))
+						.keyframe(bodyBottom, k -> k.rotation(-85F, -5F, 0F))
+						.keyframe(rightLeg, k -> k.rotation(0F, 0F, -5F))
+						.keyframe(rightLegBottom, k -> k.rotation(0F, 0F, 0F))
+						.keyframe(leftLeg, k -> k.rotation(0F, 0F, 2.5F))
+						.keyframe(leftLegBottom, k -> k.rotation(0F, 0F, 0F)))
+				.animate(death);
 	}
 }

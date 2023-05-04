@@ -1,12 +1,12 @@
 
 package com.obscuria.aquamirae.common.entities;
 
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.aquamirae.api.ShipGraveyardEntity;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.obscureapi.api.animations.AnimationProvider;
-import com.obscuria.obscureapi.api.animations.IAnimatedEntity;
+import com.obscuria.obscureapi.api.hekate.Animation;
+import com.obscuria.obscureapi.api.hekate.AnimationHelper;
+import com.obscuria.obscureapi.api.hekate.IAnimated;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -35,10 +35,11 @@ import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 @ShipGraveyardEntity
-public class TorturedSoul extends Monster implements IAnimatedEntity {
-	private final AnimationProvider ANIMATIONS = new AnimationProvider(this);
+public class TorturedSoul extends Monster implements IAnimated {
+	public final Animation ATTACK = new Animation(1);
 	public TorturedSoul(PlayMessages.SpawnEntity packet, Level world) {
 		this(AquamiraeEntities.TORTURED_SOUL.get(), world);
 	}
@@ -48,7 +49,8 @@ public class TorturedSoul extends Monster implements IAnimatedEntity {
 		xpReward = 0;
 	}
 
-	@Override protected void registerGoals() {
+	@Override
+	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false) {
 			@Override protected double getAttackReachSqr(@NotNull LivingEntity entity) {
@@ -65,52 +67,60 @@ public class TorturedSoul extends Monster implements IAnimatedEntity {
 		this.targetSelector.addGoal(9, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
 	}
 
-	@Override public AnimationProvider getAnimationProvider() {
-		return this.ANIMATIONS;
+	@Override
+	public Optional<Animation> getAnimation(byte id) {
+		return id == 1 ? Optional.of(ATTACK) : Optional.empty();
 	}
 
-	@Override public @NotNull MobType getMobType() {
+	@Override
+	public @NotNull MobType getMobType() {
 		return MobType.ILLAGER;
 	}
 
-	@Override public SoundEvent getAmbientSound() {
+	@Override
+	public SoundEvent getAmbientSound() {
 		return SoundEvents.ILLUSIONER_AMBIENT;
 	}
 
-	@Override public SoundEvent getHurtSound(@NotNull DamageSource source) {
+	@Override
+	public SoundEvent getHurtSound(@NotNull DamageSource source) {
 		return SoundEvents.ILLUSIONER_HURT;
 	}
 
-	@Override public SoundEvent getDeathSound() {
+	@Override
+	public SoundEvent getDeathSound() {
 		return SoundEvents.ILLUSIONER_DEATH;
 	}
 
-	@Override public boolean hurt(DamageSource source, float amount) {
+	@Override
+	public boolean hurt(DamageSource source, float amount) {
 		if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud) return false;
 		if (source == DamageSource.DROWN) return false;
 		return super.hurt(source, amount);
 	}
 
 	@Override public boolean doHurtTarget(@NotNull Entity entity) {
-		ANIMATIONS.play("attack", 5);
+		ATTACK.play(this, 20);
 		return super.doHurtTarget(entity);
 	}
 
 	@Override
 	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType,
 										@Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
-		AquamiraeMod.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.soulSwimSpeed.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.soulSpeed.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.soulMaxHealth.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.soulArmor.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.soulAttackDamage.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.soulFollowRange.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.soulAttackKnockback.get());
-		AquamiraeMod.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.soulKnockbackResistance.get());
+		Aquamirae.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.soulSwimSpeed.get());
+		Aquamirae.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.soulSpeed.get());
+		Aquamirae.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.soulMaxHealth.get());
+		Aquamirae.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.soulArmor.get());
+		Aquamirae.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.soulAttackDamage.get());
+		Aquamirae.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.soulFollowRange.get());
+		Aquamirae.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.soulAttackKnockback.get());
+		Aquamirae.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.soulKnockbackResistance.get());
 		return super.finalizeSpawn(world, difficulty, spawnType, spawnGroupData, tag);
 	}
 
-	@Override public void baseTick() {
+	@Override
+	public void baseTick() {
+		AnimationHelper.handle(ATTACK);
 		if (this.getTarget() != null && !this.hasEffect(MobEffects.INVISIBILITY)) {
 			this.getPersistentData().putDouble("charge", this.getPersistentData().getDouble("charge") + 1);
 			if (this.getPersistentData().getDouble("charge") > 200) {

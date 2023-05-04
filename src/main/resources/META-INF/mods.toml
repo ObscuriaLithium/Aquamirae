@@ -14,6 +14,13 @@ license="Obscuria Lithium (c) 2023, All Rights Reserved."
     description="   Ship graveyard with terrible deep sea creatures."
 
 [[dependencies.aquamirae]]
+    modId="obscure_api"
+    mandatory=true
+    versionRange="[15,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.aquamirae]]
     modId="forge"
     mandatory=true
     versionRange="[43.2.0,)"
@@ -24,13 +31,6 @@ license="Obscuria Lithium (c) 2023, All Rights Reserved."
     modId="minecraft"
     mandatory=true
     versionRange="[1.19.2]"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.aquamirae]]
-    modId="obscure_api"
-    mandatory=true
-    versionRange="[15,)"
     ordering="NONE"
     side="BOTH"
 

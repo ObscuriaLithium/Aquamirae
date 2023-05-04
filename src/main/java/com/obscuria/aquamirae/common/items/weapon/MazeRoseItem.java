@@ -4,7 +4,7 @@ package com.obscuria.aquamirae.common.items.weapon;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeCreativeTab;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
@@ -28,21 +28,26 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 @DynamicProjectileItem(mirror = true, distance = true, fastSpin = true)
 public class MazeRoseItem extends TieredItem implements Vanishable {
 	public MazeRoseItem() {
-		super(AquamiraeTiers.MAZE_ROSE, new Item.Properties().tab(AquamiraeMod.TAB).rarity(Rarity.UNCOMMON));
+		super(AquamiraeTiers.MAZE_ROSE, new Item.Properties().tab(Aquamirae.TAB).rarity(Rarity.UNCOMMON));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.create(AquamiraeMod.MODID).description("maze_rose").cost(Ability.Cost.COOLDOWN, 40)
-			.variables(5, 40).modifiers("", "s").build(this);
+	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "maze_rose").cost(Ability.Cost.Type.COOLDOWN, 40).action(
+			(stack, entity, target, context, values) -> {
+				stack.hurt(3, entity.getRandom(), null);
+				DynamicProjectile.create(AquamiraeEntities.MAZE_ROSE.get(), entity, entity.level, stack, values.get(0), 0F,
+						20 * values.get(1), 1000);
+				return true;
+			}).var(5, "").var(40, "s").build(MazeRoseItem.class);
 
 	@Override
 	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
 		super.fillItemCategory(tab, list);
-		if (tab == AquamiraeMod.TAB) list.addAll(AquamiraeCreativeTab.mazeRose());
+		if (tab == Aquamirae.TAB) list.addAll(AquamiraeCreativeTab.mazeRose());
 	}
 
 	@Override
@@ -62,10 +67,7 @@ public class MazeRoseItem extends TieredItem implements Vanishable {
 	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player entity, @NotNull InteractionHand hand) {
 		final ItemStack stack = entity.getItemInHand(hand);
 		if (world instanceof ServerLevel) {
-			stack.hurt(3, entity.getRandom(), null);
-			DynamicProjectile.create(AquamiraeEntities.MAZE_ROSE.get(), entity, world, stack, ABILITY.getVariable(entity, 1), 0F,
-					20 * ABILITY.getVariable(entity, 2), 1000);
-			entity.getCooldowns().addCooldown(this, 20 * ABILITY.getCost(entity));
+			ABILITY.use(stack, entity, null, null);
 			return InteractionResultHolder.success(stack);
 		}
 		return InteractionResultHolder.pass(stack);

@@ -4,7 +4,7 @@ package com.obscuria.aquamirae.common.items.weapon;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.common.classes.Ability;
 import com.obscuria.obscureapi.api.common.classes.ClassAbility;
@@ -22,14 +22,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class TerribleSwordItem extends SwordItem {
 	public TerribleSwordItem() {
-		super(AquamiraeTiers.TERRIBLE_SWORD, 3, -3f, new Item.Properties().tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.TERRIBLE_SWORD, 3, -3f, new Item.Properties().tab(Aquamirae.TAB));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.create(AquamiraeMod.MODID).description("terrible_sword").variables(1).build(this);
+	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "terrible_sword").action(
+			(stack, entity, target, context, values) -> {
+				if (target == null) return false;
+				if (target.getHealth() > 0) entity.hurt(DamageSource.DRAGON_BREATH, values.get(0));
+				return true;
+			}).var(1).build(TerribleSwordItem.class);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
@@ -39,15 +44,16 @@ public class TerribleSwordItem extends SwordItem {
 			builder.put(ObscureAPIAttributes.CRITICAL_HIT.get(), new AttributeModifier(UUID.fromString("AB3F55D3-645C-4F38-A497-9C13A33DB5CF"),
 					"Weapon modifier", 0.5, AttributeModifier.Operation.MULTIPLY_BASE));
 			builder.put(ObscureAPIAttributes.CRITICAL_DAMAGE.get(), new AttributeModifier(UUID.fromString("AA3F55D3-645C-4F38-A497-9C13A33DB5CF"),
-					"Weapon modifier", 2.0, AttributeModifier.Operation.MULTIPLY_BASE));
+					"Weapon modifier", 4.0, AttributeModifier.Operation.MULTIPLY_BASE));
 			return builder.build();
 		}
 		return multimap;
 	}
 
 	@Override
-	public boolean hurtEnemy(@NotNull ItemStack itemstack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
-		if (entity.getHealth() > 0) source.hurt(DamageSource.DRAGON_BREATH, ABILITY.getVariable(source, 1));
-		return super.hurtEnemy(itemstack, entity, source);
+	public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
+		final boolean hurt = super.hurtEnemy(stack, entity, source);
+		if (hurt) ABILITY.use(stack, source, entity, null);
+		return hurt;
 	}
 }

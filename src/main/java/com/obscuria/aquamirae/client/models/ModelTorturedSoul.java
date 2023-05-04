@@ -2,23 +2,16 @@ package com.obscuria.aquamirae.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.api.animations.HekateLib;
-import com.obscuria.obscureapi.client.animations.AnimatedPart;
-import com.obscuria.obscureapi.client.animations.KeyFrame;
+import com.obscuria.aquamirae.common.entities.TorturedSoul;
+import com.obscuria.obscureapi.api.hekate.HekateLib;
+import com.obscuria.obscureapi.api.hekate.Interpolations;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 
-public class ModelTorturedSoul<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "tortured_soul"),
-			"main");
-	public final ModelPart main, body, heart, head, nose, leftArm, rightArm, leftLeg, rightLeg, leftArmBottom, rightArmBottom, leftLegBottom, rightLegBottom;
+public class ModelTorturedSoul extends EntityModel<TorturedSoul> {
+	public final ModelPart main, body, heart, head, nose, leftArm, rightArm, leftLeg, rightLeg, leftArmLower, rightArmLower, leftLegLower, rightLegLower;
 
 	public ModelTorturedSoul(ModelPart root) {
 		this.main = root.getChild("main");
@@ -30,10 +23,10 @@ public class ModelTorturedSoul<T extends Entity> extends EntityModel<T> {
 		this.rightArm = body.getChild("right_arm");
 		this.leftLeg = main.getChild("left_leg");
 		this.rightLeg = main.getChild("right_leg");
-		this.leftArmBottom = leftArm.getChild("left_arm_bottom");
-		this.rightArmBottom = rightArm.getChild("right_arm_bottom");
-		this.leftLegBottom = leftLeg.getChild("left_leg_bottom");
-		this.rightLegBottom = rightLeg.getChild("right_leg_bottom");
+		this.leftArmLower = leftArm.getChild("left_arm_bottom");
+		this.rightArmLower = rightArm.getChild("right_arm_bottom");
+		this.leftLegLower = leftLeg.getChild("left_leg_bottom");
+		this.rightLegLower = rightLeg.getChild("right_leg_bottom");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -81,59 +74,48 @@ public class ModelTorturedSoul<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-							   float blue, float alpha) {
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		final float idle = HekateLib.mod.idle(limbSwingAmount, 3F);
-		final float move = HekateLib.mod.move(limbSwingAmount, 3F);
-		final float speed1 = 0.1F;
-		final float speed2 = 0.7F;
-
-		HekateLib.render.tick(entity);
-		HekateLib.render.prepare(main, body, heart, head, nose, leftArm, rightArm, leftLeg, rightLeg, leftArmBottom, rightArmBottom, leftLegBottom, rightLegBottom);
-
-		HekateLib.i(main, -0.3F, -0.5F, 0, 0, 0, 0, speed1, 0F, ageInTicks, idle);
-		HekateLib.i(body, -3F, -10F, 0, 0, 0, 0, speed1, 0F, ageInTicks, idle);
-		HekateLib.i(head, 3F, 16F, 0, 0, 0, 0, speed1, 0F, ageInTicks, idle);
-		HekateLib.i(rightArm, 12F, 35F, 0, 0, -3F, 10F, speed1, -0.2F, ageInTicks, idle);
-		HekateLib.i(rightArmBottom, 18F, 69F, 0, 0, 0, 0, speed1, -0.4F, ageInTicks, idle);
-		HekateLib.i(leftArm, 10F, 15F, 0, 0, 3F, -10F, speed1, -0.2F, ageInTicks, idle);
-		HekateLib.i(leftArmBottom, 15F, 30F, 0, 0, 0, 0, speed1, -0.4F, ageInTicks, idle);
-		HekateLib.i(leftLeg, 15F, 30F, -0.5F, 4F, 0.5F, -4F, speed1, 0F, ageInTicks, idle);
-		HekateLib.i(leftLegBottom, -30F, -44F, 0, 0, 0, 0, speed1, 0F, ageInTicks, idle);
-		this.rightLeg.xRot = this.leftLeg.xRot;
-		this.rightLeg.yRot = -this.leftLeg.yRot;
-		this.rightLeg.zRot = -this.leftLeg.zRot;
-		this.rightLegBottom.xRot = this.leftLegBottom.xRot;
-
-		HekateLib.m(main, -0.5F, -0.3F, 0, 0, 0, 0, speed2 * 2, 0F, limbSwing, move);
-		HekateLib.m(body, 3F, -3F, 0, 0, 0, 0, speed2 * 2, -0.1F, limbSwing, move);
-		HekateLib.m(head, 3F, -3F, 0, 0, 0, 0, speed2 * 2, -0.2F, limbSwing, move);
-		HekateLib.m(rightArm, 24F, -12F, 0, 0, -3F, 10F, speed2, -0.1F, limbSwing, move);
-		HekateLib.m(rightArmBottom, 20F, 34F, 0, 0, 0, 0, speed2, -0.2F, limbSwing, move);
-		HekateLib.m(leftArm, -24F, -12F, 0, 0, 3F, -10F, speed2, -0.1F, limbSwing, move);
-		HekateLib.m(leftArmBottom, -20F, 34F, 0, 0, 0, 0, speed2, -0.2F, limbSwing, move);
-		HekateLib.m(rightLeg, -30F, 14F, 0, 0, 0, 0, speed2, -0.1F, limbSwing, move);
-		HekateLib.m(rightLegBottom, -34F, -34F, 0, 0, 0, 0, speed2, -0.2F, limbSwing, move);
-		HekateLib.m(leftLeg, 30F, 14F, 0, 0, 0, 0, speed2, -0.1F, limbSwing, move);
-		HekateLib.m(leftLegBottom, 34F, -34F, 0, 0, 0, 0, speed2, -0.2F, limbSwing, move);
-
+	public void setupAnim(TorturedSoul soul, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		HekateLib.reset(main, body, heart, head, nose, leftArm, rightArm, leftLeg, rightLeg, leftArmLower, rightArmLower, leftLegLower, rightLegLower);
+		HekateLib.push(ageInTicks, 0.1f, HekateLib.mod.idle(limbSwingAmount, 5), HekateLib.Mode.DEFINITION)
+				.keyframe(main, k -> k.xRot(-0.3F, -0.5F))
+				.keyframe(body, k -> k.xRot(-3F, -10F))
+				.keyframe(head, k -> k.xRot(3F, 16F))
+				.keyframe(rightArm, k -> k.xRot(12F, 35F, -0.2f).zRot(-3F, 10F, -0.2f))
+				.keyframe(rightArmLower, k -> k.xRot(18F, 69F, -0.4f))
+				.keyframe(leftArm, k -> k.xRot(10F, 15F, -0.2f).zRot(3F, -10F, -0.2f))
+				.keyframe(leftArmLower, k -> k.xRot(15F, 30F, -0.4f))
+				.keyframe(rightLeg, k -> k.rotation(15F, 30F, -0.5F, -4F, 0.5F, 4F))
+				.keyframe(rightLegLower, k -> k.xRot(-30F, -44F))
+				.keyframe(leftLeg, k -> k.rotation(15F, 30F, -0.5F, 4F, 0.5F, -4F))
+				.keyframe(leftLegLower, k -> k.xRot(-30F, -44F));
+		HekateLib.push(ageInTicks, 0.4f, HekateLib.mod.move(limbSwingAmount, 5), HekateLib.Mode.ADDITION)
+				.keyframe(main, k -> k.xRot(0.5F, -0.3F, 2, 0))
+				.keyframe(body, k -> k.xRot(-3F, -3F, 2, -0.1f))
+				.keyframe(head, k -> k.xRot(-3F, -3F, 2, -0.2f))
+				.keyframe(rightArm, k -> k.xRot(24F, -12F, -0.1f).zRot(-3F, 10F, -0.1f))
+				.keyframe(rightArmLower, k -> k.xRot(20F, 34F, -0.2f))
+				.keyframe(leftArm, k -> k.xRot(-24F, -12F, -0.1f).zRot(3F, -10F, -0.1f))
+				.keyframe(leftArmLower, k -> k.xRot(-20F, 34F, -0.2f))
+				.keyframe(rightLeg, k -> k.xRot(-30F, 14F, -0.1f))
+				.keyframe(rightLegLower, k -> k.xRot(-34F, -34F, -0.2f))
+				.keyframe(leftLeg, k -> k.xRot(30F, 14F, -0.1f))
+				.keyframe(leftLegLower, k -> k.xRot(34F, -34F, -0.2f));
+		HekateLib.push(8, 12, Interpolations.EASE_OUT_ELASTIC, Interpolations.EASE_OUT_BACK)
+				.pose(0, 20, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(body, k -> k.rotation(-27F, 0, 0))
+						.keyframe(leftArm, k -> k.rotation(125F, 0, 0))
+						.keyframe(rightArm, k -> k.rotation(125F, 0, 0))
+						.keyframe(leftArmLower, k -> k.rotation(12F, 0, 0))
+						.keyframe(rightArmLower, k -> k.rotation(12F, 0, 0)))
+				.animate(soul.ATTACK);
 		this.heart.xRot = ageInTicks / 13F;
 		this.heart.yRot = ageInTicks / 9F;
 		this.heart.zRot = ageInTicks / 5F;
-
-		this.head.yRot += HekateLib.render.head(netHeadYaw, 0.5F);
-		this.body.yRot += HekateLib.render.head(netHeadYaw, 0.5F);
-
-		HekateLib.render.animation(entity, "attack", ageInTicks,
-				new KeyFrame(20, 0, 16F, 5F,
-						new AnimatedPart(body, -27F, 0, 0),
-						new AnimatedPart(leftArm, 125F, 0, 0),
-						new AnimatedPart(rightArm, 125F, 0, 0),
-						new AnimatedPart(leftArmBottom, 12F, 0, 0),
-						new AnimatedPart(rightArmBottom, 12F, 0, 0)));
+		this.head.yRot += HekateLib.mod.head(netHeadYaw, 0.5F);
+		this.body.yRot += HekateLib.mod.head(netHeadYaw, 0.5F);
 	}
 }

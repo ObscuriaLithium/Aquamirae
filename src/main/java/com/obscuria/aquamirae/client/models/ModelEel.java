@@ -2,22 +2,17 @@ package com.obscuria.aquamirae.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.AquamiraeMod;
-import com.obscuria.obscureapi.api.animations.HekateLib;
-import com.obscuria.obscureapi.client.animations.AnimatedPart;
-import com.obscuria.obscureapi.client.animations.KeyFrame;
+import com.obscuria.aquamirae.common.entities.Eel;
+import com.obscuria.obscureapi.api.hekate.Animation;
+import com.obscuria.obscureapi.api.hekate.HekateLib;
+import com.obscuria.obscureapi.api.hekate.Interpolations;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 
-public class ModelEel<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "eel"), "main");
-	public final ModelPart main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headTop, headBottom, leftFin, rightFin;
+public class ModelEel extends EntityModel<Eel> {
+	public final ModelPart main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headUpper, headLower, leftFin, rightFin;
 
 	public ModelEel(ModelPart root) {
 		this.main = root.getChild("main");
@@ -32,8 +27,8 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 		this.body9 = body8.getChild("body9");
 		this.body10 = body9.getChild("body10");
 		this.head = body10.getChild("head");
-		this.headTop = head.getChild("headTop");
-		this.headBottom = head.getChild("headBottom");
+		this.headUpper = head.getChild("headTop");
+		this.headLower = head.getChild("headBottom");
 		this.leftFin = head.getChild("leftFinP").getChild("leftFin");
 		this.rightFin = head.getChild("rightFinP").getChild("rightFin");
 	}
@@ -156,8 +151,7 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green,
-							   float blue, float alpha) {
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		poseStack.pushPose();
 		poseStack.scale(1.8f, 1.8f, 1.8f);
 		poseStack.translate(0F, -0.7F, 0F);
@@ -165,114 +159,194 @@ public class ModelEel<T extends Entity> extends EntityModel<T> {
 		poseStack.popPose();
 	}
 
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Eel eel, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		HekateLib.reset(main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headUpper, headLower, leftFin, rightFin);
+		HekateLib.push(ageInTicks, 0.1f, 1, HekateLib.Mode.DEFINITION)
+				.keyframe(body1, k -> k.xRot(-1F, -17.5F, -0.95F))
+				.keyframe(body2, k -> k.xRot(1F, 20F, -0.9F))
+				.keyframe(body3, k -> k.xRot(-1F, 22.5F, -0.85F))
+				.keyframe(body4, k -> k.xRot(-1F, 20F, -0.8F))
+				.keyframe(body5, k -> k.xRot(-2F, -22.5F, -0.75F))
+				.keyframe(body6, k -> k.xRot(-2F, -22.5F, -0.7F))
+				.keyframe(body7, k -> k.xRot(-2F, -27.5F, -0.65F))
+				.keyframe(body8, k -> k.xRot(-2F, -25F, -0.6F))
+				.keyframe(body9, k -> k.xRot(-3F, -27.5F, -0.55F))
+				.keyframe(body10, k -> k.xRot(-3F, -22.5F, -0.5F))
+				.keyframe(head, k -> k.xRot(-3F, -22.5F))
+				.keyframe(headUpper, k -> k.xRot(-40F))
+				.keyframe(headLower, k -> k.xRot(-10F, -105F))
+				.keyframe(leftFin, k -> k.zRot(10F, -45F))
+				.keyframe(rightFin, k -> k.zRot(-10F, 45F));
+		HekateLib.push(60, 60, Interpolations.EASE_IN_OUT_BACK, Interpolations.EASE_IN_OUT_BACK)
+				.pose(0, 300, Interpolations.CEIL, ageInTicks, 0.14f, builder -> builder
+						.keyframe(body5, k -> k.rotation(-2F, -22.5F, 1, 0, 0, 0, 2, -0.95f))
+						.keyframe(body6, k -> k.rotation(-2F, -22.5F, 2, 0, 0, 0, -0.9f))
+						.keyframe(body7, k -> k.rotation(-2F, -27.5F, 3, 0, 0, 0, -0.85f))
+						.keyframe(body8, k -> k.rotation(-2F, -25F, 4, 0, 0, 0, -0.8f))
+						.keyframe(body9, k -> k.rotation(-3F, -27.5F, 5, 0, 0, 0, -0.75f))
+						.keyframe(body10, k -> k.rotation(-3F, -22.5F, 6, 0, 0, 0, -0.7f))
+						.keyframe(head, k -> k.rotation(-3F, -22.5F, 7, 0, 0, 0, -0.65f))
+						.keyframe(headLower, k -> k.xRot(HekateLib.math.cycle(ageInTicks, 0.1f) * 8, -105, 10, 0)))
+				.animate(eel.RARE_IDLE);
+		HekateLib.push(12, 12, Interpolations.LINEAR, Interpolations.EASE_OUT_CUBIC)
+				.pose(0, 12, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(body1, k -> k.xRot(-17.5F))
+						.keyframe(body2, k -> k.xRot(20F))
+						.keyframe(body3, k -> k.xRot(22.5F))
+						.keyframe(body4, k -> k.xRot(27.5F))
+						.keyframe(body5, k -> k.xRot(-2.5F))
+						.keyframe(body6, k -> k.xRot(-2.5F))
+						.keyframe(body7, k -> k.xRot(-30F))
+						.keyframe(body8, k -> k.xRot(-30F))
+						.keyframe(body9, k -> k.xRot(-35F))
+						.keyframe(body10, k -> k.xRot(-25F))
+						.keyframe(head, k -> k.xRot(-25F))
+						.keyframe(headUpper, k -> k.xRot(-40F))
+						.keyframe(headLower, k -> k.rotation(10F, -170F, 0F, 0F, 0F, 0F, 1.4F, 0F))
+						.keyframe(leftFin, k -> k.zRot(-90F))
+						.keyframe(rightFin, k -> k.zRot(90F)))
+				.pose(12, 30, Interpolations.EASE_IN_OUT_CUBIC.scale(0.2f), ageInTicks, 1f, builder -> builder
+						.keyframe(body1, k -> k.xRot(-17.5F))
+						.keyframe(body2, k -> k.xRot(10F).scale(1.025f))
+						.keyframe(body3, k -> k.xRot(15F).scale(1.025f))
+						.keyframe(body4, k -> k.xRot(12.5F).scale(1.025f))
+						.keyframe(body5, k -> k.xRot(-35F).yRot(-1F).scale(1.025f))
+						.keyframe(body6, k -> k.xRot(-30F).yRot(-1F).scale(1.025f))
+						.keyframe(body7, k -> k.xRot(-35F).yRot(-2F).scale(1.025f))
+						.keyframe(body8, k -> k.xRot(-25F).yRot(-2F).scale(1.025f))
+						.keyframe(body9, k -> k.xRot(-12.5F).yRot(-3F).scale(1.025f))
+						.keyframe(body10, k -> k.xRot(-2.5F).yRot(-3F).scale(1.025f))
+						.keyframe(head, k -> k.xRot(-20F).yRot(-4F).scale(1.025f))
+						.keyframe(headUpper, k -> k.xRot(-40F))
+						.keyframe(headLower, k -> k.xRot(-75F))
+						.keyframe(leftFin, k -> k.zRot(-40))
+						.keyframe(rightFin, k -> k.zRot(40)))
+				.animate(eel.ATTACK);
+		HekateLib.push(12, 48, Interpolations.EASE_OUT_BACK, Interpolations.EASE_IN_OUT_BACK)
+				.pose(0, 12, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(body1, k -> k.xRot(-17.5F))
+						.keyframe(body2, k -> k.xRot(20F))
+						.keyframe(body3, k -> k.xRot(22.5F))
+						.keyframe(body4, k -> k.xRot(27.5F))
+						.keyframe(body5, k -> k.xRot(-2.5F))
+						.keyframe(body6, k -> k.rotation(0F, -2.5F, 0F, 0F, 5F, 0F, 0.4F, -0.95F))
+						.keyframe(body7, k -> k.rotation(0F, -30F, 0F, 0F, 5F, 0F, 0.4F, -0.90F))
+						.keyframe(body8, k -> k.rotation(0F, -30F, 0F, 0F, 5F, 0F, 0.4F, -0.85F))
+						.keyframe(body9, k -> k.rotation(0F, -35F, 0F, 0F, 5F, 0F, 0.4F, -0.80F))
+						.keyframe(body10, k -> k.rotation(0F, -25F, 0F, 0F, 5F, 0F, 0.4F, -0.75F))
+						.keyframe(head, k -> k.rotation(0F, -25F, 0F, 0F, 5F, 0F, 0.4F, -0.70F))
+						.keyframe(headUpper, k -> k.xRot(-40F))
+						.keyframe(headLower, k -> k.rotation(5F, -90F, 0F, 0F, 0F, 0F, 1.4F, 0F))
+						.keyframe(leftFin, k -> k.zRot(-90F))
+						.keyframe(rightFin, k -> k.zRot(90F)))
+				.pose(12, 100, Interpolations.EASE_IN_OUT_CUBIC.scale(0.05f), ageInTicks, 1f, builder -> builder
+						.keyframe(body1, k -> k.xRot(-17.5F))
+						.keyframe(body2, k -> k.xRot(12.5F))
+						.keyframe(body3, k -> k.xRot(25F))
+						.keyframe(body4, k -> k.xRot(22.5F))
+						.keyframe(body5, k -> k.xRot(-30F))
+						.keyframe(body6, k -> k.rotation(0F, -32.5F, 0F, 0F, 4F, 0F, 0.4F, -0.95F))
+						.keyframe(body7, k -> k.rotation(0F, -27.5F, 0F, 0F, 4F, 0F, 0.4F, -0.90F))
+						.keyframe(body8, k -> k.rotation(0F, -27.5F, 0F, 0F, 4F, 0F, 0.4F, -0.85F))
+						.keyframe(body9, k -> k.rotation(0F, -22.5F, 0F, 0F, 4F, 0F, 0.4F, -0.80F))
+						.keyframe(body10, k -> k.rotation(0F, -7.5F, 0F, 0F, 4F, 0F, 0.4F, -0.75F))
+						.keyframe(head, k -> k.rotation(0F, -12.5F, 0F, 0F, 4F, 0F, 0.4F, -0.70F))
+						.keyframe(headUpper, k -> k.xRot(-40F))
+						.keyframe(headLower, k -> k.rotation(10F, -145F, 0F, 0F, 0F, 0F, 1.5F, 0F))
+						.keyframe(leftFin, k -> k.zRot(-10, -80F, 2, 0))
+						.keyframe(rightFin, k -> k.zRot(10, 80F, 2, 0)))
+				.animate(eel.ROAR);
+		HekateLib.push(20, 0, Interpolations.EASE_OUT_CUBIC.scale(0.8f), Interpolations.CEIL)
+				.pose(0, 20, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(body1, k -> k.xRot(-17.5F))
+						.keyframe(body2, k -> k.xRot(20F))
+						.keyframe(body3, k -> k.xRot(22.5F))
+						.keyframe(body4, k -> k.xRot(27.5F))
+						.keyframe(body5, k -> k.xRot(-2.5F))
+						.keyframe(body6, k -> k.rotation(0F, -2.5F, 0F, 0F, 5F, 0F, 0.4F, -0.95F))
+						.keyframe(body7, k -> k.rotation(0F, -30F, 0F, 0F, 10F, 0F, 0.4F, -0.90F))
+						.keyframe(body8, k -> k.rotation(0F, -30F, 0F, 0F, 15F, 0F, 0.4F, -0.85F))
+						.keyframe(body9, k -> k.rotation(0F, -35F, 0F, 0F, 20F, 0F, 0.4F, -0.80F))
+						.keyframe(body10, k -> k.rotation(0F, -25F, 0F, 0F, 20F, 0F, 0.4F, -0.75F))
+						.keyframe(head, k -> k.rotation(0F, -25F, 0F, 0F, 20F, 0F, 0.4F, -0.70F))
+						.keyframe(headUpper, k -> k.xRot(-40F))
+						.keyframe(headLower, k -> k.rotation(5F, -90F, 0F, 0F, 0F, 0F, 1.4F, 0F))
+						.keyframe(leftFin, k -> k.zRot(-90F))
+						.keyframe(rightFin, k -> k.zRot(90F)))
+				.pose(20, 60, Interpolations.EASE_OUT_BOUNCE.scale(0.8f), ageInTicks, 1f, builder -> builder
+						.keyframe(body1, k -> k.xRot(-17.5F))
+						.keyframe(body2, k -> k.xRot(-30))
+						.keyframe(body3, k -> k.xRot(-30))
+						.keyframe(body4, k -> k.xRot(-20))
+						.keyframe(body5, k -> k.xRot(-10))
+						.keyframe(body6, k -> k.rotation(10, 0, 10))
+						.keyframe(body7, k -> k.rotation(5, 0, 10))
+						.keyframe(body8, k -> k.rotation(4, 0, 10))
+						.keyframe(body9, k -> k.rotation(3, 0, 10))
+						.keyframe(body10, k -> k.rotation(2, 0, 10))
+						.keyframe(head, k -> k.rotation(1, 0, 10))
+						.keyframe(headUpper, k -> k.xRot(-40F))
+						.keyframe(headLower, k -> k.rotation(-100, 0, 0))
+						.keyframe(leftFin, k -> k.zRot(0))
+						.keyframe(rightFin, k -> k.zRot(0)))
+				.animate(eel.DEATH);
+		this.animateMove(eel.MOVE, ageInTicks);
+		this.rotateHead(netHeadYaw);
+	}
 
-		final float rareIdle = HekateLib.mod.get(entity, "rareIdle", 1F, 1F);
-		final float s1 = 0.1F;
-		HekateLib.render.tick(entity);
-		HekateLib.render.prepare(main, body1, body2, body3, body4, body5, body6, body7, body8, body9, body10, head, headTop, headBottom, leftFin,
-				rightFin);
+	private void animateMove(Animation move, float ageInTicks) {
+		this.main.visible = !(move.getTick() >= 24 && move.getTick() <= 70);
+		HekateLib.push(30, 30, Interpolations.EASE_IN_QUINT.scale(0.8f), Interpolations.EASE_OUT_CUBIC)
+				.pose(0, 30, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(-20F, 0F, 0F).scale(0.8f)))
+				.pose(70, 100, Interpolations.EASE_OUT_CUBIC, ageInTicks, 1f, builder -> builder
+						.keyframe(main, k -> k.rotation(0F, 0F, 0F).scale(1f)))
+				.animate(move);
+		HekateLib.push(20, 20, Interpolations.EASE_IN_QUINT, Interpolations.EASE_OUT_CUBIC)
+				.pose(0, 30, Interpolations.CEIL, ageInTicks, 0.4f, builder -> builder
+						.keyframe(body2, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.90F))
+						.keyframe(body3, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.85F))
+						.keyframe(body4, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.80F))
+						.keyframe(body5, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.75F))
+						.keyframe(body6, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.75F))
+						.keyframe(body7, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.65F))
+						.keyframe(body8, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.60F))
+						.keyframe(body9, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.55F))
+						.keyframe(body10, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.50F))
+						.keyframe(head, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.50F))
+						.keyframe(headUpper, k -> k.rotation(-40F, 0F, 0F))
+						.keyframe(headLower, k -> k.rotation(5F, -90F, 0F, 0F, 0F, 0F, 3f, 0))
+						.keyframe(leftFin, k -> k.rotation(0F, 0F, -90F))
+						.keyframe(rightFin, k -> k.rotation(0F, 0F, 90F)))
+				.pose(70, 100, Interpolations.EASE_OUT_CUBIC, ageInTicks, 0.4f, builder -> builder
+						.keyframe(body2, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.90F))
+						.keyframe(body3, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.85F))
+						.keyframe(body4, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.80F))
+						.keyframe(body5, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.75F))
+						.keyframe(body6, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.75F))
+						.keyframe(body7, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.65F))
+						.keyframe(body8, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.60F))
+						.keyframe(body9, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.55F))
+						.keyframe(body10, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.50F))
+						.keyframe(head, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.50F))
+						.keyframe(headUpper, k -> k.rotation(-40F, 0F, 0F))
+						.keyframe(headLower, k -> k.rotation(5F, -90F, 0F, 0F, 0F, 0F, 3f, 0))
+						.keyframe(leftFin, k -> k.rotation(0F, 0F, -90F))
+						.keyframe(rightFin, k -> k.rotation(0F, 0F, 90F)))
+				.animate(move);
+	}
 
-		HekateLib.i(this.body1, -1F, -17.5F, 0F, 0F, 0F, 0F, s1, -0.95F, ageInTicks);
-		HekateLib.i(this.body2, -1F, 20F, 0F, 0F, 0F, 0F, s1, -0.90F, ageInTicks);
-		HekateLib.i(this.body3, -1F, 22.5F, 0F, 0F, 0F, 0F, s1, -0.85F, ageInTicks);
-		HekateLib.i(this.body4, -1F, 20F, 0F, 0F, 0F, 0F, s1, -0.80F, ageInTicks);
-		HekateLib.i(this.body5, -2F, -22.5F, 0F, 0F, 0F, 0F, s1, -0.75F, ageInTicks);
-		HekateLib.i(this.body6, -2F, -22.5F, 0F, 0F, 0F, 0F, s1, -0.70F, ageInTicks);
-		HekateLib.i(this.body7, -2F, -27.5F, 0F, 0F, 0F, 0F, s1, -0.65F, ageInTicks);
-		HekateLib.i(this.body8, -2F, -25F, 0F, 0F, 0F, 0F, s1, -0.60F, ageInTicks);
-		HekateLib.i(this.body9, -3F, -27.5F, 0F, 0F, 0F, 0F, s1, -0.55F, ageInTicks);
-		HekateLib.i(this.body10, -3F, -22.5F, 0F, 0F, 0F, 0F, s1, -0.50F, ageInTicks);
-		HekateLib.i(this.head, -3F, -22.5F, 0F, 0F, 0F, 0F, s1, 0F, ageInTicks);
-		HekateLib.i(this.headTop, 0F, -40F, 0F, 0F, 0F, 0F, s1, 0F, ageInTicks);
-		HekateLib.i(this.headBottom, -10F, -105F, 0F, 0F, 0F, 0F, s1, 0F, ageInTicks);
-		HekateLib.i(this.leftFin, 0F, 0F, 0F, 0F, 10F, -45F, s1, 0F, ageInTicks);
-		HekateLib.i(this.rightFin, 0F, 0F, 0F, 0F, -10F, 45F, s1, 0F, ageInTicks);
-
-		this.body5.yRot = HekateLib.render.idle(1F, 0F, s1 * 1.4F, -0.95F, ageInTicks, rareIdle);
-		this.body6.yRot = HekateLib.render.idle(2F, 0F, s1 * 1.4F, -0.90F, ageInTicks, rareIdle);
-		this.body7.yRot = HekateLib.render.idle(3F, 0F, s1 * 1.4F, -0.85F, ageInTicks, rareIdle);
-		this.body8.yRot = HekateLib.render.idle(4F, 0F, s1 * 1.4F, -0.80F, ageInTicks, rareIdle);
-		this.body9.yRot = HekateLib.render.idle(5F, 0F, s1 * 1.4F, -0.75F, ageInTicks, rareIdle);
-		this.body10.yRot = HekateLib.render.idle(6F, 0F, s1 * 1.4F, -0.70F, ageInTicks, rareIdle);
-		this.head.yRot = HekateLib.render.idle(7F, 0F, s1 * 1.4F, -0.65F, ageInTicks, rareIdle);
-
-		HekateLib.render.animation(entity, "attack", ageInTicks, new KeyFrame(20, 8, 6F, 24F, new AnimatedPart(this.body1, -17.5F, 0F, 0F),
-				new AnimatedPart(this.body2, 20F, 0F, 0F), new AnimatedPart(this.body3, 22.5F, 0F, 0F), new AnimatedPart(this.body4, 27.5F, 0F, 0F),
-				new AnimatedPart(this.body5, -2.5F, 0F, 0F), new AnimatedPart(this.body6, -2.5F, 0F, 0F), new AnimatedPart(this.body7, -30F, 0F, 0F),
-				new AnimatedPart(this.body8, -30F, 0F, 0F), new AnimatedPart(this.body9, -35F, 0F, 0F), new AnimatedPart(this.body10, -25F, 0F, 0F),
-				new AnimatedPart(this.head, -25F, 0F, 0F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
-				new AnimatedPart(this.headBottom, 10F, -170F, 0F, 0F, 0F, 0F, 1.4F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -90F),
-				new AnimatedPart(this.rightFin, 0F, 0F, 90F)),
-				new KeyFrame(8, 0, 24F, 2F, new AnimatedPart(this.body1, -17.5F, 0F, 0F), new AnimatedPart(this.body2, 10F, 0F, 0F),
-						new AnimatedPart(this.body3, 15F, 0F, 0F), new AnimatedPart(this.body4, 12.5F, 0F, 0F),
-						new AnimatedPart(this.body5, -35F, -1F, 0F), new AnimatedPart(this.body6, -30F, -1F, 0F),
-						new AnimatedPart(this.body7, -35F, -2F, 0F), new AnimatedPart(this.body8, -25F, -2F, 0F),
-						new AnimatedPart(this.body9, -12.5F, -3F, 0F), new AnimatedPart(this.body10, -2.5F, -3F, 0F),
-						new AnimatedPart(this.head, -20F, -4F, 0F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
-						new AnimatedPart(this.headBottom, -75F, 0F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -40F),
-						new AnimatedPart(this.rightFin, 0F, 0F, 40F)));
-
-		HekateLib.render.animation(entity, "roar", ageInTicks,
-				new KeyFrame(52, 40, 4F, 14F, new AnimatedPart(this.body1, -17.5F, 0F, 0F), new AnimatedPart(this.body2, 20F, 0F, 0F),
-						new AnimatedPart(this.body3, 22.5F, 0F, 0F), new AnimatedPart(this.body4, 27.5F, 0F, 0F),
-						new AnimatedPart(this.body5, -2.5F, 0F, 0F), new AnimatedPart(this.body6, 0F, -2.5F, 0F, 0F, 5F, 0F, 0.4F, -0.95F),
-						new AnimatedPart(this.body7, 0F, -30F, 0F, 0F, 5F, 0F, 0.4F, -0.90F),
-						new AnimatedPart(this.body8, 0F, -30F, 0F, 0F, 5F, 0F, 0.4F, -0.85F),
-						new AnimatedPart(this.body9, 0F, -35F, 0F, 0F, 5F, 0F, 0.4F, -0.80F),
-						new AnimatedPart(this.body10, 0F, -25F, 0F, 0F, 5F, 0F, 0.4F, -0.75F),
-						new AnimatedPart(this.head, 0F, -25F, 0F, 0F, 5F, 0F, 0.4F, -0.70F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
-						new AnimatedPart(this.headBottom, 5F, -90F, 0F, 0F, 0F, 0F, 1.4F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -90F),
-						new AnimatedPart(this.rightFin, 0F, 0F, 90F)),
-				new KeyFrame(40, 0, 14F, 2F, new AnimatedPart(this.body1, -17.5F, 0F, 0F), new AnimatedPart(this.body2, 12.5F, 0F, 0F),
-						new AnimatedPart(this.body3, 25F, 0F, 0F), new AnimatedPart(this.body4, 22.5F, 0F, 0F),
-						new AnimatedPart(this.body5, -30F, 0F, 0F), new AnimatedPart(this.body6, 0F, -32.5F, 0F, 0F, 4F, 0F, 0.4F, -0.95F),
-						new AnimatedPart(this.body7, 0F, -27.5F, 0F, 0F, 4F, 0F, 0.4F, -0.90F),
-						new AnimatedPart(this.body8, 0F, -27.5F, 0F, 0F, 4F, 0F, 0.4F, -0.85F),
-						new AnimatedPart(this.body9, 0F, -22.5F, 0F, 0F, 4F, 0F, 0.4F, -0.80F),
-						new AnimatedPart(this.body10, 0F, -7.5F, 0F, 0F, 4F, 0F, 0.4F, -0.75F),
-						new AnimatedPart(this.head, 0F, -12.5F, 0F, 0F, 4F, 0F, 0.4F, -0.70F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
-						new AnimatedPart(this.headBottom, 10F, -145F, 0F, 0F, 0F, 0F, 1.5F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -80F),
-						new AnimatedPart(this.rightFin, 0F, 0F, 80F)));
-
-		HekateLib.render.animation(entity, "moveMain", ageInTicks, new KeyFrame(50, 20, 1.6F, 2F, new AnimatedPart(this.main, -20F, 0F, 0F)),
-				new KeyFrame(20, 0, 2F, 4F, new AnimatedPart(this.main, 0F, 0F, 0F)));
-		HekateLib.render.animation(entity, "move", ageInTicks,
-				new KeyFrame(50, 20, 4F, 2F, new AnimatedPart(this.body1, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.95F),
-						new AnimatedPart(this.body2, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.90F),
-						new AnimatedPart(this.body3, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.85F),
-						new AnimatedPart(this.body4, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.80F),
-						new AnimatedPart(this.body5, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.75F),
-						new AnimatedPart(this.body6, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.75F),
-						new AnimatedPart(this.body7, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.65F),
-						new AnimatedPart(this.body8, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.60F),
-						new AnimatedPart(this.body9, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.55F),
-						new AnimatedPart(this.body10, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.50F),
-						new AnimatedPart(this.head, -1F, 0F, 0F, 0F, 1F, 0F, 0.4F, -0.50F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
-						new AnimatedPart(this.headBottom, 5F, -90F, 0F, 0F, 0F, 0F, 1.4F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -90F),
-						new AnimatedPart(this.rightFin, 0F, 0F, 90F)),
-				new KeyFrame(20, 0, 2F, 4F, new AnimatedPart(this.body1, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.95F),
-						new AnimatedPart(this.body2, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.90F),
-						new AnimatedPart(this.body3, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.85F),
-						new AnimatedPart(this.body4, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.80F),
-						new AnimatedPart(this.body5, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.75F),
-						new AnimatedPart(this.body6, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.75F),
-						new AnimatedPart(this.body7, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.65F),
-						new AnimatedPart(this.body8, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.60F),
-						new AnimatedPart(this.body9, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.55F),
-						new AnimatedPart(this.body10, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.50F),
-						new AnimatedPart(this.head, -3F, 0F, 0F, 0F, 3F, 0F, 0.4F, -0.50F), new AnimatedPart(this.headTop, -40F, 0F, 0F),
-						new AnimatedPart(this.headBottom, 5F, -90F, 0F, 0F, 0F, 0F, 1.4F, 0F), new AnimatedPart(this.leftFin, 0F, 0F, -90F),
-						new AnimatedPart(this.rightFin, 0F, 0F, 90F)));
-		this.body1.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body2.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body3.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body4.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body5.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body6.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body7.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body8.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body9.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
-		this.body10.yRot += HekateLib.render.head(netHeadYaw, 0.1F);
+	private void rotateHead(float netHeadYaw) {
+		final float head = HekateLib.mod.head(netHeadYaw, 0.1F);
+		this.body1.yRot += head;
+		this.body2.yRot += head;
+		this.body3.yRot += head;
+		this.body4.yRot += head;
+		this.body5.yRot += head;
+		this.body6.yRot += head;
+		this.body7.yRot += head;
+		this.body8.yRot += head;
+		this.body9.yRot += head;
+		this.body10.yRot += head;
 	}
 }

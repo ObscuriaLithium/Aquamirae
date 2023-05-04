@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.common.items.weapon;
 
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.common.classes.Ability;
 import com.obscuria.obscureapi.api.common.classes.ClassAbility;
@@ -21,18 +21,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class DaggerOfGreedItem extends SwordItem {
 	public DaggerOfGreedItem() {
-		super(AquamiraeTiers.DAGGER_OF_GREED, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON).tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.DAGGER_OF_GREED, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON).tab(Aquamirae.TAB));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY_1 = Ability.create(AquamiraeMod.MODID).description("dagger_of_greed_1").build(this);
+	public final Ability ABILITY_1 = Ability.create(Aquamirae.MODID, "dagger_of_greed_1").build(DaggerOfGreedItem.class);
 	@ClassAbility
-	public final Ability ABILITY_2 = Ability.create(AquamiraeMod.MODID).description("dagger_of_greed_2").build(this);
+	public final Ability ABILITY_2 = Ability.create(Aquamirae.MODID, "dagger_of_greed_2").build(DaggerOfGreedItem.class);
 	@ClassAbility
-	public final Ability ABILITY_3 = Ability.create(AquamiraeMod.MODID).description("dagger_of_greed_3").style(Ability.Style.EPIC).build(this);
+	public final Ability ABILITY_3 = Ability.create(Aquamirae.MODID, "dagger_of_greed_3").style(Ability.Style.EPIC).build(DaggerOfGreedItem.class);
 
 	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int i, boolean flag) {
 		if (stack.getDamageValue() != stack.getOrCreateTag().getInt("DamageValue"))

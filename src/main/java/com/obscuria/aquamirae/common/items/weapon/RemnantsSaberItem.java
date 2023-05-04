@@ -4,7 +4,7 @@ package com.obscuria.aquamirae.common.items.weapon;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
-import com.obscuria.aquamirae.AquamiraeMod;
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
 import com.obscuria.obscureapi.api.common.classes.Ability;
 import com.obscuria.obscureapi.api.common.classes.ClassAbility;
@@ -19,14 +19,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-@ClassItem(itemClass = "aquamirae:sea_wolf", itemType = "weapon")
+@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class RemnantsSaberItem extends SwordItem {
 	public RemnantsSaberItem() {
-		super(AquamiraeTiers.REMNANTS_SABER, 3, -2f, new Item.Properties().tab(AquamiraeMod.TAB));
+		super(AquamiraeTiers.REMNANTS_SABER, 3, -2f, new Item.Properties().tab(Aquamirae.TAB));
 	}
 
 	@ClassAbility
-	public final Ability ABILITY = Ability.create(AquamiraeMod.MODID).description("remnants_saber").variables(100).modifiers("%").build(this);
+	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "remnants_saber").var(100, "%").build(RemnantsSaberItem.class);
 
 	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
 		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);

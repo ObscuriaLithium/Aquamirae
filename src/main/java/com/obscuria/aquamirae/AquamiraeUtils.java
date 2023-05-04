@@ -1,6 +1,6 @@
 package com.obscuria.aquamirae;
 
-import com.obscuria.aquamirae.api.ShipGraveyardEntity;
+import com.obscuria.aquamirae.common.entities.ShipGraveyardEntity;
 import net.minecraft.world.entity.Entity;
 
 public final class AquamiraeUtils {
@@ -10,6 +10,6 @@ public final class AquamiraeUtils {
     }
 
     public static boolean isInIceMaze(Entity entity) {
-        return entity.getLevel().getBiome(entity.blockPosition()).is(AquamiraeMod.ICE_MAZE);
+        return entity.getLevel().getBiome(entity.blockPosition()).is(Aquamirae.ICE_MAZE);
     }
 }

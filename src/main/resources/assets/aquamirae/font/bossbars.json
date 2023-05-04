@@ -1,9 +1,0 @@
-{
-    "providers": [
-	{ "type": "bitmap",
-            "file": "aquamirae:gui/bossbar.png",
-            "ascent": 18, "height": 64,
-            "chars": ["1"]
-        }
-    ]
-}

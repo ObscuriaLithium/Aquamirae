@@ -1,24 +1,14 @@
 package com.obscuria.aquamirae.client.models.armor;
 
-import com.obscuria.aquamirae.AquamiraeMod;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.EntityModel;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.world.entity.Entity;
 
 public class ModelTerribleArmor<T extends Entity> extends EntityModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(AquamiraeMod.MODID, "terrible_armor"),
-			"main");
 	public final ModelPart left_shoe;
 	public final ModelPart right_shoe;
 	public final ModelPart body;
