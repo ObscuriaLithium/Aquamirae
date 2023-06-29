@@ -3,11 +3,7 @@ package com.obscuria.aquamirae.common.items;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
@@ -250,11 +246,11 @@ public final class AquamiraeTiers {
     };
 
     public static final ArmorMaterial TERRIBLE_ARMOR = new ArmorMaterial() {
-        @Override public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-            return new int[]{13, 15, 16, 11}[slot.getIndex()] * 25;
+        @Override public int getDurabilityForType(ArmorItem.Type type) {
+            return new int[]{13, 15, 16, 11}[type.getSlot().getIndex()] * 25;
         }
-        @Override public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-            return new int[]{2, 3, 7, 5}[slot.getIndex()];
+        @Override public int getDefenseForType(ArmorItem.Type type) {
+            return new int[]{2, 3, 7, 5}[type.getSlot().getIndex()];
         }
         @Override public int getEnchantmentValue() {
             return 12;
@@ -278,11 +274,11 @@ public final class AquamiraeTiers {
     };
 
     public static final ArmorMaterial THREE_BOLT_ARMOR = new ArmorMaterial() {
-        @Override public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-            return new int[]{13, 15, 16, 11}[slot.getIndex()] * 75;
+        @Override public int getDurabilityForType(ArmorItem.Type type) {
+            return new int[]{13, 15, 16, 11}[type.getSlot().getIndex()] * 75;
         }
-        @Override public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-            return new int[]{3, 5, 5, 7}[slot.getIndex()];
+        @Override public int getDefenseForType(ArmorItem.Type type) {
+            return new int[]{3, 5, 5, 7}[type.getSlot().getIndex()];
         }
         @Override public int getEnchantmentValue() {
             return 9;
@@ -305,11 +301,11 @@ public final class AquamiraeTiers {
     };
 
     public static final ArmorMaterial ABYSSAL_ARMOR = new ArmorMaterial() {
-        @Override public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-            return new int[]{13, 15, 16, 11}[slot.getIndex()] * 40;
+        @Override public int getDurabilityForType(ArmorItem.Type type) {
+            return new int[]{13, 15, 16, 11}[type.getSlot().getIndex()] * 40;
         }
-        @Override public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-            return new int[]{2, 4, 4, 6}[slot.getIndex()];
+        @Override public int getDefenseForType(ArmorItem.Type type) {
+            return new int[]{2, 4, 4, 6}[type.getSlot().getIndex()];
         }
         @Override public int getEnchantmentValue() {
             return 12;
@@ -333,11 +329,11 @@ public final class AquamiraeTiers {
     };
 
     public static final ArmorMaterial ABYSSAL_ARMOR_EXTRA = new ArmorMaterial() {
-        @Override public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-            return new int[]{13, 15, 16, 11}[slot.getIndex()] * 40;
+        @Override public int getDurabilityForType(ArmorItem.Type type) {
+            return new int[]{13, 15, 16, 11}[type.getSlot().getIndex()] * 40;
         }
-        @Override public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-            return new int[]{3, 6, 8, 2}[slot.getIndex()];
+        @Override public int getDefenseForType(ArmorItem.Type type) {
+            return new int[]{3, 6, 8, 2}[type.getSlot().getIndex()];
         }
         @Override public int getEnchantmentValue() {
             return 12;

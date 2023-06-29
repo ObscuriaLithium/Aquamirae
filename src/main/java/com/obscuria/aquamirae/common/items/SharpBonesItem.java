@@ -1,8 +1,6 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.Aquamirae;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -13,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SharpBonesItem extends Item {
 	public SharpBonesItem() {
-		super(new Item.Properties().tab(Aquamirae.TAB).stacksTo(64).rarity(Rarity.COMMON)
+		super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON)
 				.food((new FoodProperties.Builder()).nutrition(1).saturationMod(0f).meat().build()));
 	}
 
@@ -24,7 +22,7 @@ public class SharpBonesItem extends Item {
 
 	@Override
 	public @NotNull ItemStack finishUsingItem(@NotNull ItemStack itemstack, @NotNull Level world, LivingEntity entity) {
-		entity.hurt(DamageSource.STARVE, 1);
+		entity.hurt(entity.damageSources().starve(), 1);
 		return super.finishUsingItem(itemstack, world, entity);
 	}
 }

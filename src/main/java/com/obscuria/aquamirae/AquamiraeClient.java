@@ -6,6 +6,7 @@ import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.event.ObscureAPIRegisterBossBarsEvent;
 import com.obscuria.obscureapi.util.ItemUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
@@ -34,7 +35,7 @@ public final class AquamiraeClient {
         return  () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new ConfigScreen(screen));
     }
 
-    public static void scrollEffect(int type) {
+    public static void scrollSound() {
         if (Minecraft.getInstance().player == null) return;
         Minecraft.getInstance().player.playSound(AquamiraeSounds.EFFECT_MYSTERY.get());
     }
@@ -60,7 +61,7 @@ public final class AquamiraeClient {
             corneliaMusic = 20 * 150;
             Minecraft.getInstance().getMusicManager().stopPlaying();
             Minecraft.getInstance().getMusicManager().startPlaying(
-                    new Music(AquamiraeSounds.MUSIC_FORSAKEN_DROWNAGE.get(), 10, 100, true));
+                    new Music(Holder.direct(AquamiraeSounds.MUSIC_FORSAKEN_DROWNAGE.get()), 10, 100, true));
         }
     }
 
@@ -69,7 +70,7 @@ public final class AquamiraeClient {
             biomeMusic = 20 * new Random().nextInt(180, 300);
             Minecraft.getInstance().getMusicManager().stopPlaying();
             Minecraft.getInstance().getMusicManager().startPlaying(
-                    new Music(AquamiraeSounds.MUSIC_ICE_MAZE_THEME.get(), 10, 100, true));
+                    new Music(Holder.direct(AquamiraeSounds.MUSIC_ICE_MAZE_THEME.get()), 10, 100, true));
         }
     }
 

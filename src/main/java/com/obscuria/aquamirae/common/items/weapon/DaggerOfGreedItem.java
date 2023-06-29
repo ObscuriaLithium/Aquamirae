@@ -24,7 +24,7 @@ import java.util.Random;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class DaggerOfGreedItem extends SwordItem {
 	public DaggerOfGreedItem() {
-		super(AquamiraeTiers.DAGGER_OF_GREED, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON).tab(Aquamirae.TAB));
+		super(AquamiraeTiers.DAGGER_OF_GREED, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON));
 	}
 
 	@ClassAbility

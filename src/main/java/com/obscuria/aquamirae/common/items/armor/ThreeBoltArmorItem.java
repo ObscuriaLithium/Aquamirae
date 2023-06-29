@@ -10,14 +10,13 @@ import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.models.armor.ModelThreeBoltArmor;
-import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
+import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.api.common.classes.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -41,8 +40,8 @@ import java.util.function.Consumer;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "armor")
 public abstract class ThreeBoltArmorItem extends ArmorItem {
 
-	public ThreeBoltArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.THREE_BOLT_ARMOR, slot, properties.tab(Aquamirae.TAB));
+	public ThreeBoltArmorItem(ArmorItem.Type type, Item.@NotNull Properties properties) {
+		super(AquamiraeTiers.THREE_BOLT_ARMOR, type, properties);
 	}
 
 	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "three_bolt_armor_half").build(ThreeBoltArmorItem.class);
@@ -58,7 +57,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		public final Bonus BONUS = super.BONUS;
 
 		public Helmet() {
-			super(EquipmentSlot.HEAD, new Item.Properties());
+			super(Type.HELMET, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -116,7 +115,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		@ClassBonus public final Bonus BONUS = super.BONUS;
 
 		public Chestplate() {
-			super(EquipmentSlot.CHEST, new Item.Properties());
+			super(Type.CHESTPLATE, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -154,8 +153,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 						stack.shrink(1);
 						stack.setDamageValue(0);
 					}
-					if (!entity.getLevel().isClientSide()) entity.getLevel().playSound(null, new BlockPos(entity.getX(),
-							entity.getY(), entity.getZ()), AquamiraeSounds.EFFECT_OXYGEN.get(), SoundSource.PLAYERS, 1, 1);
+					if (!entity.getLevel().isClientSide()) entity.getLevel().playSound(null, entity.blockPosition(), AquamiraeSounds.EFFECT_OXYGEN.get(), SoundSource.PLAYERS, 1, 1);
 				}
 			}
 		}
@@ -168,7 +166,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		@ClassBonus public final Bonus BONUS = super.BONUS;
 
 		public Leggings() {
-			super(EquipmentSlot.LEGS, new Item.Properties());
+			super(Type.LEGGINGS, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -205,7 +203,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 		@ClassBonus public final Bonus BONUS = super.BONUS;
 
 		public Boots() {
-			super(EquipmentSlot.FEET, new Item.Properties());
+			super(Type.BOOTS, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class DividerItem extends SwordItem {
 	public DividerItem() {
-		super(AquamiraeTiers.DIVIDER, 3, -2.6f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(Aquamirae.TAB));
+		super(AquamiraeTiers.DIVIDER, 3, -2.6f, new Item.Properties().fireResistant().rarity(Rarity.EPIC));
 	}
 
 	@ClassAbility

@@ -15,9 +15,9 @@ import com.obscuria.aquamirae.client.particle.ElectricParticle;
 public class AquamiraeParticles {
 	@SubscribeEvent
 	public static void registerParticles(RegisterParticleProvidersEvent event) {
-		event.register(AquamiraeParticleTypes.SHINE.get(), ShineParticle::provider);
-		event.register(AquamiraeParticleTypes.GHOST_SHINE.get(), GhostShineParticle::provider);
-		event.register(AquamiraeParticleTypes.GHOST.get(), GhostParticle::provider);
-		event.register(AquamiraeParticleTypes.ELECTRIC.get(), ElectricParticle::provider);
+		event.registerSpriteSet(AquamiraeParticleTypes.SHINE.get(), ShineParticle::provider);
+		event.registerSpriteSet(AquamiraeParticleTypes.GHOST_SHINE.get(), GhostShineParticle::provider);
+		event.registerSpriteSet(AquamiraeParticleTypes.GHOST.get(), GhostParticle::provider);
+		event.registerSpriteSet(AquamiraeParticleTypes.ELECTRIC.get(), ElectricParticle::provider);
 	}
 }

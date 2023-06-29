@@ -1,12 +1,10 @@
 
-package com.obscuria.aquamirae.common.features;
+package com.obscuria.aquamirae.common.worldgen.feature;
 
-import com.obscuria.aquamirae.registry.AquamiraeBlocks;
+import com.mojang.serialization.Codec;
 import com.obscuria.aquamirae.common.blocks.OxygeliumBlock;
+import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
@@ -17,12 +15,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.Material;
 
 import java.util.List;
@@ -30,20 +25,9 @@ import java.util.List;
 public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	private final List<Block> BLOCKS;
 
-	public static OxygeliumFeature FEATURE = null;
-	public static Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> CONFIGURED_FEATURE = null;
-	public static Holder<PlacedFeature> PLACED_FEATURE = null;
-
-	public OxygeliumFeature() {
-		super(NoneFeatureConfiguration.CODEC);
+	public OxygeliumFeature(Codec<NoneFeatureConfiguration> codec) {
+		super(codec);
 		BLOCKS = List.of(Blocks.GRAVEL);
-	}
-
-	public static Feature<?> feature() {
-		FEATURE = new OxygeliumFeature();
-		CONFIGURED_FEATURE = FeatureUtils.register("aquamirae:oxygelium", FEATURE, FeatureConfiguration.NONE);
-		PLACED_FEATURE = PlacementUtils.register("aquamirae:oxygelium", CONFIGURED_FEATURE, List.of());
-		return FEATURE;
 	}
 
 	@Override
@@ -137,7 +121,10 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	private void placeElodea(WorldGenLevel world, int x, int y, int z, RandomSource random) {
 		final int max = random.nextInt(4, 24);
 		for (int i = 0; i <= max; i++) {
-			final BlockPos pos = new BlockPos(x + random.triangle(0, 7), y - 4, z + random.triangle(0, 7));
+			final BlockPos pos = new BlockPos(
+					x + (int) Math.round(random.triangle(0, 7)),
+					y - 4,
+					z + (int) Math.round(random.triangle(0, 7)));
 			int offset = 0;
 			while (offset <= 10) {
 				if ((world.getBlockState(pos.above(offset - 1)).getBlock() == Blocks.GRAVEL ||

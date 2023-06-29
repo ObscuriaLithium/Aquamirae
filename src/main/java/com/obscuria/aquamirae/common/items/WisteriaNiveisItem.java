@@ -1,9 +1,8 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.common.blocks.WisteriaNiveisBlock;
+import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class WisteriaNiveisItem extends Item {
 	public WisteriaNiveisItem() {
-		super(new Item.Properties().tab(Aquamirae.TAB).stacksTo(64).rarity(Rarity.COMMON));
+		super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
 	}
 
 	@Override

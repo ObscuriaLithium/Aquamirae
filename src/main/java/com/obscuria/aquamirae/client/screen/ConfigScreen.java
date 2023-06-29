@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class ConfigScreen extends Screen {
 
@@ -57,8 +58,7 @@ public class ConfigScreen extends Screen {
         this.addRenderableWidget(stylizedBossbar);
         this.addRenderableWidget(notifications);
 
-        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 24 * 7 - 6,
-                100, 20, Component.literal("Reset"), (button) -> {
+        this.addRenderableWidget(new Button.Builder(Component.literal("Reset"), b -> {
             AquamiraeConfig.Client.overlay.set(AquamiraeConfig.Client.overlay.getDefault());
             AquamiraeConfig.Client.particles.set(AquamiraeConfig.Client.particles.getDefault());
             AquamiraeConfig.Client.ambientSounds.set(AquamiraeConfig.Client.ambientSounds.getDefault());
@@ -73,17 +73,16 @@ public class ConfigScreen extends Screen {
             this.bossMusic.setValue(AquamiraeConfig.Client.bossMusic.get());
             this.stylizedBossbar.setValue(AquamiraeConfig.Client.stylizedBossbar.get());
             this.notifications.setValue(AquamiraeConfig.Common.notifications.get());
-        }));
-        this.addRenderableWidget(new Button(this.width / 2 - 45, this.height / 6 + 24 * 7 - 6,
-                200, 20, CommonComponents.GUI_DONE, (button) -> {
+        }).pos(this.width / 2 - 155, this.height / 6 + 24 * 7 - 6).size(100, 20).build());
+        this.addRenderableWidget(new Button.Builder(CommonComponents.GUI_DONE, b -> {
             this.save();
             Minecraft.getInstance().setScreen(this.PARENT);
-        }));
+        }).pos(this.width / 2 - 45, this.height / 6 + 24 * 7 - 6).size(200, 20).build());
     }
 
     @Override
-    public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
-        this.renderDirtBackground(0);
+    public void render(@NotNull PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+        this.renderDirtBackground(pose);
         drawCenteredString(pose, this.font, this.title, this.width / 2, 15, 16777215);
         super.render(pose, mouseX, mouseY, partialTicks);
     }

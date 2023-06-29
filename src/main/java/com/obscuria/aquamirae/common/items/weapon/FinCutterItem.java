@@ -12,7 +12,7 @@ import net.minecraft.world.item.SwordItem;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class FinCutterItem extends SwordItem {
 	public FinCutterItem() {
-		super(AquamiraeTiers.FIN_CUTTER, 3, -2f, new Item.Properties().tab(Aquamirae.TAB));
+		super(AquamiraeTiers.FIN_CUTTER, 3, -2f, new Item.Properties());
 	}
 
 	@ClassAbility

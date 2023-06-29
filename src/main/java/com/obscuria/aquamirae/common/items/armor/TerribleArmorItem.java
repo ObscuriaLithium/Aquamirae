@@ -29,8 +29,8 @@ import java.util.function.Consumer;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "armor")
 public abstract class TerribleArmorItem extends ArmorItem {
 
-	public TerribleArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.TERRIBLE_ARMOR, slot, properties.tab(Aquamirae.TAB));
+	public TerribleArmorItem(ArmorItem.Type type, Item.@NotNull Properties properties) {
+		super(AquamiraeTiers.TERRIBLE_ARMOR, type, properties);
 	}
 
 	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "terrible_armor_half").cost(Ability.Cost.Type.COOLDOWN, 10)
@@ -47,7 +47,7 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(20).build();
 
 		public Helmet() {
-			super(EquipmentSlot.HEAD, new Item.Properties());
+			super(Type.HELMET, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -84,7 +84,7 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(10).build();
 
 		public Chestplate() {
-			super(EquipmentSlot.CHEST, new Item.Properties());
+			super(Type.CHESTPLATE, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -122,7 +122,7 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-10).build();
 
 		public Leggings() {
-			super(EquipmentSlot.LEGS, new Item.Properties());
+			super(Type.LEGGINGS, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -160,7 +160,7 @@ public abstract class TerribleArmorItem extends ArmorItem {
 		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-20).build();
 
 		public Boots() {
-			super(EquipmentSlot.FEET, new Item.Properties());
+			super(Type.BOOTS, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {

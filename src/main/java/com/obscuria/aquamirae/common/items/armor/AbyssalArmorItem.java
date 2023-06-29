@@ -33,8 +33,8 @@ import java.util.function.Consumer;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "armor")
 public abstract class AbyssalArmorItem extends ArmorItem {
 
-	public AbyssalArmorItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.ABYSSAL_ARMOR, slot, properties.rarity(Rarity.EPIC).tab(Aquamirae.TAB));
+	public AbyssalArmorItem(ArmorItem.Type type, Item.@NotNull Properties properties) {
+		super(AquamiraeTiers.ABYSSAL_ARMOR, type, properties.rarity(Rarity.EPIC));
 	}
 
 	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "abyssal_armor_half").style(Ability.Style.ATTRIBUTE)
@@ -63,7 +63,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 		@ClassBonus public final Bonus BONUS = super.BONUS_1;
 
 		public Heaume() {
-			super(EquipmentSlot.HEAD, new Item.Properties());
+			super(Type.HELMET, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -100,7 +100,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 		@ClassBonus public final Bonus BONUS = super.BONUS_2;
 
 		public Brigantine() {
-			super(EquipmentSlot.CHEST, new Item.Properties());
+			super(Type.CHESTPLATE, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -138,7 +138,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 		@ClassBonus public final Bonus BONUS = super.BONUS_2;
 
 		public Leggings() {
-			super(EquipmentSlot.LEGS, new Item.Properties());
+			super(Type.LEGGINGS, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
@@ -176,7 +176,7 @@ public abstract class AbyssalArmorItem extends ArmorItem {
 		@ClassBonus public final Bonus BONUS = super.BONUS_1;
 
 		public Boots() {
-			super(EquipmentSlot.FEET, new Item.Properties());
+			super(Type.BOOTS, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {

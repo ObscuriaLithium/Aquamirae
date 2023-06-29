@@ -7,7 +7,6 @@ import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.api.hekate.Animation;
 import com.obscuria.obscureapi.api.hekate.AnimationHelper;
-import com.obscuria.obscureapi.api.hekate.HekateLib;
 import com.obscuria.obscureapi.api.hekate.IAnimated;
 import com.obscuria.obscureapi.api.utils.ExceptionFilter;
 import net.minecraft.core.BlockPos;
@@ -22,6 +21,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -175,7 +175,7 @@ public class Maw extends Monster implements IAnimated {
 
 	@Override
 	public boolean hurt(@NotNull DamageSource source, float amount) {
-		if (source == DamageSource.DROWN) return false;
+		if (source.is(DamageTypes.DROWN)) return false;
 		return super.hurt(source, amount);
 	}
 

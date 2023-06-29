@@ -1,36 +1,35 @@
 modLoader="javafml"
-loaderVersion="[43,)"
-license="Obscuria Lithium (c) 2023, All Rights Reserved."
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
 
 [[mods]]
-    modId="aquamirae"
-    version="6.API15"
-    displayName="Aquamirae"
-    credits="Krossy and everyone who supports us on Patreon!"
-    updateJSONURL="https://raw.githubusercontent.com/ObscuriaLithium/Home/main/aquamirae/versions.json"
-    issueTrackerURL="https://discord.gg/By29HCKgPx"
-    logoFile="logo.png"
-    authors="Obscuria, Pluvia"
-    description="   Ship graveyard with terrible deep sea creatures."
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''${mod_description}'''
+updateJSONURL="https://raw.githubusercontent.com/ObscuriaLithium/Home/main/aquamirae/versions.json"
+issueTrackerURL="https://discord.gg/By29HCKgPx"
+logoFile="logo.png"
 
-[[dependencies.aquamirae]]
-    modId="obscure_api"
-    mandatory=true
-    versionRange="[15,)"
-    ordering="AFTER"
-    side="BOTH"
+[[dependencies.${mod_id}]]
+modId="obscure_api"
+mandatory=true
+versionRange="${api_version_range}"
+ordering="NONE"
+side="BOTH"
 
-[[dependencies.aquamirae]]
-    modId="forge"
-    mandatory=true
-    versionRange="[43.2.0,)"
-    ordering="NONE"
-    side="BOTH"
+[[dependencies.${mod_id}]]
+modId="forge"
+mandatory=true
+versionRange="${forge_version_range}"
+ordering="NONE"
+side="BOTH"
 
-[[dependencies.aquamirae]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.19.2]"
-    ordering="NONE"
-    side="BOTH"
+[[dependencies.${mod_id}]]
+modId="minecraft"
+mandatory=true
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
 

@@ -22,7 +22,7 @@ import java.util.UUID;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class RemnantsSaberItem extends SwordItem {
 	public RemnantsSaberItem() {
-		super(AquamiraeTiers.REMNANTS_SABER, 3, -2f, new Item.Properties().tab(Aquamirae.TAB));
+		super(AquamiraeTiers.REMNANTS_SABER, 3, -2f, new Item.Properties());
 	}
 
 	@ClassAbility

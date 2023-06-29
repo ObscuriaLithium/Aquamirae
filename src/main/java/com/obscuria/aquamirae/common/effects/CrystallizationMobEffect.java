@@ -1,13 +1,15 @@
 
 package com.obscuria.aquamirae.common.effects;
 
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffect;
+import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.jetbrains.annotations.NotNull;
 
 public class CrystallizationMobEffect extends MobEffect {
@@ -25,7 +27,7 @@ public class CrystallizationMobEffect extends MobEffect {
 	public void removeAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap attributeMap, int amplifier) {
 		super.removeAttributeModifiers(entity, attributeMap, amplifier);
 		entity.getPersistentData().putBoolean("crystallization", true);
-		entity.hurt(new DamageSource("crystallization").bypassArmor().setMagic(), 9999999F);
+		entity.hurt(new DamageSource(Holder.direct(new DamageType("crystallization", 0f))), 9999999F);
 		if (entity.isAlive()) entity.getPersistentData().putBoolean("crystallization", false);
 	}
 }

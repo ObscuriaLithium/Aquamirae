@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DeadSeaScrollItem extends Item {
 	public DeadSeaScrollItem() {
-		super(new Item.Properties().tab(Aquamirae.TAB).stacksTo(8).rarity(Rarity.UNCOMMON));
+		super(new Item.Properties().stacksTo(8).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override

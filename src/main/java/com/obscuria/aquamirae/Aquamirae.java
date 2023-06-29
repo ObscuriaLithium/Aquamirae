@@ -13,7 +13,7 @@ import com.obscuria.obscureapi.event.ObscureAPIEnchantmentsEvent;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import com.obscuria.obscureapi.util.ItemUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -51,7 +51,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -81,23 +81,19 @@ public class Aquamirae {
 	public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 	private static int messageID = 0;
 	public static final ObscureClass SEA_WOLF = ClassManager.register(Aquamirae.MODID, "sea_wolf");
-	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Aquamirae.MODID, "ice_maze"));
-	public static final TagKey<Structure> SHIP = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Aquamirae.MODID, "ship"));
-	public static final TagKey<Structure> OUTPOST = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Aquamirae.MODID, "outpost"));
-	public static final TagKey<Structure> SHELTER = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Aquamirae.MODID, "shelter"));
+	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registries.BIOME, new ResourceLocation(Aquamirae.MODID, "ice_maze"));
+	public static final TagKey<Structure> SHIP = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Aquamirae.MODID, "ship"));
+	public static final TagKey<Structure> OUTPOST = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Aquamirae.MODID, "outpost"));
+	public static final TagKey<Structure> SHELTER = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Aquamirae.MODID, "shelter"));
 	public static final TagKey<Block> EEL_MOVE = BlockTags.create(new ResourceLocation(MODID, "eel_move"));
 	public static final TagKey<Block> MAZE_MOTHER_DESTROY = BlockTags.create(new ResourceLocation(MODID, "maze_mother_destroy"));
 	public static final TagKey<Block> SCROLL_DESTROY = BlockTags.create(new ResourceLocation(MODID, "scroll_destroy"));
-	public static final CreativeModeTab TAB = new CreativeModeTab("aquamirae") {
-		@Override public @NotNull ItemStack makeIcon() {
-			return AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance();
-		}
-	};
+	public static final CreativeModeTab TAB = new CreativeModeTab.Builder(CreativeModeTab.Row.BOTTOM, 0)
+			.icon(() -> AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance()).build();
 
 	public Aquamirae() {
 		final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-		AquamiraeConfig.register();
 		AquamiraeFeatures.REGISTRY.register(modBus);
 		AquamiraeSounds.REGISTRY.register(modBus);
 		AquamiraeBlocks.REGISTRY.register(modBus);
@@ -106,6 +102,7 @@ public class Aquamirae {
 		AquamiraeMobEffects.REGISTRY.register(modBus);
 		AquamiraePotions.REGISTRY.register(modBus);
 		AquamiraeParticleTypes.REGISTRY.register(modBus);
+		AquamiraeConfig.register();
 
 		modBus.addListener(this::commonSetup);
 		modBus.addListener(EventPriority.HIGHEST, this::registerEnchantments);
@@ -120,7 +117,7 @@ public class Aquamirae {
 			ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, AquamiraeClient.getConfig());
 	}
 
-	private void registerEnchantments(final ObscureAPIEnchantmentsEvent event) {
+	private void registerEnchantments(final @NotNull ObscureAPIEnchantmentsEvent event) {
 		event.registerMirror(true);
 		event.registerDistance(true);
 		event.registerFastSpin(true);
@@ -176,7 +173,7 @@ public class Aquamirae {
 		return Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER || Calendar.getInstance().get(Calendar.MONTH) == Calendar.JANUARY;
 	}
 
-	private void onEntitySpawn(@NotNull LivingSpawnEvent event) {
+	private void onEntitySpawn(@NotNull MobSpawnEvent event) {
 		final Mob mob = event.getEntity();
 		if (mob instanceof Pillager) this.modifyLootTable(mob, "entities/maze_pillager");
 		if (mob instanceof Vindicator) this.modifyLootTable(mob, "entities/maze_vindicator");
@@ -244,8 +241,7 @@ public class Aquamirae {
 					entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.CRYSTALLIZATION.get(),
 							20 * item.ABILITY_FULLSET_1.getVariable(entity, 1), 0, true, true));
 					entity.setHealth(entity.getMaxHealth());
-					if (entity.getLevel() instanceof ServerLevel level) level.playSound(null, new BlockPos(entity.getX(),
-							entity.getY() + 1, entity.getZ()), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1, 1);
+					if (entity.getLevel() instanceof ServerLevel level) level.playSound(null, entity.blockPosition().above(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1, 1);
 					final ItemStack head = entity.getItemBySlot(EquipmentSlot.HEAD);
 					final ItemStack chest = entity.getItemBySlot(EquipmentSlot.CHEST);
 					final ItemStack legs = entity.getItemBySlot(EquipmentSlot.LEGS);

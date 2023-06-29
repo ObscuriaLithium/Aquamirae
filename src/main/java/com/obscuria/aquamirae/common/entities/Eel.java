@@ -22,6 +22,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -311,7 +312,7 @@ public class Eel extends Monster implements IAnimated {
 	public boolean hurt(DamageSource source, float amount) {
 		if (this.MOVE.isPlaying()) return false;
 		if (source.getDirectEntity() instanceof AbstractArrow) return false;
-		if (source == DamageSource.FALL || source == DamageSource.CACTUS || source == DamageSource.DROWN) return false;
+		if (source.is(DamageTypes.FALL) || source.is(DamageTypes.CACTUS) || source.is(DamageTypes.DROWN)) return false;
 		return super.hurt(source, amount);
 	}
 

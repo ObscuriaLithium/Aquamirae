@@ -35,8 +35,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbyssalArmorExtraItem extends ArmorItem {
-	public AbyssalArmorExtraItem(EquipmentSlot slot, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.ABYSSAL_ARMOR_EXTRA, slot, properties.rarity(Rarity.EPIC).tab(Aquamirae.TAB));
+	public AbyssalArmorExtraItem(ArmorItem.Type type, Item.@NotNull Properties properties) {
+		super(AquamiraeTiers.ABYSSAL_ARMOR_EXTRA, type, properties.rarity(Rarity.EPIC));
 	}
 
 	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "abyssal_armor_half").style(Ability.Style.ATTRIBUTE)
@@ -71,7 +71,7 @@ public abstract class AbyssalArmorExtraItem extends ArmorItem {
 		@ClassBonus public final Bonus BONUS = super.BONUS;
 
 		public Tiara() {
-			super(EquipmentSlot.HEAD, new Item.Properties());
+			super(Type.HELMET, new Item.Properties());
 		}
 
 		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {

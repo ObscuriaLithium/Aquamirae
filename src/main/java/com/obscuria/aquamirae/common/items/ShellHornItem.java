@@ -1,11 +1,10 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeUtils;
+import com.obscuria.aquamirae.common.entities.CaptainCornelia;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.aquamirae.common.entities.CaptainCornelia;
 import com.obscuria.obscureapi.api.utils.Icons;
 import com.obscuria.obscureapi.util.PlayerUtils;
 import com.obscuria.obscureapi.util.TextUtils;
@@ -29,14 +28,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class ShellHornItem extends Item {
 	public ShellHornItem() {
-		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).tab(Aquamirae.TAB));
+		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override
 	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player entity, @NotNull InteractionHand hand) {
 		InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
 		if (entity.getLevel() instanceof ServerLevel level)
-			level.playSound(null, new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()),
+			level.playSound(null, entity.blockPosition().above(),
 					AquamiraeSounds.ITEM_SHELL_HORN_USE.get(), SoundSource.PLAYERS, 3, 1);
 		ItemStack stack = ar.getObject();
 		entity.swing(InteractionHand.MAIN_HAND, true);

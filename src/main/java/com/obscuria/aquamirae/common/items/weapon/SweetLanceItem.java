@@ -32,7 +32,7 @@ public class SweetLanceItem extends SwordItem {
 		if (slot == EquipmentSlot.MAINHAND) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.putAll(multimap);
-			builder.put(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(UUID.fromString("AB3F54D3-645C-4F36-A467-9C11A33DB1CF"),
+			builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.fromString("AB3F54D3-645C-4F36-A467-9C11A33DB1CF"),
 					"Weapon modifier", 0.25, AttributeModifier.Operation.MULTIPLY_BASE));
 			return builder.build();
 		}

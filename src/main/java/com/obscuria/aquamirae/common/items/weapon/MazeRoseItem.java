@@ -5,16 +5,14 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.registry.AquamiraeCreativeTab;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
+import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.api.common.DynamicProjectile;
 import com.obscuria.obscureapi.api.common.DynamicProjectileItem;
 import com.obscuria.obscureapi.api.common.classes.Ability;
 import com.obscuria.obscureapi.api.common.classes.ClassAbility;
 import com.obscuria.obscureapi.api.common.classes.ClassItem;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -32,7 +30,7 @@ import java.util.UUID;
 @DynamicProjectileItem(mirror = true, distance = true, fastSpin = true)
 public class MazeRoseItem extends TieredItem implements Vanishable {
 	public MazeRoseItem() {
-		super(AquamiraeTiers.MAZE_ROSE, new Item.Properties().tab(Aquamirae.TAB).rarity(Rarity.UNCOMMON));
+		super(AquamiraeTiers.MAZE_ROSE, new Item.Properties().rarity(Rarity.UNCOMMON));
 	}
 
 	@ClassAbility
@@ -43,12 +41,6 @@ public class MazeRoseItem extends TieredItem implements Vanishable {
 						20 * values.get(1), 1000);
 				return true;
 			}).var(5, "").var(40, "s").build(MazeRoseItem.class);
-
-	@Override
-	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
-		super.fillItemCategory(tab, list);
-		if (tab == Aquamirae.TAB) list.addAll(AquamiraeCreativeTab.mazeRose());
-	}
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {

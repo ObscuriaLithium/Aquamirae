@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class PoisonedBladeItem extends SwordItem {
 	public PoisonedBladeItem() {
-		super(AquamiraeTiers.POISONED_BLADE, 3, -1f, new Item.Properties().tab(Aquamirae.TAB));
+		super(AquamiraeTiers.POISONED_BLADE, 3, -1f, new Item.Properties());
 	}
 
 	@ClassAbility

@@ -3,7 +3,6 @@ package com.obscuria.aquamirae.common.items;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +24,7 @@ import java.util.List;
 
 public class TreasurePouchItem extends Item {
 	public TreasurePouchItem() {
-		super(new Item.Properties().tab(Aquamirae.TAB).stacksTo(16).rarity(Rarity.UNCOMMON));
+		super(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class TreasurePouchItem extends Item {
 		ItemStack stack = resultHolder.getObject();
 		player.swing(hand);
 		if (!world.isClientSide) {
-			world.playSound(player, new BlockPos(player.getX(), player.getY() + 1, player.getZ()),
+			world.playSound(player, player.blockPosition().above(),
 					AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundSource.PLAYERS, 1, 1);
 			final List<ItemStack> loot = Aquamirae.SetBuilder.rare();
 			player.addItem(loot.get(player.getRandom().nextInt(0, loot.size() - 1)));

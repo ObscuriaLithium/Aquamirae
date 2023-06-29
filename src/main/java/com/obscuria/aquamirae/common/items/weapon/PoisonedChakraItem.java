@@ -5,16 +5,14 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.registry.AquamiraeCreativeTab;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.common.items.AquamiraeTiers;
+import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.api.common.DynamicProjectile;
 import com.obscuria.obscureapi.api.common.DynamicProjectileItem;
 import com.obscuria.obscureapi.api.common.classes.Ability;
 import com.obscuria.obscureapi.api.common.classes.ClassAbility;
 import com.obscuria.obscureapi.api.common.classes.ClassItem;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,7 +20,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.Vanishable;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +33,7 @@ import java.util.UUID;
 @DynamicProjectileItem(mirror = true, distance = true, fastSpin = true)
 public class PoisonedChakraItem extends TieredItem implements Vanishable {
 	public PoisonedChakraItem() {
-		super(AquamiraeTiers.POISONED_CHAKRA, new Item.Properties().tab(Aquamirae.TAB));
+		super(AquamiraeTiers.POISONED_CHAKRA, new Item.Properties());
 	}
 
 	@ClassAbility
@@ -43,12 +44,6 @@ public class PoisonedChakraItem extends TieredItem implements Vanishable {
 						20 * values.get(1), 1000);
 				return true;
 			}).var(3, "").var(30, "s").build(PoisonedBladeItem.class);
-
-	@Override
-	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> list) {
-		super.fillItemCategory(tab, list);
-		if (tab == Aquamirae.TAB) list.addAll(AquamiraeCreativeTab.poisonedChakra());
-	}
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {

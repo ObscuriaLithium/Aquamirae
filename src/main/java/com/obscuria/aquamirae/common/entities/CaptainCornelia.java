@@ -32,6 +32,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -299,7 +300,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 		this.getEntityData().set(REGENERATION, this.getEntityData().get(REGENERATION) - 1);
 		this.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 0, false, false));
 		if (this.level instanceof ServerLevel serverLevel) {
-			final BlockPos pos = new BlockPos(this.getX(), this.getY(), this.getZ());
+			final BlockPos pos = this.blockPosition();
 			LightningBolt entityToSpawn = new LightningBolt(EntityType.LIGHTNING_BOLT, serverLevel);
 			entityToSpawn.moveTo(Vec3.atBottomCenterOf(pos));
 			entityToSpawn.setVisualOnly(true);
@@ -321,9 +322,11 @@ public class CaptainCornelia extends Monster implements IAnimated {
 				living.addEffect(new MobEffectInstance(MobEffects.POISON, 80, 2));
 				return super.doHurtTarget(entity);
 			} else if (item instanceof WhisperOfTheAbyssItem) {
-				return this.doHurtTarget(living, DamageSource.mobAttack(this).bypassArmor(), 8);
+				living.setLastHurtByMob(this);
+				return this.doHurtTarget(living, this.damageSources().magic(), 8);
 			} else if (item instanceof DividerItem) {
-				return this.doHurtTarget(living, DamageSource.mobAttack(this).bypassArmor(), Math.max(4, living.getHealth() / 2f));
+				living.setLastHurtByMob(this);
+				return this.doHurtTarget(living, this.damageSources().magic(), Math.max(4, living.getHealth() / 2f));
 			} else if (item instanceof RemnantsSaberItem) {
 				this.heal(Math.min(30, living.getMaxHealth() * 0.4f));
 				return super.doHurtTarget(entity);
@@ -393,18 +396,18 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
 		if (source.getDirectEntity() instanceof AbstractArrow) return false;
-		if (source == DamageSource.FALL) return false;
-		if (source == DamageSource.CACTUS) return false;
-		if (source == DamageSource.DROWN) return false;
-		if (source == DamageSource.LIGHTNING_BOLT) return false;
-		if (source.isExplosion()) return false;
-		if (source.getMsgId().equals("trident")) return false;
+		if (source.is(DamageTypes.FALL)) return false;
+		if (source.is(DamageTypes.CACTUS)) return false;
+		if (source.is(DamageTypes.DROWN)) return false;
+		if (source.is(DamageTypes.LIGHTNING_BOLT)) return false;
+		if (source.is(DamageTypes.EXPLOSION)) return false;
+		if (source.is(DamageTypes.TRIDENT)) return false;
 		return super.hurt(source, amount);
 	}
 
 	@Override
 	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-		if (this.getLevel() instanceof ServerLevel serverLevel) serverLevel.playSound(null, new BlockPos(this.getX(), this.getY(), this.getZ()),
+		if (this.getLevel() instanceof ServerLevel serverLevel) serverLevel.playSound(null, this.blockPosition(),
 					AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 		this.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 120, 0, false, false));
 		Aquamirae.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.corneliaMovementSpeed.get());

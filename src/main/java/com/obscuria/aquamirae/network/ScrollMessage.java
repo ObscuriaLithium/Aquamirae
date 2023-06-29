@@ -28,7 +28,7 @@ public class ScrollMessage {
 
     public static void handler(ScrollMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> AquamiraeClient.scrollEffect(message.type));
+        context.enqueueWork(() -> AquamiraeClient.scrollSound());
         context.setPacketHandled(true);
     }
 

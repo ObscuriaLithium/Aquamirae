@@ -10,7 +10,6 @@ import com.obscuria.obscureapi.api.common.classes.Ability;
 import com.obscuria.obscureapi.api.common.classes.ClassAbility;
 import com.obscuria.obscureapi.api.common.classes.ClassItem;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -25,14 +24,14 @@ import java.util.UUID;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class TerribleSwordItem extends SwordItem {
 	public TerribleSwordItem() {
-		super(AquamiraeTiers.TERRIBLE_SWORD, 3, -3f, new Item.Properties().tab(Aquamirae.TAB));
+		super(AquamiraeTiers.TERRIBLE_SWORD, 3, -3f, new Item.Properties());
 	}
 
 	@ClassAbility
 	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "terrible_sword").action(
 			(stack, entity, target, context, values) -> {
 				if (target == null) return false;
-				if (target.getHealth() > 0) entity.hurt(DamageSource.DRAGON_BREATH, values.get(0));
+				if (target.getHealth() > 0) entity.hurt(entity.damageSources().dragonBreath(), values.get(0));
 				return true;
 			}).var(1).build(TerribleSwordItem.class);
 

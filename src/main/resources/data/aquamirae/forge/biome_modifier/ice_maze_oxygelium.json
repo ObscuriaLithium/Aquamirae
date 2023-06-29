@@ -1,6 +1,6 @@
 {
   "type": "forge:add_features",
   "biomes": "#aquamirae:ice_maze",
-  "features": "aquamirae:oxygelium",
+  "features": "aquamirae:ice_maze_oxygelium",
   "step": "raw_generation"
 }

@@ -190,7 +190,7 @@ public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
 				(entity.hasEffect(MobEffects.WATER_BREATHING) ? Objects.requireNonNull(entity.getEffect(MobEffects.WATER_BREATHING)).getDuration() : 0) + 200, 0));
 
 		if (!world.isClientSide() && entity.hasEffect(MobEffects.WATER_BREATHING) && Objects.requireNonNull(entity.getEffect(MobEffects.WATER_BREATHING)).getDuration() > 1200) {
-			world.playSound(null, pos, SoundEvents.AMBIENT_CAVE, SoundSource.BLOCKS, 1, 1);
+			world.playSound(null, pos, SoundEvents.AMBIENT_CAVE.get(), SoundSource.BLOCKS, 1, 1);
 			entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 1));
 		}
 		return InteractionResult.SUCCESS;

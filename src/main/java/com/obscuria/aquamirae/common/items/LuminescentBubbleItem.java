@@ -1,7 +1,6 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LuminescentBubbleItem extends Item {
 	public LuminescentBubbleItem() {
-		super(new Item.Properties().tab(Aquamirae.TAB).stacksTo(16).rarity(Rarity.COMMON));
+		super(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON));
 	}
 
 	@Override
@@ -29,7 +28,7 @@ public class LuminescentBubbleItem extends Item {
 			stack.shrink(1);
 			world.setBlock(new BlockPos(entity.getBlockX(), entity.getBlockY() + 1, entity.getBlockZ()),
 					AquamiraeBlocks.LUMINESCENT_BUBBLE.get().defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true), 3);
-			if (world instanceof ServerLevel level) level.playSound(null, new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()),
+			if (world instanceof ServerLevel level) level.playSound(null, entity.blockPosition().above(),
 						SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 2, 1);
 			return InteractionResultHolder.success(stack);
 		}

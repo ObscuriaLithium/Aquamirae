@@ -26,7 +26,7 @@ import java.util.UUID;
 @ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
 public class WhisperOfTheAbyssItem extends SwordItem {
 	public WhisperOfTheAbyssItem() {
-		super(AquamiraeTiers.WHISPER_OF_tHE_ABYSS, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(Aquamirae.TAB));
+		super(AquamiraeTiers.WHISPER_OF_tHE_ABYSS, 3, -3.2f, new Item.Properties().fireResistant().rarity(Rarity.EPIC));
 	}
 
 	@ClassAbility
@@ -46,7 +46,7 @@ public class WhisperOfTheAbyssItem extends SwordItem {
 		if (slot == EquipmentSlot.MAINHAND) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.putAll(multimap);
-			builder.put(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(UUID.fromString("AB3F54D3-645C-4F36-A497-9C11A33DB5CF"),
+			builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.fromString("AB3F54D3-645C-4F36-A497-9C11A33DB5CF"),
 					"Weapon modifier", 0.25, AttributeModifier.Operation.MULTIPLY_BASE));
 			return builder.build();
 		}
