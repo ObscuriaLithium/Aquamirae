@@ -34,7 +34,7 @@ public class ShellHornItem extends Item {
 	@Override
 	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player entity, @NotNull InteractionHand hand) {
 		InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-		if (entity.getLevel() instanceof ServerLevel level)
+		if (entity.level() instanceof ServerLevel level)
 			level.playSound(null, entity.blockPosition().above(),
 					AquamiraeSounds.ITEM_SHELL_HORN_USE.get(), SoundSource.PLAYERS, 3, 1);
 		ItemStack stack = ar.getObject();
@@ -47,12 +47,12 @@ public class ShellHornItem extends Item {
 			for (int iz = -6; iz <= 6; iz++) {
 				final int sz = entity.getBlockZ() + iz;
 				if (AquamiraeUtils.isInIceMaze(entity)) {
-					if ((entity.getLevel().getBlockState(new BlockPos(sx, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.getLevel().getBlockState(new BlockPos(sx, 58, sz))).getBlock() == Blocks.WATER
-							&& (entity.getLevel().getBlockState(new BlockPos(sx - 1, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.getLevel().getBlockState(new BlockPos(sx + 1, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.getLevel().getBlockState(new BlockPos(sx, 62, sz - 1))).getBlock() == Blocks.WATER
-							&& (entity.getLevel().getBlockState(new BlockPos(sx, 62, sz + 1))).getBlock() == Blocks.WATER) {
+					if ((entity.level().getBlockState(new BlockPos(sx, 62, sz))).getBlock() == Blocks.WATER
+							&& (entity.level().getBlockState(new BlockPos(sx, 58, sz))).getBlock() == Blocks.WATER
+							&& (entity.level().getBlockState(new BlockPos(sx - 1, 62, sz))).getBlock() == Blocks.WATER
+							&& (entity.level().getBlockState(new BlockPos(sx + 1, 62, sz))).getBlock() == Blocks.WATER
+							&& (entity.level().getBlockState(new BlockPos(sx, 62, sz - 1))).getBlock() == Blocks.WATER
+							&& (entity.level().getBlockState(new BlockPos(sx, 62, sz + 1))).getBlock() == Blocks.WATER) {
 						summon = true;
 						pos = new BlockPos(sx, 58, sz);
 						stack.shrink(1);
@@ -79,7 +79,7 @@ public class ShellHornItem extends Item {
 					this.ticks += 1;
 					if (this.ticks >= this.waitTicks) {
 						if (summon) { spawn();
-						} else if (!summoner.getLevel().isClientSide()) {
+						} else if (!summoner.level().isClientSide()) {
 							PlayerUtils.sendMessage(summoner, Icons.BOSS + TextUtils.translation("info.captain_spawn_fail"));
 						}
 						MinecraftForge.EVENT_BUS.unregister(this);
@@ -88,14 +88,14 @@ public class ShellHornItem extends Item {
 			}
 
 			private void spawn() {
-				if (summoner.getLevel() instanceof ServerLevel server) {
+				if (summoner.level() instanceof ServerLevel server) {
 					Mob cornelia = new CaptainCornelia(AquamiraeEntities.CAPTAIN_CORNELIA.get(), server);
-					cornelia.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, summoner.getLevel().getRandom().nextFloat() * 360F, 0);
-					cornelia.finalizeSpawn(server, summoner.getLevel().getCurrentDifficultyAt(cornelia.blockPosition()), MobSpawnType.MOB_SUMMONED,
+					cornelia.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, summoner.level().getRandom().nextFloat() * 360F, 0);
+					cornelia.finalizeSpawn(server, summoner.level().getCurrentDifficultyAt(cornelia.blockPosition()), MobSpawnType.MOB_SUMMONED,
 							null, null);
-					summoner.getLevel().addFreshEntity(cornelia);
+					summoner.level().addFreshEntity(cornelia);
 				}
-				if (!summoner.getLevel().isClientSide()) {
+				if (!summoner.level().isClientSide()) {
 					PlayerUtils.sendMessage(summoner, Icons.BOSS.get() + TextUtils.translation("info.captain_spawn"));
 				}
 			}

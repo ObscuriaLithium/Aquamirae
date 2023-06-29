@@ -1,14 +1,14 @@
 {
   "required": true,
-  "package": "com.obscuria.aquamirae.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "refmap": "aquamirae.refmap.json",
+  "minVersion": "0.8",
+  "package": "com.obscuria.Aquamirae.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "Aquamirae.refmap.json",
   "mixins": [
   ],
   "client": [
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "minVersion": "0.8"
+  }
 }

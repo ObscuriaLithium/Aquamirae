@@ -32,13 +32,14 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
@@ -54,7 +55,7 @@ public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public OxygeliumBlock() {
-		super(Properties.of(Material.WATER_PLANT, MaterialColor.COLOR_CYAN).sound(SoundType.CORAL_BLOCK).strength(0.8f, 1f).randomTicks()
+		super(Properties.of().mapColor(MapColor.WATER).sound(SoundType.CORAL_BLOCK).strength(0.8f, 1f).randomTicks()
 						.requiresCorrectToolForDrops().noCollission().speedFactor(0.8f).jumpFactor(0.8f).isRedstoneConductor((bs, br, bp) -> false)
 						.hasPostProcess((bs, br, bp) -> isGlowing(bs)).emissiveRendering((bs, br, bp) -> isGlowing(bs)).lightLevel(s -> isGlowing(s) ? 12 : 0).noLootTable());
 		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(TYPE, Type.STEM));
@@ -70,7 +71,7 @@ public class OxygeliumBlock extends Block implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootContext.@NotNull Builder builder) {
+	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
 		return Collections.singletonList(AquamiraeItems.OXYGELIUM.get().getDefaultInstance());
 	}
 

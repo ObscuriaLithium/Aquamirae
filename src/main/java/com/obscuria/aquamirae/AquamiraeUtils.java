@@ -10,6 +10,6 @@ public final class AquamiraeUtils {
     }
 
     public static boolean isInIceMaze(Entity entity) {
-        return entity.getLevel().getBiome(entity.blockPosition()).is(Aquamirae.ICE_MAZE);
+        return entity.level().getBiome(entity.blockPosition()).is(Aquamirae.ICE_MAZE);
     }
 }

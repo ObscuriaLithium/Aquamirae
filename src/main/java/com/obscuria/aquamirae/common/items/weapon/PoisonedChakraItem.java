@@ -40,7 +40,7 @@ public class PoisonedChakraItem extends TieredItem implements Vanishable {
 	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "poisoned_chakra").cost(Ability.Cost.Type.COOLDOWN, 30).action(
 			(stack, entity, target, context, values) -> {
 				stack.hurt(3, entity.getRandom(), null);
-				DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), entity, entity.level, stack, values.get(0), 0F,
+				DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), entity, entity.level(), stack, values.get(0), 0F,
 						20 * values.get(1), 1000);
 				return true;
 			}).var(3, "").var(30, "s").build(PoisonedBladeItem.class);

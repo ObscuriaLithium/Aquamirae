@@ -39,7 +39,7 @@ public class ScrollEffects {
     }
 
     public static void create(@NotNull Player player) {
-        if (!player.level.isClientSide) MinecraftForge.EVENT_BUS.register(new ScrollEffects(player));
+        if (!player.level().isClientSide) MinecraftForge.EVENT_BUS.register(new ScrollEffects(player));
     }
 
     @SubscribeEvent
@@ -69,15 +69,15 @@ public class ScrollEffects {
             for (int iy = 1; iy >= -10; iy--)
                 for (int iz = -1; iz <= 1; iz++) {
                     final BlockPos pos = new BlockPos(PLAYER.getBlockX() + ix, PLAYER.getBlockY() + iy, PLAYER.getBlockZ() + iz);
-                    if (PLAYER.level.getBlockState(pos).is(Aquamirae.SCROLL_DESTROY)) PLAYER.level.destroyBlock(pos, true);
+                    if (PLAYER.level().getBlockState(pos).is(Aquamirae.SCROLL_DESTROY)) PLAYER.level().destroyBlock(pos, true);
                 }
 
     }
 
     private void mimic() {
-        final Drowned drowned = new Drowned(EntityType.DROWNED, PLAYER.level);
-        if (PLAYER.level instanceof ServerLevel serverLevel) {
-            drowned.finalizeSpawn(serverLevel, PLAYER.level.getCurrentDifficultyAt(PLAYER.blockPosition()), MobSpawnType.EVENT, null, null);
+        final Drowned drowned = new Drowned(EntityType.DROWNED, PLAYER.level());
+        if (PLAYER.level() instanceof ServerLevel serverLevel) {
+            drowned.finalizeSpawn(serverLevel, PLAYER.level().getCurrentDifficultyAt(PLAYER.blockPosition()), MobSpawnType.EVENT, null, null);
             drowned.moveTo(PLAYER.position());
             drowned.setItemSlot(EquipmentSlot.HEAD, PLAYER.getItemBySlot(EquipmentSlot.HEAD));
             drowned.setItemSlot(EquipmentSlot.CHEST, PLAYER.getItemBySlot(EquipmentSlot.CHEST));
@@ -103,14 +103,14 @@ public class ScrollEffects {
 
     private boolean shelter() {
         final Vec3 center = PLAYER.position();
-        List<Eel> eels = PLAYER.level.getEntitiesOfClass(Eel.class, new AABB(center, center).inflate(128), e -> true).stream()
+        List<Eel> eels = PLAYER.level().getEntitiesOfClass(Eel.class, new AABB(center, center).inflate(128), e -> true).stream()
                 .sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
         if (!eels.isEmpty()) { PLAYER.moveTo(eels.get(0).position()); return true; }
         return false;
     }
 
     private void chakras() {
-        for (float i = 0f; i < 1f; i += 0.1F) DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER, PLAYER.level, null, 20, i, 6000, 1);
+        for (float i = 0f; i < 1f; i += 0.1F) DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER, PLAYER.level(), null, 20, i, 6000, 1);
     }
 
     public static class MoveUp {
@@ -123,7 +123,7 @@ public class ScrollEffects {
         }
 
         public static void create(@NotNull Player player) {
-            if (!player.level.isClientSide) MinecraftForge.EVENT_BUS.register(new MoveUp(player));
+            if (!player.level().isClientSide) MinecraftForge.EVENT_BUS.register(new MoveUp(player));
         }
 
         @SubscribeEvent
@@ -146,7 +146,7 @@ public class ScrollEffects {
         }
 
         public static void create(@NotNull Player player) {
-            if (!player.level.isClientSide) MinecraftForge.EVENT_BUS.register(new MoveSide(player));
+            if (!player.level().isClientSide) MinecraftForge.EVENT_BUS.register(new MoveSide(player));
         }
 
         @SubscribeEvent
@@ -173,7 +173,7 @@ public class ScrollEffects {
         }
 
         public static void create(@NotNull Player player) {
-            if (!player.level.isClientSide) MinecraftForge.EVENT_BUS.register(new Bones(player));
+            if (!player.level().isClientSide) MinecraftForge.EVENT_BUS.register(new Bones(player));
         }
 
         @SubscribeEvent
@@ -181,7 +181,7 @@ public class ScrollEffects {
             if (event.phase != TickEvent.Phase.END) return;
             if (tick >= 200) MinecraftForge.EVENT_BUS.unregister(this);
             if (tick % 20 == 0) {
-                PLAYER.level.playSound(null, PLAYER, SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 1f, 0.9f + 0.2f * PLAYER.getRandom().nextFloat());
+                PLAYER.level().playSound(null, PLAYER, SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 1f, 0.9f + 0.2f * PLAYER.getRandom().nextFloat());
                 PLAYER.drop(AquamiraeItems.SHARP_BONES.get().getDefaultInstance(), false);
             }
             tick++;

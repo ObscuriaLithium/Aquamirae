@@ -41,6 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -86,15 +87,14 @@ public class Maw extends Monster implements IAnimated {
 	}
 
 	public void randomMawItem() {
-		if (this.level.isClientSide) return;
-		final MinecraftServer minecraftServer = this.level.getServer();
-		if (minecraftServer != null && this.level instanceof ServerLevel server) {
-			LootContext lootContext = new LootContext.Builder(server)
-					.withRandom(this.getRandom())
+		if (this.level().isClientSide) return;
+		final MinecraftServer minecraftServer = this.level().getServer();
+		if (minecraftServer != null && this.level() instanceof ServerLevel server) {
+			LootParams lootContext = new LootParams.Builder(server)
 					.withParameter(LootContextParams.THIS_ENTITY, this)
 					.withParameter(LootContextParams.ORIGIN, this.position())
 					.create(LootContextParamSets.GIFT);
-			LootTable treasure = minecraftServer.getLootTables().get(new ResourceLocation(Aquamirae.MODID, "entities/maw_random_item"));
+			LootTable treasure = minecraftServer.getLootData().getLootTable(new ResourceLocation(Aquamirae.MODID, "entities/maw_random_item"));
 			ExceptionFilter.of(() -> this.setItemInMouth(treasure.getRandomItems(lootContext).get(0)));
 		}
 	}
@@ -162,7 +162,7 @@ public class Maw extends Monster implements IAnimated {
 
 	@Override
 	protected void dropEquipment() {
-		if (this.level instanceof ServerLevel server && !this.getItemInMouth().isEmpty()) {
+		if (this.level() instanceof ServerLevel server && !this.getItemInMouth().isEmpty()) {
 			final ItemEntity item = new ItemEntity(EntityType.ITEM, server);
 			item.setItem(this.getItemInMouth());
 			item.moveTo(this.position());

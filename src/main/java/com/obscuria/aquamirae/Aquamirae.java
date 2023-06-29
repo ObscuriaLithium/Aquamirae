@@ -88,24 +88,23 @@ public class Aquamirae {
 	public static final TagKey<Block> EEL_MOVE = BlockTags.create(new ResourceLocation(MODID, "eel_move"));
 	public static final TagKey<Block> MAZE_MOTHER_DESTROY = BlockTags.create(new ResourceLocation(MODID, "maze_mother_destroy"));
 	public static final TagKey<Block> SCROLL_DESTROY = BlockTags.create(new ResourceLocation(MODID, "scroll_destroy"));
-	public static final CreativeModeTab TAB = new CreativeModeTab.Builder(CreativeModeTab.Row.BOTTOM, 0)
-			.icon(() -> AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance()).build();
 
 	public Aquamirae() {
-		final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-		AquamiraeFeatures.REGISTRY.register(modBus);
-		AquamiraeSounds.REGISTRY.register(modBus);
-		AquamiraeBlocks.REGISTRY.register(modBus);
-		AquamiraeEntities.REGISTRY.register(modBus);
-		AquamiraeItems.REGISTRY.register(modBus);
-		AquamiraeMobEffects.REGISTRY.register(modBus);
-		AquamiraePotions.REGISTRY.register(modBus);
-		AquamiraeParticleTypes.REGISTRY.register(modBus);
+		AquamiraeCreativeTab.REGISTRY.register(bus);
+		AquamiraeFeatures.REGISTRY.register(bus);
+		AquamiraeSounds.REGISTRY.register(bus);
+		AquamiraeBlocks.REGISTRY.register(bus);
+		AquamiraeEntities.REGISTRY.register(bus);
+		AquamiraeItems.REGISTRY.register(bus);
+		AquamiraeMobEffects.REGISTRY.register(bus);
+		AquamiraePotions.REGISTRY.register(bus);
+		AquamiraeParticleTypes.REGISTRY.register(bus);
 		AquamiraeConfig.register();
 
-		modBus.addListener(this::commonSetup);
-		modBus.addListener(EventPriority.HIGHEST, this::registerEnchantments);
+		bus.addListener(this::commonSetup);
+		bus.addListener(EventPriority.HIGHEST, this::registerEnchantments);
 
 		MinecraftForge.EVENT_BUS.addListener(this::onEntitySpawn);
 		MinecraftForge.EVENT_BUS.addListener(this::onPlayerTick);
@@ -185,7 +184,7 @@ public class Aquamirae {
 	}
 
 	private void onPlayerTick(final TickEvent.@NotNull PlayerTickEvent event) {
-		if (event.phase != TickEvent.Phase.END || event.player.level.isClientSide || event.player.isCreative() || event.player.isSpectator()) return;
+		if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide || event.player.isCreative() || event.player.isSpectator()) return;
 		if (AquamiraeUtils.isInIceMaze(event.player))
 			if (event.player.isInWaterOrBubble() && event.player.getTicksFrozen() <= event.player.getTicksRequiredToFreeze() * 3)
 				if (ItemUtils.getArmorPieces(event.player, ThreeBoltArmorItem.class) < 4)
@@ -241,7 +240,7 @@ public class Aquamirae {
 					entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.CRYSTALLIZATION.get(),
 							20 * item.ABILITY_FULLSET_1.getVariable(entity, 1), 0, true, true));
 					entity.setHealth(entity.getMaxHealth());
-					if (entity.getLevel() instanceof ServerLevel level) level.playSound(null, entity.blockPosition().above(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1, 1);
+					if (entity.level() instanceof ServerLevel level) level.playSound(null, entity.blockPosition().above(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1, 1);
 					final ItemStack head = entity.getItemBySlot(EquipmentSlot.HEAD);
 					final ItemStack chest = entity.getItemBySlot(EquipmentSlot.CHEST);
 					final ItemStack legs = entity.getItemBySlot(EquipmentSlot.LEGS);

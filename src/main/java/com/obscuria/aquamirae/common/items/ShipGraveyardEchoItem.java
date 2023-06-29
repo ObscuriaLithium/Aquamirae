@@ -26,7 +26,7 @@ public class ShipGraveyardEchoItem extends Item {
 	@Override
 	public void inventoryTick(@NotNull ItemStack itemstack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
 		super.inventoryTick(itemstack, world, entity, slot, selected);
-		if (entity instanceof Player player && player.level.isClientSide() && selected && Math.random() <= 0.01)
+		if (entity instanceof Player player && player.level().isClientSide() && selected && Math.random() <= 0.01)
 			AquamiraeClient.playAmbientSounds(player, false);
 	}
 }

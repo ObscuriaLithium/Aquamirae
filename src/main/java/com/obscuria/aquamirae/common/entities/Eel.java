@@ -170,7 +170,7 @@ public class Eel extends Monster implements IAnimated {
 					if (target.getHealth() < hp) this.heal((hp - target.getHealth()) * 2);
 				}
 				//ROAR
-				if (!target.getLevel().isClientSide() && this.ROAR.isPlaying() && this.ROAR.getTick() > 12 && this.ROAR.getTick() < 52) {
+				if (!target.level().isClientSide() && this.ROAR.isPlaying() && this.ROAR.getTick() > 12 && this.ROAR.getTick() < 52) {
 					if (this.tickCount % 5 == 0) {
 						final Vec3 pos = EntityUtils.getRelativePos(this, 4f, 0f, 0f);
 						FlatVFX.Builder.create(20).owner(this).texture(Aquamirae.MODID, "roar")
@@ -181,7 +181,7 @@ public class Eel extends Monster implements IAnimated {
 								.moveForward(0f, 3f, 0.03f)
 								.scale(0.4f, 0.1f, 0.01f)
 								.alpha(0.25f, -0.0025f, -0.0025f)
-								.build(this.level);
+								.build(this.level());
 					}
 					if (distance < 150) {
 						final Vec3 thisVec = new Vec3(this.getX(), this.getY(), this.getZ());
@@ -213,9 +213,9 @@ public class Eel extends Monster implements IAnimated {
 	}
 
 	public void spawnBlockParticles() {
-		final BlockState state = this.level.getBlockState(this.blockPosition().below());
+		final BlockState state = this.level().getBlockState(this.blockPosition().below());
 		if (state.getRenderShape() != RenderShape.INVISIBLE) {
-			this.level.addParticle(
+			this.level().addParticle(
 					new BlockParticleOption(ParticleTypes.BLOCK, state).setPos(this.blockPosition().below()),
 					this.position().x + (this.random.nextDouble() - 0.5D) * 1.6D,
 					this.position().y + 0.03D,
@@ -248,19 +248,19 @@ public class Eel extends Monster implements IAnimated {
 	}
 
 	public boolean checkGround(int x, int y, int z) {
-		return this.getLevel().getBlockState(new BlockPos(x, y, z)).is(Aquamirae.EEL_MOVE)
-				&& this.getLevel().getBlockState(new BlockPos(x + 1, y, z)).is(Aquamirae.EEL_MOVE)
-				&& this.getLevel().getBlockState(new BlockPos(x - 1, y, z)).is(Aquamirae.EEL_MOVE)
-				&& this.getLevel().getBlockState(new BlockPos(x, y, z + 1)).is(Aquamirae.EEL_MOVE)
-				&& this.getLevel().getBlockState(new BlockPos(x, y, z - 1)).is(Aquamirae.EEL_MOVE);
+		return this.level().getBlockState(new BlockPos(x, y, z)).is(Aquamirae.EEL_MOVE)
+				&& this.level().getBlockState(new BlockPos(x + 1, y, z)).is(Aquamirae.EEL_MOVE)
+				&& this.level().getBlockState(new BlockPos(x - 1, y, z)).is(Aquamirae.EEL_MOVE)
+				&& this.level().getBlockState(new BlockPos(x, y, z + 1)).is(Aquamirae.EEL_MOVE)
+				&& this.level().getBlockState(new BlockPos(x, y, z - 1)).is(Aquamirae.EEL_MOVE);
 	}
 
 	public boolean checkSpace(int x, int y, int z) {
-		return this.getLevel().isEmptyBlock(new BlockPos(x, y, z)) && this.getLevel().isEmptyBlock(new BlockPos(x + 1, y, z))
-				&& this.getLevel().isEmptyBlock(new BlockPos(x - 1, y, z)) && this.getLevel().isEmptyBlock(new BlockPos(x, y, z + 1))
-				&& this.getLevel().isEmptyBlock(new BlockPos(x, y, z - 1)) && this.getLevel().isEmptyBlock(new BlockPos(x + 1, y, z + 1))
-				&& this.getLevel().isEmptyBlock(new BlockPos(x - 1, y, z - 1)) && this.getLevel().isEmptyBlock(new BlockPos(x + 1, y, z - 1))
-				&& this.getLevel().isEmptyBlock(new BlockPos(x - 1, y, z + 1));
+		return this.level().isEmptyBlock(new BlockPos(x, y, z)) && this.level().isEmptyBlock(new BlockPos(x + 1, y, z))
+				&& this.level().isEmptyBlock(new BlockPos(x - 1, y, z)) && this.level().isEmptyBlock(new BlockPos(x, y, z + 1))
+				&& this.level().isEmptyBlock(new BlockPos(x, y, z - 1)) && this.level().isEmptyBlock(new BlockPos(x + 1, y, z + 1))
+				&& this.level().isEmptyBlock(new BlockPos(x - 1, y, z - 1)) && this.level().isEmptyBlock(new BlockPos(x + 1, y, z - 1))
+				&& this.level().isEmptyBlock(new BlockPos(x - 1, y, z + 1));
 	}
 
 	@Override

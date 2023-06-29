@@ -1,8 +1,8 @@
 package com.obscuria.aquamirae.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.obscuria.aquamirae.AquamiraeConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -81,10 +81,10 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack pose, int mouseX, int mouseY, float partialTicks) {
-        this.renderDirtBackground(pose);
-        drawCenteredString(pose, this.font, this.title, this.width / 2, 15, 16777215);
-        super.render(pose, mouseX, mouseY, partialTicks);
+    public void render(@NotNull GuiGraphics context, int mouseX, int mouseY, float partialTicks) {
+        this.renderDirtBackground(context);
+        context.drawCenteredString(this.font, this.title, this.width / 2, 15, 16777215);
+        super.render(context, mouseX, mouseY, partialTicks);
     }
 
     public void save() {

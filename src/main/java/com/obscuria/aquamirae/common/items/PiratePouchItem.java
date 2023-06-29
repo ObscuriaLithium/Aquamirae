@@ -27,7 +27,7 @@ public class PiratePouchItem extends Item {
 		InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
 		ItemStack sourceStack = ar.getObject();
 		entity.swing(hand);
-		if (entity.getLevel() instanceof ServerLevel level)
+		if (entity.level() instanceof ServerLevel level)
 			level.playSound(null, entity.blockPosition().above(), AquamiraeSounds.ITEM_POUCH_OPEN.get(),
 					SoundSource.PLAYERS, 1, 1);
 		final List<ItemStack> loot = Aquamirae.SetBuilder.common();

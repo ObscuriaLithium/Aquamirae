@@ -34,7 +34,7 @@ public class RuneOfTheStormItem extends Item {
 		if (source == null) return;
 		final ItemStack weapon = source.getMainHandItem();
 		if (ItemUtils.hasPerk(weapon, new ResourceLocation("aquamirae", "rune_of_the_storm"))
-				&& source.getLevel().getBiome(source.blockPosition()).value().getBaseTemperature() * 100f <= 0) {
+				&& source.level().getBiome(source.blockPosition()).value().getBaseTemperature() * 100f <= 0) {
 			event.setAmount(event.getAmount() * 1.33F);
 		}
 	}

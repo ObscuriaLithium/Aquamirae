@@ -14,9 +14,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -24,7 +23,8 @@ import java.util.List;
 
 public class ElodeaBlock extends SeagrassBlock implements SimpleWaterloggedBlock {
 	public ElodeaBlock() {
-		super(BlockBehaviour.Properties.of(Material.WATER_PLANT, MaterialColor.TERRACOTTA_CYAN).sound(SoundType.WET_GRASS).strength(0.4f, 0.5f)
+		super(BlockBehaviour.Properties.of()
+				.mapColor(MapColor.WATER).sound(SoundType.WET_GRASS).strength(0.4f, 0.5f)
 				.noCollission().speedFactor(0.7f).jumpFactor(0.7f).noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
 		this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false));
 	}
@@ -36,7 +36,7 @@ public class ElodeaBlock extends SeagrassBlock implements SimpleWaterloggedBlock
 	}
 
 	@Override
-	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootContext.@NotNull Builder builder) {
+	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
 		return Collections.singletonList(new ItemStack(this, 1));
 	}
 

@@ -14,7 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -37,14 +37,13 @@ public class TreasurePouchItem extends Item {
 					AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundSource.PLAYERS, 1, 1);
 			final List<ItemStack> loot = Aquamirae.SetBuilder.rare();
 			player.addItem(loot.get(player.getRandom().nextInt(0, loot.size() - 1)));
-			final MinecraftServer minecraftServer = player.level.getServer();
-			if (minecraftServer != null && player.level instanceof ServerLevel server) {
-				LootContext lootContext = new LootContext.Builder(server)
-						.withRandom(player.getRandom())
+			final MinecraftServer minecraftServer = player.level().getServer();
+			if (minecraftServer != null && player.level() instanceof ServerLevel server) {
+				LootParams lootContext = new LootParams.Builder(server)
 						.withParameter(LootContextParams.THIS_ENTITY, player)
 						.withParameter(LootContextParams.ORIGIN, player.position())
 						.create(LootContextParamSets.GIFT);
-				LootTable treasure = minecraftServer.getLootTables().get(new ResourceLocation(Aquamirae.MODID, "gameplay/treasure_pouch"));
+				LootTable treasure = minecraftServer.getLootData().getLootTable(new ResourceLocation(Aquamirae.MODID, "gameplay/treasure_pouch"));
 				treasure.getRandomItems(lootContext).forEach(player::addItem);
 				if (Math.random() <= 0.1f)
 					player.addItem(Aquamirae.getStructureMap(player.getRandom().nextBoolean() ? Aquamirae.SHIP : Aquamirae.OUTPOST, server, player));

@@ -42,7 +42,7 @@ public class DaggerOfGreedItem extends SwordItem {
 	@Override
 	public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
 		final boolean hurt = super.hurtEnemy(stack, entity, source);
-		final Level level = entity.getLevel();
+		final Level level = entity.level();
 		if (level.isClientSide()) return hurt;
 		stack.getOrCreateTag().putInt("DamageValue", stack.getOrCreateTag().getInt("DamageValue") + 1);
 		if (entity instanceof AbstractVillager || entity instanceof AbstractIllager) {

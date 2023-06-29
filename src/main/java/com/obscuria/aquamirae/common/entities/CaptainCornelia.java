@@ -167,10 +167,10 @@ public class CaptainCornelia extends Monster implements IAnimated {
 		if (this.getTarget() != null) {
 			final LivingEntity target = this.getTarget();
 			final double distance = this.distanceToSqr(target);
-			this.modifyYRot(EntityUtils.getYAngleBetween(this, target), this.isOnGround() ? 0.15f : 0.3f);
+			this.modifyYRot(EntityUtils.getYAngleBetween(this, target), this.onGround() ? 0.15f : 0.3f);
 			this.lookControl.setLookAt(target);
 
-			if (!this.isAttacks() && !this.level.isClientSide) {
+			if (!this.isAttacks() && !this.level().isClientSide) {
 				if (this.weaponSwitchTick > WEAPON_SWITCH_INTERVAL
 						&& random.nextFloat() < (this.weaponSwitchTick - WEAPON_SWITCH_INTERVAL) / 5000f) {
 					this.SWITCH_WEAPON.play(this, 20);
@@ -202,7 +202,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 						.moveForward(0f, 3f, -0.2f)
 						.scale(0.4f, 0.4f, -0.013f)
 						.alpha(1f, -0.01f, -0.01f)
-						.build(this.level);
+						.build(this.level());
 
 			if (this.isUnderWater() && !this.hasEffect(MobEffects.LEVITATION)) this.setDeltaMovement(new Vec3(this.getX(), this.getY(), this.getZ())
 					.vectorTo(new Vec3(target.getX(), target.getY(), target.getZ())).scale(0.04F));
@@ -215,9 +215,9 @@ public class CaptainCornelia extends Monster implements IAnimated {
 
 		if (this.hasEffect(MobEffects.LEVITATION)) {
 			this.heal(1);
-			if (AquamiraeConfig.Common.corneliaSpinAbility.get() && !this.getLevel().isClientSide()) {
+			if (AquamiraeConfig.Common.corneliaSpinAbility.get() && !this.level().isClientSide()) {
 				final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
-				List<LivingEntity> list = this.getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(10), e -> true).stream()
+				List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(10), e -> true).stream()
 						.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 				final MobEffectInstance LEVITATION = this.getEffect(MobEffects.LEVITATION);
 				final int DURATION = LEVITATION == null ? 0 : LEVITATION.getDuration();
@@ -239,7 +239,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 				});
 
 				this.particle1++;
-				if (this.getLevel() instanceof ServerLevel server && this.particle1 > 1) {
+				if (this.level() instanceof ServerLevel server && this.particle1 > 1) {
 					this.particle1 = 0;
 					server.sendParticles(AquamiraeParticleTypes.GHOST.get(), this.getX(), this.getY() - 0.2, this.getZ(), 1,
 							0.3, 0.1, 0.3, 0.1);
@@ -248,15 +248,15 @@ public class CaptainCornelia extends Monster implements IAnimated {
 			}
 		}
 		this.particle2++;
-		if (this.getLevel() instanceof ServerLevel server && this.particle2 > 9) {
+		if (this.level() instanceof ServerLevel server && this.particle2 > 9) {
 			this.particle2 = 0;
 			server.sendParticles(AquamiraeParticleTypes.GHOST_SHINE.get(), this.getX(), this.getY() + 1.7, this.getZ(), 1,
 					0.15, 0.1, 0.15, 0.1);
 		}
 
-		if (this.level.isClientSide) {
+		if (this.level().isClientSide) {
 			final Vec3 center = this.position();
-			this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(32)).forEach(AquamiraeClient::playCorneliaMusic);
+			this.level().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(32)).forEach(AquamiraeClient::playCorneliaMusic);
 		}
 		super.baseTick();
 	}
@@ -299,7 +299,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	public void rage() {
 		this.getEntityData().set(REGENERATION, this.getEntityData().get(REGENERATION) - 1);
 		this.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 0, false, false));
-		if (this.level instanceof ServerLevel serverLevel) {
+		if (this.level() instanceof ServerLevel serverLevel) {
 			final BlockPos pos = this.blockPosition();
 			LightningBolt entityToSpawn = new LightningBolt(EntityType.LIGHTNING_BOLT, serverLevel);
 			entityToSpawn.moveTo(Vec3.atBottomCenterOf(pos));
@@ -308,9 +308,9 @@ public class CaptainCornelia extends Monster implements IAnimated {
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_RAGE.get(), SoundSource.HOSTILE, 4, 1);
 			final var type = this.random.nextBoolean() ? AquamiraeEntities.POISONED_CHAKRA.get() : AquamiraeEntities.MAZE_ROSE.get();
-			DynamicProjectile.create(type, this, this.level, null, 5, 0F, 600, 1000);
-			DynamicProjectile.create(type, this, this.level, null, 5, 0.33F, 600, 1000);
-			DynamicProjectile.create(type, this, this.level, null, 5, 0.66F, 600, 1000);
+			DynamicProjectile.create(type, this, this.level(), null, 5, 0F, 600, 1000);
+			DynamicProjectile.create(type, this, this.level(), null, 5, 0.33F, 600, 1000);
+			DynamicProjectile.create(type, this, this.level(), null, 5, 0.66F, 600, 1000);
 		}
 	}
 
@@ -351,7 +351,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 
 	@Override
 	protected void dropEquipment() {
-		if (this.level instanceof ServerLevel server) {
+		if (this.level() instanceof ServerLevel server) {
 			if (Math.random() <= 0.2F) {
 				final ItemEntity item = new ItemEntity(EntityType.ITEM, server);
 				item.setItem(this.getMainWeapon().getDefaultInstance());
@@ -407,7 +407,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 
 	@Override
 	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-		if (this.getLevel() instanceof ServerLevel serverLevel) serverLevel.playSound(null, this.blockPosition(),
+		if (this.level() instanceof ServerLevel serverLevel) serverLevel.playSound(null, this.blockPosition(),
 					AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 		this.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 120, 0, false, false));
 		Aquamirae.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.corneliaMovementSpeed.get());

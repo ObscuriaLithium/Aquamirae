@@ -20,9 +20,9 @@ public class OxygeliumItem extends Item {
 	@Override
 	public @NotNull InteractionResult useOn(UseOnContext context) {
 		if (context.getClickedFace() == Direction.UP) {
-			if (context.getLevel().getBlockState(context.getClickedPos()).getMaterial().isSolid() &&
+			if (context.getLevel().getBlockState(context.getClickedPos()).isSolid() &&
 					context.getLevel().getBlockState(new BlockPos(context.getClickedPos().getX(), context.getClickedPos().getY() + 1,
-									context.getClickedPos().getZ())).getMaterial().isLiquid()) {
+									context.getClickedPos().getZ())).liquid()) {
 				context.getLevel().setBlock(
 						new BlockPos(context.getClickedPos().getX(), context.getClickedPos().getY() + 1, context.getClickedPos().getZ()),
 						AquamiraeBlocks.OXYGELIUM.get().defaultBlockState().setValue(OxygeliumBlock.TYPE, OxygeliumBlock.Type.EMPTY_BUD)
@@ -31,8 +31,7 @@ public class OxygeliumItem extends Item {
 				return InteractionResult.SUCCESS;
 			}
 			if (context.getLevel()
-					.getBlockState(new BlockPos(context.getClickedPos().getX(), context.getClickedPos().getY() + 1, context.getClickedPos().getZ()))
-					.getMaterial().isLiquid()
+					.getBlockState(new BlockPos(context.getClickedPos().getX(), context.getClickedPos().getY() + 1, context.getClickedPos().getZ())).liquid()
 					&& (context.getLevel().getBlockState(context.getClickedPos()).getBlock() == AquamiraeBlocks.OXYGELIUM.get())) {
 				context.getLevel().setBlock(
 						new BlockPos(context.getClickedPos().getX(), context.getClickedPos().getY(), context.getClickedPos().getZ()),

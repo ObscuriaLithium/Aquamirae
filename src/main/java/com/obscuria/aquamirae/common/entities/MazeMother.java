@@ -33,7 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -162,7 +161,7 @@ public class MazeMother extends Monster {
 		Aquamirae.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
 		Aquamirae.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
 		final Vec3 center = this.position();
-		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
+		List<Player> players = this.level().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 		if (AquamiraeConfig.Common.notifications.get()) players.forEach(player -> PlayerUtils.sendMessage(player,
 				Icons.INFO + TextUtils.translation("info.maze_mother_spawn")));
@@ -172,7 +171,7 @@ public class MazeMother extends Monster {
 	@Override
 	protected void updateNoActionTime() {
 		final Vec3 center = this.position();
-		List<Player> players = this.getLevel().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(128), e -> true).stream()
+		List<Player> players = this.level().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(128), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
 		if (!players.isEmpty()) this.setNoActionTime(0);
 		super.updateNoActionTime();
@@ -181,7 +180,7 @@ public class MazeMother extends Monster {
 	@Override
 	public void baseTick() {
 		if (this.isInWater()) this.setDeltaMovement(this.getDeltaMovement().add(0, -0.001, 0));
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			this.getPersistentData().putDouble("breakIce", (this.getPersistentData().getDouble("breakIce") + 1));
 			if (this.getPersistentData().getDouble("breakIce") > 10) {
 				this.getPersistentData().putDouble("breakIce", 0);
@@ -197,12 +196,12 @@ public class MazeMother extends Monster {
 		for (int ix = -6; ix <= 6; ix++)
 			for (int iz = -6; iz <= 6; iz++) {
 				final BlockPos pos = new BlockPos(this.getBlockX() + ix, this.getBlockY() + offset, this.getBlockZ() + iz);
-				if (this.level.getBlockState(pos.above()).getMaterial() == Material.AIR && this.level.getBlockState(pos).is(Aquamirae.MAZE_MOTHER_DESTROY)) {
+				if (this.level().getBlockState(pos.above()).isAir() && this.level().getBlockState(pos).is(Aquamirae.MAZE_MOTHER_DESTROY)) {
 					if (this.random.nextBoolean())
-						if (this.level.getBlockState(pos).is(Blocks.ICE) || this.level.getBlockState(pos).is(Blocks.FROSTED_ICE)) {
-							this.level.destroyBlock(pos, true);
-							this.level.setBlock(pos, Blocks.WATER.defaultBlockState(), 3);
-						} else this.level.destroyBlock(pos, true);
+						if (this.level().getBlockState(pos).is(Blocks.ICE) || this.level().getBlockState(pos).is(Blocks.FROSTED_ICE)) {
+							this.level().destroyBlock(pos, true);
+							this.level().setBlock(pos, Blocks.WATER.defaultBlockState(), 3);
+						} else this.level().destroyBlock(pos, true);
 				}
 			}
 	}

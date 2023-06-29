@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ public class WisteriaNiveisBlock extends DoublePlantBlock {
 	public static final BooleanProperty LOOT = BooleanProperty.create("loot");
 
 	public WisteriaNiveisBlock() {
-		super(Properties.of(Material.LEAVES).sound(SoundType.WEEPING_VINES).strength(1f, 10f).noCollission()
+		super(Properties.of().mapColor(MapColor.PLANT).sound(SoundType.WEEPING_VINES).strength(1f, 10f).noCollission()
 				.isRedstoneConductor((bs, br, bp) -> false).offsetType(OffsetType.XYZ));
 		this.registerDefaultState(this.stateDefinition.any().setValue(LOOT, true));
 	}
@@ -60,7 +60,7 @@ public class WisteriaNiveisBlock extends DoublePlantBlock {
 	}
 
 	@Override
-	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootContext.@NotNull Builder builder) {
+	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
 		return state.getValue(HALF) == DoubleBlockHalf.LOWER ? state.getValue(LOOT) ? super.getDrops(state, builder)
 				: List.of(AquamiraeItems.WISTERIA_NIVEIS.get().getDefaultInstance()) : new ArrayList<>();
 	}

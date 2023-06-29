@@ -89,7 +89,7 @@ public class GoldenMoth extends PathfinderMob {
 		if (source.is(DamageTypes.CACTUS)) return false;
 		if (source.is(DamageTypes.DROWN)) return false;
 		if (source.is(DamageTypes.LIGHTNING_BOLT)) return false;
-		if (this.level instanceof ServerLevel server) server.sendParticles(AquamiraeParticleTypes.SHINE.get(),
+		if (this.level() instanceof ServerLevel server) server.sendParticles(AquamiraeParticleTypes.SHINE.get(),
 				this.getX(), this.getY(), this.getZ(), 6, 0.05, 0.05, 0.05, 0.8);
 		return super.hurt(source, amount);
 	}
@@ -99,24 +99,24 @@ public class GoldenMoth extends PathfinderMob {
 		final ItemStack stack = player.getItemInHand(hand);
 		if (stack.getItem() == Items.GLASS_BOTTLE) {
 			stack.shrink(1);
-			if (!this.level.isClientSide()) {
-				this.level.playSound(null, this.blockPosition(),
+			if (!this.level().isClientSide()) {
+				this.level().playSound(null, this.blockPosition(),
 						AquamiraeSounds.ENTITY_GOLDEN_MOTH_CATCH.get(), SoundSource.AMBIENT, 1, 1);
-				ItemEntity item = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(),
+				ItemEntity item = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(),
 						new ItemStack(AquamiraeBlocks.GOLDEN_MOTH_IN_A_JAR.get()));
 				item.setPickUpDelay(10);
-				this.level.addFreshEntity(item);
+				this.level().addFreshEntity(item);
 				this.discard();
 			}
 		}
-		return InteractionResult.sidedSuccess(this.level.isClientSide());
+		return InteractionResult.sidedSuccess(this.level().isClientSide());
 	}
 
 	@Override public void baseTick() {
 		this.getPersistentData().putDouble("shine", this.getPersistentData().getDouble("shine") + 1);
 		if (this.getPersistentData().getDouble("shine") > 2) {
 			this.getPersistentData().putDouble("shine", 0);
-			if (this.level instanceof ServerLevel server)
+			if (this.level() instanceof ServerLevel server)
 				server.sendParticles(AquamiraeParticleTypes.SHINE.get(), this.getX(), this.getY(), this.getZ(),
 						1, 0.1, 0.1, 0.1, 0.1);
 		}

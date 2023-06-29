@@ -3,16 +3,18 @@ package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.obscureapi.registry.ObscureAPIEnchantments;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -20,24 +22,21 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class AquamiraeCreativeTab {
+	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Aquamirae.MODID);
 
-	public static CreativeModeTab AQUAMIRAE_TAB;
-
-	@SubscribeEvent
-	public static void registerTab(final CreativeModeTabEvent.@NotNull Register event) {
-		AQUAMIRAE_TAB = event.registerCreativeModeTab(new ResourceLocation(Aquamirae.MODID, "tab"), builder -> builder
-				.title(Component.translatable("itemGroup." + Aquamirae.MODID))
-				.icon(() -> AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance())
-				.withTabsImage(new ResourceLocation(Aquamirae.MODID, "textures/gui/creative_tabs.png"))
-				.withBackgroundLocation(new ResourceLocation(Aquamirae.MODID, "textures/gui/creative_table.png"))
-				.withSlotColor(0x8000ccff)
-				.withLabelColor(0xffdddddd)
-				.build());
-	}
+	public static final RegistryObject<CreativeModeTab> AQUAMIRAE_TAB = REGISTRY.register("aquamirae", () ->
+			new CreativeModeTab.Builder(CreativeModeTab.Row.TOP, 0)
+					.title(Component.translatable("itemGroup." + Aquamirae.MODID))
+					.icon(() -> AquamiraeItems.RUNE_OF_THE_STORM.get().getDefaultInstance())
+					//.withTabsImage(new ResourceLocation(Aquamirae.MODID, "textures/gui/creative_tabs.png"))
+					//.withBackgroundLocation(new ResourceLocation(Aquamirae.MODID, "textures/gui/creative_table.png"))
+					//.withSlotColor(0x8000ccff)
+					//.withLabelColor(0xffdddddd)
+					.build());
 
 	@SubscribeEvent
-	public static void registerTab(final CreativeModeTabEvent.@NotNull BuildContents event) {
-		if (event.getTab() == AQUAMIRAE_TAB) {
+	public static void registerTab(@NotNull BuildCreativeModeTabContentsEvent event) {
+		if (event.getTab() == AQUAMIRAE_TAB.get()) {
 			event.accept(AquamiraeItems.RUNE_OF_THE_STORM.get());
 			event.accept(AquamiraeItems.GOLDEN_MOTH_SPAWN_EGG.get());
 			event.accept(AquamiraeItems.TERRIBLE_SWORD.get());

@@ -18,7 +18,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.material.Material;
 
 import java.util.List;
 
@@ -100,8 +99,8 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 			final BlockState below = world.getBlockState(new BlockPos(x, y + i - 1, z));
 			final BlockState state = world.getBlockState(new BlockPos(x, y + i, z));
 			final BlockState above = world.getBlockState(new BlockPos(x, y + i + 1, z));
-			if ((below.getMaterial().isSolid() || isStem(below)) && state.getMaterial().isLiquid()) {
-				if (above.getMaterial().isLiquid()) {
+			if ((below.isSolid() || isStem(below)) && state.liquid()) {
+				if (above.isSolid()) {
 					world.setBlock(new BlockPos(x, y + i, z), AquamiraeBlocks.OXYGELIUM.get().defaultBlockState()
 							.setValue(OxygeliumBlock.TYPE, i < max ? OxygeliumBlock.Type.STEM : OxygeliumBlock.Type.EMPTY_BUD)
 							.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
@@ -203,9 +202,9 @@ public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	}
 
 	private void setIcebergBlock(BlockPos pos, LevelAccessor levelAccessor, RandomSource p_225127_, int p_225128_, int p_225129_, boolean p_225130_, boolean p_225131_, BlockState p_225132_) {
-		if (levelAccessor.getBlockState(pos.above()).getMaterial() == Material.AIR) return;
+		if (levelAccessor.getBlockState(pos.above()).isAir()) return;
 		BlockState blockstate = levelAccessor.getBlockState(pos);
-		if (blockstate.getMaterial() == Material.AIR || blockstate.is(Blocks.SNOW_BLOCK) || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.WATER)) {
+		if (blockstate.isAir() || blockstate.is(Blocks.SNOW_BLOCK) || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.WATER)) {
 			boolean flag = !p_225130_ || p_225127_.nextDouble() > 0.05D;
 			int i = p_225130_ ? 3 : 2;
 			if (p_225131_ && (double)p_225128_ <= (double)p_225127_.nextInt(Math.max(1, p_225129_ / i)) + (double)p_225129_ * 0.6D && flag) {

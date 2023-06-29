@@ -153,7 +153,7 @@ public abstract class ThreeBoltArmorItem extends ArmorItem {
 						stack.shrink(1);
 						stack.setDamageValue(0);
 					}
-					if (!entity.getLevel().isClientSide()) entity.getLevel().playSound(null, entity.blockPosition(), AquamiraeSounds.EFFECT_OXYGEN.get(), SoundSource.PLAYERS, 1, 1);
+					if (!entity.level().isClientSide()) entity.level().playSound(null, entity.blockPosition(), AquamiraeSounds.EFFECT_OXYGEN.get(), SoundSource.PLAYERS, 1, 1);
 				}
 			}
 		}

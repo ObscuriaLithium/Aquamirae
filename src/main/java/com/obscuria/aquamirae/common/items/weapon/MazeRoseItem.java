@@ -37,7 +37,7 @@ public class MazeRoseItem extends TieredItem implements Vanishable {
 	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "maze_rose").cost(Ability.Cost.Type.COOLDOWN, 40).action(
 			(stack, entity, target, context, values) -> {
 				stack.hurt(3, entity.getRandom(), null);
-				DynamicProjectile.create(AquamiraeEntities.MAZE_ROSE.get(), entity, entity.level, stack, values.get(0), 0F,
+				DynamicProjectile.create(AquamiraeEntities.MAZE_ROSE.get(), entity, entity.level(), stack, values.get(0), 0F,
 						20 * values.get(1), 1000);
 				return true;
 			}).var(5, "").var(40, "s").build(MazeRoseItem.class);

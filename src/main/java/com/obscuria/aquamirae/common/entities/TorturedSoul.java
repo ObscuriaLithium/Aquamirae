@@ -128,7 +128,7 @@ public class TorturedSoul extends Monster implements IAnimated {
 				this.getPersistentData().putDouble("charge", 0);
 				this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, 2, (true), (false)));
 				this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 200, 0, (true), (false)));
-				if (this.level instanceof ServerLevel server)
+				if (this.level() instanceof ServerLevel server)
 					server.sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 1, this.getZ(), 10, 0.4, 0.8, 0.4, 0);
 				this.setDeltaMovement(new Vec3(this.getDeltaMovement().x(), 0.2, this.getDeltaMovement().z()));
 			}
@@ -138,12 +138,12 @@ public class TorturedSoul extends Monster implements IAnimated {
 			this.getPersistentData().putDouble("smoke", this.getPersistentData().getDouble("smoke") + 1);
 			if (this.getPersistentData().getDouble("smoke") > 1) {
 				this.getPersistentData().putDouble("smoke", 0);
-				if (this.level instanceof ServerLevel server)
+				if (this.level() instanceof ServerLevel server)
 					server.sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 1.3, this.getZ(), 1, 0.14, 0.2, 0.14, 0);
 			}
 			if (this.getPersistentData().getDouble("flame") > 6) {
 				this.getPersistentData().putDouble("flame", 0);
-				if (this.level instanceof ServerLevel server)
+				if (this.level() instanceof ServerLevel server)
 					server.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, this.getX(), this.getY() + 1.3, this.getZ(), 1, 0.1, 0.15, 0.1, 0);
 			}
 		}

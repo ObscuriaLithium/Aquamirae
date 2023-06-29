@@ -24,7 +24,7 @@ public class LuminescentBubbleItem extends Item {
 	@Override
 	public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player entity, @NotNull InteractionHand hand) {
 		ItemStack stack = entity.getItemInHand(hand);
-		if (world.getBlockState(new BlockPos(entity.getBlockX(), entity.getBlockY() + 1, entity.getBlockZ())).getMaterial().isLiquid()) {
+		if (world.getBlockState(new BlockPos(entity.getBlockX(), entity.getBlockY() + 1, entity.getBlockZ())).liquid()) {
 			stack.shrink(1);
 			world.setBlock(new BlockPos(entity.getBlockX(), entity.getBlockY() + 1, entity.getBlockZ()),
 					AquamiraeBlocks.LUMINESCENT_BUBBLE.get().defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true), 3);
