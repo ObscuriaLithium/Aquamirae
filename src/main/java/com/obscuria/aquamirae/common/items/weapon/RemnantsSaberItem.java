@@ -5,39 +5,47 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.common.items.AquamiraeTiers;
-import com.obscuria.obscureapi.api.common.classes.Ability;
-import com.obscuria.obscureapi.api.common.classes.ClassAbility;
-import com.obscuria.obscureapi.api.common.classes.ClassItem;
+import com.obscuria.aquamirae.common.items.AquamiraeMaterials;
+import com.obscuria.obscureapi.common.classes.ClassItem;
+import com.obscuria.obscureapi.common.classes.ability.Ability;
+import com.obscuria.obscureapi.common.classes.ability.RegisterAbility;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SwordItem;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.item.SwordItem;
 
 import java.util.UUID;
 
-@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
+@ClassItem(value = Aquamirae.SEA_WOLF_ID, type = "weapon")
 public class RemnantsSaberItem extends SwordItem {
-	public RemnantsSaberItem() {
-		super(AquamiraeTiers.REMNANTS_SABER, 3, -2f, new Item.Properties());
+	@RegisterAbility public static final Ability PASSIVE;
+
+	public RemnantsSaberItem(Settings settings) {
+		super(AquamiraeMaterials.REMNANTS_SABER, 3, -2f, settings);
 	}
 
-	@ClassAbility
-	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "remnants_saber").var(100, "%").build(RemnantsSaberItem.class);
-
-	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-		final Multimap<Attribute, AttributeModifier> multimap = super.getDefaultAttributeModifiers(slot);
+	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+		final Multimap<EntityAttribute, EntityAttributeModifier> multimap = super.getAttributeModifiers(slot);
 		if (slot == EquipmentSlot.MAINHAND) {
-			Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+			Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 			builder.putAll(multimap);
-			builder.put(ObscureAPIAttributes.CRITICAL_HIT.get(), new AttributeModifier(UUID.fromString("AB3F55D3-644C-4F38-A497-9C13A33DB5CF"),
-					"Weapon modifier", 0.1, AttributeModifier.Operation.MULTIPLY_BASE));
+			builder.put(ObscureAPIAttributes.CRITICAL_HIT, new EntityAttributeModifier(UUID.fromString("AB3F55D3-644C-4F38-A497-9C13A33DB5CF"),
+					"Weapon modifier", 0.1, EntityAttributeModifier.Operation.MULTIPLY_BASE));
 			return builder.build();
 		} else {
 			return multimap;
 		}
+	}
+
+	public static float calculateDamageBonus(LivingEntity entity, float damage) {
+		return entity.isTouchingWater() ? damage * (0.01f * PASSIVE.getVariable(entity, 1)) : 0;
+	}
+
+	static {
+		PASSIVE = Ability.create(Aquamirae.MODID, "remnants_saber")
+				.mod(100)
+				.build(RemnantsSaberItem.class);
 	}
 }

@@ -1,70 +1,70 @@
 
 package com.obscuria.aquamirae.client.renderers;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.models.ModelCaptainCornelia;
-import com.obscuria.aquamirae.common.entities.CaptainCornelia;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.layers.EyesLayer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import com.obscuria.aquamirae.common.entities.CaptainCorneliaEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.feature.EyesFeatureRenderer;
+import net.minecraft.client.render.entity.feature.FeatureRenderer;
+import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Arm;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.NotNull;
 
-public class CaptainCorneliaRenderer extends MobRenderer<CaptainCornelia, ModelCaptainCornelia> {
-	public CaptainCorneliaRenderer(EntityRendererProvider.Context context) {
-		super(context, new ModelCaptainCornelia(context.bakeLayer(AquamiraeLayers.CAPTAIN_CORNELIA)), 0.5f);
-		this.addLayer(new EyesLayer<>(this) {
-			@Override public @NotNull RenderType renderType() {
-				return RenderType.eyes(new ResourceLocation(Aquamirae.MODID,"textures/entity/captain_cornelia_overlay.png"));
+public class CaptainCorneliaRenderer extends MobEntityRenderer<CaptainCorneliaEntity, ModelCaptainCornelia> {
+	public CaptainCorneliaRenderer(EntityRendererFactory.Context context) {
+		super(context, new ModelCaptainCornelia(context.getPart(AquamiraeLayers.CAPTAIN_CORNELIA)), 0.5f);
+		this.addFeature(new EyesFeatureRenderer<>(this) {
+			@Override
+			public RenderLayer getEyesTexture() {
+				return RenderLayer.getEyes(Aquamirae.key("textures/entity/captain_cornelia_overlay.png"));
 			}
 		});
-		this.addLayer(new CaptainCorneliaItemLayer(this));
+		this.addFeature(new CaptainCorneliaItemRenderer(this));
 	}
 
 	@Override
-	public @NotNull ResourceLocation getTextureLocation(@NotNull CaptainCornelia entity) {
-		return new ResourceLocation(Aquamirae.MODID,"textures/entity/captain_cornelia.png");
+	public Identifier getTexture(CaptainCorneliaEntity entity) {
+		return Aquamirae.key("textures/entity/captain_cornelia.png");
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public static class CaptainCorneliaItemLayer extends RenderLayer<CaptainCornelia, ModelCaptainCornelia> {
-		public CaptainCorneliaItemLayer(RenderLayerParent<CaptainCornelia, ModelCaptainCornelia> layer) {
+	public static class CaptainCorneliaItemRenderer extends FeatureRenderer<CaptainCorneliaEntity, ModelCaptainCornelia> {
+		public CaptainCorneliaItemRenderer(FeatureRendererContext<CaptainCorneliaEntity, ModelCaptainCornelia> layer) {
 			super(layer);
 		}
 
-		public void render(@NotNull PoseStack pose, @NotNull MultiBufferSource source, int i1, CaptainCornelia entity, float f1, float f2, float f3, float f4, float f5, float f6) {
-			ItemStack right = entity.getItemBySlot(EquipmentSlot.MAINHAND);
+		public void render(@NotNull MatrixStack stack, VertexConsumerProvider provider, int i1, CaptainCorneliaEntity entity, float f1, float f2, float f3, float f4, float f5, float f6) {
+			final ItemStack right = entity.getEquippedStack(EquipmentSlot.MAINHAND);
 			if (!right.isEmpty()) {
-				pose.pushPose();
-				this.getParentModel().translateToHand(HumanoidArm.RIGHT, pose);
-				pose.mulPose(Axis.XP.rotationDegrees(-90.0F));
-				pose.mulPose(Axis.YP.rotationDegrees(180.0F));
-				pose.translate(0.0D, 0.1D, 0.0D);
-				Minecraft.getInstance().gameRenderer.itemInHandRenderer.renderItem(entity, right, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, pose, source, i1);
-				pose.popPose();
+				stack.push();
+				this.getContextModel().translateToHand(Arm.RIGHT, stack);
+				stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90.0F));
+				stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
+				stack.translate(0.0D, 0.1D, 0.0D);
+				MinecraftClient.getInstance().gameRenderer.firstPersonRenderer.renderItem(entity, right,
+						ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, stack, provider, i1);
+				stack.pop();
 			}
-			ItemStack left = entity.getItemBySlot(EquipmentSlot.OFFHAND);
+			final ItemStack left = entity.getEquippedStack(EquipmentSlot.OFFHAND);
 			if (!left.isEmpty()) {
-				pose.pushPose();
-				this.getParentModel().translateToHand(HumanoidArm.LEFT, pose);
-				pose.mulPose(Axis.XP.rotationDegrees(45.0F));
-				pose.translate(0.0D, -0.15D, -0.65D);
-				Minecraft.getInstance().gameRenderer.itemInHandRenderer.renderItem(entity, left, ItemDisplayContext.THIRD_PERSON_LEFT_HAND, false, pose, source, i1);
-				pose.popPose();
+				stack.push();
+				this.getContextModel().translateToHand(Arm.LEFT, stack);
+				stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
+				stack.translate(0.0D, -0.15D, -0.65D);
+				MinecraftClient.getInstance().gameRenderer.firstPersonRenderer.renderItem(entity, left,
+						ModelTransformationMode.THIRD_PERSON_LEFT_HAND, false, stack, provider, i1);
+				stack.pop();
 			}
 		}
 	}

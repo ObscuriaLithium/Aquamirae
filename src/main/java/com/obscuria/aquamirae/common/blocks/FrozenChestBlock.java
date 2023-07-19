@@ -3,132 +3,99 @@ package com.obscuria.aquamirae.common.blocks;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
+import com.obscuria.aquamirae.registry.AquamiraeParticles;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
-import java.util.Collections;
-import java.util.List;
-
-public class FrozenChestBlock extends Block implements SimpleWaterloggedBlock {
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+@SuppressWarnings("deprecation")
+public class FrozenChestBlock extends Block implements Waterloggable {
+	public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+	private static final VoxelShape SHAPE = createCuboidShape(0.9, 0, 0.9, 15.1, 14.1, 15.1);
 
 	public FrozenChestBlock() {
-		super(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).strength(-1, 3600000).noOcclusion()
-				.isRedstoneConductor((bs, br, bp) -> false));
-		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
+		super(Settings.create()
+				.mapColor(MapColor.BROWN)
+				.sounds(BlockSoundGroup.WOOD)
+				.strength(-1, 3600000)
+				.nonOpaque()
+				.dropsNothing()
+				.pistonBehavior(PistonBehavior.BLOCK)
+				.solidBlock((a, b, c) -> false));
+		setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
-		return state.getFluidState().isEmpty();
-	}
-
-	@Override
-	public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos) {
-		return 0;
-	}
-
-	@Override
-	public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-		return box(0.9, 0, 0.9, 15.1, 14.1, 15.1);
-	}
-
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		builder.add(FACING, WATERLOGGED);
 	}
 
-	public @NotNull BlockState rotate(BlockState state, Rotation rot) {
-		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return SHAPE;
 	}
 
-	public @NotNull BlockState mirror(BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;;
-		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, flag);
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return SHAPE;
 	}
 
 	@Override
-	public @NotNull FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+	public BlockState rotate(BlockState state, BlockRotation rotation) {
+		return state.with(FACING, rotation.rotate(state.get(FACING)));
 	}
 
 	@Override
-	public @NotNull BlockState updateShape(BlockState state, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor world, @NotNull BlockPos currentPos,
-										   @NotNull BlockPos facingPos) {
-		if (state.getValue(WATERLOGGED)) world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-		return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+	public BlockState mirror(BlockState state, BlockMirror mirror) {
+		return state.rotate(mirror.getRotation(state.get(FACING)));
 	}
 
 	@Override
-	public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState state) {
-		return PushReaction.BLOCK;
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		final boolean inWater = ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER;
+		return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED, inWater);
 	}
 
 	@Override
-	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
-		List<ItemStack> dropsOriginal = super.getDrops(state, builder);
-		if (!dropsOriginal.isEmpty())
-			return dropsOriginal;
-		return Collections.singletonList(new ItemStack(this, 1));
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player) {
-		return false;
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+		if (state.get(WATERLOGGED)) world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
 	@Override
-	public boolean canEntityDestroy(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
-		return false;
-	}
-
-	@Override
-	public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-		final ItemStack stack = player.getItemInHand(hand);
-		if (stack.getItem() == AquamiraeItems.FROZEN_KEY.get()) {
-			stack.shrink(1);
-			final BlockState chest = Blocks.CHEST.defaultBlockState().setValue(FACING, state.getValue(FACING));
-			world.setBlock(pos, chest, 3);
-			RandomizableContainerBlockEntity.setLootTable(world, player.getRandom(), pos,
-					new ResourceLocation(Aquamirae.MODID, "chests/frozen_chest"));
-			world.playSound(player, pos, AquamiraeSounds.BLOCK_FROZEN_CHEST_UNLOCK.get(), SoundSource.BLOCKS, 1f, 1f);
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		final ItemStack stack = player.getStackInHand(hand);
+		if (stack.getItem() == AquamiraeItems.FROZEN_KEY) {
+			stack.decrement(1);
+			final BlockState chest = Blocks.CHEST.getDefaultState().with(FACING, state.get(FACING));
+			world.setBlockState(pos, chest, 3);
+			LootableContainerBlockEntity.setLootTable(world, player.getRandom(), pos, new Identifier(Aquamirae.MODID, "chests/frozen_chest"));
+			world.playSound(player, pos, AquamiraeSounds.BLOCK_FROZEN_CHEST_UNLOCK, SoundCategory.BLOCKS, 1f, 1f);
 			for(int i = 0; i < 12; ++i) {
 				double d0 = pos.getX() - 0.1D + 1.2D * player.getRandom().nextDouble();
 				double d1 = pos.getY() - 0.1D + 1.2D * player.getRandom().nextDouble();
@@ -139,10 +106,10 @@ public class FrozenChestBlock extends Block implements SimpleWaterloggedBlock {
 				double d0 = pos.getX() - 0.2D + 1.4D * player.getRandom().nextDouble();
 				double d1 = pos.getY() - 0.2D + 1.4D * player.getRandom().nextDouble();
 				double d2 = pos.getZ() - 0.2D + 1.4D * player.getRandom().nextDouble();
-				world.addParticle(AquamiraeParticleTypes.SHINE.get(), d0, d1, d2, 0, 0.05, 0);
+				world.addParticle(AquamiraeParticles.SHINE, d0, d1, d2, 0, 0.05, 0);
 			}
-			return InteractionResult.SUCCESS;
+			return ActionResult.SUCCESS;
 		}
-		return InteractionResult.FAIL;
+		return ActionResult.FAIL;
 	}
 }

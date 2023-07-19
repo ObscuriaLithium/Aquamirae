@@ -2,35 +2,26 @@
 package com.obscuria.aquamirae.common.items;
 
 import com.obscuria.aquamirae.common.blocks.WisteriaNiveisBlock;
-import com.obscuria.aquamirae.registry.AquamiraeBlocks;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemUsageContext;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
 
 public class WisteriaNiveisItem extends Item {
-	public WisteriaNiveisItem() {
-		super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
+	public WisteriaNiveisItem(Settings settings) {
+		super(settings);
 	}
 
 	@Override
-	public @NotNull InteractionResult useOn(UseOnContext context) {
-		final BlockPos pos = context.getClickedPos();
-		if (context.getClickedFace() == Direction.UP && AquamiraeBlocks.WISTERIA_NIVEIS.get() instanceof WisteriaNiveisBlock wisteriaBlock &&
-				wisteriaBlock.canBePlacedOn(context.getLevel(), pos)) {
-			context.getLevel().playSound(context.getPlayer(), context.getClickedPos(), SoundEvents.WEEPING_VINES_PLACE, SoundSource.BLOCKS, 1F, 1F);
-			context.getLevel().setBlock(pos.above(), AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState()
-					.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER).setValue(WisteriaNiveisBlock.LOOT, false), 3);
-			context.getItemInHand().shrink(1);
-			return InteractionResult.SUCCESS;
+	public ActionResult useOnBlock(ItemUsageContext context) {
+		final BlockPos pos = context.getBlockPos();
+		if (WisteriaNiveisBlock.tryPlace(context.getWorld(), pos, false)) {
+			context.getWorld().playSound(context.getPlayer(), context.getBlockPos(), SoundEvents.BLOCK_WEEPING_VINES_PLACE, SoundCategory.BLOCKS, 1F, 1F);
+			context.getStack().decrement(1);
+			return ActionResult.SUCCESS;
 		}
-		return InteractionResult.FAIL;
+		return ActionResult.FAIL;
 	}
 }

@@ -1,118 +1,124 @@
 package com.obscuria.aquamirae.common.blocks;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.ForgeSoundType;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.block.*;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CollectiblePaintingBlock extends Block implements SimpleWaterloggedBlock {
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+@SuppressWarnings("deprecation")
+public class CollectiblePaintingBlock extends Block implements Waterloggable {
+    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    private static final VoxelShape SOUTH_SHAPE;
+    private static final VoxelShape NORTH_SHAPE;
+    private static final VoxelShape EAST_SHAPE;
+    private static final VoxelShape WEST_SHAPE;
 
     public CollectiblePaintingBlock() {
-        super(BlockBehaviour.Properties.of()
-                .mapColor(MapColor.WOOD)
-                .sound(SoundType.WOOD)
-                .sound(new ForgeSoundType(1.0f, 1.0f, () -> SoundEvents.PAINTING_BREAK,
-                        () -> SoundEvents.WOOL_STEP,
-                        () -> SoundEvents.PAINTING_PLACE,
-                        () -> SoundEvents.WOOD_HIT,
-                        () -> SoundEvents.WOOD_FALL))
-                .strength(1f).requiresCorrectToolForDrops().noCollission().noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
+        super(Settings.create()
+                .mapColor(MapColor.BROWN)
+                .sounds(BlockSoundGroup.WOOD)
+                .sounds(new BlockSoundGroup(1f, 1f,
+                        SoundEvents.ENTITY_PAINTING_BREAK,
+                        SoundEvents.BLOCK_WOOD_STEP,
+                        SoundEvents.ENTITY_PAINTING_PLACE,
+                        SoundEvents.BLOCK_WOOD_HIT,
+                        SoundEvents.BLOCK_WOOD_FALL))
+                .strength(1f)
+                .noCollision()
+                .nonOpaque()
+                .solidBlock((a, b, c) -> false));
+        setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, BlockGetter world, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, world, list, flag);
-        list.add(Component.literal(ChatFormatting.GRAY + Component.translatable(this.getDescriptionId() + "_desc").getString()));
-    }
-
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
-        return state.getFluidState().isEmpty();
-    }
-
-    @Override
-    public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos) {
-        return 0;
-    }
-
-    @Override
-    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            default -> box(-8, 0, 0, 24, 16, 1);
-            case NORTH -> box(-8, 0, 15, 24, 16, 16);
-            case EAST -> box(0, 0, -8, 1, 16, 24);
-            case WEST -> box(15, 0, -8, 16, 16, 24);
-        };
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        if (context.getClickedFace().getAxis() == Direction.Axis.Y)
-            return this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, flag);
-        return this.defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, flag);
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+        tooltip.add(Text.literal(Formatting.GRAY + Text.translatable(this.getTranslationKey() + "_desc").getString()));
     }
 
-    public @NotNull BlockState rotate(BlockState state, Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    private VoxelShape getShape(BlockState state) {
+        return switch (state.get(FACING)) {
+            default -> SOUTH_SHAPE;
+            case NORTH -> NORTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case WEST -> WEST_SHAPE;
+        };
     }
 
-    public @NotNull BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return this.getShape(state);
     }
 
-    @Override
-    public @NotNull FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
-    public @NotNull BlockState updateShape(BlockState state, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor world, @NotNull BlockPos currentPos,
-                                           @NotNull BlockPos facingPos) {
-        if (state.getValue(WATERLOGGED)) world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-        return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return this.getShape(state);
     }
 
     @Override
-    public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
-        return true;
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        final boolean inWater = ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER;
+        if (ctx.getSide().getAxis() == Direction.Axis.Y)
+            return getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, inWater);
+        return getDefaultState().with(FACING, ctx.getSide()).with(WATERLOGGED, inWater);
     }
 
     @Override
-    public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
         return Collections.singletonList(new ItemStack(this, 1));
+    }
+
+    static {
+        SOUTH_SHAPE = createCuboidShape(-8, 0, 0, 24, 16, 1);
+        NORTH_SHAPE = createCuboidShape(-8, 0, 15, 24, 16, 16);
+        EAST_SHAPE = createCuboidShape(0, 0, -8, 1, 16, 24);
+        WEST_SHAPE = createCuboidShape(15, 0, -8, 16, 16, 24);
     }
 }

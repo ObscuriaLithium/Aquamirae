@@ -1,94 +1,86 @@
 
 package com.obscuria.aquamirae.common.blocks;
 
-import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.registry.AquamiraeParticles;
+import net.minecraft.block.*;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import java.util.Collections;
 import java.util.List;
 
-public class LuminescentLampBlock extends Block implements SimpleWaterloggedBlock {
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+@SuppressWarnings("deprecation")
+public class LuminescentLampBlock extends Block implements Waterloggable {
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+	private static final VoxelShape SHAPE = createCuboidShape(5, 0, 5, 11, 32, 11);
 
 	public LuminescentLampBlock() {
-		super(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).strength(1.4f, 6f).lightLevel(s -> 15).noOcclusion()
-				.isRedstoneConductor((bs, br, bp) -> false));
-		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
+		super(Settings.create()
+				.mapColor(MapColor.CYAN)
+				.sounds(BlockSoundGroup.WOOD)
+				.strength(1.4f, 6f)
+				.luminance(s -> 15)
+				.nonOpaque()
+				.solidBlock((a, b, c) -> false));
+		setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, false));
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
-		return state.getFluidState().isEmpty();
-	}
-
-	@Override
-	public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos) {
-		return 0;
-	}
-
-	@Override
-	public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-		return box(5, 0, 5, 11, 32, 11);
-	}
-
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		builder.add(WATERLOGGED);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-		return this.defaultBlockState().setValue(WATERLOGGED, flag);
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return SHAPE;
 	}
 
 	@Override
-	public @NotNull FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return SHAPE;
 	}
 
 	@Override
-	public @NotNull BlockState updateShape(BlockState state, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor world, @NotNull BlockPos currentPos,
-										   @NotNull BlockPos facingPos) {
-		if (state.getValue(WATERLOGGED)) world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-		return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		final boolean inWater = ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER;
+		return getDefaultState().with(WATERLOGGED, inWater);
 	}
 
 	@Override
-	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+	}
+
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+		if (state.get(WATERLOGGED)) world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+	}
+
+	@Override
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
 		return Collections.singletonList(new ItemStack(this));
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void animateTick(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource random) {
-		super.animateTick(blockstate, world, pos, random);
-		if (random.nextFloat() < 0.2) world.addParticle(AquamiraeParticleTypes.GHOST_SHINE.get(),
-					pos.getX() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, pos.getY() + 1.6 + (random.nextFloat() - 0.5) * 0.05D,
-					pos.getZ() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, 0, 0, 0);
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		super.randomDisplayTick(state, world, pos, random);
+		if (random.nextFloat() < 0.2) world.addParticle(AquamiraeParticles.GHOST_SHINE,
+				pos.getX() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, pos.getY() + 1.6 + (random.nextFloat() - 0.5) * 0.05D,
+				pos.getZ() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, 0, 0, 0);
 	}
 }

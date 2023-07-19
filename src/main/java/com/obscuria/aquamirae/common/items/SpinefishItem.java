@@ -1,26 +1,25 @@
-
 package com.obscuria.aquamirae.common.items;
 
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.obscureapi.api.utils.PlayerUtils;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public class SpinefishItem extends Item {
-	public SpinefishItem(Item.Properties properties) {
-		super(properties);
+	public SpinefishItem(Item.Settings settings) {
+		super(settings);
 	}
 
 	@Override
-	public @NotNull ItemStack finishUsingItem(@NotNull ItemStack itemstack, @NotNull Level world, @NotNull LivingEntity entity) {
-		ItemStack bone = new ItemStack(AquamiraeItems.SHARP_BONES.get());
-		super.finishUsingItem(itemstack, world, entity);
-		if (itemstack.isEmpty()) return bone;
-		else if (entity instanceof Player player && !player.getAbilities().instabuild)
-			if (!player.getInventory().add(bone)) player.drop(bone, false);
-		return itemstack;
+	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+		final ItemStack bone = new ItemStack(AquamiraeItems.SHARP_BONES);
+		super.finishUsing(stack, world, user);
+		if (stack.isEmpty()) return bone;
+		else if (user instanceof PlayerEntity player && !player.getAbilities().creativeMode)
+			PlayerUtils.giveItem(player, bone);
+		return stack;
 	}
 }

@@ -1,17 +1,6 @@
 package com.obscuria.aquamirae;
 
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.common.ForgeConfigSpec;
-
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.nio.file.FileAlreadyExistsException;
-
-import java.io.IOException;
-
+@SuppressWarnings("all")
 public class AquamiraeConfig {
 
 	public static final double DEFAULT_CORNELIA_MAX_HEALTH = 200.0;
@@ -63,6 +52,7 @@ public class AquamiraeConfig {
 	public static final double DEFAULT_EEL_ATTACK_KNOCKBACK = 2.0;
 	public static final double DEFAULT_EEL_FOLLOW_RANGE = 32.0;
 
+	/*
 	public static class Common {
 		public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 		public static final ForgeConfigSpec COMMON_SPEC;
@@ -137,7 +127,7 @@ public class AquamiraeConfig {
 			corneliaRegenerationAbility = BUILDER.worldRestart().defineInRange("regenerationSkillUses", DEFAULT_CORNELIA_SKILL_USES, 0, 1000);
 			BUILDER.pop();
 
-			BUILDER.push("Anglerfish");
+			BUILDER.push("AnglerfishEntity");
 			anglerfishSwimSpeed = BUILDER.worldRestart().defineInRange("swimSpeed", DEFAULT_ANGLERFISH_SWIM_SPEED, 0.0, 100.0);
 			anglerfishMaxHealth = BUILDER.worldRestart().defineInRange("maxHealth", DEFAULT_ANGLERFISH_MAX_HEALTH, 1.0, 100000.0);
 			anglerfishArmor = BUILDER.worldRestart().defineInRange("armor", DEFAULT_ANGLERFISH_ARMOR, 0.0, 1000.0);
@@ -147,7 +137,7 @@ public class AquamiraeConfig {
 			anglerfishFollowRange = BUILDER.worldRestart().defineInRange("followRange", DEFAULT_ANGLERFISH_FOLLOW_RANGE, 1.0, 256.0);
 			BUILDER.pop();
 
-			BUILDER.push("Maw");
+			BUILDER.push("MawEntity");
 			mawSpeed = BUILDER.worldRestart().defineInRange("movementSpeed", DEFAULT_MAW_MOVEMENT_SPEED, 0.0, 10.0);
 			mawSwimSpeed = BUILDER.worldRestart().defineInRange("swimSpeed", DEFAULT_MAW_SWIM_SPEED, 0.0, 100.0);
 			mawMaxHealth = BUILDER.worldRestart().defineInRange("maxHealth", DEFAULT_MAW_MAX_HEALTH, 1.0, 100000.0);
@@ -158,7 +148,7 @@ public class AquamiraeConfig {
 			mawFollowRange = BUILDER.worldRestart().defineInRange("followRange", DEFAULT_MAW_FOLLOW_RANGE, 1.0, 256.0);
 			BUILDER.pop();
 
-			BUILDER.push("TorturedSoul");
+			BUILDER.push("TorturedSoulEntity");
 			soulSpeed = BUILDER.worldRestart().defineInRange("movementSpeed", DEFAULT_SOUL_MOVEMENT_SPEED, 0.0, 10.0);
 			soulSwimSpeed = BUILDER.worldRestart().defineInRange("swimSpeed", DEFAULT_SOUL_SWIM_SPEED, 0.0, 100.0);
 			soulMaxHealth = BUILDER.worldRestart().defineInRange("maxHealth", DEFAULT_SOUL_MAX_HEALTH, 1.0, 100000.0);
@@ -179,7 +169,7 @@ public class AquamiraeConfig {
 			motherFollowRange = BUILDER.worldRestart().defineInRange("followRange", DEFAULT_MOTHER_FOLLOW_RANGE, 1.0, 256.0);
 			BUILDER.pop();
 
-			BUILDER.push("Eel");
+			BUILDER.push("EelEntity");
 			eelMaxHealth = BUILDER.worldRestart().defineInRange("maxHealth", DEFAULT_EEL_MAX_HEALTH, 1.0, 100000.0);
 			eelArmor = BUILDER.worldRestart().defineInRange("armor", DEFAULT_EEL_ARMOR, 0.0, 1000.0);
 			eelAttackDamage = BUILDER.worldRestart().defineInRange("attackDamage", DEFAULT_EEL_ATTACK_DAMAGE, 1.0, 1000.0);
@@ -224,4 +214,6 @@ public class AquamiraeConfig {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Common.COMMON_SPEC, "Obscuria/aquamirae-common.toml");
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Client.CLIENT_SPEC, "Obscuria/aquamirae-client.toml");
 	}
+
+	 */
 }

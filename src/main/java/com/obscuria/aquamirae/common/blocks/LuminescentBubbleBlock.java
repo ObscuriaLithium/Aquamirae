@@ -2,135 +2,129 @@
 package com.obscuria.aquamirae.common.blocks;
 
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.ItemHandlerHelper;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.obscureapi.api.utils.PlayerUtils;
+import net.minecraft.block.*;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-public class LuminescentBubbleBlock extends Block implements SimpleWaterloggedBlock {
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+@SuppressWarnings("deprecation")
+public class LuminescentBubbleBlock extends Block implements Waterloggable {
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+	private static final VoxelShape SHAPE = createCuboidShape(3.3, 1, 3.3, 12.7, 15, 12.7);
 
 	public LuminescentBubbleBlock() {
-		super(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).sound(SoundType.CORAL_BLOCK).strength(0.1f, 0.5f)
-				.lightLevel(s -> 14).noCollission().speedFactor(0.8f).jumpFactor(0.8f).noOcclusion()
-				.hasPostProcess((bs, br, bp) -> true).emissiveRendering((bs, br, bp) -> true).isRedstoneConductor((bs, br, bp) -> false)
-				.dynamicShape().offsetType(Block.OffsetType.XYZ));
-		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
+		super(Settings.create()
+				.mapColor(MapColor.BLUE)
+				.sounds(BlockSoundGroup.CORAL)
+				.strength(0.1f, 0.5f)
+				.luminance(s -> 14)
+				.noCollision()
+				.nonOpaque()
+				.velocityMultiplier(0.8f)
+				.jumpVelocityMultiplier(0.8f)
+				.postProcess((a, b, c) -> true)
+				.emissiveLighting((a, b, c) -> true)
+				.solidBlock((a, b, c) -> false)
+				.dynamicBounds()
+				.offset(OffsetType.XYZ));
+		setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, false));
 	}
 
 	@Override
-	public void onPlace(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean moving) {
-		super.onPlace(blockstate, world, pos, oldState, moving);
-		world.scheduleTick(pos, this, 20);
-	}
-
-	@Override
-	public void tick(@NotNull BlockState blockstate, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource random) {
-		super.tick(blockstate, world, pos, random);
-		world.scheduleTick(pos, this, 20);
-		final Vec3 center = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-		List<Player> list = world.getEntitiesOfClass(Player.class, new AABB(center, center).inflate(8), e -> true).stream()
-				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();
-		list.forEach(player -> {if (player.isInWater()) player.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 80, 1, false, true)); });
-	}
-
-	@Override
-	public boolean propagatesSkylightDown(BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
-		return state.getFluidState().isEmpty();
-	}
-
-	@Override
-	public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos) {
-		return 0;
-	}
-
-	@Override
-	public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-		Vec3 offset = state.getOffset(world, pos);
-		return box(3.3, 1, 3.3, 12.7, 15, 12.7).move(offset.x, offset.y, offset.z);
-	}
-
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		builder.add(WATERLOGGED);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-		return this.defaultBlockState().setValue(WATERLOGGED, flag);
+	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+		super.onPlaced(world, pos, state, placer, itemStack);
+		world.scheduleBlockTick(pos, this, 20);
 	}
 
 	@Override
-	public @NotNull FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		super.scheduledTick(state, world, pos, random);
+		world.scheduleBlockTick(pos, this, 20);
+		final Vec3d center = new Vec3d(pos.getX(), pos.getY(), pos.getZ());
+		world.getEntitiesByClass(PlayerEntity.class, new Box(center, center).expand(8), e -> true)
+				.forEach(player -> {
+					if (player.isSubmergedInWater()) player.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE,
+							80, 1, false, true));
+				});
+	}
+
+	private VoxelShape getShape(BlockState state, BlockView world, BlockPos pos) {
+		final Vec3d offset = state.getModelOffset(world, pos);
+		return SHAPE.offset(offset.x, offset.y, offset.z);
+	}
+
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.getShape(state, world, pos);
+	}
+
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.getShape(state, world, pos);
 	}
 
 	@Override
-	public @NotNull BlockState updateShape(BlockState state, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor world, @NotNull BlockPos currentPos,
-										   @NotNull BlockPos facingPos) {
-		if (state.getValue(WATERLOGGED)) world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-		return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		final boolean inWater = ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER;
+		return getDefaultState().with(WATERLOGGED, inWater);
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-		return AquamiraeItems.LUMINESCENT_BUBBLE.get().getDefaultInstance();
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
-		return BlockPathTypes.OPEN;
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+		if (state.get(WATERLOGGED)) world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
 	@Override
-	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
-		return Collections.singletonList(AquamiraeItems.LUMINESCENT_BUBBLE.get().getDefaultInstance());
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+		return AquamiraeItems.LUMINESCENT_BUBBLE.getDefaultStack();
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void animateTick(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource random) {
-		super.animateTick(blockstate, world, pos, random);
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
+		return Collections.singletonList(AquamiraeItems.LUMINESCENT_BUBBLE.getDefaultStack());
+	}
+
+	@Override
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		super.randomDisplayTick(state, world, pos, random);
 		for (int l = 0; l < 3; ++l) {
 			double x0 = pos.getX() + random.nextFloat();
 			double y0 = pos.getY() + random.nextFloat();
@@ -143,11 +137,10 @@ public class LuminescentBubbleBlock extends Block implements SimpleWaterloggedBl
 	}
 
 	@Override
-	public @NotNull InteractionResult use(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player entity, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-		super.use(blockstate, world, pos, entity, hand, hit);
-		world.destroyBlock(pos, false);
-		ItemStack stack = new ItemStack(AquamiraeItems.LUMINESCENT_BUBBLE.get(), 1);
-		ItemHandlerHelper.giveItemToPlayer(entity, stack);
-		return InteractionResult.SUCCESS;
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		super.onUse(state, world, pos, player, hand, hit);
+		world.breakBlock(pos, false);
+		PlayerUtils.giveItem(player, AquamiraeItems.LUMINESCENT_BUBBLE.getDefaultStack());
+		return ActionResult.SUCCESS;
 	}
 }

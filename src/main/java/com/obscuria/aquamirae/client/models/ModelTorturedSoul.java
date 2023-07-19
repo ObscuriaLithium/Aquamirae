@@ -1,16 +1,14 @@
 package com.obscuria.aquamirae.client.models;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.common.entities.TorturedSoul;
+import com.obscuria.aquamirae.common.entities.TorturedSoulEntity;
 import com.obscuria.obscureapi.api.hekate.HekateLib;
 import com.obscuria.obscureapi.api.hekate.Interpolations;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.util.math.MatrixStack;
 
-public class ModelTorturedSoul extends EntityModel<TorturedSoul> {
+public class ModelTorturedSoul extends EntityModel<TorturedSoulEntity> {
 	public final ModelPart main, body, heart, head, nose, leftArm, rightArm, leftLeg, rightLeg, leftArmLower, rightArmLower, leftLegLower, rightLegLower;
 
 	public ModelTorturedSoul(ModelPart root) {
@@ -29,58 +27,35 @@ public class ModelTorturedSoul extends EntityModel<TorturedSoul> {
 		this.rightLegLower = rightLeg.getChild("right_leg_bottom");
 	}
 
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
-		PartDefinition partdefinition = meshdefinition.getRoot();
-		PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(0.0F, 6.0F, 150.0F));
-		PartDefinition body = main.addOrReplaceChild(
-				"body", CubeListBuilder.create().texOffs(16, 20).addBox(-4.0F, -12.0F, -3.0F, 8.0F, 12.0F, 6.0F, new CubeDeformation(-0.02F))
-						.texOffs(0, 39).addBox(-4.0F, -12.0F, -3.0F, 8.0F, 18.0F, 6.0F, new CubeDeformation(0.5F)),
-				PartPose.offset(0.0F, 6.0F, -150.0F));
-		PartDefinition heart = body.addOrReplaceChild("heart",
-				CubeListBuilder.create().texOffs(44, 21).addBox(-2.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(0.0F, -8.0F, 0.0F));
-		PartDefinition head = body.addOrReplaceChild(
-				"head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
-						.texOffs(28, 39).addBox(-4.5F, -13.0F, -4.5F, 9.0F, 10.0F, 9.0F, new CubeDeformation(-0.4F)),
-				PartPose.offset(0.0F, -12.0F, 0.0F));
-		PartDefinition nose = head.addOrReplaceChild("nose",
-				CubeListBuilder.create().texOffs(24, 0).addBox(-1.0F, -1.0F, -2.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(0.0F, -2.0F, -4.0F));
-		PartDefinition left_arm = body.addOrReplaceChild("left_arm",
-				CubeListBuilder.create().texOffs(38, 0).mirror().addBox(0.0F, -2.0F, -2.0F, 4.0F, 7.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false)
-						.texOffs(44, 30).mirror().addBox(0.0F, -6.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.01F)).mirror(false),
-				PartPose.offsetAndRotation(4.0F, -10.0F, 0.0F, 0.0F, 0.0F, 0.0F));
-		PartDefinition left_arm_bottom = left_arm.addOrReplaceChild("left_arm_bottom", CubeListBuilder.create().texOffs(38, 11).mirror()
-				.addBox(-2.0F, 0.0F, -3.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.01F)).mirror(false), PartPose.offset(2.0F, 4.0F, 1.0F));
-		PartDefinition right_arm = body.addOrReplaceChild(
-				"right_arm", CubeListBuilder.create().texOffs(38, 0).addBox(-4.0F, -2.0F, -2.0F, 4.0F, 7.0F, 4.0F, new CubeDeformation(0.0F))
-						.texOffs(44, 30).addBox(-4.0F, -6.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.01F)),
-				PartPose.offset(-4.0F, -10.0F, 0.0F));
-		PartDefinition right_arm_bottom = right_arm.addOrReplaceChild("right_arm_bottom",
-				CubeListBuilder.create().texOffs(38, 11).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.01F)),
-				PartPose.offset(-2.0F, 4.0F, 0.0F));
-		PartDefinition left_leg = main.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 18).mirror()
-				.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 7.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(2.0F, 6.0F, -150.0F));
-		PartDefinition left_leg_bottom = left_leg.addOrReplaceChild("left_leg_bottom", CubeListBuilder.create().texOffs(0, 29).mirror()
-				.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.01F)).mirror(false), PartPose.offset(0.0F, 6.0F, 0.0F));
-		PartDefinition right_leg = main.addOrReplaceChild("right_leg",
-				CubeListBuilder.create().texOffs(0, 18).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 7.0F, 4.0F, new CubeDeformation(0.0F)),
-				PartPose.offset(-2.0F, 6.0F, -150.0F));
-		PartDefinition right_leg_bottom = right_leg.addOrReplaceChild("right_leg_bottom",
-				CubeListBuilder.create().texOffs(0, 29).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.01F)),
-				PartPose.offset(0.0F, 6.0F, 0.0F));
-		return LayerDefinition.create(meshdefinition, 64, 64);
+	public static TexturedModelData createModelData() {
+		final ModelData modelData = new ModelData();
+		final ModelPartData root = modelData.getRoot();
+		final ModelPartData main = root.addChild("main", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 6.0F, 150.0F));
+		final ModelPartData body = main.addChild("body", ModelPartBuilder.create().uv(16, 20).cuboid(-4.0F, -12.0F, -3.0F, 8.0F, 12.0F, 6.0F, new Dilation(-0.02F)).uv(0, 39).cuboid(-4.0F, -12.0F, -3.0F, 8.0F, 18.0F, 6.0F, new Dilation(0.5F)), ModelTransform.pivot(0.0F, 6.0F, -150.0F));
+		body.addChild("heart", ModelPartBuilder.create().uv(44, 21).cuboid(-2.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -8.0F, 0.0F));
+		final ModelPartData head = body.addChild("head", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.0F)).uv(28, 39).cuboid(-4.5F, -13.0F, -4.5F, 9.0F, 10.0F, 9.0F, new Dilation(-0.4F)), ModelTransform.pivot(0.0F, -12.0F, 0.0F));
+		head.addChild("nose", ModelPartBuilder.create().uv(24, 0).cuboid(-1.0F, -1.0F, -2.0F, 2.0F, 4.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, -4.0F));
+		final ModelPartData leftArm = body.addChild("left_arm", ModelPartBuilder.create().uv(38, 0).mirrored().cuboid(0.0F, -2.0F, -2.0F, 4.0F, 7.0F, 4.0F, new Dilation(0.0F)).mirrored(false).uv(44, 30).mirrored().cuboid(0.0F, -6.0F, -2.0F, 4.0F, 4.0F, 4.0F, new Dilation(0.01F)).mirrored(false), ModelTransform.of(4.0F, -10.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		leftArm.addChild("left_arm_bottom", ModelPartBuilder.create().uv(38, 11).mirrored().cuboid(-2.0F, 0.0F, -3.0F, 4.0F, 6.0F, 4.0F, new Dilation(0.01F)).mirrored(false), ModelTransform.pivot(2.0F, 4.0F, 1.0F));
+		final ModelPartData rightArm = body.addChild("right_arm", ModelPartBuilder.create().uv(38, 0).cuboid(-4.0F, -2.0F, -2.0F, 4.0F, 7.0F, 4.0F, new Dilation(0.0F)).uv(44, 30).cuboid(-4.0F, -6.0F, -2.0F, 4.0F, 4.0F, 4.0F, new Dilation(0.01F)), ModelTransform.pivot(-4.0F, -10.0F, 0.0F));
+		rightArm.addChild("right_arm_bottom", ModelPartBuilder.create().uv(38, 11).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new Dilation(0.01F)), ModelTransform.pivot(-2.0F, 4.0F, 0.0F));
+		final ModelPartData leftLeg = main.addChild("left_leg", ModelPartBuilder.create().uv(0, 18).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 7.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(2.0F, 6.0F, -150.0F));
+		leftLeg.addChild("left_leg_bottom", ModelPartBuilder.create().uv(0, 29).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new Dilation(0.01F)).mirrored(false), ModelTransform.pivot(0.0F, 6.0F, 0.0F));
+		final ModelPartData rightLeg = main.addChild("right_leg", ModelPartBuilder.create().uv(0, 18).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 7.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-2.0F, 6.0F, -150.0F));
+		rightLeg.addChild("right_leg_bottom", ModelPartBuilder.create().uv(0, 29).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new Dilation(0.01F)), ModelTransform.pivot(0.0F, 6.0F, 0.0F));
+		return TexturedModelData.of(modelData, 64, 64);
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void render(MatrixStack stack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		main.render(stack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
-	public void setupAnim(TorturedSoul soul, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	@Override
+	public void setAngles(TorturedSoulEntity soul, float limbAngle, float limbDistance, float progress, float headYaw, float headPitch) {
+		System.out.println(progress);
 		HekateLib.reset(main, body, heart, head, nose, leftArm, rightArm, leftLeg, rightLeg, leftArmLower, rightArmLower, leftLegLower, rightLegLower);
-		HekateLib.push(ageInTicks, 0.1f, HekateLib.mod.idle(limbSwingAmount, 5), HekateLib.Mode.DEFINITION)
+		HekateLib.push(progress, 0.1f, HekateLib.mod.idle(limbDistance, 5), HekateLib.Mode.DEFINITION)
 				.keyframe(main, k -> k.xRot(-0.3F, -0.5F))
 				.keyframe(body, k -> k.xRot(-3F, -10F))
 				.keyframe(head, k -> k.xRot(3F, 16F))
@@ -92,7 +67,7 @@ public class ModelTorturedSoul extends EntityModel<TorturedSoul> {
 				.keyframe(rightLegLower, k -> k.xRot(-30F, -44F))
 				.keyframe(leftLeg, k -> k.rotation(15F, 30F, -0.5F, 4F, 0.5F, -4F))
 				.keyframe(leftLegLower, k -> k.xRot(-30F, -44F));
-		HekateLib.push(ageInTicks, 0.4f, HekateLib.mod.move(limbSwingAmount, 5), HekateLib.Mode.ADDITION)
+		HekateLib.push(progress, 0.4f, HekateLib.mod.move(limbDistance, 5), HekateLib.Mode.ADDITION)
 				.keyframe(main, k -> k.xRot(0.5F, -0.3F, 2, 0))
 				.keyframe(body, k -> k.xRot(-3F, -3F, 2, -0.1f))
 				.keyframe(head, k -> k.xRot(-3F, -3F, 2, -0.2f))
@@ -105,17 +80,17 @@ public class ModelTorturedSoul extends EntityModel<TorturedSoul> {
 				.keyframe(leftLeg, k -> k.xRot(30F, 14F, -0.1f))
 				.keyframe(leftLegLower, k -> k.xRot(34F, -34F, -0.2f));
 		HekateLib.push(8, 12, Interpolations.EASE_OUT_ELASTIC, Interpolations.EASE_OUT_BACK)
-				.pose(0, 20, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+				.pose(0, 20, Interpolations.CEIL, progress, 1f, builder -> builder
 						.keyframe(body, k -> k.rotation(-27F, 0, 0))
 						.keyframe(leftArm, k -> k.rotation(125F, 0, 0))
 						.keyframe(rightArm, k -> k.rotation(125F, 0, 0))
 						.keyframe(leftArmLower, k -> k.rotation(12F, 0, 0))
 						.keyframe(rightArmLower, k -> k.rotation(12F, 0, 0)))
 				.animate(soul.ATTACK);
-		this.heart.xRot = ageInTicks / 13F;
-		this.heart.yRot = ageInTicks / 9F;
-		this.heart.zRot = ageInTicks / 5F;
-		this.head.yRot += HekateLib.mod.head(netHeadYaw, 0.5F);
-		this.body.yRot += HekateLib.mod.head(netHeadYaw, 0.5F);
+		this.heart.pitch = progress / 13F;
+		this.heart.yaw = progress / 9F;
+		this.heart.roll = progress / 5F;
+		this.head.yaw += HekateLib.mod.head(headYaw, 0.5F);
+		this.body.yaw += HekateLib.mod.head(headYaw, 0.5F);
 	}
 }

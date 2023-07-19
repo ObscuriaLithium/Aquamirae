@@ -3,71 +3,82 @@ package com.obscuria.aquamirae.common.blocks;
 
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DoublePlantBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.block.*;
+import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WisteriaNiveisBlock extends DoublePlantBlock {
-
-	public static final BooleanProperty LOOT = BooleanProperty.create("loot");
+@SuppressWarnings("deprecation")
+public class WisteriaNiveisBlock extends TallPlantBlock {
+	public static final BooleanProperty LOOT = BooleanProperty.of("loot");
 
 	public WisteriaNiveisBlock() {
-		super(Properties.of().mapColor(MapColor.PLANT).sound(SoundType.WEEPING_VINES).strength(1f, 10f).noCollission()
-				.isRedstoneConductor((bs, br, bp) -> false).offsetType(OffsetType.XYZ));
-		this.registerDefaultState(this.stateDefinition.any().setValue(LOOT, true));
+		super(Settings.create()
+				.mapColor(MapColor.PALE_GREEN)
+				.sounds(BlockSoundGroup.WEEPING_VINES)
+				.strength(1f, 10f)
+				.noCollision()
+				.solidBlock((a, b, c) -> false)
+				.offset(OffsetType.XYZ));
+		setDefaultState(getStateManager().getDefaultState().with(LOOT, true));
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder);
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		super.appendProperties(builder);
 		builder.add(LOOT);
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-		return AquamiraeItems.WISTERIA_NIVEIS.get().getDefaultInstance();
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+		return AquamiraeItems.WISTERIA_NIVEIS.getDefaultStack();
 	}
 
 	@Override
-	protected boolean mayPlaceOn(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
-		return state.is(BlockTags.SNOW) || super.mayPlaceOn(state, level, pos);
+	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+		if (state.get(HALF) != DoubleBlockHalf.UPPER) {
+			return world.getBlockState(pos.down()).isIn(BlockTags.SNOW);
+		} else {
+			final BlockState lower = world.getBlockState(pos.down());
+			return lower.isOf(this) && lower.get(HALF) == DoubleBlockHalf.LOWER;
+		}
 	}
 
-	public boolean canBePlacedOn(Level level, BlockPos pos) {
-		return mayPlaceOn(level.getBlockState(pos), level, pos) && level.isEmptyBlock(pos.above(1)) && level.isEmptyBlock(pos.above(2));
+	public static boolean canGenerateAt(StructureWorldAccess world, BlockPos pos) {
+		final BlockState state = world.getBlockState(pos);
+		return state.isSideSolid(world, pos, Direction.UP, SideShapeType.FULL) && state.isIn(BlockTags.SNOW)
+				&& world.isAir(pos.up(1)) && world.isAir(pos.up(2));
 	}
 
-	public boolean canBePlacedOn(WorldGenLevel level, BlockPos pos) {
-		return mayPlaceOn(level.getBlockState(pos), level, pos) && level.isEmptyBlock(pos.above(1)) && level.isEmptyBlock(pos.above(2));
+	public static boolean canGenerateAt(World world, BlockPos pos) {
+		final BlockState state = world.getBlockState(pos);
+		return state.isSideSolid(world, pos, Direction.UP, SideShapeType.FULL) && state.isIn(BlockTags.SNOW)
+				&& world.isAir(pos.up(1)) && world.isAir(pos.up(2));
 	}
 
 	@Override
-	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
-		return state.getValue(HALF) == DoubleBlockHalf.LOWER ? state.getValue(LOOT) ? super.getDrops(state, builder)
-				: List.of(AquamiraeItems.WISTERIA_NIVEIS.get().getDefaultInstance()) : new ArrayList<>();
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
+		return state.get(HALF) == DoubleBlockHalf.LOWER ? state.get(LOOT) ? super.getDroppedStacks(state, builder)
+				: List.of(AquamiraeItems.WISTERIA_NIVEIS.getDefaultStack()) : new ArrayList<>();
 	}
 
-	@Override
-	public void onPlace(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean moving) {
-		if (state.getValue(HALF) == DoubleBlockHalf.LOWER && world.isEmptyBlock(pos.above()))
-			world.setBlock(pos.above(), AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER).setValue(LOOT, false), 3);
+	public static boolean tryPlace(World world, BlockPos pos, boolean natural) {
+		if (!canGenerateAt(world, pos)) return false;
+		world.setBlockState(pos.up(1), AquamiraeBlocks.WISTERIA_NIVEIS.getDefaultState().with(HALF, DoubleBlockHalf.LOWER).with(LOOT, natural), 3);
+		world.setBlockState(pos.up(2), AquamiraeBlocks.WISTERIA_NIVEIS.getDefaultState().with(HALF, DoubleBlockHalf.UPPER).with(LOOT, natural), 3);
+		return true;
 	}
 }

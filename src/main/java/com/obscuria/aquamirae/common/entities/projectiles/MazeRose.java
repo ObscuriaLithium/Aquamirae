@@ -1,32 +1,27 @@
 
 package com.obscuria.aquamirae.common.entities.projectiles;
 
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.obscureapi.api.common.DynamicProjectile;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PlayMessages;
+import com.obscuria.obscureapi.common.entities.DynamicProjectileEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
-public class MazeRose extends DynamicProjectile {
+public class MazeRose extends DynamicProjectileEntity {
 
-	public MazeRose(PlayMessages.SpawnEntity packet, Level world) {
-		this(AquamiraeEntities.MAZE_ROSE.get(), world);
-	}
-
-	public MazeRose(EntityType<MazeRose> type, Level world) {
+	public MazeRose(EntityType<MazeRose> type, World world) {
 		super(type, world);
 	}
 
 	@Override
 	public void updateMotion() {
-		final Vec3 center = this.OWNER.position().add(0.0, (double)this.OWNER.getBbHeight() * 0.33, 0.0);
-		final float radius = this.getRadius();
-		final float speed = this.getSpinSpeed();
-		final float offset = this.getSpinOffset();
-		final Vec3 orbit = new Vec3((center.x + Math.cos(speed + offset) * radius) + Math.sin(speed * 6F + offset) * (radius * 0.5F), center.y,
+		if (owner == null) return;
+		final Vec3d center = owner.getPos().add(0.0, owner.getHeight() * 0.33, 0.0);
+		final float radius = getRadius();
+		final float speed = getSpinSpeed();
+		final float offset = getSpinOffset();
+		final Vec3d orbit = new Vec3d((center.x + Math.cos(speed + offset) * radius) + Math.sin(speed * 6F + offset) * (radius * 0.5F), center.y,
 				(center.z + Math.sin(speed + offset) * radius) + Math.cos(speed * 6F + offset) * (radius * 0.5F));
-		this.moveTo(orbit);
+		this.setPosition(orbit);
 	}
 
 	public float getAttackRange() {

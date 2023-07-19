@@ -1,128 +1,78 @@
 package com.obscuria.aquamirae;
 
+import com.obscuria.aquamirae.common.DelayedEvents;
+import com.obscuria.aquamirae.common.items.RuneOfTheStormItem;
 import com.obscuria.aquamirae.common.items.armor.AbyssalArmorItem;
 import com.obscuria.aquamirae.common.items.armor.TerribleArmorItem;
-import com.obscuria.aquamirae.common.items.armor.ThreeBoltArmorItem;
 import com.obscuria.aquamirae.common.items.weapon.CoralLanceItem;
 import com.obscuria.aquamirae.common.items.weapon.FinCutterItem;
 import com.obscuria.aquamirae.common.items.weapon.RemnantsSaberItem;
 import com.obscuria.aquamirae.registry.*;
-import com.obscuria.obscureapi.api.ClassManager;
-import com.obscuria.obscureapi.api.common.classes.ObscureClass;
-import com.obscuria.obscureapi.event.ObscureAPIEnchantmentsEvent;
+import com.obscuria.obscureapi.api.ClassRegistry;
+import com.obscuria.obscureapi.api.utils.ItemUtils;
+import com.obscuria.obscureapi.common.classes.GameClass;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import com.obscuria.obscureapi.util.ItemUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Pillager;
-import net.minecraft.world.entity.monster.Vindicator;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
+import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PillagerEntity;
+import net.minecraft.entity.mob.VindicatorEntity;
+import net.minecraft.item.FilledMapItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.map.MapIcon;
+import net.minecraft.item.map.MapState;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
-@Mod(Aquamirae.MODID)
-public class Aquamirae {
-	public static final Logger LOGGER = LogManager.getLogger(Aquamirae.class);
+public final class Aquamirae implements ModInitializer {
 	public static final String MODID = "aquamirae";
-	private static final String PROTOCOL_VERSION = "1";
-	public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
-	private static int messageID = 0;
-	public static final ObscureClass SEA_WOLF = ClassManager.register(Aquamirae.MODID, "sea_wolf");
-	public static final TagKey<Biome> ICE_MAZE = TagKey.create(Registries.BIOME, new ResourceLocation(Aquamirae.MODID, "ice_maze"));
-	public static final TagKey<Structure> SHIP = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Aquamirae.MODID, "ship"));
-	public static final TagKey<Structure> OUTPOST = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Aquamirae.MODID, "outpost"));
-	public static final TagKey<Structure> SHELTER = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Aquamirae.MODID, "shelter"));
-	public static final TagKey<Block> EEL_MOVE = BlockTags.create(new ResourceLocation(MODID, "eel_move"));
-	public static final TagKey<Block> MAZE_MOTHER_DESTROY = BlockTags.create(new ResourceLocation(MODID, "maze_mother_destroy"));
-	public static final TagKey<Block> SCROLL_DESTROY = BlockTags.create(new ResourceLocation(MODID, "scroll_destroy"));
+	public static final String SEA_WOLF_ID = "aquamirae:sea_wolf";
+	public static final GameClass SEA_WOLF = ClassRegistry.register(Aquamirae.MODID, "sea_wolf");
+	public static final TagKey<Biome> ICE_MAZE = TagKey.of(RegistryKeys.BIOME, key("ice_maze"));
+	public static final TagKey<Structure> SHIP = TagKey.of(RegistryKeys.STRUCTURE, key("ship"));
+	public static final TagKey<Structure> OUTPOST = TagKey.of(RegistryKeys.STRUCTURE, key("outpost"));
+	public static final TagKey<Structure> SHELTER = TagKey.of(RegistryKeys.STRUCTURE, key("shelter"));
+	public static final TagKey<Block> EEL_MOVE = TagKey.of(RegistryKeys.BLOCK, key("eel_move"));
+	public static final TagKey<Block> MAZE_MOTHER_DESTROY = TagKey.of(RegistryKeys.BLOCK, key("maze_mother_destroy"));
+	public static final TagKey<Block> SCROLL_DESTROY = TagKey.of(RegistryKeys.BLOCK, key("scroll_destroy"));
 
-	public Aquamirae() {
-		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+	public void onInitialize() {
+		AquamiraeBlocks.register();
+		AquamiraeItems.register();
+		AquamiraeEntities.register();
+		AquamiraeSounds.register();
+		AquamiraeFeatures.register();
+		AquamiraeParticles.register();
+		AquamiraeEffects.register();
+		AquamiraePotions.register();
+		DelayedEvents.register();
 
-		AquamiraeCreativeTab.REGISTRY.register(bus);
-		AquamiraeFeatures.REGISTRY.register(bus);
-		AquamiraeSounds.REGISTRY.register(bus);
-		AquamiraeBlocks.REGISTRY.register(bus);
-		AquamiraeEntities.REGISTRY.register(bus);
-		AquamiraeItems.REGISTRY.register(bus);
-		AquamiraeMobEffects.REGISTRY.register(bus);
-		AquamiraePotions.REGISTRY.register(bus);
-		AquamiraeParticleTypes.REGISTRY.register(bus);
-		AquamiraeConfig.register();
-
-		bus.addListener(this::commonSetup);
-		bus.addListener(EventPriority.HIGHEST, this::registerEnchantments);
-
-		MinecraftForge.EVENT_BUS.addListener(this::onEntitySpawn);
-		MinecraftForge.EVENT_BUS.addListener(this::onPlayerTick);
-		MinecraftForge.EVENT_BUS.addListener(this::onEntityAttacked);
-		MinecraftForge.EVENT_BUS.addListener(this::onEntityHurt);
-		MinecraftForge.EVENT_BUS.addListener(this::onEntityDeath);
-
-		if (FMLEnvironment.dist == Dist.CLIENT)
-			ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, AquamiraeClient.getConfig());
-	}
-
-	private void registerEnchantments(final @NotNull ObscureAPIEnchantmentsEvent event) {
-		event.registerMirror(true);
-		event.registerDistance(true);
-		event.registerFastSpin(true);
-	}
-
-	private void commonSetup(final FMLCommonSetupEvent event) {
 		ItemUtils.addLore("aquamirae:sea_casserole");
 		ItemUtils.addLore("aquamirae:sea_stew");
 		ItemUtils.addLore("aquamirae:poseidons_breakfast");
@@ -138,146 +88,70 @@ public class Aquamirae {
 		ItemUtils.addLore("aquamirae:golden_moth_in_a_jar");
 		ItemUtils.addLore("aquamirae:rune_of_the_storm");
 		ItemUtils.addLore("aquamirae:oxygelium");
+
+		EntityTrackingEvents.START_TRACKING.register((entity, player) -> {
+			if (entity instanceof PillagerEntity pillager) modifyLootTable(pillager, "entities/maze_pillager");
+			if (entity instanceof VindicatorEntity vindicator) modifyLootTable(vindicator, "entities/maze_vindicator");
+		});
+
+		ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, damage) ->
+				!(ItemUtils.countArmorPieces(entity, AbyssalArmorItem.class) >= 4 && AbyssalArmorItem.tryAvoidDeath(entity)));
 	}
 
-	public static void loadFromConfig(@NotNull LivingEntity entity, Attribute attribute, double amount) {
-		final AttributeInstance attributeInstance = entity.getAttribute(attribute);
-		if (attributeInstance != null) attributeInstance.setBaseValue(amount);
-		if (attribute == Attributes.MAX_HEALTH) entity.setHealth(entity.getMaxHealth());
+	public static Identifier key(String key) {
+		return new Identifier(MODID, key);
 	}
 
-	public static ItemStack getStructureMap(TagKey<Structure> tag, @NotNull ServerLevel server, @NotNull Entity source) {
-		BlockPos pos = server.findNearestMapStructure(tag, source.blockPosition(), 100, false);
+	public static ItemStack createStructureMap(TagKey<Structure> tag, ServerWorld server, Entity source) {
+		final BlockPos pos = server.locateStructure(tag, source.getBlockPos(), 100, false);
 		if (pos != null) {
-			final Component name = tag == SHIP ? Component.translatable("filled_map.aquamirae.ship")
-					: tag == OUTPOST ? Component.translatable("filled_map.aquamirae.outpost")
-					: tag == SHELTER ? Component.translatable("filled_map.aquamirae.shelter")
-					: Component.translatable("filled_map.buried_treasure");
-			final ItemStack map = MapItem.create(server, pos.getX(), pos.getZ(), (byte) 2, true, true);
-			MapItem.renderBiomePreviewMap(server, map);
-			MapItemSavedData.addTargetDecoration(map, pos, "+", MapDecoration.Type.RED_X);
-			map.setHoverName(name);
-			final CompoundTag display = map.getOrCreateTag().getCompound("display");
-			final ListTag lore = new ListTag();
-			lore.add(StringTag.valueOf("{\"text\":\"§7x: " + pos.getX() + "\"}"));
-			lore.add(StringTag.valueOf("{\"text\":\"§7z: " + pos.getZ() + "\"}"));
+			final Text name = tag == SHIP ? Text.translatable("filled_map.aquamirae.ship")
+					: tag == OUTPOST ? Text.translatable("filled_map.aquamirae.outpost")
+					: tag == SHELTER ? Text.translatable("filled_map.aquamirae.shelter")
+					: Text.translatable("filled_map.buried_treasure");
+			final ItemStack map = FilledMapItem.createMap(server, pos.getX(), pos.getZ(), (byte) 2, true, true);
+			FilledMapItem.fillExplorationMap(server, map);
+			MapState.addDecorationsNbt(map, pos, "+", MapIcon.Type.RED_X);
+			map.setCustomName(name);
+			final NbtCompound display = map.getOrCreateNbt().getCompound("display");
+			final NbtList lore = new NbtList();
+			lore.add(NbtString.of("{\"text\":\"§7x: " + pos.getX() + "\"}"));
+			lore.add(NbtString.of("{\"text\":\"§7z: " + pos.getZ() + "\"}"));
 			display.put("Lore", lore);
-			map.addTagElement("display", display);
+			map.setSubNbt("display", display);
 			return map;
 		}
 		return ItemStack.EMPTY;
 	}
 
-	public static boolean winterEvent() {
+	public static boolean isWinterEvent() {
 		return Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER || Calendar.getInstance().get(Calendar.MONTH) == Calendar.JANUARY;
 	}
 
-	private void onEntitySpawn(@NotNull MobSpawnEvent event) {
-		final Mob mob = event.getEntity();
-		if (mob instanceof Pillager) this.modifyLootTable(mob, "entities/maze_pillager");
-		if (mob instanceof Vindicator) this.modifyLootTable(mob, "entities/maze_vindicator");
-	}
-
-	private void modifyLootTable(@NotNull Mob mob, String loot) {
+	public static void modifyLootTable(MobEntity mob, String loot) {
 		if (!AquamiraeUtils.isInIceMaze(mob) || mob.getLootTable().toString().endsWith("captain")) return;
-		mob.getPersistentData().putString("DeathLootTable", Aquamirae.MODID + ":" + loot);
+		final NbtCompound data = new NbtCompound();
+		mob.writeCustomDataToNbt(data);
+		data.putString("DeathLootTable", Aquamirae.MODID + ":" + loot);
+		mob.readCustomDataFromNbt(data);
 	}
 
-	private void onPlayerTick(final TickEvent.@NotNull PlayerTickEvent event) {
-		if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide || event.player.isCreative() || event.player.isSpectator()) return;
-		if (AquamiraeUtils.isInIceMaze(event.player))
-			if (event.player.isInWaterOrBubble() && event.player.getTicksFrozen() <= event.player.getTicksRequiredToFreeze() * 3)
-				if (ItemUtils.getArmorPieces(event.player, ThreeBoltArmorItem.class) < 4)
-					event.player.setTicksFrozen(event.player.getTicksFrozen() + 4);
+	public static void onEntityDamage(LivingEntity entity, DamageSource source) {
+		final int pieces = ItemUtils.countArmorPieces(entity, TerribleArmorItem.class);
+		if (pieces >= 2) TerribleArmorItem.halfSetEffect(entity);
+		if (pieces >= 4) TerribleArmorItem.fullSetEffect(entity, source);
 	}
 
-	private void onEntityAttacked(final @NotNull LivingHurtEvent event) {
-		//Fin Cutter
-		if (event.getSource().getEntity() instanceof LivingEntity source && source.getMainHandItem().getItem() instanceof FinCutterItem item) {
-			final int emptyHP = (int) Math.floor((source.getMaxHealth() - source.getHealth()) / 2);
-			event.setAmount(event.getAmount() + event.getAmount() *
-					Math.min(item.ABILITY.getVariable(source, 2) * 0.01F, emptyHP * item.ABILITY.getVariable(source, 1) * 0.01F));
+	public static float modifyDamage(LivingEntity entity, DamageSource source, float amount) {
+		if (source.getAttacker() instanceof LivingEntity attacker) {
+			final Item item = attacker.getMainHandStack().getItem();
+			if (ItemUtils.hasPerk(attacker.getMainHandStack(), key("rune_of_the_storm")))
+				amount += RuneOfTheStormItem.calculateDamageBonus(attacker, amount);
+			if (item instanceof FinCutterItem) amount += FinCutterItem.calculateDamageBonus(attacker, amount);
+			if (item instanceof RemnantsSaberItem) amount += RemnantsSaberItem.calculateDamageBonus(attacker, amount);
+			if (item instanceof CoralLanceItem) amount += CoralLanceItem.calculateDamageBonus(attacker, entity, amount);
 		}
-		//Terrible Armor
-		if (event.getEntity() instanceof Player player) {
-			final int TOTAL = ItemUtils.getArmorPieces(player, TerribleArmorItem.class);
-			if (TOTAL >= 2) {
-				final ItemStack piece = getArmor(player, TerribleArmorItem.class);
-				if (player.isInWater() && !player.getCooldowns().isOnCooldown(piece.getItem()) && piece.getItem() instanceof TerribleArmorItem item) {
-					player.addEffect(new MobEffectInstance(AquamiraeMobEffects.SWIM_SPEED.get(), 20 * item.ABILITY_HALFSET.getVariable(player, 2),
-							Math.min(19, item.ABILITY_HALFSET.getVariable(player, 1) / 10 - 1), false, false));
-					final int cooldown = 20 * item.ABILITY_HALFSET.getCost(player);
-					cooldown(player, TerribleArmorItem.class, cooldown);
-				}
-				if (TOTAL >= 4 && event.getSource().getEntity() instanceof LivingEntity source && piece.getItem() instanceof TerribleArmorItem item) {
-					source.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * item.ABILITY_FULLSET.getVariable(player, 1), 1, false, false));
-				}
-			}
-		}
-	}
-
-	private void onEntityHurt(final @NotNull LivingHurtEvent event) {
-		//Remnants Saber
-		if (event.getSource().getEntity() instanceof LivingEntity source && source.isInWater()
-				&& source.getMainHandItem().getItem() instanceof RemnantsSaberItem item)
-			event.setAmount(event.getAmount() * (1F + item.ABILITY.getVariable(source, 1) * 0.01F));
-		//Coral Lance
-		if (event.getSource().getEntity() instanceof LivingEntity source && source.getMainHandItem().getItem() instanceof CoralLanceItem item
-				&& AquamiraeUtils.isShipGraveyardEntity(event.getEntity())) {
-			event.setAmount(event.getAmount() * (1F + item.ABILITY.getVariable(source, 1) * 0.01F));
-		}
-	}
-
-	private void onEntityDeath(final LivingDeathEvent event) {
-		//Abyssal Armor
-		if (event != null && event.getEntity() != null) {
-			final LivingEntity entity = event.getEntity();
-			final int TOTAL = ItemUtils.getArmorPieces(entity, AbyssalArmorItem.class);
-			if (TOTAL >= 4 && !entity.hasEffect(AquamiraeMobEffects.CRYSTALLIZATION.get())) {
-				final AbyssalArmorItem item = (AbyssalArmorItem) getArmor(entity, AbyssalArmorItem.class).getItem();
-				if (!entity.getPersistentData().getBoolean("crystallization")) {
-					event.setCanceled(true);
-					entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.CRYSTALLIZATION.get(),
-							20 * item.ABILITY_FULLSET_1.getVariable(entity, 1), 0, true, true));
-					entity.setHealth(entity.getMaxHealth());
-					if (entity.level() instanceof ServerLevel level) level.playSound(null, entity.blockPosition().above(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1, 1);
-					final ItemStack head = entity.getItemBySlot(EquipmentSlot.HEAD);
-					final ItemStack chest = entity.getItemBySlot(EquipmentSlot.CHEST);
-					final ItemStack legs = entity.getItemBySlot(EquipmentSlot.LEGS);
-					final ItemStack feet = entity.getItemBySlot(EquipmentSlot.FEET);
-					if (head.hurt(50, entity.getRandom(), null)) { head.shrink(1); head.setDamageValue(0); }
-					if (chest.hurt(50, entity.getRandom(), null)) { chest.shrink(1); chest.setDamageValue(0); }
-					if (legs.hurt(50, entity.getRandom(), null)) { legs.shrink(1); legs.setDamageValue(0); }
-					if (feet.hurt(50, entity.getRandom(), null)) { feet.shrink(1); feet.setDamageValue(0); }
-				}
-			}
-		}
-	}
-
-	private ItemStack getArmor(@NotNull LivingEntity entity, @NotNull Class<?> armor) {
-		return armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.HEAD).getItem().getClass()) ?
-				entity.getItemBySlot(EquipmentSlot.HEAD) :
-				armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.CHEST).getItem().getClass()) ?
-						entity.getItemBySlot(EquipmentSlot.CHEST) :
-						armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.LEGS).getItem().getClass()) ?
-								entity.getItemBySlot(EquipmentSlot.LEGS) :
-								armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.FEET).getItem().getClass()) ?
-										entity.getItemBySlot(EquipmentSlot.FEET) : ItemStack.EMPTY;
-	}
-
-	private void cooldown(@NotNull Player player, @NotNull Class<?> armor, int cooldown) {
-		if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlot.HEAD).getItem().getClass()))
-			player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlot.HEAD).getItem(), cooldown);
-		if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlot.CHEST).getItem().getClass()))
-			player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlot.CHEST).getItem(), cooldown);
-		if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlot.LEGS).getItem().getClass()))
-			player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlot.LEGS).getItem(), cooldown);
-		if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlot.FEET).getItem().getClass()))
-			player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlot.FEET).getItem(), cooldown);
-	}
-
-	public static <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
-		PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer); messageID++;
+		return amount;
 	}
 
 	public static class SetBuilder {
@@ -287,46 +161,48 @@ public class Aquamirae {
 			final int c2 = getColor(10, 190, 220);
 			final int c3 = getColor(10, 130, 220);
 			List<ItemStack> list = new ArrayList<>();
-			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c1, "dead_sea_hat", Attributes.ATTACK_DAMAGE);
-			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c2, "twilight_grotto_hat", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c3, "sea_tramps_hat", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c1, "dead_sea_doublet", Attributes.ATTACK_DAMAGE);
-			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c2, "twilight_grotto_doublet", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c3, "sea_tramps_doublet", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c1, "dead_sea_pants", Attributes.ATTACK_DAMAGE);
-			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c2, "twilight_grotto_pants", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c3, "sea_tramps_pants", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c1, "dead_sea_boots", Attributes.ATTACK_DAMAGE);
-			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c2, "twilight_grotto_boots", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c3, "sea_tramps_boots", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c1, "dead_sea_hat", EntityAttributes.GENERIC_ATTACK_DAMAGE);
+			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c2, "twilight_grotto_hat", ObscureAPIAttributes.PENETRATION);
+			add(list, Items.LEATHER_HELMET, EquipmentSlot.HEAD, 1, 1, c3, "sea_tramps_hat", ObscureAPIAttributes.CRITICAL_HIT);
+			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c1, "dead_sea_doublet", EntityAttributes.GENERIC_ATTACK_DAMAGE);
+			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c2, "twilight_grotto_doublet", ObscureAPIAttributes.PENETRATION);
+			add(list, Items.LEATHER_CHESTPLATE, EquipmentSlot.CHEST, 1, 3, c3, "sea_tramps_doublet", ObscureAPIAttributes.CRITICAL_HIT);
+			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c1, "dead_sea_pants", EntityAttributes.GENERIC_ATTACK_DAMAGE);
+			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c2, "twilight_grotto_pants", ObscureAPIAttributes.PENETRATION);
+			add(list, Items.LEATHER_LEGGINGS, EquipmentSlot.LEGS, 1, 2, c3, "sea_tramps_pants", ObscureAPIAttributes.CRITICAL_HIT);
+			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c1, "dead_sea_boots", EntityAttributes.GENERIC_ATTACK_DAMAGE);
+			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c2, "twilight_grotto_boots", ObscureAPIAttributes.PENETRATION);
+			add(list, Items.LEATHER_BOOTS, EquipmentSlot.FEET, 1, 1, c3, "sea_tramps_boots", ObscureAPIAttributes.CRITICAL_HIT);
 			return list;
 		}
 
-		public static @NotNull List<ItemStack> rare() {
+		public static List<ItemStack> rare() {
 			List<ItemStack> list = new ArrayList<>();
-			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "dead_sea_helmet", Attributes.ATTACK_DAMAGE);
-			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "twilight_grotto_helmet", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "sea_tramps_helmet", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "dead_sea_chestplate", Attributes.ATTACK_DAMAGE);
-			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "twilight_grotto_chestplate", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "sea_tramps_chestplate", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "dead_sea_leggings", Attributes.ATTACK_DAMAGE);
-			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "twilight_grotto_leggings", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "sea_tramps_leggings", ObscureAPIAttributes.CRITICAL_HIT.get());
-			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "dead_sea_boots", Attributes.ATTACK_DAMAGE);
-			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "twilight_grotto_boots", ObscureAPIAttributes.PENETRATION.get());
-			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "sea_tramps_boots", ObscureAPIAttributes.CRITICAL_HIT.get());
+			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "dead_sea_helmet", EntityAttributes.GENERIC_ATTACK_DAMAGE);
+			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "twilight_grotto_helmet", ObscureAPIAttributes.PENETRATION);
+			add(list, Items.IRON_HELMET, EquipmentSlot.HEAD, 2, 2, 0, "sea_tramps_helmet", ObscureAPIAttributes.CRITICAL_HIT);
+			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "dead_sea_chestplate", EntityAttributes.GENERIC_ATTACK_DAMAGE);
+			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "twilight_grotto_chestplate", ObscureAPIAttributes.PENETRATION);
+			add(list, Items.IRON_CHESTPLATE, EquipmentSlot.CHEST, 2, 6, 0, "sea_tramps_chestplate", ObscureAPIAttributes.CRITICAL_HIT);
+			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "dead_sea_leggings", EntityAttributes.GENERIC_ATTACK_DAMAGE);
+			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "twilight_grotto_leggings", ObscureAPIAttributes.PENETRATION);
+			add(list, Items.IRON_LEGGINGS, EquipmentSlot.LEGS, 2, 5, 0, "sea_tramps_leggings", ObscureAPIAttributes.CRITICAL_HIT);
+			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "dead_sea_boots", EntityAttributes.GENERIC_ATTACK_DAMAGE);
+			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "twilight_grotto_boots", ObscureAPIAttributes.PENETRATION);
+			add(list, Items.IRON_BOOTS, EquipmentSlot.FEET, 2, 2, 0, "sea_tramps_boots", ObscureAPIAttributes.CRITICAL_HIT);
 			return list;
 		}
 
-		public static void add(List<ItemStack> list, Item item, EquipmentSlot slot, int mod, int armor, int color, String name, Attribute attribute) {
+		public static void add(List<ItemStack> list, Item item, EquipmentSlot slot, int mod, int armor, int color, String name, EntityAttribute attribute) {
 			for (int i = 1; i <= 5; i++) {
 				final ItemStack stack = new ItemStack(item);
-				stack.addAttributeModifier(Attributes.ARMOR, new AttributeModifier("base_armor", armor, AttributeModifier.Operation.ADDITION), slot);
-				stack.addAttributeModifier(attribute, new AttributeModifier("base_bonus", mod * i * 0.01, AttributeModifier.Operation.MULTIPLY_TOTAL), slot);
-				stack.setHoverName(Component.translatable("set.aquamirae." + name));
-				if (i == 5) stack.enchant(Enchantments.UNBREAKING, mod);
-				if (color > 0) stack.getOrCreateTagElement("display").putInt("color", color);
+				stack.addAttributeModifier(EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier("base_armor",
+						armor, EntityAttributeModifier.Operation.ADDITION), slot);
+				stack.addAttributeModifier(attribute, new EntityAttributeModifier("base_bonus",
+						mod * i * 0.01, EntityAttributeModifier.Operation.MULTIPLY_TOTAL), slot);
+				stack.setCustomName(Text.translatable("set.aquamirae." + name));
+				if (i == 5) stack.addEnchantment(Enchantments.UNBREAKING, mod);
+				if (color > 0) stack.getOrCreateSubNbt("display").putInt("color", color);
 				list.add(stack);
 			}
 		}

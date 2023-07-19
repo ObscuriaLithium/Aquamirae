@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "aquamirae",
+  "version": "${version}",
+  "name": "Aquamirae",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.obscuria.aquamirae.AquamiraeClient"
+    ],
+    "main": [
+      "com.obscuria.aquamirae.Aquamirae"
+    ]
+  },
+  "mixins": [
+    "aquamirae.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "fabric": "*",
+    "minecraft": "1.20.1",
+    "obscure_api": ">=16"
+  }
+}

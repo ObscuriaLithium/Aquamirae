@@ -1,42 +1,34 @@
-
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.common.ScrollEffects;
-import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.aquamirae.AquamiraeClient;
+import com.obscuria.aquamirae.common.DelayedEvents;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import net.minecraft.client.Minecraft;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
 
 public class DeadSeaScrollItem extends Item {
-	public DeadSeaScrollItem() {
-		super(new Item.Properties().stacksTo(8).rarity(Rarity.UNCOMMON));
+	public DeadSeaScrollItem(Settings settings) {
+		super(settings);
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean isFoil(@NotNull ItemStack stack) {
-		return Minecraft.getInstance().player != null && Minecraft.getInstance().player.getMainHandItem().getItem() == AquamiraeItems.DEAD_SEA_SCROLL.get();
+	public boolean hasGlint(ItemStack stack) {
+		return AquamiraeClient.isStackHeld(stack);
 	}
 
 	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-		InteractionResultHolder<ItemStack> resultHolder = super.use(level, player, hand);
-		if (level.isClientSide) Minecraft.getInstance().gameRenderer.displayItemActivation(resultHolder.getObject().copy());
-		level.playLocalSound(player.getBlockX(), player.getBlockY(), player.getBlockZ(), AquamiraeSounds.ITEM_SCROLL_USE.get(), SoundSource.PLAYERS, 1, 1, false);
-		player.getCooldowns().addCooldown(resultHolder.getObject().getItem(), 100);
-		resultHolder.getObject().shrink(1); player.swing(hand);
-		ScrollEffects.create(player);
-		return resultHolder;
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+		final TypedActionResult<ItemStack> result = super.use(world, user, hand);
+		if (world.isClient()) AquamiraeClient.showFloatingItem(result.getValue());
+		world.playSound(user.getBlockX(), user.getBlockY(), user.getBlockZ(), AquamiraeSounds.ITEM_SCROLL_USE, SoundCategory.PLAYERS, 1, 1, false);
+		user.getItemCooldownManager().set(result.getValue().getItem(), 100);
+		user.swingHand(hand);
+		if (!world.isClient()) DelayedEvents.createScrollEvent(user);
+		return TypedActionResult.consume(result.getValue());
 	}
 }

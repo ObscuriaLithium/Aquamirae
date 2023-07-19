@@ -4,33 +4,32 @@ package com.obscuria.aquamirae.common.worldgen.feature;
 import com.mojang.serialization.Codec;
 import com.obscuria.aquamirae.common.blocks.WisteriaNiveisBlock;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.gen.feature.DefaultFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 
-public class WisteriaFeature extends Feature<NoneFeatureConfiguration> {
-
-	public WisteriaFeature(Codec<NoneFeatureConfiguration> codec) {
+public class WisteriaFeature extends Feature<DefaultFeatureConfig> {
+	public WisteriaFeature(Codec<DefaultFeatureConfig> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+	public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
 		boolean placed = false;
-		final int count = context.random().nextInt(4, 12);
+		final int count = context.getRandom().nextBetween(4, 12);
 		for (int i = 0; i <= count; i++) {
-			final int x = (int) (context.origin().getX() + context.random().triangle(0, 5));
-			final int z = (int) (context.origin().getZ() + context.random().triangle(0, 5));
-			final BlockPos pos = new BlockPos(x, context.level().getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z), z);
-			if (((WisteriaNiveisBlock) AquamiraeBlocks.WISTERIA_NIVEIS.get()).canBePlacedOn(context.level(), pos.below())) {
-				context.level().setBlock(pos, AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState()
-						.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER), 3);
-				context.level().setBlock(pos.above(), AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState()
-						.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.UPPER), 3);
+			final int x = (int) (context.getOrigin().getX() + context.getRandom().nextTriangular(0, 5));
+			final int z = (int) (context.getOrigin().getZ() + context.getRandom().nextTriangular(0, 5));
+			final BlockPos pos = new BlockPos(x, context.getWorld().getTopY(Heightmap.Type.WORLD_SURFACE_WG, x, z), z);
+			if (WisteriaNiveisBlock.canGenerateAt(context.getWorld(), pos.down())) {
+				context.getWorld().setBlockState(pos, AquamiraeBlocks.WISTERIA_NIVEIS.getDefaultState()
+						.with(Properties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER), 3);
+				context.getWorld().setBlockState(pos.up(), AquamiraeBlocks.WISTERIA_NIVEIS.getDefaultState()
+						.with(Properties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.UPPER), 3);
 				placed = true;
 			}
 		}

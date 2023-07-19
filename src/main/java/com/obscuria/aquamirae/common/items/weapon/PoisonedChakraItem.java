@@ -5,66 +5,76 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.common.items.AquamiraeTiers;
+import com.obscuria.aquamirae.common.items.AquamiraeMaterials;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.obscureapi.api.common.DynamicProjectile;
-import com.obscuria.obscureapi.api.common.DynamicProjectileItem;
-import com.obscuria.obscureapi.api.common.classes.Ability;
-import com.obscuria.obscureapi.api.common.classes.ClassAbility;
-import com.obscuria.obscureapi.api.common.classes.ClassItem;
+import com.obscuria.obscureapi.common.classes.ClassItem;
+import com.obscuria.obscureapi.common.classes.ability.Ability;
+import com.obscuria.obscureapi.common.classes.ability.RegisterAbility;
+import com.obscuria.obscureapi.common.classes.ability.context.AbilityContext;
+import com.obscuria.obscureapi.common.classes.ability.context.SimpleAbilityContext;
+import com.obscuria.obscureapi.common.entities.DynamicProjectile;
+import com.obscuria.obscureapi.common.entities.DynamicProjectileEntity;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TieredItem;
-import net.minecraft.world.item.Vanishable;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolItem;
+import net.minecraft.item.Vanishable;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.UUID;
 
-@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
-@DynamicProjectileItem(mirror = true, distance = true, fastSpin = true)
-public class PoisonedChakraItem extends TieredItem implements Vanishable {
-	public PoisonedChakraItem() {
-		super(AquamiraeTiers.POISONED_CHAKRA, new Item.Properties());
+@ClassItem(value = Aquamirae.SEA_WOLF_ID, type = "weapon")
+@DynamicProjectile(mirror = true, distance = true, fastSpin = true)
+public class PoisonedChakraItem extends ToolItem implements Vanishable {
+	@RegisterAbility public static final Ability ACTIVE;
+
+	public PoisonedChakraItem(Settings settings) {
+		super(AquamiraeMaterials.POISONED_CHAKRA, settings);
 	}
 
-	@ClassAbility
-	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "poisoned_chakra").cost(Ability.Cost.Type.COOLDOWN, 30).action(
-			(stack, entity, target, context, values) -> {
-				stack.hurt(3, entity.getRandom(), null);
-				DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), entity, entity.level(), stack, values.get(0), 0F,
-						20 * values.get(1), 1000);
-				return true;
-			}).var(3, "").var(30, "s").build(PoisonedBladeItem.class);
+	@Override
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+		final ItemStack stack = user.getStackInHand(hand);
+		if (world instanceof ServerWorld) {
+			ACTIVE.use(new SimpleAbilityContext(user, stack));
+			return TypedActionResult.success(stack);
+		}
+		return TypedActionResult.pass(stack);
+	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		final Multimap<Attribute, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
+		final Multimap<EntityAttribute, EntityAttributeModifier> multimap = super.getAttributeModifiers(stack, slot);
 		if (slot == EquipmentSlot.OFFHAND) {
-			Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+			Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 			builder.putAll(multimap);
-			builder.put(ObscureAPIAttributes.CRITICAL_HIT.get(), new AttributeModifier(UUID.fromString("A33F51D3-645C-4F38-A497-9C13A33DB5CF"),
-					"Weapon modifier", 0.1, AttributeModifier.Operation.MULTIPLY_BASE));
+			builder.put(ObscureAPIAttributes.CRITICAL_HIT, new EntityAttributeModifier(UUID.fromString("A33F51D3-645C-4F38-A497-9C13A33DB5CF"),
+					"Weapon modifier", 0.1, EntityAttributeModifier.Operation.MULTIPLY_BASE));
 			return builder.build();
 		}
 		return multimap;
 	}
 
-	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player entity, @NotNull InteractionHand hand) {
-		final ItemStack stack = entity.getItemInHand(hand);
-		if (world instanceof ServerLevel) {
-			ABILITY.use(stack, entity, null, null);
-			return InteractionResultHolder.success(stack);
-		}
-		return InteractionResultHolder.pass(stack);
+	public static boolean summonChakra(AbilityContext context, List<Integer> vars) {
+		context.getStack().damage(3, context.getUser().getRandom(), null);
+		DynamicProjectileEntity.create(AquamiraeEntities.POISONED_CHAKRA, context.getUser(), context.getUser().getWorld(),
+				context.getStack(), vars.get(0), 0F, 20 * vars.get(1), 1000);
+		return true;
+	}
+
+	static {
+		ACTIVE = Ability.create(Aquamirae.MODID, "poisoned_chakra")
+				.cost(Ability.CostType.COOLDOWN, 30)
+				.action(PoisonedChakraItem::summonChakra)
+				.var(3)
+				.sec(30)
+				.build(PoisonedBladeItem.class);
 	}
 }

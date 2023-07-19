@@ -2,191 +2,137 @@
 package com.obscuria.aquamirae.common.items.armor;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.client.AquamiraeLayers;
-import com.obscuria.aquamirae.client.models.armor.ModelTerribleArmor;
-import com.obscuria.aquamirae.common.items.AquamiraeTiers;
-import com.obscuria.obscureapi.api.common.classes.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.common.items.AquamiraeMaterials;
+import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.obscureapi.common.classes.ClassItem;
+import com.obscuria.obscureapi.common.classes.ability.Ability;
+import com.obscuria.obscureapi.common.classes.ability.RegisterAbility;
+import com.obscuria.obscureapi.common.classes.bonus.Bonus;
+import com.obscuria.obscureapi.common.classes.bonus.RegisterBonus;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorItem;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.function.Consumer;
-
-@Mod.EventBusSubscriber
-@ClassItem(clazz = "aquamirae:sea_wolf", type = "armor")
+@ClassItem(value = Aquamirae.SEA_WOLF_ID, type = "armor")
 public abstract class TerribleArmorItem extends ArmorItem {
+	public static final Ability HALFSET;
+	public static final Ability FULLSET;
 
-	public TerribleArmorItem(ArmorItem.Type type, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.TERRIBLE_ARMOR, type, properties);
+	public TerribleArmorItem(ArmorItem.Type type, Settings settings) {
+		super(AquamiraeMaterials.TERRIBLE_ARMOR, type, settings);
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "terrible_armor_half").cost(Ability.Cost.Type.COOLDOWN, 10)
-			.var(120, "%").var(6, "s").build(TerribleArmorItem.class);
-	public final Ability ABILITY_FULLSET = Ability.create(Aquamirae.MODID, "terrible_armor_full").var(4, "s")
-			.build(TerribleArmorItem.class);
+	public static void halfSetEffect(LivingEntity entity) {
+		if (entity.isSubmergedInWater()) {
+			if (entity instanceof PlayerEntity player) {
+				if (player.getItemCooldownManager().isCoolingDown(AquamiraeItems.TERRIBLE_CHESTPLATE)) return;
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 20 * HALFSET.getVariable(entity, 1)));
+				final int cooldown = 20 * HALFSET.getCost(player);
+				player.getItemCooldownManager().set(AquamiraeItems.TERRIBLE_HELMET, cooldown);
+				player.getItemCooldownManager().set(AquamiraeItems.TERRIBLE_CHESTPLATE, cooldown);
+				player.getItemCooldownManager().set(AquamiraeItems.TERRIBLE_LEGGINGS, cooldown);
+				player.getItemCooldownManager().set(AquamiraeItems.TERRIBLE_BOOTS, cooldown);
+			}
+			entity.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 20 * HALFSET.getVariable(entity, 1)));
+		}
+	}
+
+	public static void fullSetEffect(LivingEntity entity, DamageSource source) {
+		if (source.getSource() instanceof LivingEntity attacker)
+			attacker.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON,
+					20 * FULLSET.getVariable(entity, 1), 1, false, true));
+	}
+
+	static {
+		HALFSET = Ability.create(Aquamirae.MODID, "terrible_armor_half")
+				.cost(Ability.CostType.COOLDOWN, 10)
+				.sec(20)
+				.build(TerribleArmorItem.class);
+		FULLSET = Ability.create(Aquamirae.MODID, "terrible_armor_full")
+				.sec(4)
+				.build(TerribleArmorItem.class);
+	}
 
 	public static class Helmet extends TerribleArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterAbility public static final Ability FULLSET;
+		@RegisterBonus public static final Bonus BONUS;
 
-		@ClassAbility
-		public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
-		@ClassBonus
-		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(20).build();
-
-		public Helmet() {
-			super(Type.HELMET, new Item.Properties());
+		public Helmet(Settings settings) {
+			super(Type.HELMET, settings);
 		}
 
-		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
-				@Override
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"head", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).head,
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
-		}
-
-		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/terrible_helmet.png";
+		static {
+			HALFSET = TerribleArmorItem.HALFSET;
+			FULLSET = TerribleArmorItem.FULLSET;
+			BONUS = Bonus.create()
+					.target(Aquamirae.SEA_WOLF, "weapon")
+					.type(Bonus.Type.POWER, Bonus.Operation.PERCENT)
+					.value(20)
+					.build();
 		}
 	}
 
 	public static class Chestplate extends TerribleArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterAbility public static final Ability FULLSET;
+		@RegisterBonus public static final Bonus BONUS;
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
-		@ClassBonus
-		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(10).build();
-
-		public Chestplate() {
-			super(Type.CHESTPLATE, new Item.Properties());
+		public Chestplate(Settings settings) {
+			super(Type.CHESTPLATE, settings);
 		}
 
-		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"body", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).body,
-							"left_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).left_arm,
-							"right_arm", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).right_arm,
-							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
-		}
-
-		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/terrible_chestplate.png";
+		static {
+			HALFSET = TerribleArmorItem.HALFSET;
+			FULLSET = TerribleArmorItem.FULLSET;
+			BONUS = Bonus.create()
+					.target(Aquamirae.SEA_WOLF, "weapon")
+					.type(Bonus.Type.POWER, Bonus.Operation.PERCENT)
+					.value(10)
+					.build();
 		}
 	}
 
 	public static class Leggings extends TerribleArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterAbility public static final Ability FULLSET;
+		@RegisterBonus public static final Bonus BONUS;
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
-		@ClassBonus
-		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-10).build();
-
-		public Leggings() {
-			super(Type.LEGGINGS, new Item.Properties());
+		public Leggings(Settings settings) {
+			super(Type.LEGGINGS, settings);
 		}
 
-		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
-							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).left_shoe2,
-									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).right_shoe2,
-									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
-		}
-
-		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/terrible_leggings.png";
+		static {
+			HALFSET = TerribleArmorItem.HALFSET;
+			FULLSET = TerribleArmorItem.FULLSET;
+			BONUS = Bonus.create()
+					.target(Aquamirae.SEA_WOLF, "weapon")
+					.type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT)
+					.value(-10)
+					.build();
 		}
 	}
 
 	public static class Boots extends TerribleArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterAbility public static final Ability FULLSET;
+		@RegisterBonus public static final Bonus BONUS;
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
-		@ClassAbility public final Ability ABILITY_FULLSET = super.ABILITY_FULLSET;
-		@ClassBonus
-		public final Bonus BONUS = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT).value(-20).build();
-
-		public Boots() {
-			super(Type.BOOTS, new Item.Properties());
+		public Boots(Settings settings) {
+			super(Type.BOOTS, settings);
 		}
 
-		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(),
-							Map.of("left_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).left_shoe,
-									"right_leg", new ModelTerribleArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.TERRIBLE_ARMOR)).right_shoe,
-									"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-									"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
-		}
-
-		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/terrible_boots.png";
+		static {
+			HALFSET = TerribleArmorItem.HALFSET;
+			FULLSET = TerribleArmorItem.FULLSET;
+			BONUS = Bonus.create()
+					.target(Aquamirae.SEA_WOLF, "weapon")
+					.type(Bonus.Type.COOLDOWN, Bonus.Operation.PERCENT)
+					.value(-20)
+					.build();
 		}
 	}
 }

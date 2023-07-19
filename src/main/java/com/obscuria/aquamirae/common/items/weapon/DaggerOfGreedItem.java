@@ -2,69 +2,98 @@
 package com.obscuria.aquamirae.common.items.weapon;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.common.items.AquamiraeTiers;
-import com.obscuria.obscureapi.api.common.classes.Ability;
-import com.obscuria.obscureapi.api.common.classes.ClassAbility;
-import com.obscuria.obscureapi.api.common.classes.ClassItem;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.common.items.AquamiraeMaterials;
+import com.obscuria.obscureapi.api.utils.WorldUtils;
+import com.obscuria.obscureapi.common.classes.ClassItem;
+import com.obscuria.obscureapi.common.classes.ability.Ability;
+import com.obscuria.obscureapi.common.classes.ability.RegisterAbility;
+import com.obscuria.obscureapi.common.classes.ability.context.AbilityContext;
+import com.obscuria.obscureapi.common.classes.ability.context.CombatAbilityContext;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.IllagerEntity;
+import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.SwordItem;
+import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Random;
 
-@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
+@ClassItem(value = Aquamirae.SEA_WOLF_ID, type = "weapon")
 public class DaggerOfGreedItem extends SwordItem {
-	public DaggerOfGreedItem() {
-		super(AquamiraeTiers.DAGGER_OF_GREED, 3, -2f, new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON));
-	}
+	@RegisterAbility public static final Ability PASSIVE_1;
+	@RegisterAbility public static final Ability PASSIVE_2;
+	@RegisterAbility public static final Ability PASSIVE_3;
 
-	@ClassAbility
-	public final Ability ABILITY_1 = Ability.create(Aquamirae.MODID, "dagger_of_greed_1").build(DaggerOfGreedItem.class);
-	@ClassAbility
-	public final Ability ABILITY_2 = Ability.create(Aquamirae.MODID, "dagger_of_greed_2").build(DaggerOfGreedItem.class);
-	@ClassAbility
-	public final Ability ABILITY_3 = Ability.create(Aquamirae.MODID, "dagger_of_greed_3").style(Ability.Style.EPIC).build(DaggerOfGreedItem.class);
-
-	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int i, boolean flag) {
-		if (stack.getDamageValue() != stack.getOrCreateTag().getInt("DamageValue"))
-			stack.setDamageValue(stack.getOrCreateTag().getInt("DamageValue"));
+	public DaggerOfGreedItem(Settings settings) {
+		super(AquamiraeMaterials.DAGGER_OF_GREED, 3, -2f, settings);
 	}
 
 	@Override
-	public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
-		final boolean hurt = super.hurtEnemy(stack, entity, source);
-		final Level level = entity.level();
-		if (level.isClientSide()) return hurt;
-		stack.getOrCreateTag().putInt("DamageValue", stack.getOrCreateTag().getInt("DamageValue") + 1);
-		if (entity instanceof AbstractVillager || entity instanceof AbstractIllager) {
-			ItemEntity emerald = new ItemEntity(level, entity.getX(), entity.getY() + entity.getBbHeight() / 2.0, entity.getZ(),
-					new ItemStack(Items.EMERALD));
-			emerald.setPickUpDelay(10);
-			level.addFreshEntity(emerald);
-			if (!entity.isAlive()) {
-				ItemEntity emeralds = new ItemEntity(level, entity.getX(), entity.getY() + entity.getBbHeight() / 2.0, entity.getZ(),
-						new ItemStack(Items.EMERALD, new Random().nextInt(3, 8)));
-				emeralds.setPickUpDelay(10);
-				level.addFreshEntity(emeralds);
-			}
-			if (entity instanceof AbstractVillager && new Random().nextInt(0, 20) == 20)
-				source.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 24000, 0));
+	public boolean postHit(ItemStack stack, LivingEntity entity, LivingEntity source) {
+		final boolean hit = super.postHit(stack, entity, source);
+		if (entity.getWorld().isClient()) return hit;
+		if (hit) {
+			final CombatAbilityContext context = new CombatAbilityContext(source, stack, entity);
+			PASSIVE_1.use(context);
+			PASSIVE_2.use(context);
+			PASSIVE_3.use(context);
 		}
-		return hurt;
+		return hit;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean isFoil(@NotNull ItemStack itemstack) {
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+		super.inventoryTick(stack, world, entity, slot, selected);
+		if (stack.getDamage() != stack.getOrCreateNbt().getInt("DamageValue"))
+			stack.setDamage(stack.getOrCreateNbt().getInt("DamageValue"));
+		if (stack.getDamage() <= 0 && entity instanceof LivingEntity living)
+			stack.damage(1, living, e -> {});
+	}
+
+	@Override
+	public boolean hasGlint(ItemStack stack) {
 		return true;
+	}
+
+	public static boolean dropEmeralds(AbilityContext context, List<Integer> vars) {
+		if (context instanceof CombatAbilityContext combat && (combat.getTarget() instanceof VillagerEntity || combat.getTarget() instanceof IllagerEntity)) {
+			WorldUtils.dropItem(combat.getTarget().getWorld(), combat.getTarget().getBlockPos(), Items.EMERALD.getDefaultStack());
+			if (!combat.getTarget().isAlive())
+				WorldUtils.dropItem(combat.getTarget().getWorld(), combat.getTarget().getBlockPos(),
+						new ItemStack(Items.EMERALD, new Random().nextInt(3, 8)));
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean applyBadOmen(AbilityContext context, List<Integer> vars) {
+		if (context instanceof CombatAbilityContext combat && combat.getTarget() instanceof VillagerEntity && new Random().nextInt(0, 20) == 20) {
+			combat.getUser().addStatusEffect(new StatusEffectInstance(StatusEffects.BAD_OMEN, 24000, 0));
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean updateDurability(AbilityContext context, List<Integer> vars) {
+		context.getStack().getOrCreateNbt().putInt("DamageValue", context.getStack().getOrCreateNbt().getInt("DamageValue") + 1);
+		return true;
+	}
+
+	static {
+		PASSIVE_1 = Ability.create(Aquamirae.MODID, "dagger_of_greed_1")
+				.action(DaggerOfGreedItem::dropEmeralds)
+				.build(DaggerOfGreedItem.class);
+		PASSIVE_2 = Ability.create(Aquamirae.MODID, "dagger_of_greed_2")
+				.action(DaggerOfGreedItem::applyBadOmen)
+				.build(DaggerOfGreedItem.class);
+		PASSIVE_3 = Ability.create(Aquamirae.MODID, "dagger_of_greed_3")
+				.action(DaggerOfGreedItem::updateDurability)
+				.style(Ability.Style.EPIC)
+				.build(DaggerOfGreedItem.class);
 	}
 }

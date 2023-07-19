@@ -2,207 +2,203 @@
 package com.obscuria.aquamirae.common.items.armor;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.client.AquamiraeLayers;
-import com.obscuria.aquamirae.client.models.armor.ModelAbyssalArmor;
-import com.obscuria.aquamirae.common.items.AquamiraeTiers;
-import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
-import com.obscuria.obscureapi.api.common.classes.*;
-import com.obscuria.obscureapi.util.ItemUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.common.items.AquamiraeMaterials;
+import com.obscuria.aquamirae.registry.AquamiraeEffects;
+import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.obscureapi.api.utils.ItemUtils;
+import com.obscuria.obscureapi.common.classes.ClassItem;
+import com.obscuria.obscureapi.common.classes.ability.Ability;
+import com.obscuria.obscureapi.common.classes.ability.RegisterAbility;
+import com.obscuria.obscureapi.common.classes.ability.context.AbilityContext;
+import com.obscuria.obscureapi.common.classes.ability.context.SimpleAbilityContext;
+import com.obscuria.obscureapi.common.classes.bonus.Bonus;
+import com.obscuria.obscureapi.common.classes.bonus.RegisterBonus;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.List;
 
-@ClassItem(clazz = "aquamirae:sea_wolf", type = "armor")
+@ClassItem(value = Aquamirae.SEA_WOLF_ID, type = "armor")
 public abstract class AbyssalArmorItem extends ArmorItem {
+	public static final Ability HALFSET;
+	public static final Ability FULLSET_HEAUME;
+	public static final Ability FULLSET_TIARA;
+	public static final Bonus BONUS_AMOUNT;
+	public static final Bonus BONUS_PERCENT;
 
-	public AbyssalArmorItem(ArmorItem.Type type, Item.@NotNull Properties properties) {
-		super(AquamiraeTiers.ABYSSAL_ARMOR, type, properties.rarity(Rarity.EPIC));
+	public AbyssalArmorItem(ArmorMaterial material, ArmorItem.Type type, Settings settings) {
+		super(material, type, settings);
 	}
 
-	public final Ability ABILITY_HALFSET = Ability.create(Aquamirae.MODID, "abyssal_armor_half").style(Ability.Style.ATTRIBUTE)
-			.build(AbyssalArmorItem.class);
-	public final Ability ABILITY_FULLSET_1 = Ability.create(Aquamirae.MODID, "abyssal_armor_full_1").var(90, "s")
-			.build(AbyssalArmorItem.class);
-	public final Ability ABILITY_FULLSET_2 = Ability.create(Aquamirae.MODID, "abyssal_armor_full_2")
-			.build(AbyssalArmorItem.class);
-	public final Bonus BONUS_1 = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.AMOUNT).value(3).build();
-	public final Bonus BONUS_2 = Bonus.create().target(Aquamirae.SEA_WOLF, "weapon").type(Bonus.Type.POWER, Bonus.Operation.PERCENT).value(25).build();
-
 	@Override
-	public void onArmorTick(ItemStack itemstack, Level world, Player player) {
-		if (ItemUtils.getArmorPieces(player, AbyssalArmorItem.class, AbyssalArmorExtraItem.class) >= 2) {
-			final MobEffectInstance EFFECT = player.getEffect(AquamiraeMobEffects.STRONG_ARMOR.get());
-			if (EFFECT != null) EFFECT.update(new MobEffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
-			else player.addEffect(new MobEffectInstance(AquamiraeMobEffects.STRONG_ARMOR.get(), 4, 0, false, false));
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+		super.inventoryTick(stack, world, entity, slot, selected);
+		if (entity instanceof LivingEntity living) {
+			HALFSET.use(new SimpleAbilityContext(living, stack));
+			FULLSET_TIARA.use(new SimpleAbilityContext(living, stack));
 		}
+	}
+
+	public static boolean applyStrongArmor(AbilityContext context, List<Integer> vars) {
+		if (ItemUtils.countArmorPieces(context.getUser(), AbyssalArmorItem.class) >= 2) {
+			final StatusEffectInstance effect = context.getUser().getStatusEffect(AquamiraeEffects.STRONG_ARMOR);
+			if (effect != null) effect.upgrade(new StatusEffectInstance(AquamiraeEffects.STRONG_ARMOR, 4, 0, false, false));
+			else context.getUser().addStatusEffect(new StatusEffectInstance(AquamiraeEffects.STRONG_ARMOR, 4, 0, false, false));
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean tryAvoidDeath(LivingEntity entity) {
+		if (entity instanceof PlayerEntity player) {
+			if (player.getItemCooldownManager().isCoolingDown(AquamiraeItems.ABYSSAL_HEAUME)) return false;
+			final int cooldown = 20 * FULLSET_HEAUME.getCost(entity);
+			player.getItemCooldownManager().set(AquamiraeItems.ABYSSAL_HEAUME, cooldown);
+			entity.addStatusEffect(new StatusEffectInstance(AquamiraeEffects.CRYSTALLIZATION, cooldown, 0, true, true));
+			entity.setHealth(entity.getMaxHealth());
+			final ItemStack head = entity.getEquippedStack(EquipmentSlot.HEAD);
+			final ItemStack chest = entity.getEquippedStack(EquipmentSlot.CHEST);
+			final ItemStack legs = entity.getEquippedStack(EquipmentSlot.LEGS);
+			final ItemStack feet = entity.getEquippedStack(EquipmentSlot.FEET);
+			head.damage(50, entity, e -> {});
+			chest.damage(50, entity, e -> {});
+			legs.damage(50, entity, e -> {});
+			feet.damage(50, entity, e -> {});
+			entity.getWorld().playSound(null, entity.getBlockPos().up(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1, 1);
+			return true;
+		}
+		return false;
+	}
+
+	static {
+		HALFSET = Ability.create(Aquamirae.MODID, "abyssal_armor_half")
+				.action(AbyssalArmorItem::applyStrongArmor)
+				.style(Ability.Style.ATTRIBUTE)
+				.build(AbyssalArmorItem.class);
+		FULLSET_HEAUME = Ability.create(Aquamirae.MODID, "abyssal_armor_full_1")
+				.cost(Ability.CostType.COOLDOWN, 60)
+				.build(AbyssalArmorItem.class);
+		FULLSET_TIARA = Ability.create(Aquamirae.MODID, "abyssal_armor_full_2")
+				.action(AbyssalArmorItem::applyTiaraEffect)
+				.build(AbyssalArmorItem.class);
+		BONUS_AMOUNT = Bonus.create()
+				.target(Aquamirae.SEA_WOLF, "weapon")
+				.type(Bonus.Type.POWER, Bonus.Operation.AMOUNT)
+				.value(3)
+				.build();
+		BONUS_PERCENT = Bonus.create()
+				.target(Aquamirae.SEA_WOLF, "weapon")
+				.type(Bonus.Type.POWER, Bonus.Operation.PERCENT)
+				.value(25)
+				.build();
+	}
+
+	public static boolean applyTiaraEffect(AbilityContext context, List<Integer> vars) {
+		if (context.getUser().getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof AbyssalArmorItem.Tiara
+				&& ItemUtils.countArmorPieces(context.getUser(), AbyssalArmorItem.class) == 4) {
+			final Vec3d center = context.getUser().getPos().add(0, 1, 0);
+			final List<HostileEntity> list = context.getUser().getWorld().getEntitiesByClass(HostileEntity.class, new Box(center, center).expand(4), e -> true);
+			for (HostileEntity monster: list) monster.addStatusEffect(new StatusEffectInstance(AquamiraeEffects.ABYSS_BLINDNESS, 10, 0, false, false));
+			final double radius = 4;
+			context.getUser().getWorld().addParticle(ParticleTypes.DRAGON_BREATH,
+					center.getX() + Math.cos(context.getUser().age * 0.05) * radius,
+					center.getY() - 0.5,
+					center.getZ() + Math.sin(context.getUser().age * 0.05) * radius,
+					0, 0, 0);
+			context.getUser().getWorld().addParticle(ParticleTypes.DRAGON_BREATH,
+					center.getX() + Math.cos(context.getUser().age * 0.05 + 3.12) * radius,
+					center.getY() - 0.5,
+					center.getZ() + Math.sin(context.getUser().age * 0.05 + 3.12) * radius,
+					0, 0, 0);
+			return true;
+		}
+		return false;
 	}
 
 	public static class Heaume extends AbyssalArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterAbility public static final Ability FULLSET_HEAUME;
+		@RegisterBonus public static final Bonus BONUS;
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
-		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
-		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
-		@ClassBonus public final Bonus BONUS = super.BONUS_1;
-
-		public Heaume() {
-			super(Type.HELMET, new Item.Properties());
+		public Heaume(Settings settings) {
+			super(AquamiraeMaterials.ABYSSAL_ARMOR, Type.HELMET, settings);
 		}
 
-		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
-				@Override
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"head", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).helmet,
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
-		}
-
-		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/abyssal_heaume.png";
+		static {
+			HALFSET = AbyssalArmorItem.HALFSET;
+			FULLSET_HEAUME = AbyssalArmorItem.FULLSET_HEAUME;
+			BONUS = AbyssalArmorItem.BONUS_AMOUNT;
 		}
 	}
 
 	public static class Brigantine extends AbyssalArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterBonus public static final Bonus BONUS;
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
-		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
-		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
-		@ClassBonus public final Bonus BONUS = super.BONUS_2;
-
-		public Brigantine() {
-			super(Type.CHESTPLATE, new Item.Properties());
+		public Brigantine(Settings settings) {
+			super(AquamiraeMaterials.ABYSSAL_ARMOR, Type.CHESTPLATE, settings);
 		}
 
-		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"body", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).body,
-							"left_arm", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).left_arm,
-							"right_arm", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).right_arm,
-							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_leg", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
-		}
-
-		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/abyssal_brigantine.png";
+		static {
+			HALFSET = AbyssalArmorItem.HALFSET;
+			BONUS = AbyssalArmorItem.BONUS_PERCENT;
 		}
 	}
 
 	public static class Leggings extends AbyssalArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterBonus public static final Bonus BONUS;
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
-		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
-		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
-		@ClassBonus public final Bonus BONUS = super.BONUS_2;
-
-		public Leggings() {
-			super(Type.LEGGINGS, new Item.Properties());
+		public Leggings(Settings settings) {
+			super(AquamiraeMaterials.ABYSSAL_ARMOR, Type.LEGGINGS, settings);
 		}
 
-		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"left_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).left_leg,
-							"right_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).right_leg,
-							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
-		}
-
-		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/abyssal_leggings.png";
+		static {
+			HALFSET = AbyssalArmorItem.HALFSET;
+			BONUS = AbyssalArmorItem.BONUS_PERCENT;
 		}
 	}
 
 	public static class Boots extends AbyssalArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterBonus public static final Bonus BONUS;
 
-		@ClassAbility public final Ability ABILITY_HALFSET = super.ABILITY_HALFSET;
-		@ClassAbility public final Ability ABILITY_FULLSET_1 = super.ABILITY_FULLSET_1;
-		@ClassAbility public final Ability ABILITY_FULLSET_2 = super.ABILITY_FULLSET_2;
-		@ClassBonus public final Bonus BONUS = super.BONUS_1;
-
-		public Boots() {
-			super(Type.BOOTS, new Item.Properties());
+		public Boots(Settings settings) {
+			super(AquamiraeMaterials.ABYSSAL_ARMOR, Type.BOOTS, settings);
 		}
 
-		public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-			consumer.accept(new IClientItemExtensions() {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				public @NotNull HumanoidModel<? extends LivingEntity> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel defaultModel) {
-					HumanoidModel<? extends LivingEntity> armorModel = new HumanoidModel<>(new ModelPart(Collections.emptyList(), Map.of(
-							"left_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).left_boot,
-							"right_leg", new ModelAbyssalArmor<>(Minecraft.getInstance().getEntityModels().bakeLayer(AquamiraeLayers.ABYSSAL_ARMOR)).right_boot,
-							"head", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"hat", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"body", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"right_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()),
-							"left_arm", new ModelPart(Collections.emptyList(), Collections.emptyMap()))));
-					armorModel.crouching = living.isShiftKeyDown();
-					armorModel.riding = defaultModel.riding;
-					armorModel.young = living.isBaby();
-					return armorModel;
-				}
-			});
+		static {
+			HALFSET = AbyssalArmorItem.HALFSET;
+			BONUS = AbyssalArmorItem.BONUS_AMOUNT;
+		}
+	}
+
+	public static class Tiara extends AbyssalArmorItem {
+		@RegisterAbility public static final Ability HALFSET;
+		@RegisterAbility public static final Ability FULLSET_TIARA;
+		@RegisterBonus public static final Bonus BONUS;
+
+		public Tiara(Settings settings) {
+			super(AquamiraeMaterials.ABYSSAL_ARMOR_EXTRA, Type.HELMET, settings);
 		}
 
-		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-			return "aquamirae:textures/entity/armor/abyssal_boots.png";
+		static {
+			HALFSET = AbyssalArmorItem.HALFSET;
+			FULLSET_TIARA = AbyssalArmorItem.FULLSET_TIARA;
+			BONUS = AbyssalArmorItem.BONUS_AMOUNT;
 		}
 	}
 }

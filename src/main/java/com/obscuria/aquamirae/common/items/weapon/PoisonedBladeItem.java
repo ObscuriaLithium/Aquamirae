@@ -2,36 +2,48 @@
 package com.obscuria.aquamirae.common.items.weapon;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.common.items.AquamiraeTiers;
-import com.obscuria.obscureapi.api.common.classes.Ability;
-import com.obscuria.obscureapi.api.common.classes.ClassAbility;
-import com.obscuria.obscureapi.api.common.classes.ClassItem;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.common.items.AquamiraeMaterials;
+import com.obscuria.obscureapi.common.classes.ClassItem;
+import com.obscuria.obscureapi.common.classes.ability.Ability;
+import com.obscuria.obscureapi.common.classes.ability.RegisterAbility;
+import com.obscuria.obscureapi.common.classes.ability.context.AbilityContext;
+import com.obscuria.obscureapi.common.classes.ability.context.CombatAbilityContext;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
 
-@ClassItem(clazz = "aquamirae:sea_wolf", type = "weapon")
+import java.util.List;
+
+@ClassItem(value = Aquamirae.SEA_WOLF_ID, type = "weapon")
 public class PoisonedBladeItem extends SwordItem {
-	public PoisonedBladeItem() {
-		super(AquamiraeTiers.POISONED_BLADE, 3, -1f, new Item.Properties());
+	@RegisterAbility public static final Ability PASSIVE;
+
+	public PoisonedBladeItem(Settings settings) {
+		super(AquamiraeMaterials.POISONED_BLADE, 3, -1f, settings);
 	}
 
-	@ClassAbility
-	public final Ability ABILITY = Ability.create(Aquamirae.MODID, "poisoned_blade").cost(Ability.Cost.Type.COOLDOWN, 10).action(
-			(stack, entity, target, context, values) -> {
-				if (target == null) return false;
-				target.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * values.get(0), 1));
-				return true;
-			}).var(5, "s").build(PoisonedBladeItem.class);
-
 	@Override
-	public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity entity, @NotNull LivingEntity source) {
-		final boolean hurt = super.hurtEnemy(stack, entity, source);
-		if (hurt) ABILITY.use(stack, source, entity, null);
-		return hurt;
+	public boolean postHit(ItemStack stack, LivingEntity entity, LivingEntity source) {
+		final boolean hit = super.postHit(stack, entity, source);
+		if (hit) PASSIVE.use(new CombatAbilityContext(source, stack, entity));
+		return hit;
+	}
+
+	public static boolean applyEffect(AbilityContext context, List<Integer> vars) {
+		if (context instanceof CombatAbilityContext combat) {
+			combat.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 20 * vars.get(0), 1));
+			return true;
+		}
+		return false;
+	}
+
+	static {
+		PASSIVE = Ability.create(Aquamirae.MODID, "poisoned_blade")
+				.cost(Ability.CostType.COOLDOWN, 10)
+				.action(PoisonedBladeItem::applyEffect)
+				.sec(5)
+				.build(PoisonedBladeItem.class);
 	}
 }

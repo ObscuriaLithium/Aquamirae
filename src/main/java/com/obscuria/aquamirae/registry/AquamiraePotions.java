@@ -1,22 +1,25 @@
 
 package com.obscuria.aquamirae.registry;
 
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.DeferredRegister;
-
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.effect.MobEffectInstance;
-
 import com.obscuria.aquamirae.Aquamirae;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.Potions;
+import net.minecraft.recipe.BrewingRecipeRegistry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
-public class AquamiraePotions {
-	public static final DeferredRegister<Potion> REGISTRY = DeferredRegister.create(ForgeRegistries.POTIONS, Aquamirae.MODID);
-	public static final RegistryObject<Potion> SPECTRAL_POTION = REGISTRY.register("spectral_potion",
-			() -> new Potion(new MobEffectInstance(MobEffects.GLOWING, 2400, 0, false, true)));
-	public static final RegistryObject<Potion> POTION_OF_TENACITY = REGISTRY.register("potion_of_tenacity",
-			() -> new Potion(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 0, false, true),
-					new MobEffectInstance(MobEffects.ABSORPTION, 2400, 2, false, true),
-					new MobEffectInstance(MobEffects.CONFUSION, 400, 1, false, true)));
+public interface AquamiraePotions {
+	Potion SPECTRAL_POTION = new Potion(new StatusEffectInstance(StatusEffects.GLOWING, 2400, 0, false, true));
+	Potion POTION_OF_TENACITY = new Potion(new StatusEffectInstance(StatusEffects.STRENGTH, 2400, 0, false, true),
+					new StatusEffectInstance(StatusEffects.ABSORPTION, 2400, 2, false, true),
+					new StatusEffectInstance(StatusEffects.NAUSEA, 400, 1, false, true));
+
+	static void register() {
+		Registry.register(Registries.POTION, Aquamirae.key("spectral_potion"), SPECTRAL_POTION);
+		Registry.register(Registries.POTION, Aquamirae.key("potion_of_tenacity"), POTION_OF_TENACITY);
+		BrewingRecipeRegistry.registerPotionRecipe(Potions.THICK, AquamiraeItems.ESCA, SPECTRAL_POTION);
+		BrewingRecipeRegistry.registerPotionRecipe(Potions.THICK, AquamiraeItems.WISTERIA_NIVEIS, POTION_OF_TENACITY);
+	}
 }

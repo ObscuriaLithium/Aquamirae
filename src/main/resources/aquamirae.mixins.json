@@ -1,12 +1,17 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.obscuria.Aquamirae.mixin",
+  "package": "com.obscuria.aquamirae.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "Aquamirae.refmap.json",
   "mixins": [
+    "LivingEntityMixin",
+    "OverworldBiomeCreatorMixin",
+    "PlayerEntityMixin",
+    "ServerPlayerEntityMixin"
   ],
   "client": [
+    "client.InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

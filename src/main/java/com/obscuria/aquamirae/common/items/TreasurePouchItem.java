@@ -3,53 +3,51 @@ package com.obscuria.aquamirae.common.items;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import net.minecraft.resources.ResourceLocation;
+import com.obscuria.obscureapi.api.utils.PlayerUtils;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
 
 import java.util.List;
 
 public class TreasurePouchItem extends Item {
-	public TreasurePouchItem() {
-		super(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
+	public TreasurePouchItem(Settings settings) {
+		super(settings);
 	}
 
 	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player player, @NotNull InteractionHand hand) {
-		InteractionResultHolder<ItemStack> resultHolder = super.use(world, player, hand);
-		ItemStack stack = resultHolder.getObject();
-		player.swing(hand);
-		if (!world.isClientSide) {
-			world.playSound(player, player.blockPosition().above(),
-					AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN.get(), SoundSource.PLAYERS, 1, 1);
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+		final TypedActionResult<ItemStack> result = super.use(world, user, hand);
+		final ItemStack stack = result.getValue();
+		user.swingHand(hand);
+		if (!world.isClient()) {
+			world.playSound(null, user.getBlockPos().up(), AquamiraeSounds.ITEM_TREASURE_POUCH_OPEN, SoundCategory.PLAYERS, 1, 1);
 			final List<ItemStack> loot = Aquamirae.SetBuilder.rare();
-			player.addItem(loot.get(player.getRandom().nextInt(0, loot.size() - 1)));
-			final MinecraftServer minecraftServer = player.level().getServer();
-			if (minecraftServer != null && player.level() instanceof ServerLevel server) {
-				LootParams lootContext = new LootParams.Builder(server)
-						.withParameter(LootContextParams.THIS_ENTITY, player)
-						.withParameter(LootContextParams.ORIGIN, player.position())
-						.create(LootContextParamSets.GIFT);
-				LootTable treasure = minecraftServer.getLootData().getLootTable(new ResourceLocation(Aquamirae.MODID, "gameplay/treasure_pouch"));
-				treasure.getRandomItems(lootContext).forEach(player::addItem);
-				if (Math.random() <= 0.1f)
-					player.addItem(Aquamirae.getStructureMap(player.getRandom().nextBoolean() ? Aquamirae.SHIP : Aquamirae.OUTPOST, server, player));
+			PlayerUtils.giveItem(user, loot.get(user.getRandom().nextBetween(0, loot.size()-1)));
+			final MinecraftServer minecraftServer = user.getServer();
+			if (minecraftServer != null && user.getWorld() instanceof ServerWorld server) {
+				final LootContextParameterSet context = new LootContextParameterSet.Builder(server)
+						.add(LootContextParameters.THIS_ENTITY, user)
+						.add(LootContextParameters.ORIGIN, user.getPos())
+						.build(LootContextTypes.GIFT);
+				final LootTable treasure = minecraftServer.getLootManager().getLootTable(new Identifier(Aquamirae.MODID, "gameplay/treasure_pouch"));
+				treasure.generateLoot(context).forEach(item -> PlayerUtils.giveItem(user, item));
+				if (Math.random() <= 0.1f) PlayerUtils.giveItem(user, Aquamirae.createStructureMap(user.getRandom().nextBoolean()
+						? Aquamirae.SHIP : Aquamirae.OUTPOST, server, user));
 			}
 		}
-		stack.shrink(1);
-		return resultHolder;
+		stack.decrement(1);
+		return result;
 	}
 }

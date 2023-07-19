@@ -1,28 +1,24 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public class SharpBonesItem extends Item {
-	public SharpBonesItem() {
-		super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON)
-				.food((new FoodProperties.Builder()).nutrition(1).saturationMod(0f).meat().build()));
+	public SharpBonesItem(Settings settings) {
+		super(settings);
 	}
 
 	@Override
-	public int getUseDuration(@NotNull ItemStack itemstack) {
+	public int getMaxUseTime(ItemStack stack) {
 		return 24;
 	}
 
 	@Override
-	public @NotNull ItemStack finishUsingItem(@NotNull ItemStack itemstack, @NotNull Level world, LivingEntity entity) {
-		entity.hurt(entity.damageSources().starve(), 1);
-		return super.finishUsingItem(itemstack, world, entity);
+	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+		user.damage(user.getDamageSources().starve(), 1);
+		return super.finishUsing(stack, world, user);
 	}
 }

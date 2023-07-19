@@ -3,29 +3,27 @@ package com.obscuria.aquamirae.client.renderers;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.client.AquamiraeLayers;
-import com.obscuria.aquamirae.common.entities.Anglerfish;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.renderer.entity.layers.EyesLayer;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.RenderType;
-
 import com.obscuria.aquamirae.client.models.ModelAnglerfish;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.common.entities.AnglerfishEntity;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.feature.EyesFeatureRenderer;
+import net.minecraft.util.Identifier;
 
-public class AnglerfishRenderer extends MobRenderer<Anglerfish, ModelAnglerfish> {
-	public AnglerfishRenderer(EntityRendererProvider.Context context) {
-		super(context, new ModelAnglerfish(context.bakeLayer(AquamiraeLayers.ANGLERFISH)), 1.5f);
-		this.addLayer(new EyesLayer<>(this) {
+public class AnglerfishRenderer extends MobEntityRenderer<AnglerfishEntity, ModelAnglerfish> {
+	public AnglerfishRenderer(EntityRendererFactory.Context context) {
+		super(context, new ModelAnglerfish(context.getPart(AquamiraeLayers.ANGLERFISH)), 1.5f);
+		this.addFeature(new EyesFeatureRenderer<>(this) {
 			@Override
-			public @NotNull RenderType renderType() {
-				return RenderType.eyes(new ResourceLocation(Aquamirae.MODID, "textures/entity/anglerfish_overlay.png"));
+			public RenderLayer getEyesTexture() {
+				return RenderLayer.getEyes(Aquamirae.key("textures/entity/anglerfish_overlay.png"));
 			}
 		});
 	}
 
 	@Override
-	public @NotNull ResourceLocation getTextureLocation(@NotNull Anglerfish entity) {
-		return new ResourceLocation(Aquamirae.MODID,"textures/entity/anglerfish.png");
+	public Identifier getTexture(AnglerfishEntity entity) {
+		return Aquamirae.key("textures/entity/anglerfish.png");
 	}
 }

@@ -3,22 +3,33 @@ package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.blocks.*;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
-public class AquamiraeBlocks {
-	public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, Aquamirae.MODID);
-	public static final RegistryObject<Block> PAINTING_ANGLERFISH = REGISTRY.register("painting_anglerfish", CollectiblePaintingBlock::new);
-	public static final RegistryObject<Block> PAINTING_OXYGELIUM = REGISTRY.register("painting_oxygelium", CollectiblePaintingBlock::new);
-	public static final RegistryObject<Block> PAINTING_TORTURED_SOUL = REGISTRY.register("painting_tortured_soul", CollectiblePaintingBlock::new);
-	public static final RegistryObject<Block> PAINTING_AURORA = REGISTRY.register("painting_aurora", CollectiblePaintingBlock::new);
-	public static final RegistryObject<Block> GOLDEN_MOTH_IN_A_JAR = REGISTRY.register("golden_moth_in_a_jar", JarBlock::new);
-	public static final RegistryObject<Block> FROZEN_CHEST = REGISTRY.register("frozen_chest", FrozenChestBlock::new);
-	public static final RegistryObject<Block> LUMINESCENT_LAMP = REGISTRY.register("luminescent_lamp", LuminescentLampBlock::new);
-	public static final RegistryObject<Block> ELODEA = REGISTRY.register("elodea", ElodeaBlock::new);
-	public static final RegistryObject<Block> OXYGELIUM = REGISTRY.register("oxygelium", OxygeliumBlock::new);
-	public static final RegistryObject<Block> LUMINESCENT_BUBBLE = REGISTRY.register("luminescent_bubble", LuminescentBubbleBlock::new);
-	public static final RegistryObject<Block> WISTERIA_NIVEIS = REGISTRY.register("wisteria_niveis", WisteriaNiveisBlock::new);
+public interface AquamiraeBlocks {
+	CollectiblePaintingBlock PAINTING_ANGLERFISH = new CollectiblePaintingBlock();
+	CollectiblePaintingBlock PAINTING_OXYGELIUM = new CollectiblePaintingBlock();
+	CollectiblePaintingBlock PAINTING_TORTURED_SOUL = new CollectiblePaintingBlock();
+	CollectiblePaintingBlock PAINTING_AURORA = new CollectiblePaintingBlock();
+	JarBlock GOLDEN_MOTH_IN_A_JAR = new JarBlock();
+	FrozenChestBlock FROZEN_CHEST = new FrozenChestBlock();
+	LuminescentLampBlock LUMINESCENT_LAMP = new LuminescentLampBlock();
+	ElodeaBlock ELODEA = new ElodeaBlock();
+	OxygeliumBlock OXYGELIUM = new OxygeliumBlock();
+	LuminescentBubbleBlock LUMINESCENT_BUBBLE = new LuminescentBubbleBlock();
+	WisteriaNiveisBlock WISTERIA_NIVEIS = new WisteriaNiveisBlock();
+
+	static void register() {
+		Registry.register(Registries.BLOCK, Aquamirae.key("painting_anglerfish"), PAINTING_ANGLERFISH);
+		Registry.register(Registries.BLOCK, Aquamirae.key("painting_oxygelium"), PAINTING_OXYGELIUM);
+		Registry.register(Registries.BLOCK, Aquamirae.key("painting_tortured_soul"), PAINTING_TORTURED_SOUL);
+		Registry.register(Registries.BLOCK, Aquamirae.key("painting_aurora"), PAINTING_AURORA);
+		Registry.register(Registries.BLOCK, Aquamirae.key("golden_moth_in_a_jar"), GOLDEN_MOTH_IN_A_JAR);
+		Registry.register(Registries.BLOCK, Aquamirae.key("frozen_chest"), FROZEN_CHEST);
+		Registry.register(Registries.BLOCK, Aquamirae.key("luminescent_lamp"), LUMINESCENT_LAMP);
+		Registry.register(Registries.BLOCK, Aquamirae.key("elodea"), ELODEA);
+		Registry.register(Registries.BLOCK, Aquamirae.key("oxygelium"), OXYGELIUM);
+		Registry.register(Registries.BLOCK, Aquamirae.key("luminescent_bubble"), LUMINESCENT_BUBBLE);
+		Registry.register(Registries.BLOCK, Aquamirae.key("wisteria_niveis"), WISTERIA_NIVEIS);
+	}
 }

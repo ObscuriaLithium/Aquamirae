@@ -1,64 +1,49 @@
 
 package com.obscuria.aquamirae.common.items;
 
-import com.obscuria.obscureapi.common.items.ObscureRarity;
-import com.obscuria.obscureapi.util.ItemUtils;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
+import com.obscuria.aquamirae.Aquamirae;
+import com.obscuria.obscureapi.api.utils.ItemUtils;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
 
-@Mod.EventBusSubscriber
 public class RuneOfTheStormItem extends Item {
-	public RuneOfTheStormItem() {
-		super(new Item.Properties().stacksTo(1).fireResistant().rarity(ObscureRarity.MYTHIC));
-	}
-
-	@SubscribeEvent
-	public static void onLivingDamage(@NotNull LivingDamageEvent event) {
-		final LivingEntity source = event.getSource().getEntity() instanceof LivingEntity living ? living : null;
-		if (source == null) return;
-		final ItemStack weapon = source.getMainHandItem();
-		if (ItemUtils.hasPerk(weapon, new ResourceLocation("aquamirae", "rune_of_the_storm"))
-				&& source.level().getBiome(source.blockPosition()).value().getBaseTemperature() * 100f <= 0) {
-			event.setAmount(event.getAmount() * 1.33F);
-		}
+	public RuneOfTheStormItem(Settings settings) {
+		super(settings);
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean isFoil(@NotNull ItemStack itemstack) {
+	public boolean hasGlint(ItemStack stack) {
 		return true;
 	}
 
 	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player entity, @NotNull InteractionHand hand) {
-		final ItemStack stack = entity.getItemInHand(hand);
-		final ItemStack offhand = entity.getItemInHand(InteractionHand.OFF_HAND);
-		if (hand != InteractionHand.MAIN_HAND)
-			return InteractionResultHolder.fail(stack);
-		if (offhand.getItem() instanceof SwordItem && !ItemUtils.hasPerk(offhand, new ResourceLocation("aquamirae", "rune_of_the_storm"))) {
-			if (world instanceof ServerLevel level)
-				level.playSound(null, entity.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 2, 1);
-			entity.swing(hand);
-			stack.shrink(1);
-			ItemUtils.addPerk(offhand, new ResourceLocation("aquamirae", "rune_of_the_storm"), 1);
-			return InteractionResultHolder.success(stack);
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+		final ItemStack stack = user.getStackInHand(hand);
+		final ItemStack offhand = user.getStackInHand(Hand.OFF_HAND);
+		if (hand != Hand.MAIN_HAND)
+			return TypedActionResult.fail(stack);
+		if (offhand.getItem() instanceof SwordItem && !ItemUtils.hasPerk(offhand, new Identifier(Aquamirae.MODID, "rune_of_the_storm"))) {
+			if (world instanceof ServerWorld server) server.playSound(null, user.getBlockPos(),
+					SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 2, 1);
+			ItemUtils.addPerk(offhand, new Identifier(Aquamirae.MODID, "rune_of_the_storm"), 1);
+			user.swingHand(hand);
+			stack.decrement(1);
+			return TypedActionResult.success(stack);
 		}
-		return InteractionResultHolder.fail(stack);
+		return TypedActionResult.fail(stack);
+	}
+
+	public static float calculateDamageBonus(LivingEntity entity, float damage) {
+		return entity.getWorld().getBiome(entity.getBlockPos()).value().isCold(entity.getBlockPos()) ? damage * 0.33f : 0;
 	}
 }
