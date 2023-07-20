@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.models;
 import com.obscuria.aquamirae.common.entities.CaptainCorneliaEntity;
 import com.obscuria.obscureapi.api.hekate.Animation;
 import com.obscuria.obscureapi.api.hekate.HekateLib;
-import com.obscuria.obscureapi.api.hekate.Interpolations;
+import com.obscuria.obscureapi.api.hekate.Easing;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -190,8 +190,8 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 	}
 
 	private void animateAttack(Animation weapon, Animation pull, Animation swing, Animation thrust, float ageInTicks) {
-		HekateLib.push(10, 10, Interpolations.EASE_OUT_BACK.scale(0.95f), Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 20, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+		HekateLib.push(10, 10, Easing.EASE_OUT_BACK.scale(0.95f), Easing.EASE_OUT_CUBIC)
+				.pose(0, 20, Easing.CEIL, ageInTicks, 1f, builder -> builder
 						.keyframe(bodyTop, k -> k.rotation(-20F, 22F, 0F))
 						.keyframe(bodyTop2, k -> k.rotation(-12F, 20F, 0F))
 						.keyframe(head, k -> k.rotation(-12F, 0F, 0F))
@@ -202,8 +202,8 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 						.keyframe(item, k -> k.rotation(-45F, 0F, 0F)))
 				.animate(weapon);
 
-		HekateLib.push(10, 10, Interpolations.EASE_OUT_SINE, Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 10, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+		HekateLib.push(10, 10, Easing.EASE_OUT_SINE, Easing.EASE_OUT_CUBIC)
+				.pose(0, 10, Easing.CEIL, ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(2F, 0F, 0F))
 						.keyframe(bodyTop, k -> k.rotation(0F, -17.5F, 0F))
 						.keyframe(bodyTop2, k -> k.rotation(0F, -32.5F, 0F))
@@ -218,7 +218,7 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 						.keyframe(rightLegLower, k -> k.rotation(-60F, 0F, 0F))
 						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
 						.keyframe(leftLegLower, k -> k.rotation(-17.5F, 0F, 0F)))
-				.pose(10, 30, Interpolations.EASE_OUT_EXPO.scale(0.5f), ageInTicks, 1f, builder -> builder
+				.pose(10, 30, Easing.EASE_OUT_EXPO.scale(0.5f), ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(1.5F, 0F, 0F))
 						.keyframe(bodyTop, k -> k.rotation(0F, -7.5F, 0F))
 						.keyframe(bodyTop2, k -> k.rotation(10F, -15F, 0F))
@@ -234,8 +234,8 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
 						.keyframe(leftLegLower, k -> k.rotation(-17.5F, 0F, 0F)))
 				.animate(pull);
-		HekateLib.push(12, 20, Interpolations.EASE_OUT_SINE, Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 12, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+		HekateLib.push(12, 20, Easing.EASE_OUT_SINE, Easing.EASE_OUT_CUBIC)
+				.pose(0, 12, Easing.CEIL, ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(2.5F, 0F, 0F))
 						.keyframe(bodyTop, k -> k.rotation(-14F, 42F, -2F))
 						.keyframe(bodyTop2, k -> k.rotation(0F, 25F, 0F))
@@ -250,7 +250,7 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 						.keyframe(rightLegLower, k -> k.rotation(-90F, 0F, 0F))
 						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
 						.keyframe(leftLegLower, k -> k.rotation(-17.5F, 0F, 0F)))
-				.pose(12, 40, Interpolations.EASE_OUT_EXPO.scale(0.2f), ageInTicks, 1f, builder -> builder
+				.pose(12, 40, Easing.EASE_OUT_EXPO.scale(0.2f), ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(1.5F, 0F, 0F))
 						.keyframe(bodyTop, k -> k.rotation(-10F, -4F, 8F))
 						.keyframe(bodyTop2, k -> k.rotation(0F, -20F, 0F))
@@ -266,8 +266,8 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 						.keyframe(leftLeg, k -> k.rotation(-2.5F, 0F, 2.5F))
 						.keyframe(leftLegLower, k -> k.rotation(-17.5F, 0F, 0F)))
 						.animate(swing);
-		HekateLib.push(12, 20, Interpolations.EASE_OUT_SINE, Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 12, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+		HekateLib.push(12, 20, Easing.EASE_OUT_SINE, Easing.EASE_OUT_CUBIC)
+				.pose(0, 12, Easing.CEIL, ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(2.5F, 0F, 0F))
 						.keyframe(bodyTop, k -> k.rotation(0F, -17.5F, 0F))
 						.keyframe(bodyTop2, k -> k.rotation(0F, -27.5F, 0F))
@@ -282,7 +282,7 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 						.keyframe(rightLegLower, k -> k.rotation(-90F, 0F, 0F))
 						.keyframe(leftLeg, k -> k.rotation(0F, 0F, 2.5F))
 						.keyframe(leftLegLower, k -> k.rotation(-38F, 0F, 0F)))
-				.pose(12, 40, Interpolations.EASE_OUT_EXPO.scale(0.2f), ageInTicks, 1f, builder -> builder
+				.pose(12, 40, Easing.EASE_OUT_EXPO.scale(0.2f), ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(1.5F, 0F, 0F))
 						.keyframe(bodyTop, k -> k.rotation(-12.5F, 35F, 0F))
 						.keyframe(bodyTop2, k -> k.rotation(0F, 7.5F, 0F))
@@ -301,8 +301,8 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 	}
 
 	private void animateDeath(Animation death, float ageInTicks) {
-		HekateLib.push(10, 0, Interpolations.EASE_OUT_BACK, Interpolations.CEIL)
-				.pose(0, 10, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+		HekateLib.push(10, 0, Easing.EASE_OUT_BACK, Easing.CEIL)
+				.pose(0, 10, Easing.CEIL, ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(5F, 0, 0))
 						.keyframe(bodyTop, k -> k.rotation(10, 0, 0))
 						.keyframe(head, k -> k.rotation(10, 0, 0))
@@ -314,7 +314,7 @@ public class ModelCaptainCornelia extends EntityModel<CaptainCorneliaEntity> {
 						.keyframe(rightLeg, k -> k.rotation(0, 0, -3))
 						.keyframe(rightLegLower, k -> k.rotation(-23, 0, 0))
 						.keyframe(leftLeg, k -> k.rotation(-8, 0, 3)))
-				.pose(10, 60, Interpolations.EASE_OUT_BOUNCE.scale(0.5f), ageInTicks, 1f, builder -> builder
+				.pose(10, 60, Easing.EASE_OUT_BOUNCE.scale(0.5f), ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(-5F, 0F, 0F))
 						.keyframe(bodyTop, k -> k.rotation(-82.5F, 0F, 0F))
 						.keyframe(bodyTop2, k -> k.rotation(12.5F, 0F, 0F))

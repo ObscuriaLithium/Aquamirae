@@ -17,7 +17,7 @@ public abstract class PlayerEntityMixin {
     private DamageSource source = null;
 
     @Inject(method = "applyDamage", at = @At("HEAD"))
-    private void saveSource(DamageSource source, float amount, CallbackInfo ci) {
+    protected void saveSource(DamageSource source, float amount, CallbackInfo ci) {
         this.source = source;
         Aquamirae.onEntityDamage((LivingEntity)(Object)this, source);
     }

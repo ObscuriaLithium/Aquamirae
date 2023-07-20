@@ -1,8 +1,8 @@
 package com.obscuria.aquamirae.client.models;
 
 import com.obscuria.aquamirae.common.entities.AnglerfishEntity;
+import com.obscuria.obscureapi.api.hekate.Easing;
 import com.obscuria.obscureapi.api.hekate.HekateLib;
-import com.obscuria.obscureapi.api.hekate.Interpolations;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -102,8 +102,8 @@ public class ModelAnglerfish extends EntityModel<AnglerfishEntity> {
 				.keyframe(lamp3, k -> k.xRot(6F, -30F, -0.1f))
 				.keyframe(lamp4, k -> k.xRot(8F, -50F, -0.15f))
 				.keyframe(lamp5, k -> k.xRot(10F, -30F, -0.2f));
-		HekateLib.push(14, 10, Interpolations.EASE_OUT_CUBIC, Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 20, Interpolations.CEIL, progress, 0.7f, builder -> builder
+		HekateLib.push(14, 10, Easing.EASE_OUT_CUBIC, Easing.EASE_OUT_CUBIC)
+				.pose(0, 20, Easing.CEIL, progress, 0.7f, builder -> builder
 						.keyframe(headUpper, k -> k.xRot(1F, 15F, 4, 0))
 						.keyframe(headLower, k -> k.xRot(-1F, -15F, 4, 0))
 						.keyframe(body, k -> k.yRot(10F, 0))
@@ -113,7 +113,7 @@ public class ModelAnglerfish extends EntityModel<AnglerfishEntity> {
 						.keyframe(tail4, k -> k.yRot(30F, 0, -0.2f))
 						.keyframe(tail5, k -> k.yRot(35F, 0, -0.25f))
 						.keyframe(tail6, k -> k.yRot(40F, 0, -0.3f)))
-				.pose(20, 40, Interpolations.EASE_OUT_CUBIC.scale(0.15f), progress, 0.7f, builder -> builder
+				.pose(20, 40, Easing.EASE_OUT_CUBIC.scale(0.15f), progress, 0.7f, builder -> builder
 						.keyframe(headUpper, k -> k.xRot(-25F))
 						.keyframe(headLower, k -> k.xRot(25F)))
 				.animate(anglerfish.ATTACK);

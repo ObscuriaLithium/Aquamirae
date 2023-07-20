@@ -2,7 +2,7 @@ package com.obscuria.aquamirae.client.models;
 
 import com.obscuria.aquamirae.common.entities.TorturedSoulEntity;
 import com.obscuria.obscureapi.api.hekate.HekateLib;
-import com.obscuria.obscureapi.api.hekate.Interpolations;
+import com.obscuria.obscureapi.api.hekate.Easing;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -79,8 +79,8 @@ public class ModelTorturedSoul extends EntityModel<TorturedSoulEntity> {
 				.keyframe(rightLegLower, k -> k.xRot(-34F, -34F, -0.2f))
 				.keyframe(leftLeg, k -> k.xRot(30F, 14F, -0.1f))
 				.keyframe(leftLegLower, k -> k.xRot(34F, -34F, -0.2f));
-		HekateLib.push(8, 12, Interpolations.EASE_OUT_ELASTIC, Interpolations.EASE_OUT_BACK)
-				.pose(0, 20, Interpolations.CEIL, progress, 1f, builder -> builder
+		HekateLib.push(8, 12, Easing.EASE_OUT_ELASTIC, Easing.EASE_OUT_BACK)
+				.pose(0, 20, Easing.CEIL, progress, 1f, builder -> builder
 						.keyframe(body, k -> k.rotation(-27F, 0, 0))
 						.keyframe(leftArm, k -> k.rotation(125F, 0, 0))
 						.keyframe(rightArm, k -> k.rotation(125F, 0, 0))

@@ -2,7 +2,7 @@ package com.obscuria.aquamirae.client.models;
 
 import com.obscuria.aquamirae.common.entities.MawEntity;
 import com.obscuria.obscureapi.api.hekate.HekateLib;
-import com.obscuria.obscureapi.api.hekate.Interpolations;
+import com.obscuria.obscureapi.api.hekate.Easing;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -71,22 +71,22 @@ public class ModelMaw extends EntityModel<MawEntity> {
 				.keyframe(body3, k -> k.yRot(-12, 0, -0.2f))
 				.keyframe(rightFin, k -> k.yRot(40, 0).zRot(-12, 10, -0.3f))
 				.keyframe(leftFin, k -> k.yRot(40, 0).zRot(-12, -10, -0.3f));
-		HekateLib.push(1, 13, Interpolations.EASE_IN_CUBIC, Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 2, Interpolations.EASE_OUT_CUBIC, progress, 1F, builder -> builder
+		HekateLib.push(1, 13, Easing.EASE_IN_CUBIC, Easing.EASE_OUT_CUBIC)
+				.pose(0, 2, Easing.EASE_OUT_CUBIC, progress, 1F, builder -> builder
 						.keyframe(head, k -> k.xRot(0, -10))
 						.keyframe(headUpper, k -> k.xRot(0, 50)))
-				.pose(2, 20, Interpolations.EASE_IN_QUART.scale(0.15f), progress, 1F, builder -> builder
+				.pose(2, 20, Easing.EASE_IN_QUART.scale(0.15f), progress, 1F, builder -> builder
 						.keyframe(head, k -> k.xRot(0, 10))
 						.keyframe(headUpper, k -> k.xRot(0, -22)))
 				.animate(maw.ATTACK);
-		HekateLib.push(6, 0, Interpolations.EASE_OUT_CIRCLE, Interpolations.CEIL)
-				.pose(0, 6, Interpolations.CEIL, progress, 1F, builder -> builder
+		HekateLib.push(6, 0, Easing.EASE_OUT_CIRCLE, Easing.CEIL)
+				.pose(0, 6, Easing.CEIL, progress, 1F, builder -> builder
 						.keyframe(main, k -> k.xRot(8))
 						.keyframe(head, k -> k.xRot(0, -50))
 						.keyframe(body2, k -> k.xRot(20))
 						.keyframe(body3, k -> k.xRot(40))
 						.keyframe(headUpper, k -> k.xRot(0, 50)))
-				.pose(6, 40, Interpolations.EASE_OUT_BOUNCE.scale(0.6f), progress, 1F, builder -> builder
+				.pose(6, 40, Easing.EASE_OUT_BOUNCE.scale(0.6f), progress, 1F, builder -> builder
 						.keyframe(main, k -> k.xRot(0))
 						.keyframe(head, k -> k.xRot(0, 10))
 						.keyframe(body2, k -> k.xRot(0))

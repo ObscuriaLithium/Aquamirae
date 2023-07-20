@@ -12,6 +12,7 @@ import com.obscuria.obscureapi.api.ClassRegistry;
 import com.obscuria.obscureapi.api.utils.ItemUtils;
 import com.obscuria.obscureapi.common.classes.GameClass;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
+import com.obscuria.obscureapi.registry.ObscureAPIEnchantments;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
@@ -72,6 +73,10 @@ public final class Aquamirae implements ModInitializer {
 		AquamiraeEffects.register();
 		AquamiraePotions.register();
 		DelayedEvents.register();
+
+		ObscureAPIEnchantments.registerDistance();
+		ObscureAPIEnchantments.registerMirror();
+		ObscureAPIEnchantments.registerFastSpin();
 
 		ItemUtils.addLore("aquamirae:sea_casserole");
 		ItemUtils.addLore("aquamirae:sea_stew");

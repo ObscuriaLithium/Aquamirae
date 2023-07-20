@@ -10,7 +10,7 @@ import com.obscuria.aquamirae.common.items.armor.ThreeBoltArmorItem;
 import com.obscuria.aquamirae.common.items.weapon.*;
 import com.obscuria.obscureapi.common.entities.items.ObscureRarity;
 import com.obscuria.obscureapi.registry.ObscureAPIEnchantments;
-import com.obscuria.obscureapi.registry.ObscureAPIMobEffects;
+import com.obscuria.obscureapi.registry.ObscureAPIEffects;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.Fluids;
@@ -92,7 +92,7 @@ public interface AquamiraeItems {
 	BlockItem LUMINESCENT_LAMP = new BlockItem(AquamiraeBlocks.LUMINESCENT_LAMP, new Item.Settings());
 	Item SEA_CASSEROLE = new Item(new Item.Settings().maxCount(64).rarity(Rarity.COMMON)
 			.food(new FoodComponent.Builder().hunger(6).saturationModifier(0.4f).alwaysEdible()
-					.statusEffect(new StatusEffectInstance(ObscureAPIMobEffects.RUSH, 1800, 1), 1)
+					.statusEffect(new StatusEffectInstance(ObscureAPIEffects.RUSH, 1800, 1), 1)
 					.statusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 600, 0), 1).build()));
 	EntityBucketItem SPINEFISH_BUCKET = new EntityBucketItem(AquamiraeEntities.SPINEFISH, Fluids.WATER, SoundEvents.ITEM_BUCKET_EMPTY_FISH, new Item.Settings().maxCount(1));
 	SpinefishItem SPINEFISH = new SpinefishItem(new Item.Settings().maxCount(64).rarity(Rarity.COMMON)
@@ -101,12 +101,12 @@ public interface AquamiraeItems {
 			.food(new FoodComponent.Builder().hunger(6).saturationModifier(0.4f).meat().build()));
 	StewItem SEA_STEW = new StewItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON)
 			.food(new FoodComponent.Builder().hunger(12).saturationModifier(0.8f).alwaysEdible()
-					.statusEffect(new StatusEffectInstance(ObscureAPIMobEffects.FURY, 2400, 2), 1)
+					.statusEffect(new StatusEffectInstance(ObscureAPIEffects.FURY, 2400, 2), 1)
 					.statusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2400, 0), 1).build()));
 	StewItem POSEIDONS_BREAKFAST = new StewItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC)
 			.food(new FoodComponent.Builder().hunger(20).saturationModifier(1f).alwaysEdible()
-					.statusEffect(new StatusEffectInstance(ObscureAPIMobEffects.FURY, 3600, 9), 1)
-					.statusEffect(new StatusEffectInstance(ObscureAPIMobEffects.RUSH, 3600, 4), 1).build())) {
+					.statusEffect(new StatusEffectInstance(ObscureAPIEffects.FURY, 3600, 9), 1)
+					.statusEffect(new StatusEffectInstance(ObscureAPIEffects.RUSH, 3600, 4), 1).build())) {
 		@Override
 		public boolean hasGlint(ItemStack stack) {
 			return true;

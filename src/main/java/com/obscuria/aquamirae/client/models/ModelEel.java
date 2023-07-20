@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.client.models;
 import com.obscuria.aquamirae.common.entities.EelEntity;
 import com.obscuria.obscureapi.api.hekate.Animation;
 import com.obscuria.obscureapi.api.hekate.HekateLib;
-import com.obscuria.obscureapi.api.hekate.Interpolations;
+import com.obscuria.obscureapi.api.hekate.Easing;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -105,8 +105,8 @@ public class ModelEel extends EntityModel<EelEntity> {
 				.keyframe(headLower, k -> k.xRot(-10F, -105F))
 				.keyframe(leftFin, k -> k.zRot(10F, -45F))
 				.keyframe(rightFin, k -> k.zRot(-10F, 45F));
-		HekateLib.push(60, 60, Interpolations.EASE_IN_OUT_BACK, Interpolations.EASE_IN_OUT_BACK)
-				.pose(0, 300, Interpolations.CEIL, progress, 0.14f, builder -> builder
+		HekateLib.push(60, 60, Easing.EASE_IN_OUT_BACK, Easing.EASE_IN_OUT_BACK)
+				.pose(0, 300, Easing.CEIL, progress, 0.14f, builder -> builder
 						.keyframe(body5, k -> k.rotation(-2F, -22.5F, 1, 0, 0, 0, 2, -0.95f))
 						.keyframe(body6, k -> k.rotation(-2F, -22.5F, 2, 0, 0, 0, -0.9f))
 						.keyframe(body7, k -> k.rotation(-2F, -27.5F, 3, 0, 0, 0, -0.85f))
@@ -116,8 +116,8 @@ public class ModelEel extends EntityModel<EelEntity> {
 						.keyframe(head, k -> k.rotation(-3F, -22.5F, 7, 0, 0, 0, -0.65f))
 						.keyframe(headLower, k -> k.xRot(HekateLib.math.cycle(progress, 0.1f) * 8, -105, 10, 0)))
 				.animate(eel.RARE_IDLE);
-		HekateLib.push(12, 12, Interpolations.LINEAR, Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 12, Interpolations.CEIL, progress, 1f, builder -> builder
+		HekateLib.push(12, 12, Easing.LINEAR, Easing.EASE_OUT_CUBIC)
+				.pose(0, 12, Easing.CEIL, progress, 1f, builder -> builder
 						.keyframe(body1, k -> k.xRot(-17.5F))
 						.keyframe(body2, k -> k.xRot(20F))
 						.keyframe(body3, k -> k.xRot(22.5F))
@@ -133,7 +133,7 @@ public class ModelEel extends EntityModel<EelEntity> {
 						.keyframe(headLower, k -> k.rotation(10F, -170F, 0F, 0F, 0F, 0F, 1.4F, 0F))
 						.keyframe(leftFin, k -> k.zRot(-90F))
 						.keyframe(rightFin, k -> k.zRot(90F)))
-				.pose(12, 30, Interpolations.EASE_IN_OUT_CUBIC.scale(0.2f), progress, 1f, builder -> builder
+				.pose(12, 30, Easing.EASE_IN_OUT_CUBIC.scale(0.2f), progress, 1f, builder -> builder
 						.keyframe(body1, k -> k.xRot(-17.5F))
 						.keyframe(body2, k -> k.xRot(10F).scale(1.025f))
 						.keyframe(body3, k -> k.xRot(15F).scale(1.025f))
@@ -150,8 +150,8 @@ public class ModelEel extends EntityModel<EelEntity> {
 						.keyframe(leftFin, k -> k.zRot(-40))
 						.keyframe(rightFin, k -> k.zRot(40)))
 				.animate(eel.ATTACK);
-		HekateLib.push(12, 48, Interpolations.EASE_OUT_BACK, Interpolations.EASE_IN_OUT_BACK)
-				.pose(0, 12, Interpolations.CEIL, progress, 1f, builder -> builder
+		HekateLib.push(12, 48, Easing.EASE_OUT_BACK, Easing.EASE_IN_OUT_BACK)
+				.pose(0, 12, Easing.CEIL, progress, 1f, builder -> builder
 						.keyframe(body1, k -> k.xRot(-17.5F))
 						.keyframe(body2, k -> k.xRot(20F))
 						.keyframe(body3, k -> k.xRot(22.5F))
@@ -167,7 +167,7 @@ public class ModelEel extends EntityModel<EelEntity> {
 						.keyframe(headLower, k -> k.rotation(5F, -90F, 0F, 0F, 0F, 0F, 1.4F, 0F))
 						.keyframe(leftFin, k -> k.zRot(-90F))
 						.keyframe(rightFin, k -> k.zRot(90F)))
-				.pose(12, 100, Interpolations.EASE_IN_OUT_CUBIC.scale(0.05f), progress, 1f, builder -> builder
+				.pose(12, 100, Easing.EASE_IN_OUT_CUBIC.scale(0.05f), progress, 1f, builder -> builder
 						.keyframe(body1, k -> k.xRot(-17.5F))
 						.keyframe(body2, k -> k.xRot(12.5F))
 						.keyframe(body3, k -> k.xRot(25F))
@@ -184,8 +184,8 @@ public class ModelEel extends EntityModel<EelEntity> {
 						.keyframe(leftFin, k -> k.zRot(-10, -80F, 2, 0))
 						.keyframe(rightFin, k -> k.zRot(10, 80F, 2, 0)))
 				.animate(eel.ROAR);
-		HekateLib.push(20, 0, Interpolations.EASE_OUT_CUBIC.scale(0.8f), Interpolations.CEIL)
-				.pose(0, 20, Interpolations.CEIL, progress, 1f, builder -> builder
+		HekateLib.push(20, 0, Easing.EASE_OUT_CUBIC.scale(0.8f), Easing.CEIL)
+				.pose(0, 20, Easing.CEIL, progress, 1f, builder -> builder
 						.keyframe(body1, k -> k.xRot(-17.5F))
 						.keyframe(body2, k -> k.xRot(20F))
 						.keyframe(body3, k -> k.xRot(22.5F))
@@ -201,7 +201,7 @@ public class ModelEel extends EntityModel<EelEntity> {
 						.keyframe(headLower, k -> k.rotation(5F, -90F, 0F, 0F, 0F, 0F, 1.4F, 0F))
 						.keyframe(leftFin, k -> k.zRot(-90F))
 						.keyframe(rightFin, k -> k.zRot(90F)))
-				.pose(20, 60, Interpolations.EASE_OUT_BOUNCE.scale(0.8f), progress, 1f, builder -> builder
+				.pose(20, 60, Easing.EASE_OUT_BOUNCE.scale(0.8f), progress, 1f, builder -> builder
 						.keyframe(body1, k -> k.xRot(-17.5F))
 						.keyframe(body2, k -> k.xRot(-30))
 						.keyframe(body3, k -> k.xRot(-30))
@@ -224,14 +224,14 @@ public class ModelEel extends EntityModel<EelEntity> {
 
 	private void animateMove(Animation move, float ageInTicks) {
 		this.main.visible = !(move.getTick() >= 24 && move.getTick() <= 70);
-		HekateLib.push(30, 30, Interpolations.EASE_IN_QUINT.scale(0.8f), Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 30, Interpolations.CEIL, ageInTicks, 1f, builder -> builder
+		HekateLib.push(30, 30, Easing.EASE_IN_QUINT.scale(0.8f), Easing.EASE_OUT_CUBIC)
+				.pose(0, 30, Easing.CEIL, ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(-20F, 0F, 0F).scale(0.8f)))
-				.pose(70, 100, Interpolations.EASE_OUT_CUBIC, ageInTicks, 1f, builder -> builder
+				.pose(70, 100, Easing.EASE_OUT_CUBIC, ageInTicks, 1f, builder -> builder
 						.keyframe(main, k -> k.rotation(0F, 0F, 0F).scale(1f)))
 				.animate(move);
-		HekateLib.push(20, 20, Interpolations.EASE_IN_QUINT, Interpolations.EASE_OUT_CUBIC)
-				.pose(0, 30, Interpolations.CEIL, ageInTicks, 0.4f, builder -> builder
+		HekateLib.push(20, 20, Easing.EASE_IN_QUINT, Easing.EASE_OUT_CUBIC)
+				.pose(0, 30, Easing.CEIL, ageInTicks, 0.4f, builder -> builder
 						.keyframe(body2, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.90F))
 						.keyframe(body3, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.85F))
 						.keyframe(body4, k -> k.rotation(-1F, 0F, 0F, 0F, 1F, 0F, -0.80F))
@@ -246,7 +246,7 @@ public class ModelEel extends EntityModel<EelEntity> {
 						.keyframe(headLower, k -> k.rotation(5F, -90F, 0F, 0F, 0F, 0F, 3f, 0))
 						.keyframe(leftFin, k -> k.rotation(0F, 0F, -90F))
 						.keyframe(rightFin, k -> k.rotation(0F, 0F, 90F)))
-				.pose(70, 100, Interpolations.EASE_OUT_CUBIC, ageInTicks, 0.4f, builder -> builder
+				.pose(70, 100, Easing.EASE_OUT_CUBIC, ageInTicks, 0.4f, builder -> builder
 						.keyframe(body2, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.90F))
 						.keyframe(body3, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.85F))
 						.keyframe(body4, k -> k.rotation(-3F, 0F, 0F, 0F, 3F, 0F, -0.80F))
