@@ -1,12 +1,12 @@
 
 package com.obscuria.aquamirae.common.entities.projectiles;
 
-import com.obscuria.obscureapi.common.entities.DynamicProjectileEntity;
+import com.obscuria.obscureapi.common.entities.CompoundProjectileEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class MazeRose extends DynamicProjectileEntity {
+public class MazeRose extends CompoundProjectileEntity {
 
 	public MazeRose(EntityType<MazeRose> type, World world) {
 		super(type, world);

@@ -5,12 +5,12 @@ import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.models.ModelPoisonedChakra;
 import com.obscuria.aquamirae.common.entities.projectiles.PoisonedChakra;
-import com.obscuria.obscureapi.client.renderer.DynamicProjectileRenderer;
+import com.obscuria.obscureapi.client.renderer.CompoundProjectileRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-public class PoisonedChakraRenderer extends DynamicProjectileRenderer<PoisonedChakra> {
+public class PoisonedChakraRenderer extends CompoundProjectileRenderer<PoisonedChakra> {
 
 	public PoisonedChakraRenderer(EntityRendererFactory.Context context) {
 		super(context, new ModelPoisonedChakra<>(context.getPart(AquamiraeLayers.POISONED_CHAKRA)));
@@ -23,7 +23,7 @@ public class PoisonedChakraRenderer extends DynamicProjectileRenderer<PoisonedCh
 
 	@Nullable
 	@Override
-	public Identifier getGlowingTextureLocation(PoisonedChakra poisonedChakra) {
+	public Identifier getGlowingTexture(PoisonedChakra poisonedChakra) {
 		return null;
 	}
 }

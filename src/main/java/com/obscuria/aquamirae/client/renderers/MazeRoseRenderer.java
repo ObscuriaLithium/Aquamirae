@@ -5,11 +5,11 @@ import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.models.ModelMazeRose;
 import com.obscuria.aquamirae.common.entities.projectiles.MazeRose;
-import com.obscuria.obscureapi.client.renderer.DynamicProjectileRenderer;
+import com.obscuria.obscureapi.client.renderer.CompoundProjectileRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 
-public class MazeRoseRenderer extends DynamicProjectileRenderer<MazeRose> {
+public class MazeRoseRenderer extends CompoundProjectileRenderer<MazeRose> {
 	public MazeRoseRenderer(EntityRendererFactory.Context context) {
 		super(context, new ModelMazeRose<>(context.getPart(AquamiraeLayers.MAZE_ROSE)));
 	}
@@ -20,7 +20,7 @@ public class MazeRoseRenderer extends DynamicProjectileRenderer<MazeRose> {
 	}
 
 	@Override
-	public Identifier getGlowingTextureLocation(MazeRose rose) {
+	public Identifier getGlowingTexture(MazeRose rose) {
 		return Aquamirae.key("textures/entity/maze_rose_overlay.png");
 	}
 }

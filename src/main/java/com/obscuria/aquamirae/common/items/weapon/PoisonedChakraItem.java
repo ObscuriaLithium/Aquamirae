@@ -12,8 +12,8 @@ import com.obscuria.obscureapi.common.classes.ability.Ability;
 import com.obscuria.obscureapi.common.classes.ability.RegisterAbility;
 import com.obscuria.obscureapi.common.classes.ability.context.AbilityContext;
 import com.obscuria.obscureapi.common.classes.ability.context.SimpleAbilityContext;
-import com.obscuria.obscureapi.common.entities.DynamicProjectile;
-import com.obscuria.obscureapi.common.entities.DynamicProjectileEntity;
+import com.obscuria.obscureapi.common.entities.CompoundProjectile;
+import com.obscuria.obscureapi.common.entities.CompoundProjectileEntity;
 import com.obscuria.obscureapi.registry.ObscureAPIAttributes;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 @ClassItem(value = Aquamirae.SEA_WOLF_ID, type = "weapon")
-@DynamicProjectile(mirror = true, distance = true, fastSpin = true)
+@CompoundProjectile(mirror = true, distance = true, fastSpin = true)
 public class PoisonedChakraItem extends ToolItem implements Vanishable {
 	@RegisterAbility public static final Ability ACTIVE;
 
@@ -64,7 +64,7 @@ public class PoisonedChakraItem extends ToolItem implements Vanishable {
 
 	public static boolean summonChakra(AbilityContext context, List<Integer> vars) {
 		context.getStack().damage(3, context.getUser().getRandom(), null);
-		DynamicProjectileEntity.create(AquamiraeEntities.POISONED_CHAKRA, context.getUser(), context.getUser().getWorld(),
+		CompoundProjectileEntity.create(AquamiraeEntities.POISONED_CHAKRA, context.getUser(), context.getUser().getWorld(),
 				context.getStack(), vars.get(0), 0F, 20 * vars.get(1), 1000);
 		return true;
 	}

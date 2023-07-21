@@ -3,10 +3,10 @@
   "id": "aquamirae",
   "version": "${version}",
   "name": "Aquamirae",
-  "description": "",
-  "authors": [],
+  "description": "Ship graveyard with terrible deep sea creatures.",
+  "authors": ["Obscuria"],
   "contact": {},
-  "license": "All-Rights-Reserved",
+  "license": "Obscuria Lithium (c) 2023, All Rights Reserved.",
   "environment": "*",
   "entrypoints": {
     "client": [

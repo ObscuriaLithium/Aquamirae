@@ -16,7 +16,7 @@ import com.obscuria.obscureapi.api.hekate.Animation;
 import com.obscuria.obscureapi.api.hekate.AnimationHelper;
 import com.obscuria.obscureapi.api.hekate.IAnimated;
 import com.obscuria.obscureapi.api.utils.EntityUtils;
-import com.obscuria.obscureapi.common.entities.DynamicProjectileEntity;
+import com.obscuria.obscureapi.common.entities.CompoundProjectileEntity;
 import com.obscuria.obscureapi.common.entities.TextureFX;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -280,9 +280,9 @@ public class CaptainCorneliaEntity extends HostileEntity implements IAnimated {
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN, SoundCategory.HOSTILE, 3, 1);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_RAGE, SoundCategory.HOSTILE, 4, 1);
 			final var type = this.random.nextBoolean() ? AquamiraeEntities.POISONED_CHAKRA : AquamiraeEntities.MAZE_ROSE;
-			DynamicProjectileEntity.create(type, this, getWorld(), null, 5, 0F, 600, 1000);
-			DynamicProjectileEntity.create(type, this, getWorld(), null, 5, 0.33F, 600, 1000);
-			DynamicProjectileEntity.create(type, this, getWorld(), null, 5, 0.66F, 600, 1000);
+			CompoundProjectileEntity.create(type, this, getWorld(), null, 5, 0F, 600, 1000);
+			CompoundProjectileEntity.create(type, this, getWorld(), null, 5, 0.33F, 600, 1000);
+			CompoundProjectileEntity.create(type, this, getWorld(), null, 5, 0.66F, 600, 1000);
 		}
 	}
 

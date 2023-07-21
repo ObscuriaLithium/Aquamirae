@@ -8,7 +8,7 @@ import com.obscuria.aquamirae.common.items.armor.AbyssalArmorItem;
 import com.obscuria.aquamirae.common.items.armor.TerribleArmorItem;
 import com.obscuria.aquamirae.common.items.armor.ThreeBoltArmorItem;
 import com.obscuria.aquamirae.common.items.weapon.*;
-import com.obscuria.obscureapi.common.entities.items.ObscureRarity;
+import com.obscuria.obscureapi.common.items.ObscureRarity;
 import com.obscuria.obscureapi.registry.ObscureAPIEnchantments;
 import com.obscuria.obscureapi.registry.ObscureAPIEffects;
 import net.minecraft.entity.effect.StatusEffectInstance;

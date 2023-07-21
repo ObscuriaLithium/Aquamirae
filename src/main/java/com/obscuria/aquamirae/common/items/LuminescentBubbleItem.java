@@ -27,7 +27,8 @@ public class LuminescentBubbleItem extends Item {
 					.with(Properties.WATERLOGGED, true), 3);
 			if (world instanceof ServerWorld server) server.playSound(null, user.getBlockPos().up(),
 					SoundEvents.BLOCK_BUBBLE_COLUMN_BUBBLE_POP, SoundCategory.BLOCKS, 2, 1);
-			return TypedActionResult.consume(stack);
+			stack.decrement(1);
+			return TypedActionResult.success(stack);
 		}
 		return TypedActionResult.fail(stack);
 	}

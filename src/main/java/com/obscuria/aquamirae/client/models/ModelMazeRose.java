@@ -1,6 +1,5 @@
 package com.obscuria.aquamirae.client.models;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -99,6 +98,6 @@ public class ModelMazeRose<T extends Entity> extends EntityModel<T> {
 	}
 
 	public void setAngles(T entity, float limbAngle, float limbDistance, float progress, float headYaw, float headPitch) {
-		this.main.yaw = (progress + MinecraftClient.getInstance().getTickDelta()) * 0.8F;
+		this.main.yaw = progress * 0.8F;
 	}
 }

@@ -29,6 +29,7 @@ public class PiratePouchItem extends Item {
 				AquamiraeSounds.ITEM_POUCH_OPEN, SoundCategory.PLAYERS, 1, 1);
 		final List<ItemStack> loot = Aquamirae.SetBuilder.common();
 		PlayerUtils.giveItem(user, loot.get(user.getRandom().nextBetween(0, loot.size()-1)));
-		return TypedActionResult.consume(stack);
+		stack.decrement(1);
+		return TypedActionResult.success(stack);
 	}
 }

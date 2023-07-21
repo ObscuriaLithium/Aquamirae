@@ -8,7 +8,7 @@ import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.obscureapi.api.Icons;
 import com.obscuria.obscureapi.api.utils.TextUtils;
-import com.obscuria.obscureapi.common.entities.DynamicProjectileEntity;
+import com.obscuria.obscureapi.common.entities.CompoundProjectileEntity;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
@@ -125,7 +125,7 @@ public final class DelayedEvents {
         }
 
         private void chakras() {
-            for (float i = 0f; i < 1f; i += 0.1F) DynamicProjectileEntity.create(AquamiraeEntities.POISONED_CHAKRA,
+            for (float i = 0f; i < 1f; i += 0.1F) CompoundProjectileEntity.create(AquamiraeEntities.POISONED_CHAKRA,
                     PLAYER, PLAYER.getWorld(), null, 20, i, 6000, 1);
         }
 

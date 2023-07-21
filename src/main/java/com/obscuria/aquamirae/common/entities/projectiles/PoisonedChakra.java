@@ -1,14 +1,14 @@
 
 package com.obscuria.aquamirae.common.entities.projectiles;
 
-import com.obscuria.obscureapi.common.entities.DynamicProjectileEntity;
+import com.obscuria.obscureapi.common.entities.CompoundProjectileEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.world.World;
 
-public class PoisonedChakra extends DynamicProjectileEntity {
+public class PoisonedChakra extends CompoundProjectileEntity {
 
 	public PoisonedChakra(EntityType<PoisonedChakra> type, World world) {
 		super(type, world);
