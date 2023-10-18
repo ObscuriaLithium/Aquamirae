@@ -53,7 +53,6 @@ public class ModelTorturedSoul extends EntityModel<TorturedSoulEntity> {
 
 	@Override
 	public void setAngles(TorturedSoulEntity soul, float limbAngle, float limbDistance, float progress, float headYaw, float headPitch) {
-		System.out.println(progress);
 		HekateLib.reset(main, body, heart, head, nose, leftArm, rightArm, leftLeg, rightLeg, leftArmLower, rightArmLower, leftLegLower, rightLegLower);
 		HekateLib.push(progress, 0.1f, HekateLib.mod.idle(limbDistance, 5), HekateLib.Mode.DEFINITION)
 				.keyframe(main, k -> k.xRot(-0.3F, -0.5F))
