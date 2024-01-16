@@ -85,9 +85,9 @@ public class AquamiraeItems {
 	public static final RegistryObject<Item> PIRATE_POUCH = REGISTRY.register("pirate_pouch", PiratePouchItem::new);
 	public static final RegistryObject<Item> TREASURE_POUCH = REGISTRY.register("treasure_pouch", TreasurePouchItem::new);
 	public static final RegistryObject<Item> MUSIC_DISC_HORIZON = REGISTRY.register("music_disc_horizon",
-			() -> new RecordItem(0, AquamiraeSounds.RECORD_HORIZON, new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 0));
+			() -> new RecordItem(0, AquamiraeSounds.RECORD_HORIZON, new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 1480));
 	public static final RegistryObject<Item> MUSIC_DISC_FORSAKEN_DROWNAGE = REGISTRY.register("music_disc_forsaken_drownage",
-			() -> new RecordItem(0, AquamiraeSounds.RECORD_FORSAKEN_DROWNAGE, new Item.Properties().stacksTo(1).rarity(ObscureRarity.MYTHIC), 0));
+			() -> new RecordItem(0, AquamiraeSounds.RECORD_FORSAKEN_DROWNAGE, new Item.Properties().stacksTo(1).rarity(ObscureRarity.MYTHIC), 3080));
 	public static final RegistryObject<Item> FIN = REGISTRY.register("fin", () -> new Item(new Item.Properties().stacksTo(64)
 			.rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(1).saturationMod(0f).meat().build())));
 	public static final RegistryObject<Item> ESCA = REGISTRY.register("esca", () -> new Item(new Item.Properties().stacksTo(64)
