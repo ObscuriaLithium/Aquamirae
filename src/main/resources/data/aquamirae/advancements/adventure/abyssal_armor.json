@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/three_bolt_armor",
   "display": {
-    "icon": {
-      "item": "aquamirae:abyssal_brigantine"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.abyssal_armor.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.abyssal_armor.descr"
-    },
+    "icon": { "item": "aquamirae:abyssal_brigantine" },
+    "title": { "translate": "advancements.aquamirae.abyssal_armor.title" },
+    "description": { "translate": "advancements.aquamirae.abyssal_armor.description" },
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
@@ -45,7 +40,6 @@
     }
   },
   "rewards": {
-    "experience": 100
-  },
-  "parent": "aquamirae:adventure/three_bolt_armor"
+    "experience": 400
+  }
 }

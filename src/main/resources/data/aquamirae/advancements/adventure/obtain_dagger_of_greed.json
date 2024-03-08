@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/obtain_frozen_key",
   "display": {
-    "icon": {
-      "item": "aquamirae:dagger_of_greed"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.obtain_dagger_of_greed.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.obtain_dagger_of_greed.descr"
-    },
+    "icon": { "item": "aquamirae:dagger_of_greed" },
+    "title": { "translate": "advancements.aquamirae.obtain_dagger_of_greed.title" },
+    "description": { "translate": "advancements.aquamirae.obtain_dagger_of_greed.description" },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
@@ -30,6 +25,5 @@
   },
   "rewards": {
     "experience": 30
-  },
-  "parent": "aquamirae:adventure/obtain_frozen_key"
+  }
 }

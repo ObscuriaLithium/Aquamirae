@@ -1,23 +1,24 @@
 
 package com.obscuria.aquamirae.registry;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.api.distmarker.Dist;
+import com.obscuria.aquamirae.Aquamirae;
+import com.obscuria.core.api.registry.RegistryHandler;
+import com.obscuria.core.api.registry.RegistrySupplier;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 
-import com.obscuria.aquamirae.client.particle.ShineParticle;
-import com.obscuria.aquamirae.client.particle.GhostShineParticle;
-import com.obscuria.aquamirae.client.particle.GhostParticle;
-import com.obscuria.aquamirae.client.particle.ElectricParticle;
+@ApiStatus.NonExtendable
+public interface AquamiraeParticles {
+	RegistryHandler<ParticleType<?>> HANDLER = RegistryHandler.create(Registries.PARTICLE_TYPE, Aquamirae.MODID);
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class AquamiraeParticles {
-	@SubscribeEvent
-	public static void registerParticles(RegisterParticleProvidersEvent event) {
-		event.registerSpriteSet(AquamiraeParticleTypes.SHINE.get(), ShineParticle::provider);
-		event.registerSpriteSet(AquamiraeParticleTypes.GHOST_SHINE.get(), GhostShineParticle::provider);
-		event.registerSpriteSet(AquamiraeParticleTypes.GHOST.get(), GhostParticle::provider);
-		event.registerSpriteSet(AquamiraeParticleTypes.ELECTRIC.get(), ElectricParticle::provider);
+	RegistrySupplier<SimpleParticleType> SHINE = simple("shine");
+	RegistrySupplier<SimpleParticleType> GHOST_SHINE = simple("ghost_shine");
+	RegistrySupplier<SimpleParticleType> GHOST = simple("ghost");
+	RegistrySupplier<SimpleParticleType> ELECTRIC = simple("electric");
+
+	private static RegistrySupplier<SimpleParticleType> simple(String key) {
+		return HANDLER.register(key, () -> new SimpleParticleType(true));
 	}
 }

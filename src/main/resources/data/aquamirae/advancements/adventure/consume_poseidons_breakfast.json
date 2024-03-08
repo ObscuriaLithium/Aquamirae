@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/consume_sea_stew",
   "display": {
-    "icon": {
-      "item": "aquamirae:poseidons_breakfast"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.consume_poseidons_breakfast.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.consume_poseidons_breakfast.descr"
-    },
+    "icon": { "item": "aquamirae:poseidons_breakfast" },
+    "title": { "translate": "advancements.aquamirae.consume_poseidons_breakfast.title" },
+    "description": { "translate": "advancements.aquamirae.consume_poseidons_breakfast.description" },
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
@@ -28,6 +23,5 @@
   },
   "rewards": {
     "experience": 20
-  },
-  "parent": "aquamirae:adventure/consume_sea_stew"
+  }
 }

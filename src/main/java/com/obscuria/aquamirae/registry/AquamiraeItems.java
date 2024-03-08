@@ -2,139 +2,172 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.common.items.*;
-import com.obscuria.aquamirae.common.items.armor.AbyssalArmorExtraItem;
-import com.obscuria.aquamirae.common.items.armor.AbyssalArmorItem;
-import com.obscuria.aquamirae.common.items.armor.TerribleArmorItem;
-import com.obscuria.aquamirae.common.items.armor.ThreeBoltArmorItem;
-import com.obscuria.aquamirae.common.items.weapon.*;
-import com.obscuria.obscureapi.common.items.ObscureRarity;
-import com.obscuria.obscureapi.registry.ObscureAPIMobEffects;
+import com.obscuria.aquamirae.common.item.*;
+import com.obscuria.aquamirae.common.item.armor.AbyssalArmor;
+import com.obscuria.aquamirae.common.item.armor.TerribleArmor;
+import com.obscuria.aquamirae.common.item.armor.ThreeBoltArmor;
+import com.obscuria.aquamirae.compat.curios.item.*;
+import com.obscuria.aquamirae.common.item.weapon.*;
+import com.obscuria.core.api.registry.RegistryHandler;
+import com.obscuria.core.api.registry.RegistrySupplier;
+import com.obscuria.core.common.item.ObscureRarity;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.ApiStatus;
 
-public class AquamiraeItems {
-	public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, Aquamirae.MODID);
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-	public static final RegistryObject<Item> RUNE_OF_THE_STORM = REGISTRY.register("rune_of_the_storm", RuneOfTheStormItem::new);
-	public static final RegistryObject<Item> GOLDEN_MOTH_SPAWN_EGG = REGISTRY.register("golden_moth_spawn_egg",
-			() -> new ForgeSpawnEggItem(AquamiraeEntities.GOLDEN_MOTH, -3381760, -205,
-					new Item.Properties().rarity(Rarity.UNCOMMON)));
-	public static final RegistryObject<Item> TERRIBLE_SWORD = REGISTRY.register("terrible_sword", TerribleSwordItem::new);
-	public static final RegistryObject<Item> FIN_CUTTER = REGISTRY.register("fin_cutter", FinCutterItem::new);
-	public static final RegistryObject<Item> TERRIBLE_HELMET = REGISTRY.register("terrible_helmet", TerribleArmorItem.Helmet::new);
-	public static final RegistryObject<Item> TERRIBLE_CHESTPLATE = REGISTRY.register("terrible_chestplate", TerribleArmorItem.Chestplate::new);
-	public static final RegistryObject<Item> TERRIBLE_LEGGINGS = REGISTRY.register("terrible_leggings", TerribleArmorItem.Leggings::new);
-	public static final RegistryObject<Item> TERRIBLE_BOOTS = REGISTRY.register("terrible_boots", TerribleArmorItem.Boots::new);
-	public static final RegistryObject<Item> SHIP_GRAVEYARD_ECHO = REGISTRY.register("ship_graveyard_echo", ShipGraveyardEchoItem::new);
-	public static final RegistryObject<Item> MAW_SPAWN_EGG = REGISTRY.register("maw_spawn_egg", () -> new ForgeSpawnEggItem(AquamiraeEntities.MAW,
-			-16764109, -16737895, new Item.Properties()));
-	public static final RegistryObject<Item> ANGLERFISH_SPAWN_EGG = REGISTRY.register("anglerfish_spawn_egg",
-			() -> new ForgeSpawnEggItem(AquamiraeEntities.ANGLERFISH, -12963033, -4942746,
-					new Item.Properties()));
-	public static final RegistryObject<Item> DIVIDER = REGISTRY.register("divider", DividerItem::new);
-	public static final RegistryObject<Item> WHISPER_OF_THE_ABYSS = REGISTRY.register("whisper_of_the_abyss", WhisperOfTheAbyssItem::new);
-	public static final RegistryObject<Item> ABYSSAL_HEAUME = REGISTRY.register("abyssal_heaume", AbyssalArmorItem.Heaume::new);
-	public static final RegistryObject<Item> ABYSSAL_BRIGANTINE = REGISTRY.register("abyssal_brigantine", AbyssalArmorItem.Brigantine::new);
-	public static final RegistryObject<Item> ABYSSAL_LEGGINGS = REGISTRY.register("abyssal_leggings", AbyssalArmorItem.Leggings::new);
-	public static final RegistryObject<Item> ABYSSAL_BOOTS = REGISTRY.register("abyssal_boots", AbyssalArmorItem.Boots::new);
-	public static final RegistryObject<Item> ABYSSAL_TIARA = REGISTRY.register("abyssal_tiara", AbyssalArmorExtraItem.Tiara::new);
-	public static final RegistryObject<Item> MAZE_MOTHER_SPAWN_EGG = REGISTRY.register("maze_mother_spawn_egg",
-			() -> new ForgeSpawnEggItem(AquamiraeEntities.MAZE_MOTHER, -10092442, -39169,
-					new Item.Properties()));
-	public static final RegistryObject<Item> CAPTAIN_CORNELIA_SPAWN_EGG = REGISTRY.register("captain_cornelia_spawn_egg",
-			() -> new ForgeSpawnEggItem(AquamiraeEntities.CAPTAIN_CORNELIA, -7760229, -13355980,
-					new Item.Properties().rarity(Rarity.EPIC)));
-	public static final RegistryObject<Item> REMNANTS_SABER = REGISTRY.register("remnants_saber", RemnantsSaberItem::new);
-	public static final RegistryObject<Item> POISONED_BLADE = REGISTRY.register("poisoned_blade", PoisonedBladeItem::new);
-	public static final RegistryObject<Item> THREE_BOLT_HELMET = REGISTRY.register("three_bolt_helmet", ThreeBoltArmorItem.Helmet::new);
-	public static final RegistryObject<Item> THREE_BOLT_SUIT = REGISTRY.register("three_bolt_suit", ThreeBoltArmorItem.Chestplate::new);
-	public static final RegistryObject<Item> THREE_BOLT_LEGGINGS = REGISTRY.register("three_bolt_leggings", ThreeBoltArmorItem.Leggings::new);
-	public static final RegistryObject<Item> THREE_BOLT_BOOTS = REGISTRY.register("three_bolt_boots", ThreeBoltArmorItem.Boots::new);
-	public static final RegistryObject<Item> DEAD_SEA_SCROLL = REGISTRY.register("dead_sea_scroll", DeadSeaScrollItem::new);
-	public static final RegistryObject<Item> PILLAGERS_PATROL_SPAWN_EGG = REGISTRY.register("pillagers_patrol_spawn_egg",
-			() -> new ForgeSpawnEggItem(AquamiraeEntities.PILLAGERS_PATROL, -16751002, -16711681,
-					new Item.Properties()));
-	public static final RegistryObject<Item> TORTURED_SOUL_SPAWN_EGG = REGISTRY.register("tortured_soul_spawn_egg",
-			() -> new ForgeSpawnEggItem(AquamiraeEntities.TORTURED_SOUL, -13421773, -16724737,
-					new Item.Properties()));
-	public static final RegistryObject<Item> CORAL_LANCE = REGISTRY.register("coral_lance", CoralLanceItem::new);
-	public static final RegistryObject<Item> DAGGER_OF_GREED = REGISTRY.register("dagger_of_greed", DaggerOfGreedItem::new);
-	public static final RegistryObject<Item> SHELL_HORN = REGISTRY.register("shell_horn", ShellHornItem::new);
-	public static final RegistryObject<Item> FROZEN_KEY = REGISTRY.register("frozen_key",
-			() -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)));
-	public static final RegistryObject<Item> EEL_SPAWN_EGG = REGISTRY.register("eel_spawn_egg", () -> new ForgeSpawnEggItem(AquamiraeEntities.EEL,
-			-16764109, -16737844, new Item.Properties()));
-	public static final RegistryObject<Item> SWEET_LANCE = REGISTRY.register("sweet_lance", SweetLanceItem::new);
-	public static final RegistryObject<Item> SPINEFISH_SPAWN_EGG = REGISTRY.register("spinefish_spawn_egg",
-			() -> new ForgeSpawnEggItem(AquamiraeEntities.SPINEFISH,  1589067, 11451069, new Item.Properties()));
-	public static final RegistryObject<Item> POISONED_CHAKRA = REGISTRY.register("poisoned_chakra", PoisonedChakraItem::new);
-	public static final RegistryObject<Item> MAZE_ROSE = REGISTRY.register("maze_rose", MazeRoseItem::new);
-	public static final RegistryObject<Item> PIRATE_POUCH = REGISTRY.register("pirate_pouch", PiratePouchItem::new);
-	public static final RegistryObject<Item> TREASURE_POUCH = REGISTRY.register("treasure_pouch", TreasurePouchItem::new);
-	public static final RegistryObject<Item> MUSIC_DISC_HORIZON = REGISTRY.register("music_disc_horizon",
-			() -> new RecordItem(0, AquamiraeSounds.RECORD_HORIZON, new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 0));
-	public static final RegistryObject<Item> MUSIC_DISC_FORSAKEN_DROWNAGE = REGISTRY.register("music_disc_forsaken_drownage",
-			() -> new RecordItem(0, AquamiraeSounds.RECORD_FORSAKEN_DROWNAGE, new Item.Properties().stacksTo(1).rarity(ObscureRarity.MYTHIC), 0));
-	public static final RegistryObject<Item> FIN = REGISTRY.register("fin", () -> new Item(new Item.Properties().stacksTo(64)
-			.rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(1).saturationMod(0f).meat().build())));
-	public static final RegistryObject<Item> ESCA = REGISTRY.register("esca", () -> new Item(new Item.Properties().stacksTo(64)
-			.rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.2f)
-					.effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1).build())));
-	public static final RegistryObject<Item> ANGLERS_FANG = REGISTRY.register("anglers_fang",
-			() -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.UNCOMMON)));
-	public static final RegistryObject<Item> ABYSSAL_AMETHYST = REGISTRY.register("abyssal_amethyst",
-			() -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.UNCOMMON)));
-	public static final RegistryObject<Item> SHARP_BONES = REGISTRY.register("sharp_bones", SharpBonesItem::new);
-	public static final RegistryObject<Item> PAINTING_ANGLERFISH = block(AquamiraeBlocks.PAINTING_ANGLERFISH, new Item.Properties().rarity(Rarity.UNCOMMON));
-	public static final RegistryObject<Item> PAINTING_OXYGELIUM = block(AquamiraeBlocks.PAINTING_OXYGELIUM, new Item.Properties().rarity(Rarity.UNCOMMON));
-	public static final RegistryObject<Item> PAINTING_TORTURED_SOUL = block(AquamiraeBlocks.PAINTING_TORTURED_SOUL, new Item.Properties().rarity(Rarity.UNCOMMON));
-	public static final RegistryObject<Item> PAINTING_AURORA = block(AquamiraeBlocks.PAINTING_AURORA, new Item.Properties().rarity(Rarity.UNCOMMON));
-	public static final RegistryObject<Item> GOLDEN_MOTH_IN_A_JAR = block(AquamiraeBlocks.GOLDEN_MOTH_IN_A_JAR, new Item.Properties());
-	public static final RegistryObject<Item> OXYGELIUM = REGISTRY.register("oxygelium", OxygeliumItem::new);
-	public static final RegistryObject<Item> WISTERIA_NIVEIS = REGISTRY.register("wisteria_niveis", WisteriaNiveisItem::new);
-	public static final RegistryObject<Item> OXYGEN_TANK = REGISTRY.register("oxygen_tank",
-			() -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON)));
-	public static final RegistryObject<Item> FROZEN_CHEST = block(AquamiraeBlocks.FROZEN_CHEST, new Item.Properties().rarity(Rarity.UNCOMMON));
-	public static final RegistryObject<Item> LUMINESCENT_BUBBLE = REGISTRY.register("luminescent_bubble", LuminescentBubbleItem::new);
-	public static final RegistryObject<Item> LUMINESCENT_LAMP = block(AquamiraeBlocks.LUMINESCENT_LAMP, new Item.Properties());
-	public static final RegistryObject<Item> SEA_CASSEROLE = REGISTRY.register("sea_casserole", () -> new Item(new Item.Properties().stacksTo(64)
-			.rarity(Rarity.COMMON).food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).alwaysEat()
-					.effect(() -> new MobEffectInstance(ObscureAPIMobEffects.RUSH.get(), 1800, 1), 1)
-					.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 0), 1).build())));
-	public static final RegistryObject<Item> SPINEFISH_BUCKET = REGISTRY.register("spinefish_bucket", () ->
-			new MobBucketItem(AquamiraeEntities.SPINEFISH, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH, new Item.Properties().stacksTo(1)));
-	public static final RegistryObject<Item> SPINEFISH = REGISTRY.register("spinefish", () -> new SpinefishItem(new Item.Properties().stacksTo(64)
-			.rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(2).saturationMod(0f).meat().build())));
-	public static final RegistryObject<Item> COOKED_SPINEFISH = REGISTRY.register("cooked_spinefish",
-			() -> new SpinefishItem(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food((new FoodProperties.Builder())
-					.nutrition(6).saturationMod(0.4f).meat().build())));
-	public static final RegistryObject<Item> SEA_STEW = REGISTRY.register("sea_stew", () -> new StewItem(new Item.Properties().stacksTo(1)
-			.rarity(Rarity.UNCOMMON).food((new FoodProperties.Builder()).nutrition(12).saturationMod(0.8f).alwaysEat()
-					.effect(() -> new MobEffectInstance(ObscureAPIMobEffects.FURY.get(), 2400, 2), 1)
-					.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 0), 1).build())));
-	public static final RegistryObject<Item> POSEIDONS_BREAKFAST = REGISTRY.register("poseidons_breakfast",
-			() -> new StewItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).food((new FoodProperties.Builder())
-					.nutrition(20).saturationMod(1f).alwaysEat()
-					.effect(() -> new MobEffectInstance(ObscureAPIMobEffects.FURY.get(), 3600, 9), 1)
-					.effect(() -> new MobEffectInstance(ObscureAPIMobEffects.RUSH.get(), 3600, 4), 1).build())) {
-				@Override @OnlyIn(Dist.CLIENT) public boolean isFoil(@NotNull ItemStack itemstack) { return true; }});
-	public static final RegistryObject<Item> ELODEA = REGISTRY.register(AquamiraeBlocks.ELODEA.getId().getPath(),
-			() -> new BlockItem(AquamiraeBlocks.ELODEA.get(), new Item.Properties()));
+@ApiStatus.NonExtendable
+public interface AquamiraeItems {
+	RegistryHandler<Item> HANDLER = RegistryHandler.create(Registries.ITEM, Aquamirae.MODID);
 
-	private static RegistryObject<Item> block(RegistryObject<Block> block, Item.Properties properties) {
-		return REGISTRY.register(block.getId().getPath(), () -> new BlockItem(block.get(), properties));
+	RegistrySupplier<Item> RUNE_OF_THE_STORM = simple("rune_of_the_storm", RuneOfTheStormItem::new);
+	RegistrySupplier<Item> TERRIBLE_SWORD = simple("terrible_sword", TerribleSword::new);
+	RegistrySupplier<Item> DIVIDER = simple("divider", Divider::new);
+	RegistrySupplier<Item> FIN_CUTTER = simple("fin_cutter", FinCutter::new);
+	RegistrySupplier<Item> REMNANTS_SABER = simple("remnants_saber", RemnantsSaber::new);
+	RegistrySupplier<Item> POISONED_BLADE = simple("poisoned_blade", PoisonedBlade::new);
+	RegistrySupplier<Item> CORAL_LANCE = simple("coral_lance", CoralLance::new);
+	RegistrySupplier<Item> DAGGER_OF_GREED = simple("dagger_of_greed", DaggerOfGreed::new);
+	RegistrySupplier<Item> WHISPER_OF_THE_ABYSS = simple("whisper_of_the_abyss", WhisperOfTheAbyss::new);
+	RegistrySupplier<Item> SWEET_LANCE = simple("sweet_lance", SweetLance::new);
+	RegistrySupplier<Item> TERRIBLE_HELMET = simple("terrible_helmet", TerribleArmor.Helmet::new);
+	RegistrySupplier<Item> TERRIBLE_CHESTPLATE = simple("terrible_chestplate", TerribleArmor.Chestplate::new);
+	RegistrySupplier<Item> TERRIBLE_LEGGINGS = simple("terrible_leggings", TerribleArmor.Leggings::new);
+	RegistrySupplier<Item> TERRIBLE_BOOTS = simple("terrible_boots", TerribleArmor.Boots::new);
+	RegistrySupplier<Item> THREE_BOLT_HELMET = simple("three_bolt_helmet", ThreeBoltArmor.Helmet::new);
+	RegistrySupplier<Item> THREE_BOLT_SUIT = simple("three_bolt_suit", ThreeBoltArmor.Suit::new);
+	RegistrySupplier<Item> THREE_BOLT_LEGGINGS = simple("three_bolt_leggings", ThreeBoltArmor.Leggings::new);
+	RegistrySupplier<Item> THREE_BOLT_BOOTS = simple("three_bolt_boots", ThreeBoltArmor.Boots::new);
+	RegistrySupplier<Item> ABYSSAL_TIARA = simple("abyssal_tiara", AbyssalArmor.Tiara::new);
+	RegistrySupplier<Item> ABYSSAL_HEAUME = simple("abyssal_heaume", AbyssalArmor.Heaume::new);
+	RegistrySupplier<Item> ABYSSAL_BRIGANTINE = simple("abyssal_brigantine", AbyssalArmor.Brigantine::new);
+	RegistrySupplier<Item> ABYSSAL_LEGGINGS = simple("abyssal_leggings", AbyssalArmor.Leggings::new);
+	RegistrySupplier<Item> ABYSSAL_BOOTS = simple("abyssal_boots", AbyssalArmor.Boots::new);
+	RegistrySupplier<Item> SHIP_GRAVEYARD_ECHO = simple("ship_graveyard_echo", ShipGraveyardEchoItem::new);
+	RegistrySupplier<Item> DEAD_SEA_SCROLL = simple("dead_sea_scroll", DeadSeaScrollItem::new);
+	RegistrySupplier<Item> SHELL_HORN = simple("shell_horn", ShellHornItem::new);
+	RegistrySupplier<Item> PIRATE_POUCH = simple("pirate_pouch", PiratePouchItem::new);
+	RegistrySupplier<Item> TREASURE_POUCH = simple("treasure_pouch", TreasurePouchItem::new);
+	RegistrySupplier<Item> ENCHANTED_POUCH = simple("enchanted_pouch", EnchantedPouchItem::new);
+	RegistrySupplier<Item> ABYSSAL_AMETHYST = simple("abyssal_amethyst", AbyssalAmethystItem::new);
+	RegistrySupplier<Item> SHARP_BONES = simple("sharp_bones", SharpBonesItem::new);
+	RegistrySupplier<Item> OXYGELIUM = simple("oxygelium", OxygeliumItem::new);
+	RegistrySupplier<Item> WISTERIA_NIVEIS = simple("wisteria_niveis", WisteriaNiveisItem::new);
+	RegistrySupplier<Item> LUMINESCENT_BUBBLE = simple("luminescent_bubble", LuminescentBubbleItem::new);
+	RegistrySupplier<Item> PIRATE_DOUBLOON = simple("pirate_doubloon", PirateDoubloonItem::new);
+	RegistrySupplier<Item> LIQUID_CURSE = simple("liquid_curse", LiquidCurseItem::new);
+	RegistrySupplier<Item> OXYGEN_TANK = simple("oxygen_tank", OxygenTankItem::new);
+	RegistrySupplier<Item> DEAD_SEA_RING = simple("dead_sea_ring", DeadSeaRingItem::new);
+	RegistrySupplier<Item> SHOE_SPIKES = simple("shoe_spikes", ShoeSpikesItem::new);
+	RegistrySupplier<Item> SHIP_GRAVEYARD_RING = simple("ship_graveyard_ring", ShipGraveyardRingItem::new);
+	RegistrySupplier<Item> ICE_MAZE_RING = simple("ice_maze_ring", IceMazeRingItem::new);
+
+	RegistrySupplier<Item> FROZEN_KEY = item("frozen_key", properties ->
+			properties.stacksTo(1).rarity(Rarity.UNCOMMON));
+	RegistrySupplier<Item> ANGLERS_FANG = item("anglers_fang", properties ->
+			properties.stacksTo(64).rarity(Rarity.UNCOMMON));
+	RegistrySupplier<Item> FIN = item("fin", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+			.food(new FoodProperties.Builder().nutrition(1).saturationMod(0f).meat().build()));
+	RegistrySupplier<Item> SPINEFISH = item("spinefish", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+			.food(new FoodProperties.Builder().nutrition(2).saturationMod(0f).meat().build()));
+	RegistrySupplier<Item> COOKED_SPINEFISH = item("cooked_spinefish", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+			.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).meat().build()));
+	RegistrySupplier<Item> ESCA = item("esca", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+			.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.2f)
+					.effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1).build()));
+	RegistrySupplier<Item> SEA_CASSEROLE = item("sea_casserole", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+			.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).alwaysEat()
+					.effect(() -> new MobEffectInstance(MobEffects.POISON, 1800, 1), 1)
+					.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 0), 1).build()));
+	RegistrySupplier<Item> SEA_STEW = item("sea_stew", properties -> properties.stacksTo(1).rarity(Rarity.UNCOMMON)
+			.food(new FoodProperties.Builder().nutrition(12).saturationMod(0.8f).alwaysEat()
+					.effect(() -> new MobEffectInstance(MobEffects.SATURATION, 2400, 2), 1)
+					.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 0), 1).build()));
+	RegistrySupplier<Item> POSEIDONS_BREAKFAST = item("poseidons_breakfast", properties -> properties.stacksTo(1).rarity(Rarity.EPIC)
+			.food(new FoodProperties.Builder().nutrition(20).saturationMod(1f).alwaysEat()
+					.effect(() -> new MobEffectInstance(MobEffects.SATURATION, 3600, 9), 1)
+					.effect(() -> new MobEffectInstance(MobEffects.POISON, 3600, 4), 1).build()));
+	RegistrySupplier<Item> SPINEFISH_BUCKET = mobBucket("spinefish_bucket",
+			AquamiraeEntities.SPINEFISH, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH);
+
+	RegistrySupplier<Item> GOLDEN_MOTH_SPAWN_EGG = spawnEgg("golden_moth_spawn_egg",
+			AquamiraeEntities.GOLDEN_MOTH, Rarity.UNCOMMON, -3381760, -205);
+	RegistrySupplier<Item> CURSED_MOTH_SPAWN_EGG = spawnEgg("cursed_moth_spawn_egg",
+			AquamiraeEntities.CURSED_MOTH, Rarity.UNCOMMON, 0xFFE34873, 0xFF8A2253);
+	RegistrySupplier<Item> MAW_SPAWN_EGG = spawnEgg("maw_spawn_egg",
+			AquamiraeEntities.MAW, Rarity.COMMON, -16764109, -16737895);
+	RegistrySupplier<Item> ANGLERFISH_SPAWN_EGG = spawnEgg("anglerfish_spawn_egg",
+			AquamiraeEntities.ANGLERFISH, Rarity.COMMON, -12963033, -4942746);
+	RegistrySupplier<Item> MAZE_MOTHER_SPAWN_EGG = spawnEgg("maze_mother_spawn_egg",
+			AquamiraeEntities.MAZE_MOTHER, Rarity.COMMON, -10092442, -39169);
+	RegistrySupplier<Item> CAPTAIN_CORNELIA_SPAWN_EGG = spawnEgg("captain_cornelia_spawn_egg",
+			AquamiraeEntities.CAPTAIN_CORNELIA, Rarity.EPIC, -7760229, -13355980);
+	RegistrySupplier<Item> PILLAGERS_PATROL_SPAWN_EGG = spawnEgg("pillagers_patrol_spawn_egg",
+			AquamiraeEntities.PILLAGERS_PATROL, Rarity.COMMON, -16751002, -16711681);
+	RegistrySupplier<Item> TORTURED_SOUL_SPAWN_EGG = spawnEgg("tortured_soul_spawn_egg",
+			AquamiraeEntities.TORTURED_SOUL, Rarity.COMMON, -13421773, -16724737);
+	RegistrySupplier<Item> EEL_SPAWN_EGG = spawnEgg("eel_spawn_egg",
+			AquamiraeEntities.EEL, Rarity.COMMON, -16764109, -16737844);
+	RegistrySupplier<Item> SPINEFISH_SPAWN_EGG = spawnEgg("spinefish_spawn_egg",
+			AquamiraeEntities.SPINEFISH, Rarity.COMMON, 1589067, 11451069);
+
+	RegistrySupplier<Item> MUSIC_DISC_HORIZON = record("music_disc_horizon",
+			AquamiraeSounds.RECORD_HORIZON, Rarity.RARE, 1480);
+	RegistrySupplier<Item> MUSIC_DISC_FORSAKEN_DROWNAGE = record("music_disc_forsaken_drownage",
+			AquamiraeSounds.RECORD_FORSAKEN_DROWNAGE, ObscureRarity.MYTHIC, 3080);
+
+	RegistrySupplier<Item> PAINTING_ANGLERFISH = block(AquamiraeBlocks.PAINTING_ANGLERFISH, Rarity.UNCOMMON);
+	RegistrySupplier<Item> PAINTING_OXYGELIUM = block(AquamiraeBlocks.PAINTING_OXYGELIUM, Rarity.UNCOMMON);
+	RegistrySupplier<Item> PAINTING_TORTURED_SOUL = block(AquamiraeBlocks.PAINTING_TORTURED_SOUL, Rarity.UNCOMMON);
+	RegistrySupplier<Item> PAINTING_AURORA = block(AquamiraeBlocks.PAINTING_AURORA, Rarity.UNCOMMON);
+	RegistrySupplier<Item> GOLDEN_MOTH_IN_A_JAR = block(AquamiraeBlocks.GOLDEN_MOTH_IN_A_JAR, Rarity.COMMON);
+	RegistrySupplier<Item> CURSED_MOTH_IN_A_JAR = block(AquamiraeBlocks.CURSED_MOTH_IN_A_JAR, Rarity.COMMON);
+	RegistrySupplier<Item> FROZEN_CHEST = block(AquamiraeBlocks.FROZEN_CHEST, Rarity.UNCOMMON);
+	RegistrySupplier<Item> LUMINESCENT_LAMP = block(AquamiraeBlocks.LUMINESCENT_LAMP, Rarity.COMMON);
+	RegistrySupplier<Item> ELODEA = block(AquamiraeBlocks.ELODEA, Rarity.COMMON);
+
+	private static RegistrySupplier<Item> simple(String key, Supplier<Item> supplier) {
+		return HANDLER.register(key, supplier);
+	}
+
+	private static RegistrySupplier<Item> block(RegistrySupplier<Block> block, Rarity rarity) {
+		return HANDLER.register(block.key().getPath(), () -> new BlockItem(block.get(),
+				new Item.Properties().rarity(rarity)));
+	}
+
+	private static RegistrySupplier<Item> item(String key, Function<Item.Properties, Item.Properties> function) {
+		return HANDLER.register(key, () -> new Item(function.apply(new Item.Properties())));
+	}
+
+	private static <M extends Mob> RegistrySupplier<Item> spawnEgg(String key, Supplier<EntityType<M>> entity,
+												   Rarity rarity, int backColor, int color) {
+		return HANDLER.register(key, () -> new ForgeSpawnEggItem(entity, backColor, color,
+				new Item.Properties().rarity(rarity)));
+	}
+
+	private static RegistrySupplier<Item> record(String key, Supplier<SoundEvent> sound, Rarity rarity, int length) {
+		return HANDLER.register(key, () -> new RecordItem(0, sound,
+				new Item.Properties().stacksTo(1).rarity(rarity), length));
+	}
+
+	@SuppressWarnings("all")
+	private static <E extends Entity> RegistrySupplier<Item> mobBucket(String key, Supplier<EntityType<E>> entity,
+													Supplier<Fluid> fluid, Supplier<SoundEvent> sound) {
+		return HANDLER.register(key, () -> new MobBucketItem(entity, fluid, sound,
+				new Item.Properties().stacksTo(1)));
 	}
 }

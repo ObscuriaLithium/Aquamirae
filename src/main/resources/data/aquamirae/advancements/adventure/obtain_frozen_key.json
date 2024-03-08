@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/obtain_shell_horn",
   "display": {
-    "icon": {
-      "item": "aquamirae:frozen_key"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.obtain_frozen_key.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.obtain_frozen_key.descr"
-    },
+    "icon": { "item": "aquamirae:frozen_key" },
+    "title": { "translate": "advancements.aquamirae.obtain_frozen_key.title" },
+    "description": { "translate": "advancements.aquamirae.obtain_frozen_key.description" },
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
@@ -30,6 +25,5 @@
   },
   "rewards": {
     "experience": 10
-  },
-  "parent": "aquamirae:adventure/obtain_shell_horn"
+  }
 }

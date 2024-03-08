@@ -1,16 +1,13 @@
 package com.obscuria.aquamirae;
 
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.nio.file.Paths;
-import java.nio.file.Path;
 import java.nio.file.Files;
-import java.nio.file.FileAlreadyExistsException;
-
-import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class AquamiraeConfig {
 
@@ -194,7 +191,7 @@ public class AquamiraeConfig {
 	public static class Client {
 		public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 		public static final ForgeConfigSpec CLIENT_SPEC;
-		public static final ForgeConfigSpec.BooleanValue stylizedBossbar;
+		public static final ForgeConfigSpec.BooleanValue stylizedBossBar;
 		public static final ForgeConfigSpec.BooleanValue particles;
 		public static final ForgeConfigSpec.BooleanValue ambientSounds;
 		public static final ForgeConfigSpec.BooleanValue biomeMusic;
@@ -203,7 +200,7 @@ public class AquamiraeConfig {
 		static {
 			BUILDER.push("General");
 			overlay = BUILDER.worldRestart().define("renderThreeBoltHelmetOverlay", true);
-			stylizedBossbar = BUILDER.worldRestart().define("stylizedBossbar", true);
+			stylizedBossBar = BUILDER.worldRestart().define("stylizedBossBar", true);
 			BUILDER.pop();
 			BUILDER.push("IceMazeAmbient");
 			particles = BUILDER.worldRestart().define("spawnParticles", true);
@@ -219,8 +216,7 @@ public class AquamiraeConfig {
 		Path configPath = FMLPaths.CONFIGDIR.get();
 		Path modConfigPath = Paths.get(configPath.toAbsolutePath().toString(), "Obscuria");
 		try { Files.createDirectory(modConfigPath); }
-		catch (FileAlreadyExistsException ignored) {}
-		catch (IOException e) { Aquamirae.LOGGER.warn("Failed to create Obscuria config directory", e); }
+		catch (Exception ignored) {}
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Common.COMMON_SPEC, "Obscuria/aquamirae-common.toml");
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Client.CLIENT_SPEC, "Obscuria/aquamirae-client.toml");
 	}

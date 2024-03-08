@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/obtain_frozen_key",
   "display": {
-    "icon": {
-      "item": "aquamirae:rune_of_the_storm"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.obtain_rune_of_the_storm.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.obtain_rune_of_the_storm.descr"
-    },
+    "icon": { "item": "aquamirae:rune_of_the_storm" },
+    "title": { "translate": "advancements.aquamirae.obtain_rune_of_the_storm.title" },
+    "description": { "translate": "advancements.aquamirae.obtain_rune_of_the_storm.description" },
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
@@ -30,6 +25,5 @@
   },
   "rewards": {
     "experience": 30
-  },
-  "parent": "aquamirae:adventure/obtain_frozen_key"
+  }
 }

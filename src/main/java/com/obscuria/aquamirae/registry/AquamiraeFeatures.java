@@ -2,17 +2,27 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
+import com.obscuria.aquamirae.common.worldgen.feature.IceSpiralFeature;
 import com.obscuria.aquamirae.common.worldgen.feature.OxygeliumFeature;
 import com.obscuria.aquamirae.common.worldgen.feature.WisteriaFeature;
+import com.obscuria.core.api.registry.RegistryHandler;
+import com.obscuria.core.api.registry.RegistrySupplier;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.ApiStatus;
 
-public class AquamiraeFeatures {
-	public static final DeferredRegister<Feature<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.FEATURES, Aquamirae.MODID);
+import java.util.function.Supplier;
 
-	public static final RegistryObject<OxygeliumFeature> OXYGELIUM = REGISTRY.register("oxygelium", () -> new OxygeliumFeature(NoneFeatureConfiguration.CODEC));
-	public static final RegistryObject<WisteriaFeature> WISTERIA = REGISTRY.register("wisteria", () -> new WisteriaFeature(NoneFeatureConfiguration.CODEC));
+@SuppressWarnings("unused")
+@ApiStatus.NonExtendable
+public interface AquamiraeFeatures {
+	RegistryHandler<Feature<?>> HANDLER = RegistryHandler.create(Registries.FEATURE, Aquamirae.MODID);
+
+	RegistrySupplier<OxygeliumFeature> OXYGELIUM = simple("oxygelium", OxygeliumFeature::new);
+	RegistrySupplier<WisteriaFeature> WISTERIA = simple("wisteria", WisteriaFeature::new);
+	RegistrySupplier<IceSpiralFeature> ICE_SPIRAL = simple("ice_spiral", IceSpiralFeature::new);
+
+	private static <F extends Feature<?>> RegistrySupplier<F> simple(String key, Supplier<F> supplier) {
+		return HANDLER.register(key, supplier);
+	}
 }

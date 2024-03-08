@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/obtain_esca",
   "display": {
-    "icon": {
-      "item": "aquamirae:sea_stew"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.consume_sea_stew.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.consume_sea_stew.descr"
-    },
+    "icon": { "item": "aquamirae:sea_stew" },
+    "title": { "translate": "advancements.aquamirae.consume_sea_stew.title" },
+    "description": { "translate": "advancements.aquamirae.consume_sea_stew.description" },
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
@@ -28,6 +23,5 @@
   },
   "rewards": {
     "experience": 5
-  },
-  "parent": "aquamirae:adventure/obtain_esca"
+  }
 }

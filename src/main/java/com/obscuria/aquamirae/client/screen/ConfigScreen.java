@@ -11,14 +11,13 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class ConfigScreen extends Screen {
-
     private final Screen PARENT;
     private CycleButton<Boolean> overlay;
     private CycleButton<Boolean> particles;
     private CycleButton<Boolean> ambientSounds;
     private CycleButton<Boolean> biomeMusic;
     private CycleButton<Boolean> bossMusic;
-    private CycleButton<Boolean> stylizedBossbar;
+    private CycleButton<Boolean> stylizedBossBar;
     private CycleButton<Boolean> notifications;
 
     public ConfigScreen(Screen parent) {
@@ -44,7 +43,7 @@ public class ConfigScreen extends Screen {
         this.bossMusic = CycleButton.onOffBuilder(AquamiraeConfig.Client.bossMusic.get())
                 .create(this.width / 2 + 5, this.height / 6 + 72 - 6,
                         150, 20, Component.literal("Boss Music"));
-        this.stylizedBossbar = CycleButton.onOffBuilder(AquamiraeConfig.Client.stylizedBossbar.get())
+        this.stylizedBossBar = CycleButton.onOffBuilder(AquamiraeConfig.Client.stylizedBossBar.get())
                 .create(this.width / 2 - 155, this.height / 6 + 108 - 6,
                         150, 20, Component.literal("Stylized Boss Bar"));
         this.notifications = CycleButton.onOffBuilder(AquamiraeConfig.Common.notifications.get())
@@ -55,7 +54,7 @@ public class ConfigScreen extends Screen {
         this.addRenderableWidget(ambientSounds);
         this.addRenderableWidget(biomeMusic);
         this.addRenderableWidget(bossMusic);
-        this.addRenderableWidget(stylizedBossbar);
+        this.addRenderableWidget(stylizedBossBar);
         this.addRenderableWidget(notifications);
 
         this.addRenderableWidget(new Button.Builder(Component.literal("Reset"), b -> {
@@ -64,14 +63,14 @@ public class ConfigScreen extends Screen {
             AquamiraeConfig.Client.ambientSounds.set(AquamiraeConfig.Client.ambientSounds.getDefault());
             AquamiraeConfig.Client.biomeMusic.set(AquamiraeConfig.Client.biomeMusic.getDefault());
             AquamiraeConfig.Client.bossMusic.set(AquamiraeConfig.Client.bossMusic.getDefault());
-            AquamiraeConfig.Client.stylizedBossbar.set(AquamiraeConfig.Client.stylizedBossbar.getDefault());
+            AquamiraeConfig.Client.stylizedBossBar.set(AquamiraeConfig.Client.stylizedBossBar.getDefault());
             AquamiraeConfig.Common.notifications.set(AquamiraeConfig.Common.notifications.getDefault());
             this.overlay.setValue(AquamiraeConfig.Client.overlay.get());
             this.particles.setValue(AquamiraeConfig.Client.particles.get());
             this.ambientSounds.setValue(AquamiraeConfig.Client.ambientSounds.get());
             this.biomeMusic.setValue(AquamiraeConfig.Client.biomeMusic.get());
             this.bossMusic.setValue(AquamiraeConfig.Client.bossMusic.get());
-            this.stylizedBossbar.setValue(AquamiraeConfig.Client.stylizedBossbar.get());
+            this.stylizedBossBar.setValue(AquamiraeConfig.Client.stylizedBossBar.get());
             this.notifications.setValue(AquamiraeConfig.Common.notifications.get());
         }).pos(this.width / 2 - 155, this.height / 6 + 24 * 7 - 6).size(100, 20).build());
         this.addRenderableWidget(new Button.Builder(CommonComponents.GUI_DONE, b -> {
@@ -93,7 +92,7 @@ public class ConfigScreen extends Screen {
         AquamiraeConfig.Client.ambientSounds.set(this.ambientSounds.getValue());
         AquamiraeConfig.Client.biomeMusic.set(this.biomeMusic.getValue());
         AquamiraeConfig.Client.bossMusic.set(this.bossMusic.getValue());
-        AquamiraeConfig.Client.stylizedBossbar.set(this.stylizedBossbar.getValue());
+        AquamiraeConfig.Client.stylizedBossBar.set(this.stylizedBossBar.getValue());
         AquamiraeConfig.Common.notifications.set(this.notifications.getValue());
     }
 

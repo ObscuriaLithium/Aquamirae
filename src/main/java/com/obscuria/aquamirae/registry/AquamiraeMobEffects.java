@@ -2,18 +2,29 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.common.effects.*;
+import com.obscuria.aquamirae.common.effect.*;
+import com.obscuria.core.api.registry.RegistryHandler;
+import com.obscuria.core.api.registry.RegistrySupplier;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.ApiStatus;
 
-public class AquamiraeMobEffects {
-	public static final DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Aquamirae.MODID);
-	public static final RegistryObject<MobEffect> CRYSTALLIZATION = REGISTRY.register("crystallization", CrystallizationMobEffect::new);
-	public static final RegistryObject<MobEffect> HEALTH_DECREASE = REGISTRY.register("health_decrease", HealthDecreaseMobEffect::new);
-	public static final RegistryObject<MobEffect> ARMOR_DECREASE = REGISTRY.register("armor_decrease", ArmorDecreaseMobEffect::new);
-	public static final RegistryObject<MobEffect> SWIM_SPEED = REGISTRY.register("swim_speed", SwimSpeedMobEffect::new);
-	public static final RegistryObject<MobEffect> STRONG_ARMOR = REGISTRY.register("strong_armor", StrongArmorMobEffect::new);
-	public static final RegistryObject<MobEffect> ABYSS_BLINDNESS = REGISTRY.register("abyss_blindness", AbyssBlindnessMobEffect::new);
+import java.util.function.Supplier;
+
+@ApiStatus.NonExtendable
+public interface AquamiraeMobEffects {
+	RegistryHandler<MobEffect> HANDLER = RegistryHandler.create(Registries.MOB_EFFECT, Aquamirae.MODID);
+
+	RegistrySupplier<MobEffect> HYDROPHOBIA = simple("hydrophobia", HydrophobiaModEffect::new);
+	RegistrySupplier<MobEffect> CRYSTALLIZATION = simple("crystallization", CrystallizationMobEffect::new);
+	RegistrySupplier<MobEffect> TERRIBLE_ARMOR = simple("terrible_armor", TerribleArmorMobEffect::new);
+	RegistrySupplier<MobEffect> THREE_BOLT_ARMOR = simple("three_bolt_armor", ThreeeBoltArmorMobEffect::new);
+	RegistrySupplier<MobEffect> DIVIDER = simple("divider", DividerMobEffect::new);
+	RegistrySupplier<MobEffect> WHISPER_OF_THE_ABYSS = simple("whisper_of_the_abyss", WhisperOfTheAbyssMobEffect::new);
+	RegistrySupplier<MobEffect> STRONG_ARMOR = simple("strong_armor", StrongArmorMobEffect::new);
+	RegistrySupplier<MobEffect> ABYSS_BLINDNESS = simple("abyss_blindness", AbyssBlindnessMobEffect::new);
+
+	private static RegistrySupplier<MobEffect> simple(String key, Supplier<MobEffect> supplier) {
+		return HANDLER.register(key, supplier);
+	}
 }

@@ -2,68 +2,57 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.DeferredRegister;
-
+import com.obscuria.core.api.registry.RegistryHandler;
+import com.obscuria.core.api.registry.RegistrySupplier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.Music;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
 
-public class AquamiraeSounds {
-	public static final DeferredRegister<SoundEvent> REGISTRY = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Aquamirae.MODID);
+@SuppressWarnings("unused")
+@ApiStatus.NonExtendable
+public interface AquamiraeSounds {
+	RegistryHandler<SoundEvent> HANDLER = RegistryHandler.create(Registries.SOUND_EVENT, Aquamirae.MODID);
 
-	public static final RegistryObject<SoundEvent> ENTITY_GOLDEN_MOTH_CATCH = REGISTRY.register("entity.golden_moth.catch",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.golden_moth.catch")));
-	public static final RegistryObject<SoundEvent> ENTITY_GOLDEN_MOTH_AMBIENT = REGISTRY.register("entity.golden_moth.ambient",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.golden_moth.ambient")));
-	public static final RegistryObject<SoundEvent> BLOCK_FROZEN_CHEST_UNLOCK = REGISTRY.register("block.frozen_chest.unlock",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "block.frozen_chest.unlock")));
-	public static final RegistryObject<SoundEvent> EFFECT_OXYGEN = REGISTRY.register("effect.oxygen",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "effect.oxygen")));
-	public static final RegistryObject<SoundEvent> AMBIENT_SHIP_HORN = REGISTRY.register("ambient.ship_horn",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "ambient.ship_horn")));
-	public static final RegistryObject<SoundEvent> ITEM_SHELL_HORN_USE = REGISTRY.register("item.shell_horn.use",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "item.shell_horn.use")));
-	public static final RegistryObject<SoundEvent> ITEM_TERRIBLE_SWORD = REGISTRY.register("item.terrible_sword",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "item.terrible_sword")));
-	public static final RegistryObject<SoundEvent> ITEM_TREASURE_POUCH_OPEN = REGISTRY.register("item.treasure_pouch.open",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "item.treasure_pouch.open")));
-	public static final RegistryObject<SoundEvent> ITEM_POUCH_OPEN = REGISTRY.register("item.pouch.open",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "item.pouch.open")));
-	public static final RegistryObject<SoundEvent> MUSIC_FORSAKEN_DROWNAGE = REGISTRY.register("music.forsaken_drownage",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "music.forsaken_drownage")));
-	public static final RegistryObject<SoundEvent> ENTITY_CAPTAIN_CORNELIA_HORN = REGISTRY.register("entity.captain_cornelia.horn",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.captain_cornelia.horn")));
-	public static final RegistryObject<SoundEvent> ENTITY_CAPTAIN_CORNELIA_ATTACK_1 = REGISTRY.register("entity.captain_cornelia.attack_1",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.captain_cornelia.attack_1")));
-	public static final RegistryObject<SoundEvent> ENTITY_CAPTAIN_CORNELIA_ATTACK_2 = REGISTRY.register("entity.captain_cornelia.attack_2",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.captain_cornelia.attack_2")));
-	public static final RegistryObject<SoundEvent> ENTITY_DEEP_AMBIENT = REGISTRY.register("entity.deep_ambient",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.deep_ambient")));
-	public static final RegistryObject<SoundEvent> ENTITY_DEEP_HURT = REGISTRY.register("entity.deep_hurt",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.deep_hurt")));
-	public static final RegistryObject<SoundEvent> ENTITY_DEEP_DEATH = REGISTRY.register("entity.deep_death",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.deep_death")));
-	public static final RegistryObject<SoundEvent> ENTITY_CAPTAIN_CORNELIA_AMBIENT = REGISTRY.register("entity.captain_cornelia.ambient",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.captain_cornelia.ambient")));
-	public static final RegistryObject<SoundEvent> EFFECT_MYSTERY = REGISTRY.register("effect.mystery",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "effect.mystery")));
-	public static final RegistryObject<SoundEvent> ITEM_SCROLL_USE = REGISTRY.register("item.scroll.use",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "item.scroll.use")));
-	public static final RegistryObject<SoundEvent> ENTITY_CAPTAIN_CORNELIA_HURT = REGISTRY.register("entity.captain_cornelia.hurt",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.captain_cornelia.hurt")));
-	public static final RegistryObject<SoundEvent> ENTITY_CAPTAIN_CORNELIA_DEATH = REGISTRY.register("entity.captain_cornelia.death",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.captain_cornelia.death")));
-	public static final RegistryObject<SoundEvent> ENTITY_EEL_BITE = REGISTRY.register("entity.eel.bite",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.eel.bite")));
-	public static final RegistryObject<SoundEvent> ENTITY_EEL_ROAR = REGISTRY.register("entity.eel.roar",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.eel.roar")));
-	public static final RegistryObject<SoundEvent> ENTITY_CAPTAIN_CORNELIA_RAGE = REGISTRY.register("entity.captain_cornelia.rage",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "entity.captain_cornelia.rage")));
-	public static final RegistryObject<SoundEvent> MUSIC_ICE_MAZE_THEME = REGISTRY.register("music.ice_maze_theme",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "music.ice_maze_theme")));
-	public static final RegistryObject<SoundEvent> RECORD_HORIZON = REGISTRY.register("record.horizon",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "record.horizon")));
-	public static final RegistryObject<SoundEvent> RECORD_FORSAKEN_DROWNAGE = REGISTRY.register("record.forsaken_drownage",
-			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Aquamirae.MODID, "record.forsaken_drownage")));
+	RegistrySupplier<SoundEvent> AMBIENT_SHIP_HORN = variable("ambient.ship_horn");
+	RegistrySupplier<SoundEvent> BLOCK_FROZEN_CHEST_UNLOCK = variable("block.frozen_chest.unlock");
+	RegistrySupplier<SoundEvent> ENTITY_MOTH_CATCH = variable("entity.moth.catch");
+	RegistrySupplier<SoundEvent> ENTITY_CHAKRAM_HIT = variable("entity.chakram.hit");
+	RegistrySupplier<SoundEvent> ENTITY_CAPTAIN_CORNELIA_AMBIENT = variable("entity.captain_cornelia.ambient");
+	RegistrySupplier<SoundEvent> ENTITY_CAPTAIN_CORNELIA_HORN = variable("entity.captain_cornelia.horn");
+	RegistrySupplier<SoundEvent> ENTITY_CAPTAIN_CORNELIA_RAGE = variable("entity.captain_cornelia.rage");
+	RegistrySupplier<SoundEvent> ENTITY_CAPTAIN_CORNELIA_ATTACK_1 = variable("entity.captain_cornelia.attack_1");
+	RegistrySupplier<SoundEvent> ENTITY_CAPTAIN_CORNELIA_ATTACK_2 = variable("entity.captain_cornelia.attack_2");
+	RegistrySupplier<SoundEvent> ENTITY_CAPTAIN_CORNELIA_HURT = variable("entity.captain_cornelia.hurt");
+	RegistrySupplier<SoundEvent> ENTITY_CAPTAIN_CORNELIA_DEATH = variable("entity.captain_cornelia.death");
+	RegistrySupplier<SoundEvent> ENTITY_EEL_BITE = variable("entity.eel.bite");
+	RegistrySupplier<SoundEvent> ENTITY_EEL_ROAR = variable("entity.eel.roar");
+	RegistrySupplier<SoundEvent> ENTITY_DEEP_AMBIENT = variable("entity.deep.ambient");
+	RegistrySupplier<SoundEvent> ENTITY_DEEP_HURT = variable("entity.deep.hurt");
+	RegistrySupplier<SoundEvent> ENTITY_DEEP_DEATH = variable("entity.deep.death");
+	RegistrySupplier<SoundEvent> ITEM_THREE_BOLT_OXYGEN = variable("item.three_bolt.oxygen");
+	RegistrySupplier<SoundEvent> ITEM_SHELL_HORN_USE = variable("item.shell_horn.use");
+	RegistrySupplier<SoundEvent> ITEM_TERRIBLE_SWORD_CRIT = variable("item.terrible_sword.crit");
+	RegistrySupplier<SoundEvent> ITEM_TREASURE_POUCH_OPEN = variable("item.treasure_pouch.open");
+	RegistrySupplier<SoundEvent> ITEM_PIRATE_POUCH_OPEN = variable("item.pirate_pouch.open");
+	RegistrySupplier<SoundEvent> ITEM_SCROLL_MYSTERY = variable("item.scroll.mystery");
+	RegistrySupplier<SoundEvent> ITEM_SCROLL_USE = variable("item.scroll.use");
+	RegistrySupplier<SoundEvent> RECORD_HORIZON = variable("record.horizon");
+	RegistrySupplier<SoundEvent> RECORD_FORSAKEN_DROWNAGE = variable("record.forsaken_drownage");
+	RegistrySupplier<SoundEvent> MUSIC_FORSAKEN_DROWNAGE = variable("music.forsaken_drownage");
+	RegistrySupplier<SoundEvent> MUSIC_ICE_MAZE = variable("music.ice_maze");
+	RegistrySupplier<SoundEvent> MUSIC_SHIP_GRAVEYARD = variable("music.ship_graveyard");
+
+	Music GAME_MUSIC_ICE_MAZE = music(MUSIC_ICE_MAZE, 6000, 12000, false);
+	Music GAME_MUSIC_SHIP_GRAVEYARD = music(MUSIC_SHIP_GRAVEYARD, 1200, 2400, false);
+	Music GAME_MUSIC_FORSAKEN_DROWNAGE = music(MUSIC_FORSAKEN_DROWNAGE, 0, 0, true);
+
+	private static RegistrySupplier<SoundEvent> variable(String key) {
+		return HANDLER.register(key, () -> SoundEvent.createVariableRangeEvent(Aquamirae.key(key)));
+	}
+
+	private static Music music(RegistrySupplier<SoundEvent> sound, int minDelay, int maxDelay, boolean playImmediately) {
+		return new Music(Holder.direct(sound.get()), minDelay, maxDelay, playImmediately);
+	}
 }

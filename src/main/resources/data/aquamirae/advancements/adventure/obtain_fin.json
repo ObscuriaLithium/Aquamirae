@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/root",
   "display": {
-    "icon": {
-      "item": "aquamirae:fin"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.obtain_fin.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.obtain_fin.descr"
-    },
+    "icon": { "item": "aquamirae:fin" },
+    "title": { "translate": "advancements.aquamirae.obtain_fin.title" },
+    "description": { "translate": "advancements.aquamirae.obtain_fin.description" },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
@@ -30,6 +25,5 @@
   },
   "rewards": {
     "experience": 5
-  },
-  "parent": "aquamirae:adventure/find_ice_maze"
+  }
 }

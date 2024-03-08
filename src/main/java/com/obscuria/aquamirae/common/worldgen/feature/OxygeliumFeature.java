@@ -1,8 +1,7 @@
 
 package com.obscuria.aquamirae.common.worldgen.feature;
 
-import com.mojang.serialization.Codec;
-import com.obscuria.aquamirae.common.blocks.OxygeliumBlock;
+import com.obscuria.aquamirae.common.block.OxygeliumBlock;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -24,8 +23,8 @@ import java.util.List;
 public class OxygeliumFeature extends Feature<NoneFeatureConfiguration> {
 	private final List<Block> BLOCKS;
 
-	public OxygeliumFeature(Codec<NoneFeatureConfiguration> codec) {
-		super(codec);
+	public OxygeliumFeature() {
+		super(NoneFeatureConfiguration.CODEC);
 		BLOCKS = List.of(Blocks.GRAVEL);
 	}
 

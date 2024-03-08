@@ -1,27 +1,21 @@
 
 package com.obscuria.aquamirae.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.client.renderers.*;
+import com.obscuria.aquamirae.client.particle.ElectricParticle;
+import com.obscuria.aquamirae.client.particle.GhostParticle;
+import com.obscuria.aquamirae.client.particle.GhostShineParticle;
+import com.obscuria.aquamirae.client.particle.ShineParticle;
+import com.obscuria.aquamirae.client.renderer.*;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
-import com.obscuria.aquamirae.common.entities.PillagersPatrol;
-import net.minecraft.client.model.SlimeModel;
-import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
+import com.obscuria.aquamirae.registry.AquamiraeParticles;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import org.jetbrains.annotations.ApiStatus;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class AquamiraeRenderers {
+@ApiStatus.NonExtendable
+public interface AquamiraeRenderers {
 
-	@SubscribeEvent
-	public static void registerEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
+	static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerEntityRenderer(AquamiraeEntities.GOLDEN_MOTH.get(), GoldenMothRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.MAW.get(), MawRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.ANGLERFISH.get(), AnglerfishRenderer::new);
@@ -32,16 +26,16 @@ public class AquamiraeRenderers {
 		event.registerEntityRenderer(AquamiraeEntities.MAZE_ROSE.get(), MazeRoseRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.POISONED_CHAKRA.get(), PoisonedChakraRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.SPINEFISH.get(), SpinefishRenderer::new);
-		event.registerEntityRenderer(AquamiraeEntities.LUMINOUS_JELLY.get(), LuminousJellyRenderer::new);
+		event.registerEntityRenderer(AquamiraeEntities.PYCNOGONIDA.get(), PycnogonidaRenderer::new);
+		event.registerEntityRenderer(AquamiraeEntities.CURSED_MOTH.get(), CursedMothRenderer::new);
+		event.registerEntityRenderer(AquamiraeEntities.STORM_CHAKRAM.get(), StormChakramRenderer::new);
+		event.registerEntityRenderer(AquamiraeEntities.PILLAGERS_PATROL.get(), PillagersPatrolRenderer::new);
+	}
 
-		event.registerEntityRenderer(AquamiraeEntities.PILLAGERS_PATROL.get(),
-				provider -> new MobRenderer<>(provider, new SlimeModel<>(provider.bakeLayer(ModelLayers.SLIME)) {
-					@Override public void setupAnim(@NotNull PillagersPatrol entity, float f1, float f2, float f3, float f4, float f5) {}
-					@Override public void renderToBuffer(@NotNull PoseStack pose, @NotNull VertexConsumer consumer, int i1, int i2, float f1, float f2, float f3, float f4) {}
-				}, 0F) {
-					@Override @NotNull public ResourceLocation getTextureLocation(@NotNull PillagersPatrol entity) {
-						return new ResourceLocation(Aquamirae.MODID, "textures/entity/blank.png");
-					}
-				});
+	static void registerParticles(RegisterParticleProvidersEvent event) {
+		event.registerSpriteSet(AquamiraeParticles.SHINE.get(), ShineParticle::provider);
+		event.registerSpriteSet(AquamiraeParticles.GHOST_SHINE.get(), GhostShineParticle::provider);
+		event.registerSpriteSet(AquamiraeParticles.GHOST.get(), GhostParticle::provider);
+		event.registerSpriteSet(AquamiraeParticles.ELECTRIC.get(), ElectricParticle::provider);
 	}
 }

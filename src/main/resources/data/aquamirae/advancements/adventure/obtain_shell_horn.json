@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/root",
   "display": {
-    "icon": {
-      "item": "aquamirae:shell_horn"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.obtain_shell_horn.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.obtain_shell_horn.descr"
-    },
+    "icon": { "item": "aquamirae:shell_horn" },
+    "title": { "translate": "advancements.aquamirae.obtain_shell_horn.title" },
+    "description": { "translate": "advancements.aquamirae.obtain_shell_horn.description" },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
@@ -30,6 +25,5 @@
   },
   "rewards": {
     "experience": 3
-  },
-  "parent": "aquamirae:adventure/find_ice_maze"
+  }
 }

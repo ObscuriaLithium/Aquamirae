@@ -1,0 +1,12 @@
+{
+  "feature": "aquamirae:ice_spiral",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 25
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/terrible_armor",
   "display": {
-    "icon": {
-      "item": "aquamirae:three_bolt_helmet"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.three_bolt_armor.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.three_bolt_armor.descr"
-    },
+    "icon": { "item": "aquamirae:three_bolt_helmet" },
+    "title": { "translate": "advancements.aquamirae.three_bolt_armor.title" },
+    "description": { "translate": "advancements.aquamirae.three_bolt_armor.description" },
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
@@ -45,6 +40,5 @@
   },
   "rewards": {
     "experience": 30
-  },
-  "parent": "aquamirae:adventure/terrible_armor"
+  }
 }

@@ -1,11 +1,8 @@
 package com.obscuria.aquamirae.common;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.network.ScrollMessage;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.aquamirae.common.entities.Eel;
-import com.obscuria.obscureapi.api.common.DynamicProjectile;
+import com.obscuria.aquamirae.common.entity.Eel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +21,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -50,8 +46,8 @@ public class ScrollEffects {
 
     private void effect() {
         final int type = (int) Math.round(7.0 * Math.random());
-        if (PLAYER instanceof ServerPlayer player)
-            Aquamirae.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ScrollMessage(type));
+        if (PLAYER instanceof ServerPlayer player) {}
+            //Aquamirae.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new ScrollEffectPacket(type));
         switch (type) {
             default -> PLAYER.drop(Items.DIAMOND.getDefaultInstance(), false);
             case 1 -> abyss();
@@ -69,7 +65,7 @@ public class ScrollEffects {
             for (int iy = 1; iy >= -10; iy--)
                 for (int iz = -1; iz <= 1; iz++) {
                     final BlockPos pos = new BlockPos(PLAYER.getBlockX() + ix, PLAYER.getBlockY() + iy, PLAYER.getBlockZ() + iz);
-                    if (PLAYER.level().getBlockState(pos).is(Aquamirae.SCROLL_DESTROY)) PLAYER.level().destroyBlock(pos, true);
+                    if (PLAYER.level().getBlockState(pos).is(Aquamirae.SCROLL_CAN_DESTROY)) PLAYER.level().destroyBlock(pos, true);
                 }
 
     }
@@ -110,7 +106,7 @@ public class ScrollEffects {
     }
 
     private void chakras() {
-        for (float i = 0f; i < 1f; i += 0.1F) DynamicProjectile.create(AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER, PLAYER.level(), null, 20, i, 6000, 1);
+        for (float i = 0f; i < 1f; i += 0.1F) {} //CompoundProjectileEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER, PLAYER.level(), null, 20, i, 6000, 1);
     }
 
     public static class MoveUp {

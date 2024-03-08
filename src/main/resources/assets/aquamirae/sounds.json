@@ -1,263 +1,137 @@
 {
-  "entity.golden_moth.catch": {
-    "category": "ambient",
-    "sounds": [
-      {
-        "name": "aquamirae:golden_moth_catch",
-        "stream": false
-      }
-    ]
-  },
-  "entity.golden_moth.ambient": {
-    "category": "hostile",
-    "subtitle": "subtitles.entity.golden_moth.ambient",
-    "sounds": [
-      {
-        "name": "aquamirae:golden_moth",
-        "stream": false
-      }
-    ]
-  },
-  "block.frozen_chest.unlock": {
-    "category": "block",
-    "subtitle": "subtitles.block.frozen_chest.unlock",
-    "sounds": [
-      {
-        "name": "aquamirae:unlock",
-        "stream": false
-      }
-    ]
-  },
-  "effect.oxygen": {
-    "category": "player",
-    "subtitle": "subtitles.effect.oxygen",
-    "sounds": [
-      {
-        "name": "aquamirae:three_bolt_effect",
-        "stream": false
-      }
-    ]
-  },
-  "ambient.ship_horn": {
-    "category": "ambient",
-    "sounds": [
-      {
-        "name": "aquamirae:horn1",
-        "stream": false
-      },
-      {
-        "name": "aquamirae:horn2",
-        "stream": false
-      },
-      {
-        "name": "aquamirae:horn3",
-        "stream": false
-      }
-    ]
-  },
-  "item.shell_horn.use": {
-    "category": "player",
-    "subtitle": "subtitles.item.shell_horn.use",
-    "sounds": [
-      {
-        "name": "aquamirae:horn_2",
-        "stream": false
-      }
-    ]
-  },
-  "item.terrible_sword": {
-    "category": "player",
-    "sounds": [
-      {
-        "name": "aquamirae:terrible_sword",
-        "stream": false
-      }
-    ]
-  },
-  "item.treasure_pouch.open": {
-    "category": "player",
-    "subtitle": "subtitles.item.treasure_pouch.open",
-    "sounds": [
-      {
-        "name": "aquamirae:treasure_pouch_open",
-        "stream": false
-      }
-    ]
-  },
-  "item.pouch.open": {
-    "category": "player",
-    "subtitle": "subtitles.item.pouch.open",
-    "sounds": [
-      {
-        "name": "aquamirae:pouch_open",
-        "stream": false
-      }
-    ]
-  },
-  "music.forsaken_drownage": {
-    "category": "music",
-    "sounds": [
-      {
-        "name": "aquamirae:forsaken_drownage",
-        "stream": true
-      }
-    ]
-  },
-  "entity.captain_cornelia.horn": {
-    "category": "hostile",
-    "subtitle": "subtitles.entity.captain_cornelia.horn",
-    "sounds": [
-      {
-        "name": "aquamirae:horn_1",
-        "stream": false
-      }
-    ]
-  },
-  "entity.captain_cornelia.attack_1": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:cornelia_attack_1",
-        "stream": false
-      }
-    ]
-  },
-  "entity.captain_cornelia.attack_2": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:cornelia_attack_2",
-        "stream": false
-      }
-    ]
-  },
-  "entity.deep_ambient": {
-    "category": "hostile",
-    "subtitle": "subtitles.entity.deep_ambient",
-    "sounds": [
-      {
-        "name": "aquamirae:deep_ambient",
-        "stream": false
-      }
-    ]
-  },
-  "entity.deep_hurt": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:deep_hurt",
-        "stream": false
-      }
-    ]
-  },
-  "entity.deep_death": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:deep_death",
-        "stream": false
-      }
-    ]
-  },
-  "entity.captain_cornelia.ambient": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:cornelia_ambient",
-        "stream": false
-      }
-    ]
-  },
-  "effect.mystery": {
-    "category": "player",
-    "sounds": [
-      {
-        "name": "aquamirae:mystery",
-        "stream": false
-      }
-    ]
+  "item.scroll.mystery": {
+    "sounds": [ "aquamirae:item_scroll_mystery" ]
   },
   "item.scroll.use": {
-    "category": "player",
-    "sounds": [
-      {
-        "name": "aquamirae:scroll",
-        "stream": false
-      }
-    ]
-  },
-  "entity.captain_cornelia.hurt": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:cornelia_hurt",
-        "stream": false
-      }
-    ]
-  },
-  "entity.captain_cornelia.death": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:cornelia_death",
-        "stream": false
-      }
-    ]
+    "sounds": [ "aquamirae:item_scroll_use" ]
   },
   "entity.eel.bite": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:eel_bite",
-        "stream": false
-      }
-    ]
+    "sounds": [ "aquamirae:entity_eel_bite" ]
   },
   "entity.eel.roar": {
-    "category": "hostile",
-    "sounds": [
-      {
-        "name": "aquamirae:eel_roar",
-        "stream": false
-      }
-    ]
+    "sounds": [ "aquamirae:entity_eel_roar" ]
+  },
+  "entity.deep.hurt": {
+    "sounds": [ "aquamirae:entity_deep_hurt" ]
+  },
+  "entity.deep.death": {
+    "sounds": [ "aquamirae:entity_deep_death" ]
+  },
+  "item.terrible_sword.crit": {
+    "sounds": [ "aquamirae:item_terrible_sword_crit" ]
+  },
+  "entity.captain_cornelia.horn": {
+    "sounds": [ "aquamirae:entity_cornelia_horn" ]
+  },
+  "entity.captain_cornelia.ambient": {
+    "sounds": [ "aquamirae:entity_cornelia_ambient" ]
+  },
+  "entity.captain_cornelia.attack_1": {
+    "subtitle": "subtitles.aquamirae.entity_cornelia_attack",
+    "sounds": [ "aquamirae:entity_cornelia_attack_1" ]
+  },
+  "entity.captain_cornelia.attack_2": {
+    "subtitle": "subtitles.aquamirae.entity_cornelia_attack",
+    "sounds": [ "aquamirae:entity_cornelia_attack_2" ]
   },
   "entity.captain_cornelia.rage": {
-    "category": "hostile",
+    "subtitle": "subtitles.aquamirae.entity_cornelia_rage",
+    "sounds": [ "aquamirae:entity_cornelia_rage" ]
+  },
+  "entity.captain_cornelia.hurt": {
+    "subtitle": "subtitles.aquamirae.entity_cornelia_hurt",
+    "sounds": [ "aquamirae:entity_cornelia_hurt" ]
+  },
+  "entity.captain_cornelia.death": {
+    "subtitle": "subtitles.aquamirae.entity_cornelia_death",
+    "sounds": [ "aquamirae:entity_cornelia_death" ]
+  },
+  "entity.deep.ambient": {
+    "subtitle": "subtitles.aquamirae.entity_deep_ambient",
+    "sounds": [ "aquamirae:entity_deep_ambient" ]
+  },
+  "entity.moth.catch": {
+    "subtitle": "subtitles.aquamirae.entity_moth_catch",
+    "sounds": [ "aquamirae:entity_moth_catch" ]
+  },
+  "block.frozen_chest.unlock": {
+    "subtitle": "subtitles.aquamirae.block_frozen_chest_unlock",
+    "sounds": [ "aquamirae:block_frozen_chest_unlock" ]
+  },
+  "item.three_bolt.oxygen": {
+    "subtitle": "subtitles.aquamirae.item_three_bolt_oxygen",
+    "sounds": [ "aquamirae:item_three_bolt_oxygen" ]
+  },
+  "item.shell_horn.use": {
+    "subtitle": "subtitles.aquamirae.item_shell_horn_use",
+    "sounds": [ "aquamirae:item_shell_horn_use" ]
+  },
+  "item.pirate_pouch.open": {
+    "subtitle": "subtitles.aquamirae.item_pirate_pouch_open",
+    "sounds": [ "aquamirae:item_pirate_pouch_open" ]
+  },
+  "item.treasure_pouch.open": {
+    "subtitle": "subtitles.aquamirae.item_treasure_pouch_open",
+    "sounds": [ "aquamirae:item_treasure_pouch_open" ]
+  },
+  "ambient.ship_horn": {
     "sounds": [
-      {
-        "name": "aquamirae:cornelia_rage",
-        "stream": false
-      }
+      "aquamirae:ambient_ship_horn_1",
+      "aquamirae:ambient_ship_horn_2",
+      "aquamirae:ambient_ship_horn_3"
     ]
   },
-  "music.ice_maze_theme": {
-    "category": "music",
+  "entity.chakram.hit": {
     "sounds": [
-      {
-        "name": "aquamirae:ice_maze_theme_1",
-        "stream": true
-      },
-      {
-        "name": "aquamirae:ice_maze_theme_2",
-        "stream": true
-      }
+      "aquamirae:entity_chakram_hit_1",
+      "aquamirae:entity_chakram_hit_2",
+      "aquamirae:entity_chakram_hit_3"
     ]
   },
   "record.horizon": {
-    "category": "music",
     "sounds": [
       {
-        "name": "aquamirae:horizon",
+        "name": "aquamirae:record_horizon",
         "stream": true
       }
     ]
   },
   "record.forsaken_drownage": {
-    "category": "record",
     "sounds": [
       {
-        "name": "aquamirae:forsaken_drownage_mono",
+        "name": "aquamirae:record_forsaken_drownage",
+        "stream": true
+      }
+    ]
+  },
+  "music.forsaken_drownage": {
+    "sounds": [
+      {
+        "name": "aquamirae:music_forsaken_drownage",
+        "stream": true
+      }
+    ]
+  },
+  "music.ice_maze": {
+    "sounds": [
+      {
+        "name": "aquamirae:music_ice_maze_1",
+        "stream": true
+      },
+      {
+        "name": "aquamirae:music_ice_maze_2",
+        "stream": true
+      }
+    ]
+  },
+  "music.ship_graveyard": {
+    "sounds": [
+      {
+        "name": "aquamirae:music_ship_graveyard_1",
+        "stream": true
+      },
+      {
+        "name": "aquamirae:music_ship_graveyard_2",
         "stream": true
       }
     ]

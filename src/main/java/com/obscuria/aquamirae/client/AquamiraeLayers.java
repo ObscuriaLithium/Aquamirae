@@ -2,42 +2,35 @@
 package com.obscuria.aquamirae.client;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.client.models.*;
-import com.obscuria.aquamirae.client.models.armor.ModelAbyssalArmor;
-import com.obscuria.aquamirae.client.models.armor.ModelTerribleArmor;
-import com.obscuria.aquamirae.client.models.armor.ModelThreeBoltArmor;
+import com.obscuria.aquamirae.client.model.*;
+import com.obscuria.aquamirae.client.model.armor.ModelAbyssalArmor;
+import com.obscuria.aquamirae.client.model.armor.ModelTerribleArmor;
+import com.obscuria.aquamirae.client.model.armor.ModelThreeBoltArmor;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
-public class AquamiraeLayers {
+@ApiStatus.NonExtendable
+public interface AquamiraeLayers {
+	ModelLayerLocation MOTH = mainLayer("moth");
+	ModelLayerLocation TORTURED_SOUL = mainLayer("tortured_soul");
+	ModelLayerLocation EEL = mainLayer("eel");
+	ModelLayerLocation MAZE_MOTHER = mainLayer("maze_mother");
+	ModelLayerLocation CAPTAIN_CORNELIA = mainLayer("captain_cornelia");
+	ModelLayerLocation ANGLERFISH = mainLayer("anglerfish");
+	ModelLayerLocation MAW = mainLayer("maw");
+	ModelLayerLocation SPINEFISH = mainLayer("spinefish");
+	ModelLayerLocation PYCNOGONIDA = mainLayer("pycnogonida");
+	ModelLayerLocation RUNE_OF_THE_STORM = mainLayer("rune_of_the_storm");
+	ModelLayerLocation MAZE_ROSE = mainLayer("maze_rose");
+	ModelLayerLocation POISONED_CHAKRA = mainLayer("poisoned_chakra");
+	ModelLayerLocation TERRIBLE_ARMOR = mainLayer("terrible_armor");
+	ModelLayerLocation ABYSSAL_ARMOR = mainLayer("abyssal_armor");
+	ModelLayerLocation THREE_BOLT_ARMOR = mainLayer("three_bolt_armor");
 
-	public static final ModelLayerLocation GOLDEN_MOTH = register("golden_moth");
-	public static final ModelLayerLocation TORTURED_SOUL = register("tortured_soul");
-	public static final ModelLayerLocation EEL = register("eel");
-	public static final ModelLayerLocation MAZE_MOTHER = register("maze_mother");
-	public static final ModelLayerLocation CAPTAIN_CORNELIA = register("captain_cornelia");
-	public static final ModelLayerLocation ANGLERFISH = register("anglerfish");
-	public static final ModelLayerLocation MAW = register("maw");
-	public static final ModelLayerLocation SPINEFISH = register("spinefish");
-	public static final ModelLayerLocation LUMINOUS_JELLY = register("luminous_jelly");
-
-	public static final ModelLayerLocation MAZE_ROSE = register("maze_rose");
-	public static final ModelLayerLocation POISONED_CHAKRA = register("poisoned_chakra");
-
-	public static final ModelLayerLocation TERRIBLE_ARMOR = register("terrible_armor");
-	public static final ModelLayerLocation ABYSSAL_ARMOR = register("abyssal_armor");
-	public static final ModelLayerLocation THREE_BOLT_ARMOR = register("three_bolt_armor");
-
-	@SubscribeEvent
-	public static void registerLayerDefinitions(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
-		event.registerLayerDefinition(GOLDEN_MOTH, ModelGoldenMoth::createBodyLayer);
+	static void register(EntityRenderersEvent.RegisterLayerDefinitions event) {
+		event.registerLayerDefinition(MOTH, ModelMoth::createBodyLayer);
 		event.registerLayerDefinition(TORTURED_SOUL, ModelTorturedSoul::createBodyLayer);
 		event.registerLayerDefinition(EEL, ModelEel::createBodyLayer);
 		event.registerLayerDefinition(TERRIBLE_ARMOR, ModelTerribleArmor::createBodyLayer);
@@ -50,11 +43,12 @@ public class AquamiraeLayers {
 		event.registerLayerDefinition(MAW, ModelMaw::createBodyLayer);
 		event.registerLayerDefinition(THREE_BOLT_ARMOR, ModelThreeBoltArmor::createBodyLayer);
 		event.registerLayerDefinition(SPINEFISH, ModelSpinefish::createBodyLayer);
-		event.registerLayerDefinition(LUMINOUS_JELLY, ModelLuminousJelly::createBodyLayer);
+		event.registerLayerDefinition(PYCNOGONIDA, ModelPycnogonida::createBodyLayer);
+		event.registerLayerDefinition(RUNE_OF_THE_STORM, ModelStormChakram::createBodyLayer);
 	}
 
 	@Contract("_ -> new")
-	private static @NotNull ModelLayerLocation register(String name) {
-		return new ModelLayerLocation(new ResourceLocation(Aquamirae.MODID, name), "main");
+	private static ModelLayerLocation mainLayer(String key) {
+		return new ModelLayerLocation(Aquamirae.key(key), "main");
 	}
 }

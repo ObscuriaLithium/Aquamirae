@@ -1,17 +1,25 @@
 package com.obscuria.aquamirae.client;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.obscureapi.util.RenderUtils;
-import net.minecraft.client.Minecraft;
+import com.obscuria.core.api.extension.BossEventStyles;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.LerpingBossEvent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public final class AquamiraeBossBars {
-    private static final ResourceLocation CORNELIA = new ResourceLocation(Aquamirae.MODID, "textures/gui/bossbars/cornelia.png");
+@OnlyIn(Dist.CLIENT)
+public interface AquamiraeBossBars {
 
-    public static void cornelia(Minecraft minecraft, GuiGraphics context, int x, int y, LerpingBossEvent bossEvent, Component name) {
-        RenderUtils.screen(CORNELIA, () -> context.blit(CORNELIA, x - 37, y - 20, 0, 0, 256, 64, 256, 64));
+    final class CaptainCornelia implements BossEventStyles.Renderer {
+        public static final ResourceLocation TEXTURE = Aquamirae.key("textures/gui/bossbars/cornelia.png");
+
+        @Override
+        public int render(GuiGraphics graphics, BossEvent bossEvent, int x, int y, int increment, LivingEntity entity) {
+            graphics.blit(TEXTURE, x - 37, y - 20, 0, 0,
+                    256, 64, 256, 64);
+            return increment;
+        }
     }
 }

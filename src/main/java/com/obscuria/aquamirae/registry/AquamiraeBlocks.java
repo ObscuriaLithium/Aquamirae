@@ -2,23 +2,35 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.aquamirae.common.blocks.*;
+import com.obscuria.aquamirae.common.block.*;
+import com.obscuria.core.api.registry.RegistrySupplier;
+import com.obscuria.core.api.registry.RegistryHandler;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.ApiStatus;
 
-public class AquamiraeBlocks {
-	public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, Aquamirae.MODID);
-	public static final RegistryObject<Block> PAINTING_ANGLERFISH = REGISTRY.register("painting_anglerfish", CollectiblePaintingBlock::new);
-	public static final RegistryObject<Block> PAINTING_OXYGELIUM = REGISTRY.register("painting_oxygelium", CollectiblePaintingBlock::new);
-	public static final RegistryObject<Block> PAINTING_TORTURED_SOUL = REGISTRY.register("painting_tortured_soul", CollectiblePaintingBlock::new);
-	public static final RegistryObject<Block> PAINTING_AURORA = REGISTRY.register("painting_aurora", CollectiblePaintingBlock::new);
-	public static final RegistryObject<Block> GOLDEN_MOTH_IN_A_JAR = REGISTRY.register("golden_moth_in_a_jar", JarBlock::new);
-	public static final RegistryObject<Block> FROZEN_CHEST = REGISTRY.register("frozen_chest", FrozenChestBlock::new);
-	public static final RegistryObject<Block> LUMINESCENT_LAMP = REGISTRY.register("luminescent_lamp", LuminescentLampBlock::new);
-	public static final RegistryObject<Block> ELODEA = REGISTRY.register("elodea", ElodeaBlock::new);
-	public static final RegistryObject<Block> OXYGELIUM = REGISTRY.register("oxygelium", OxygeliumBlock::new);
-	public static final RegistryObject<Block> LUMINESCENT_BUBBLE = REGISTRY.register("luminescent_bubble", LuminescentBubbleBlock::new);
-	public static final RegistryObject<Block> WISTERIA_NIVEIS = REGISTRY.register("wisteria_niveis", WisteriaNiveisBlock::new);
+import java.util.function.Supplier;
+
+@ApiStatus.NonExtendable
+public interface AquamiraeBlocks {
+	RegistryHandler<Block> HANDLER = RegistryHandler.create(Registries.BLOCK, Aquamirae.MODID);
+
+	RegistrySupplier<Block> PAINTING_ANGLERFISH = simple("painting_anglerfish", CollectiblePaintingBlock::new);
+	RegistrySupplier<Block> PAINTING_OXYGELIUM = simple("painting_oxygelium", CollectiblePaintingBlock::new);
+	RegistrySupplier<Block> PAINTING_TORTURED_SOUL = simple("painting_tortured_soul", CollectiblePaintingBlock::new);
+	RegistrySupplier<Block> PAINTING_AURORA = simple("painting_aurora", CollectiblePaintingBlock::new);
+	RegistrySupplier<Block> FROZEN_CHEST = simple("frozen_chest", FrozenChestBlock::new);
+	RegistrySupplier<Block> LUMINESCENT_LAMP = simple("luminescent_lamp", LuminescentLampBlock::new);
+	RegistrySupplier<Block> ELODEA = simple("elodea", ElodeaBlock::new);
+	RegistrySupplier<Block> OXYGELIUM = simple("oxygelium", OxygeliumBlock::new);
+	RegistrySupplier<Block> LUMINESCENT_BUBBLE = simple("luminescent_bubble", LuminescentBubbleBlock::new);
+	RegistrySupplier<Block> WISTERIA_NIVEIS = simple("wisteria_niveis", WisteriaNiveisBlock::new);
+	RegistrySupplier<Block> GOLDEN_MOTH_IN_A_JAR = simple("golden_moth_in_a_jar",
+			() -> new MothJarBlock(AquamiraeEntities.GOLDEN_MOTH::get));
+	RegistrySupplier<Block> CURSED_MOTH_IN_A_JAR = simple("cursed_moth_in_a_jar",
+			() -> new MothJarBlock(AquamiraeEntities.CURSED_MOTH::get));
+
+	private static RegistrySupplier<Block> simple(String key, Supplier<Block> supplier) {
+		return HANDLER.register(key, supplier);
+	}
 }

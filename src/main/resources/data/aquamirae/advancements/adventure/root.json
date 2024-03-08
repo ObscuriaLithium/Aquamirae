@@ -1,37 +1,33 @@
 {
+  "parent": "obscure_api:root",
   "display": {
-    "background": "aquamirae:textures/screens/aquamirae_adv.png",
-    "icon": {
-      "item": "aquamirae:rune_of_the_storm"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.root.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.root.descr"
-    },
+    "icon": { "item": "aquamirae:rune_of_the_storm" },
+    "title": { "translate": "advancements.aquamirae.root.title" },
+    "description": { "translate": "advancements.aquamirae.root.description" },
     "frame": "task",
-    "show_toast": false,
-    "announce_to_chat": false,
+    "show_toast": true,
+    "announce_to_chat": true,
     "hidden": false
   },
   "criteria": {
-    "crafting_table": {
-      "trigger": "minecraft:inventory_changed",
+    "ice_maze": {
+      "trigger": "minecraft:location",
       "conditions": {
-        "items": [
+        "player": [
           {
-            "items": [
-              "minecraft:crafting_table"
-            ]
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "biome": "deep_frozen_ocean"
+              }
+            }
           }
         ]
       }
     }
   },
   "rewards": {
-    "recipes": [
-      "obscure_api:obscure_book"
-    ]
+    "experience": 100
   }
 }

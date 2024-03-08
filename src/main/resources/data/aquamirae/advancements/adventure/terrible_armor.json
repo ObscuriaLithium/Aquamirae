@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/obtain_anglers_fang",
   "display": {
-    "icon": {
-      "item": "aquamirae:terrible_chestplate"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.terrible_armor.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.terrible_armor.descr"
-    },
+    "icon": { "item": "aquamirae:terrible_chestplate" },
+    "title": { "translate": "advancements.aquamirae.terrible_armor.title" },
+    "description": { "translate": "advancements.aquamirae.terrible_armor.description" },
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
@@ -45,6 +40,5 @@
   },
   "rewards": {
     "experience": 10
-  },
-  "parent": "aquamirae:adventure/obtain_anglers_fang"
+  }
 }

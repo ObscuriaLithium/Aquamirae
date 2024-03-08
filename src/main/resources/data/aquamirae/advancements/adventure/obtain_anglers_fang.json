@@ -1,14 +1,9 @@
 {
+  "parent": "aquamirae:adventure/obtain_fin",
   "display": {
-    "icon": {
-      "item": "aquamirae:anglers_fang"
-    },
-    "title": {
-      "translate": "advancements.aquamirae.obtain_anglers_fang.title"
-    },
-    "description": {
-      "translate": "advancements.aquamirae.obtain_anglers_fang.descr"
-    },
+    "icon": { "item": "aquamirae:anglers_fang" },
+    "title": { "translate": "advancements.aquamirae.obtain_anglers_fang.title" },
+    "description": { "translate": "advancements.aquamirae.obtain_anglers_fang.description" },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
@@ -30,6 +25,5 @@
   },
   "rewards": {
     "experience": 10
-  },
-  "parent": "aquamirae:adventure/obtain_fin"
+  }
 }
