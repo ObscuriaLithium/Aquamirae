@@ -80,7 +80,8 @@ public class StormChakram extends ThrowableProjectile {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (getOwner() != player) return InteractionResult.FAIL;
+        final var owner = getOwner();
+        if (owner != null && owner != player) return InteractionResult.FAIL;
         if (!level().isClientSide) {
             if (!player.getInventory().add(stack))
                 WorldUtil.dropItem(level(), position(), stack);
@@ -92,6 +93,10 @@ public class StormChakram extends ThrowableProjectile {
 
     @Override
     public void tick() {
+        final var position = position();
+        super.tick();
+        damageFactor = (float) position.distanceTo(position());
+
         if (level().isClientSide) {
             updateSpinFactor();
             if (tickCount % 10 == 0) level().addParticle(AquamiraeParticles.GHOST_SHINE.get(),
@@ -100,7 +105,6 @@ public class StormChakram extends ThrowableProjectile {
                     0, -0.25, 0);
         }
 
-        updateOwner();
         if (getOwner() instanceof Player player) {
             if (position().distanceTo(player.position()) > 256) return;
             findTargetAround(player);
@@ -113,9 +117,6 @@ public class StormChakram extends ThrowableProjectile {
         }
 
         updateTrail();
-        final var position = position();
-        super.tick();
-        damageFactor = (float) position.distanceTo(position());
     }
 
     protected void findTargetAround(Player player) {
@@ -136,20 +137,13 @@ public class StormChakram extends ThrowableProjectile {
     }
 
     protected boolean isCorrectTarget(LivingEntity entity, Player player) {
+        if (entity.isRemoved()) return false;
         if (entity.isDeadOrDying()) return false;
         if (entity == player) return false;
         if (player.position().distanceTo(entity.position()) > 16) return false;
         if (!entity.hasLineOfSight(player)) return false;
         if (entity instanceof Mob mob && mob.getTarget() == player) return true;
         return entity instanceof Monster;
-    }
-
-    protected void updateOwner() {
-        if (getOwner() != null) return;
-        level().getEntitiesOfClass(Player.class,
-                        new AABB(this.position().add(-16, -16, -16),
-                                this.position().add(16, 16, 16)))
-                .forEach(this::setOwner);
     }
 
     protected void updateTrail() {
@@ -160,11 +154,14 @@ public class StormChakram extends ThrowableProjectile {
 
     protected void followTo(Entity entity) {
         final var targetPos = entity.getEyePosition().add(0, -1, 0);
-        setDeltaMovement(getDeltaMovement().scale(0.9f));
-        if (position().distanceTo(targetPos) > 5f) {
+        final var distance = position().distanceTo(targetPos);
+        setDeltaMovement(getDeltaMovement().scale(0.99f));
+        if (distance > 5) {
             addDeltaMovement(position()
                     .vectorTo(targetPos)
-                    .scale(0.01f));
+                    .scale(0.005f));
+        } else if (distance <= 4) {
+            setDeltaMovement(getDeltaMovement().scale(0.9f));
         }
     }
 

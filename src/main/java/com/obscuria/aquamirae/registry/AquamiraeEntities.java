@@ -47,7 +47,7 @@ public interface AquamiraeEntities {
 	RegistrySupplier<EntityType<CursedMoth>> CURSED_MOTH = simple("cursed_moth", CursedMoth::new, MobCategory.AMBIENT,
 			builder -> builder.setTrackingRange(64).fireImmune().sized(0.5f, 0.2f));
 	RegistrySupplier<EntityType<StormChakram>> STORM_CHAKRAM = simple("storm_chakram", StormChakram::new, MobCategory.MISC,
-			builder -> builder.setTrackingRange(64).fireImmune().sized(1.5f, 0.2f).updateInterval(2));
+			builder -> builder.setTrackingRange(64).fireImmune().sized(1.5f, 0.2f));
 
 	private static <T extends Entity> RegistrySupplier<EntityType<T>> simple(String key, EntityType.EntityFactory<T> factory, MobCategory category,
 																			 Function<EntityType.Builder<T> , EntityType.Builder<T> > function) {

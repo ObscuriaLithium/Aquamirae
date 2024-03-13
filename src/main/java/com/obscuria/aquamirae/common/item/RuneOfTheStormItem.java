@@ -111,6 +111,7 @@ public class RuneOfTheStormItem extends Item implements IAbilitable {
 			if (tick < 4) return;
 			if (level instanceof ServerLevel serverLevel) {
 				final var chakram = StormChakram.create(serverLevel, player, stack);
+				chakram.setOwner(player);
 				chakram.setPos(player.getEyePosition());
 				chakram.shootFromRotation(player, player.getXRot(), player.getYRot(),
 						0.0F, Math.min(8f, tick / 4f), 1.0F);
