@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "aquamirae:abyssal_amethyst"
+  },
+  "base": {
+    "item": "minecraft:netherite_boots"
+  },
+  "result": {
+    "item": "aquamirae:abyssal_boots"
+  },
+  "template": {
+    "item": "aquamirae:abyssal_upgrade_smithing_template"
+  }
+}

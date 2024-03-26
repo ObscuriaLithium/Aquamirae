@@ -71,6 +71,8 @@ public interface AquamiraeCreativeTabs {
 						builder.accept(AquamiraeItems.EEL_SPAWN_EGG.get());
 						builder.accept(AquamiraeItems.SPINEFISH_SPAWN_EGG.get());
 						if (Aquamirae.isWinterEvent()) builder.accept(AquamiraeItems.SWEET_LANCE.get().getDefaultInstance());
+						builder.accept(AquamiraeItems.TERRIBLE_UPGRADE_SMITHING_TEMPLATE.get());
+						builder.accept(AquamiraeItems.ABYSSAL_UPGRADE_SMITHING_TEMPLATE.get());
 						builder.accept(AquamiraeItems.SHOE_SPIKES.get());
 						builder.accept(AquamiraeItems.SHIP_GRAVEYARD_RING.get());
 						builder.accept(AquamiraeItems.ICE_MAZE_RING.get());
@@ -106,9 +108,6 @@ public interface AquamiraeCreativeTabs {
 						builder.accept(AquamiraeItems.SEA_STEW.get());
 						builder.accept(AquamiraeItems.POSEIDONS_BREAKFAST.get());
 						builder.accept(AquamiraeItems.ELODEA.get());
-
-						builder.acceptAll(Aquamirae.SetBuilder.common());
-						builder.acceptAll(Aquamirae.SetBuilder.rare());
 					})
 					.build());
 

@@ -49,9 +49,12 @@ import javax.annotation.Nullable;
 @IceMazeEntity
 public class Maw extends Monster implements IAnimatedEntity {
 	private static final EntityDataAccessor<ItemStack> ITEM_IN_MOUTH = SynchedEntityData.defineId(Maw.class, EntityDataSerializers.ITEM_STACK);
-	private final EntityAnimations<Maw> animations = EntityAnimations.create(this);
+	public final String SPECIAL_IDLE = "special_idle";
 	public final String ATTACK = "attack";
 	public final String DEATH = "death";
+	private final EntityAnimations<Maw> animations = EntityAnimations.create(this)
+			.withAnimation(SPECIAL_IDLE, 60)
+			.withAnimation(ATTACK, 100);
 
 	public Maw(EntityType<Maw> type, Level world) {
 		super(type, world);
@@ -104,14 +107,24 @@ public class Maw extends Monster implements IAnimatedEntity {
 	}
 
 	@Override
-	public EntityAnimations<? extends Entity> getAnimationList() {
+	public EntityAnimations<? extends Entity> getAnimations() {
 		return animations;
 	}
+
+	@Override
+	public float getWalkAnimationPower() {
+		return 5f;
+	}
+
 	@Override
 	public void tick() {
 //		AnimationHelper.handleDeath(this, DEATH, 40);
 //		AnimationHelper.handle(ATTACK, DEATH);
 		super.tick();
+		if (!this.level().isClientSide) {
+			if (this.tickCount % 20 == 0 && this.random.nextFloat() <= 0.1f)
+				this.animations.playIfStopped(SPECIAL_IDLE);
+		}
 	}
 
 	public void setItemInMouth(ItemStack stack) {

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "aquamirae:abyssal_amethyst"
+  },
+  "base": {
+    "item": "minecraft:netherite_chestplate"
+  },
+  "result": {
+    "item": "aquamirae:abyssal_brigantine"
+  },
+  "template": {
+    "item": "aquamirae:abyssal_upgrade_smithing_template"
+  }
+}

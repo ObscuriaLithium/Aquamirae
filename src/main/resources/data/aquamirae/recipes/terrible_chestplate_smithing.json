@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "aquamirae:anglers_fang"
+  },
+  "base": {
+    "item": "minecraft:iron_chestplate"
+  },
+  "result": {
+    "item": "aquamirae:terrible_chestplate"
+  },
+  "template": {
+    "item": "aquamirae:terrible_upgrade_smithing_template"
+  }
+}

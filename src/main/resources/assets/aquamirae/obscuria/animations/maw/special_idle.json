@@ -1,0 +1,19 @@
+{
+  "length": 60,
+  "out_easing": "obscure_api:ease_in_out_cubic",
+  "frames": [
+    {
+      "timestamp": 30,
+      "easing": "obscure_api:ease_in_out_cubic",
+      "bones": [
+        { "name": "main", "rotation": {} },
+        { "name": "head_upper", "rotation": { "pose": [30, 0, 0] } },
+        { "name": "body", "rotation": { "swing": [0, 0, 5], "speed": 0.75, "offset": 0.1 } },
+        { "name": "body2", "rotation": { "pose": [-30, 0, 0], "swing": [0, 15, 0], "speed": 0.75 } },
+        { "name": "body3", "rotation": { "swing": [0, 25, 0], "speed": 0.75, "offset": -0.15 } },
+        { "name": "left_fin", "rotation": { "swing": [0, 0, -10], "speed": 0.75, "offset": 0.1 } },
+        { "name": "right_fin", "rotation": { "swing": [0, 0, -10], "speed": 0.75, "offset": 0.1 } }
+      ]
+    }
+  ]
+}

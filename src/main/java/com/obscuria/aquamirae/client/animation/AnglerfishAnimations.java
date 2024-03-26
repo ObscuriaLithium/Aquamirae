@@ -1,13 +1,18 @@
 package com.obscuria.aquamirae.client.animation;
 
+import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.entity.Anglerfish;
 import com.obscuria.core.api.animation.Animation;
+import com.obscuria.core.api.animation.AnimationHolder;
 import com.obscuria.core.api.animation.KeyFrame;
 import com.obscuria.core.api.animation.entity.IEntityAnimationBundle;
 import com.obscuria.core.api.animation.tool.Animator;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 
+@OnlyIn(Dist.CLIENT)
 public enum AnglerfishAnimations implements IEntityAnimationBundle<Anglerfish> {
     IDLE("IDLE", AnglerfishAnimations::createIdle, AnglerfishAnimations::animateIdle),
     SWIM("SWIM", AnglerfishAnimations::createSwim, AnglerfishAnimations::animateSwim),
@@ -15,22 +20,22 @@ public enum AnglerfishAnimations implements IEntityAnimationBundle<Anglerfish> {
 
     private final String name;
     private final Supplier<Animation> animation;
-    private final SetupFunction<Anglerfish> setupFunction;
+    private final AnimationConsumer<Anglerfish> consumer;
 
-    AnglerfishAnimations(String name, Supplier<Animation> animation, SetupFunction<Anglerfish> setupFunction) {
+    AnglerfishAnimations(String name, Supplier<Animation> animation, AnimationConsumer<Anglerfish> consumer) {
         this.name = name;
         this.animation = animation;
-        this.setupFunction = setupFunction;
+        this.consumer = consumer;
     }
 
     @Override
-    public SetupFunction<Anglerfish> getSetupFunction() {
-        return this.setupFunction;
+    public AnimationHolder getHolder() {
+        return AnimationHolder.reference(Aquamirae.key("test"));
     }
 
     @Override
-    public Animation getAnimation() {
-        return this.animation.get();
+    public AnimationConsumer<Anglerfish> getConsumer() {
+        return this.consumer;
     }
 
     @Override

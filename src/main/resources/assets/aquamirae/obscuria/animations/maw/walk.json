@@ -1,0 +1,16 @@
+{
+  "frames": [
+    {
+      "easing": "obscure_api:ceil",
+      "bones": [
+        { "name": "main", "rotation": { "swing": [0, 0, -5], "speed": 0.6 } },
+        { "name": "head_upper", "rotation": { "pose": [12, 0, 0], "swing": [-4, 0, 0], "speed": 0.6 } },
+        { "name": "body", "rotation": { "swing": [0, -12, 0], "speed": 0.6 } },
+        { "name": "body2", "rotation": { "swing": [0, -16, 0], "speed": 0.6, "offset": -0.1 } },
+        { "name": "body3", "rotation": { "swing": [0, -20, 0], "speed": 0.6, "offset": -0.2 } },
+        { "name": "left_fin", "rotation": { "pose": [0, 0, -10], "swing": [0, 40, -20], "speed": 0.6, "offset": -0.3 } },
+        { "name": "right_fin", "rotation": { "pose": [0, 0, 10], "swing": [0, 40, -20], "speed": 0.6, "offset": -0.3 } }
+      ]
+    }
+  ]
+}

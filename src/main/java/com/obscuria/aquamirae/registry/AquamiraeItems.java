@@ -1,13 +1,17 @@
 
 package com.obscuria.aquamirae.registry;
 
+import com.machinezoo.noexception.optional.OptionalSupplier;
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.item.*;
 import com.obscuria.aquamirae.common.item.armor.AbyssalArmor;
 import com.obscuria.aquamirae.common.item.armor.TerribleArmor;
 import com.obscuria.aquamirae.common.item.armor.ThreeBoltArmor;
-import com.obscuria.aquamirae.compat.curios.item.*;
 import com.obscuria.aquamirae.common.item.weapon.*;
+import com.obscuria.aquamirae.compat.curios.item.DeadSeaRingItem;
+import com.obscuria.aquamirae.compat.curios.item.IceMazeRingItem;
+import com.obscuria.aquamirae.compat.curios.item.ShipGraveyardRingItem;
+import com.obscuria.aquamirae.compat.curios.item.ShoeSpikesItem;
 import com.obscuria.core.api.registry.RegistryHandler;
 import com.obscuria.core.api.registry.RegistrySupplier;
 import com.obscuria.core.common.item.ObscureRarity;
@@ -27,6 +31,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -60,8 +65,8 @@ public interface AquamiraeItems {
 	RegistrySupplier<Item> SHIP_GRAVEYARD_ECHO = simple("ship_graveyard_echo", ShipGraveyardEchoItem::new);
 	RegistrySupplier<Item> DEAD_SEA_SCROLL = simple("dead_sea_scroll", DeadSeaScrollItem::new);
 	RegistrySupplier<Item> SHELL_HORN = simple("shell_horn", ShellHornItem::new);
-	RegistrySupplier<Item> PIRATE_POUCH = simple("pirate_pouch", PiratePouchItem::new);
-	RegistrySupplier<Item> TREASURE_POUCH = simple("treasure_pouch", TreasurePouchItem::new);
+	RegistrySupplier<Item> PIRATE_POUCH = simple("pirate_pouch", PouchItem.Pirate::new);
+	RegistrySupplier<Item> TREASURE_POUCH = simple("treasure_pouch", PouchItem.Treasure::new);
 	RegistrySupplier<Item> ENCHANTED_POUCH = simple("enchanted_pouch", EnchantedPouchItem::new);
 	RegistrySupplier<Item> ABYSSAL_AMETHYST = simple("abyssal_amethyst", AbyssalAmethystItem::new);
 	RegistrySupplier<Item> SHARP_BONES = simple("sharp_bones", SharpBonesItem::new);
@@ -75,35 +80,49 @@ public interface AquamiraeItems {
 	RegistrySupplier<Item> SHOE_SPIKES = simple("shoe_spikes", ShoeSpikesItem::new);
 	RegistrySupplier<Item> SHIP_GRAVEYARD_RING = simple("ship_graveyard_ring", ShipGraveyardRingItem::new);
 	RegistrySupplier<Item> ICE_MAZE_RING = simple("ice_maze_ring", IceMazeRingItem::new);
+	RegistrySupplier<Item> TERRIBLE_UPGRADE_SMITHING_TEMPLATE = simple("terrible_upgrade_smithing_template", TerribleUpgradeItem::new);
+	RegistrySupplier<Item> ABYSSAL_UPGRADE_SMITHING_TEMPLATE = simple("abyssal_upgrade_smithing_template", AbyssalUpgradeItem::new);
+	RegistrySupplier<Item> FROZEN_KEY = simple("frozen_key", FrozenKeyItem::new);
+	RegistrySupplier<Item> GOLDEN_MOTH_IN_A_JAR = simple("golden_moth_in_a_jar", GoldenMothJarItem::new);
+	RegistrySupplier<Item> CURSED_MOTH_IN_A_JAR = simple("cursed_moth_in_a_jar", CursedMothJarItem::new);
+	RegistrySupplier<Item> LUMINESCENT_LAMP = simple("luminescent_lamp", LuminescentLampItem::new);
 
-	RegistrySupplier<Item> FROZEN_KEY = item("frozen_key", properties ->
-			properties.stacksTo(1).rarity(Rarity.UNCOMMON));
-	RegistrySupplier<Item> ANGLERS_FANG = item("anglers_fang", properties ->
-			properties.stacksTo(64).rarity(Rarity.UNCOMMON));
-	RegistrySupplier<Item> FIN = item("fin", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
-			.food(new FoodProperties.Builder().nutrition(1).saturationMod(0f).meat().build()));
-	RegistrySupplier<Item> SPINEFISH = item("spinefish", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
-			.food(new FoodProperties.Builder().nutrition(2).saturationMod(0f).meat().build()));
-	RegistrySupplier<Item> COOKED_SPINEFISH = item("cooked_spinefish", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
-			.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).meat().build()));
-	RegistrySupplier<Item> ESCA = item("esca", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
-			.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.2f)
-					.effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1).build()));
-	RegistrySupplier<Item> SEA_CASSEROLE = item("sea_casserole", properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
-			.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).alwaysEat()
-					.effect(() -> new MobEffectInstance(MobEffects.POISON, 1800, 1), 1)
-					.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 0), 1).build()));
-	RegistrySupplier<Item> SEA_STEW = item("sea_stew", properties -> properties.stacksTo(1).rarity(Rarity.UNCOMMON)
-			.food(new FoodProperties.Builder().nutrition(12).saturationMod(0.8f).alwaysEat()
-					.effect(() -> new MobEffectInstance(MobEffects.SATURATION, 2400, 2), 1)
-					.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 0), 1).build()));
-	RegistrySupplier<Item> POSEIDONS_BREAKFAST = item("poseidons_breakfast", properties -> properties.stacksTo(1).rarity(Rarity.EPIC)
-			.food(new FoodProperties.Builder().nutrition(20).saturationMod(1f).alwaysEat()
-					.effect(() -> new MobEffectInstance(MobEffects.SATURATION, 3600, 9), 1)
-					.effect(() -> new MobEffectInstance(MobEffects.POISON, 3600, 4), 1).build()));
+	RegistrySupplier<Item> ANGLERS_FANG = item("anglers_fang",
+			properties -> properties.stacksTo(64).rarity(Rarity.UNCOMMON));
+	RegistrySupplier<Item> FIN = item("fin",
+			properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+					.food(new FoodProperties.Builder().nutrition(1).saturationMod(0f).meat().build()));
+	RegistrySupplier<Item> ESCA = item("esca",
+			properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+					.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.2f)
+							.effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1).build()));
+	RegistrySupplier<Item> SPINEFISH = food("spinefish", () -> Optional.of(SHARP_BONES.get()), 32, false,
+			properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+					.food(new FoodProperties.Builder().nutrition(2).saturationMod(0f).meat().build()));
+	RegistrySupplier<Item> COOKED_SPINEFISH = food("cooked_spinefish", () -> Optional.of(SHARP_BONES.get()), 32, false,
+			properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+					.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).meat().build()));
+	RegistrySupplier<Item> SEA_CASSEROLE = food("sea_casserole", Optional::empty, 32, false,
+			properties -> properties.stacksTo(64).rarity(Rarity.COMMON)
+					.food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).alwaysEat()
+							.effect(() -> new MobEffectInstance(AquamiraeMobEffects.DEPTHS_FURY.get(), 1800, 1), 1)
+							.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1800, 0), 1).build()));
+	RegistrySupplier<Item> SEA_STEW = food("sea_stew", () -> Optional.of(Items.BOWL), 40, false,
+			properties -> properties.stacksTo(1).rarity(Rarity.UNCOMMON)
+					.food(new FoodProperties.Builder().nutrition(12).saturationMod(0.8f).alwaysEat()
+							.effect(() -> new MobEffectInstance(AquamiraeMobEffects.DEPTHS_FURY.get(), 2400, 3), 1)
+							.effect(() -> new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 2400, 1), 1)
+							.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 1), 1).build()));
+	RegistrySupplier<Item> POSEIDONS_BREAKFAST = food("poseidons_breakfast", () -> Optional.of(Items.BOWL), 40, true,
+			properties -> properties.stacksTo(1).rarity(Rarity.EPIC)
+					.food(new FoodProperties.Builder().nutrition(20).saturationMod(1f).alwaysEat()
+							.effect(() -> new MobEffectInstance(AquamiraeMobEffects.DEPTHS_FURY.get(), 2400, 5), 1)
+							.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2400, 2), 1)
+							.effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 2400, 2), 1)
+							.effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 3), 1).build()));
+
 	RegistrySupplier<Item> SPINEFISH_BUCKET = mobBucket("spinefish_bucket",
 			AquamiraeEntities.SPINEFISH, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH);
-
 	RegistrySupplier<Item> GOLDEN_MOTH_SPAWN_EGG = spawnEgg("golden_moth_spawn_egg",
 			AquamiraeEntities.GOLDEN_MOTH, Rarity.UNCOMMON, -3381760, -205);
 	RegistrySupplier<Item> CURSED_MOTH_SPAWN_EGG = spawnEgg("cursed_moth_spawn_egg",
@@ -134,10 +153,7 @@ public interface AquamiraeItems {
 	RegistrySupplier<Item> PAINTING_OXYGELIUM = block(AquamiraeBlocks.PAINTING_OXYGELIUM, Rarity.UNCOMMON);
 	RegistrySupplier<Item> PAINTING_TORTURED_SOUL = block(AquamiraeBlocks.PAINTING_TORTURED_SOUL, Rarity.UNCOMMON);
 	RegistrySupplier<Item> PAINTING_AURORA = block(AquamiraeBlocks.PAINTING_AURORA, Rarity.UNCOMMON);
-	RegistrySupplier<Item> GOLDEN_MOTH_IN_A_JAR = block(AquamiraeBlocks.GOLDEN_MOTH_IN_A_JAR, Rarity.COMMON);
-	RegistrySupplier<Item> CURSED_MOTH_IN_A_JAR = block(AquamiraeBlocks.CURSED_MOTH_IN_A_JAR, Rarity.COMMON);
 	RegistrySupplier<Item> FROZEN_CHEST = block(AquamiraeBlocks.FROZEN_CHEST, Rarity.UNCOMMON);
-	RegistrySupplier<Item> LUMINESCENT_LAMP = block(AquamiraeBlocks.LUMINESCENT_LAMP, Rarity.COMMON);
 	RegistrySupplier<Item> ELODEA = block(AquamiraeBlocks.ELODEA, Rarity.COMMON);
 
 	private static RegistrySupplier<Item> simple(String key, Supplier<Item> supplier) {
@@ -151,6 +167,11 @@ public interface AquamiraeItems {
 
 	private static RegistrySupplier<Item> item(String key, Function<Item.Properties, Item.Properties> function) {
 		return HANDLER.register(key, () -> new Item(function.apply(new Item.Properties())));
+	}
+
+	private static RegistrySupplier<Item> food(String key, OptionalSupplier<Item> resultItem, int useDuration,
+											   boolean isFoil, Function<Item.Properties, Item.Properties> function) {
+		return HANDLER.register(key, () -> new CustomFoodItem(resultItem, useDuration, isFoil, function.apply(new Item.Properties())));
 	}
 
 	private static <M extends Mob> RegistrySupplier<Item> spawnEgg(String key, Supplier<EntityType<M>> entity,

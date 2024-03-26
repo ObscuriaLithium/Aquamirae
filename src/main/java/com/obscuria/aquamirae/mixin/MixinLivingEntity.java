@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public final class MixinLivingEntity implements CuriosCompat.EntityExtension {
+public final class MixinLivingEntity implements CuriosCompat.LivingEntityExtension {
     @Unique
     private int aquamirae$shoeSpikesTick = 0;
 

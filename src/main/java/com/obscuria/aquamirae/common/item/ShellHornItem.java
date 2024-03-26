@@ -4,102 +4,126 @@ package com.obscuria.aquamirae.common.item;
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.entity.CaptainCornelia;
 import com.obscuria.aquamirae.registry.AquamiraeEntities;
+import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.core.api.annotation.SimpleLore;
+import com.obscuria.core.api.graphic.Icons;
+import com.obscuria.core.api.util.signal.RuntimeSignals;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
-@SimpleLore("lore.aquamirae.shell_horn")
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ShellHornItem extends Item {
 	public ShellHornItem() {
 		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player entity, @NotNull InteractionHand hand) {
-		InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-		if (entity.level() instanceof ServerLevel level)
-			level.playSound(null, entity.blockPosition().above(),
-					AquamiraeSounds.ITEM_SHELL_HORN_USE.get(), SoundSource.PLAYERS, 3, 1);
-		ItemStack stack = ar.getObject();
-		entity.swing(InteractionHand.MAIN_HAND, true);
-		entity.getCooldowns().addCooldown(stack.getItem(), 120);
-		boolean summon = false;
-		BlockPos pos = new BlockPos(0, 0, 0);
-		waterSearch : for (int ix = -6; ix <= 6; ix++) {
-			final int sx = entity.getBlockX() + ix;
-			for (int iz = -6; iz <= 6; iz++) {
-				final int sz = entity.getBlockZ() + iz;
-				if (Aquamirae.isInIceMaze(entity)) {
-					if ((entity.level().getBlockState(new BlockPos(sx, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.level().getBlockState(new BlockPos(sx, 58, sz))).getBlock() == Blocks.WATER
-							&& (entity.level().getBlockState(new BlockPos(sx - 1, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.level().getBlockState(new BlockPos(sx + 1, 62, sz))).getBlock() == Blocks.WATER
-							&& (entity.level().getBlockState(new BlockPos(sx, 62, sz - 1))).getBlock() == Blocks.WATER
-							&& (entity.level().getBlockState(new BlockPos(sx, 62, sz + 1))).getBlock() == Blocks.WATER) {
-						summon = true;
-						pos = new BlockPos(sx, 58, sz);
-						stack.shrink(1);
-						entity.getInventory().setChanged();
-						break waterSearch;
-					}
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+		Aquamirae.addIconTooltip(Icons.SKULL, Component.translatable("lore.aquamirae.common.summons_cornelia")
+				.withStyle(ChatFormatting.LIGHT_PURPLE), tooltip);
+		Aquamirae.addTooltip(Component.translatable("lore.aquamirae.shell_horn"), tooltip);
+	}
+
+	@Override
+	public UseAnim getUseAnimation(ItemStack stack) {
+		return UseAnim.TOOT_HORN;
+	}
+
+	@Override
+	public int getUseDuration(ItemStack stack) {
+		return 60;
+	}
+
+	@Override
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+		return ItemUtils.startUsingInstantly(level, player, hand);
+	}
+
+	@Override
+	public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int tick) {
+		if (level instanceof ServerLevel serverLevel && entity instanceof Player player) {
+			if (tick == 55) {
+				player.getCooldowns().addCooldown(AquamiraeItems.SHELL_HORN.get(), 120);
+				player.level().playSound(null, player.blockPosition().above(),
+						AquamiraeSounds.ITEM_SHELL_HORN_USE.get(),
+						SoundSource.PLAYERS, 3, 1);
+			} else if (tick == 1) {
+				final var pos = searchPosition(level, player.blockPosition());
+				if (pos != BlockPos.ZERO) {
+					if (!player.getAbilities().instabuild) stack.shrink(1);
+					player.awardStat(Stats.ITEM_USED.get(this));
 				}
+				Timer.create(player, serverLevel, pos);
 			}
 		}
-		new Object() {
-			private int ticks = 0; private float waitTicks; private Player summoner; private BlockPos pos; private boolean summon;
+	}
 
-			public void start(int waitTicks, Player summoner, BlockPos pos, boolean summon) {
-				this.waitTicks = waitTicks;
-				this.summoner = summoner;
-				this.pos = pos;
-				this.summon = summon;
-				MinecraftForge.EVENT_BUS.register(this);
+	private BlockPos searchPosition(Level level, BlockPos origin) {
+		for (int x = -9; x <= 9; x++)
+			for (int z = -9; z <= 9; z++) {
+				final var ox = origin.getX();
+				final var oz = origin.getZ();
+				final var pos = new BlockPos(ox + x, level.getHeight(Heightmap.Types.WORLD_SURFACE, ox, oz), oz + z);
+				if (isWaterIn(level, pos.below())) return pos;
 			}
+		return BlockPos.ZERO;
+	}
 
-			@SubscribeEvent
-			public void tick(TickEvent.ServerTickEvent event) {
-				if (event.phase == TickEvent.Phase.END) {
-					this.ticks += 1;
-					if (this.ticks >= this.waitTicks) {
-						if (summon) { spawn();
-						} else if (!summoner.level().isClientSide()) {
-							//summoner.sendSystemMessage(TextUtils.component(Icons.BOSS + TextUtils.translation("info.captain_spawn_fail")));
-						}
-						MinecraftForge.EVENT_BUS.unregister(this);
-					}
-				}
-			}
+	private boolean isWaterIn(Level level, BlockPos pos) {
+		for (int x = -1; x <= 1; x++)
+			for (int y = -4; y <= 0; y++)
+				for (int z = -1; z <= 1; z++)
+					if (!level.isWaterAt(pos.offset(x, y, z)))
+						return false;
+		return true;
+	}
 
-			@SuppressWarnings("all")
-			private void spawn() {
-				if (summoner.level() instanceof ServerLevel server) {
-					Mob cornelia = new CaptainCornelia(AquamiraeEntities.CAPTAIN_CORNELIA.get(), server);
-					cornelia.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, summoner.level().getRandom().nextFloat() * 360F, 0);
-					cornelia.finalizeSpawn(server, summoner.level().getCurrentDifficultyAt(cornelia.blockPosition()), MobSpawnType.MOB_SUMMONED,
-							null, null);
-					summoner.level().addFreshEntity(cornelia);
+	private record Timer(Player player, ServerLevel level, BlockPos pos, AtomicInteger ticks) {
+		private static final int DELAY = 20;
+
+		private static void create(Player player, ServerLevel level, BlockPos pos) {
+			final var timer = new Timer(player, level, pos, new AtomicInteger(0));
+			RuntimeSignals.ON_SERVER_TICK.connect(timer, timer::tick);
+		}
+
+		private void tick() {
+			if (this.ticks.addAndGet(1) >= DELAY) {
+				if (pos == BlockPos.ZERO) {
+					player.sendSystemMessage(Component.empty().withStyle(ChatFormatting.RED)
+							.append(Icons.INFO.toComponent())
+							.append(Component.literal(" "))
+							.append(Component.translatable("info.aquamirae.nothing_happened")));
+				} else {
+					final var cornelia = new CaptainCornelia(AquamiraeEntities.CAPTAIN_CORNELIA.get(), level);
+					cornelia.moveTo(pos.getX() + 0.5, pos.getY() - 4, pos.getZ() + 0.5,
+							level.getRandom().nextFloat() * 360F, 0);
+					cornelia.finalizeSpawn(level, level.getCurrentDifficultyAt(cornelia.blockPosition()),
+							MobSpawnType.MOB_SUMMONED, null, null);
+					level.addFreshEntity(cornelia);
+					for (var player : level.getEntitiesOfClass(Player.class, new AABB(pos).inflate(64)))
+						player.sendSystemMessage(Component.empty().withStyle(ChatFormatting.LIGHT_PURPLE)
+								.append(Icons.SKULL.toComponent())
+								.append(Component.literal(" "))
+								.append(Component.translatable("info.aquamirae.cornelia_awakened")));
 				}
-				if (!summoner.level().isClientSide()) {
-					//summoner.sendSystemMessage(TextUtils.component(Icons.BOSS.get() + TextUtils.translation("info.captain_spawn")));
-				}
+				RuntimeSignals.ON_SERVER_TICK.disconnect(this);
 			}
-		}.start(60, entity, pos, summon);
-		return ar;
+		}
 	}
 }

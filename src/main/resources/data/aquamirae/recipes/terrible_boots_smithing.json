@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "aquamirae:anglers_fang"
+  },
+  "base": {
+    "item": "minecraft:iron_boots"
+  },
+  "result": {
+    "item": "aquamirae:terrible_boots"
+  },
+  "template": {
+    "item": "aquamirae:terrible_upgrade_smithing_template"
+  }
+}

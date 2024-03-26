@@ -18,10 +18,12 @@ public class PoisonedBlade extends SwordItem implements IAbilitable {
 			.setRelatedItems(ItemBundle.direct(AquamiraeItems.POISONED_BLADE))
 			.addTier(AbilityTier.create()
 					.setDescription(Component.translatable("ability.aquamirae.poisoned_blade"))
-					.addVariable(Variable.create(5).withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS)))
+					.addVariable(Variable.create(5).withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
+					.addVariable(Variable.create(10).inverted().withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS)))
 			.addTier(AbilityTier.create()
 					.setDescription(Component.translatable("ability.aquamirae.poisoned_blade"))
 					.addVariable(Variable.create(10).withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
+					.addVariable(Variable.create(10).inverted().withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
 					.addGoal(AbilityGoal.appliedAstralDust(4)))
 			.build();
 

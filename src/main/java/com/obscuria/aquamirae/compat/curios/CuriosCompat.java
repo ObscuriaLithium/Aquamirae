@@ -23,9 +23,9 @@ public final class CuriosCompat {
         CuriosApi.registerCurio(AquamiraeItems.ICE_MAZE_RING.get(), new IceMazeRingItem.Curio());
     }
 
-    public interface EntityExtension {
+    public interface LivingEntityExtension {
         static void shoeSpikesTick(Entity entity) {
-            if (entity instanceof EntityExtension extension)
+            if (entity instanceof LivingEntityExtension extension)
                 extension.aquamirae$shoeSpikesTick();
         }
 

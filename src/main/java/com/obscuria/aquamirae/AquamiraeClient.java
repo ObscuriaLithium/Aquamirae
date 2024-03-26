@@ -6,10 +6,12 @@ import com.obscuria.aquamirae.client.AquamiraeRenderers;
 import com.obscuria.aquamirae.client.screen.ConfigScreen;
 import com.obscuria.aquamirae.client.screen.DeadSeaCurseToast;
 import com.obscuria.aquamirae.common.entity.CaptainCornelia;
+import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.core.api.util.signal.RuntimeSignals;
 import com.obscuria.core.api.ObscureAPIClient;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
@@ -26,6 +29,7 @@ public final class AquamiraeClient {
 
     @ApiStatus.Internal
     public static void setup(IEventBus bus) {
+        bus.addListener(AquamiraeClient::onClientSetup);
         bus.addListener(AquamiraeLayers::register);
         bus.addListener(AquamiraeRenderers::registerEntityRenderers);
         bus.addListener(AquamiraeRenderers::registerParticles);
@@ -78,6 +82,11 @@ public final class AquamiraeClient {
         if (player == null) return;
         if (player.position().distanceTo(entity.position()) > 128) return;
         ObscureAPIClient.GAME_MUSICS.suggest(200, () -> AquamiraeSounds.GAME_MUSIC_FORSAKEN_DROWNAGE);
+    }
+
+    private static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> ItemProperties.register(AquamiraeItems.SHELL_HORN.get(), Aquamirae.key("tooting"),
+                (stack, level, entity, i) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1 : 0));
     }
 
     private static void onClientTick() {

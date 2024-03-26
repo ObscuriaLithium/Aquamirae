@@ -59,7 +59,6 @@ public class DaggerOfGreed extends SwordItem implements IAbilitable {
 				WorldUtil.dropItem(player.level(), entity.getEyePosition(),
 						new ItemStack(Items.EMERALD, count));
 				AbilityHelper.addCustomProgress(stack, "obtain_emeralds", count);
-				context.forceCooldown();
 			} else if (AbilityHelper.getTierOf(stack, player) >= 2) {
 				final var offers = villager.getOffers().stream().filter(offer ->
 						!offer.isOutOfStock() && !offer.getResult().is(Items.EMERALD)).toList();

@@ -67,7 +67,7 @@ public class Divider extends SwordItem implements IAbilitable {
 					.map(MobEffectInstance::getAmplifier).orElse(-1);
 			entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.DIVIDER.get(),
 					duration, Math.min(currentAmplifier + 1, maxAmplifier)));
-			context.forceCustomCooldown(20);
+			context.forceCooldown(20);
 			AbilityHelper.addCustomProgress(stack, "apply_effect", 1);
 		}
 		return super.hurtEnemy(stack, entity, user);

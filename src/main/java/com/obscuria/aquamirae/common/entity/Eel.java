@@ -109,7 +109,7 @@ public class Eel extends Monster implements IAnimatedEntity {
 	}
 
 	@Override
-	public EntityAnimations<? extends Entity> getAnimationList() {
+	public EntityAnimations<? extends Entity> getAnimations() {
 		return animations;
 	}
 

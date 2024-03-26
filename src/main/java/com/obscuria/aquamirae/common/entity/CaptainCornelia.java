@@ -127,7 +127,7 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 	}
 
 	@Override
-	public EntityAnimations<CaptainCornelia> getAnimationList() {
+	public EntityAnimations<CaptainCornelia> getAnimations() {
 		return animations;
 	}
 
@@ -345,13 +345,13 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 				item.moveTo(this.position());
 				server.addFreshEntity(item);
 			}
-			final ItemStack map = Aquamirae.getStructureMap(Aquamirae.STRUCTURE_SHELTER, server, this);
-			if (!map.isEmpty()) {
-				final ItemEntity item = new ItemEntity(EntityType.ITEM, server);
-				item.setItem(map);
-				item.moveTo(this.position());
-				server.addFreshEntity(item);
-			}
+//			final ItemStack map = Aquamirae.getStructureMap(Aquamirae.SHELTER, server, this);
+//			if (!map.isEmpty()) {
+//				final ItemEntity item = new ItemEntity(EntityType.ITEM, server);
+//				item.setItem(map);
+//				item.moveTo(this.position());
+//				server.addFreshEntity(item);
+//			}
 		}
 	}
 

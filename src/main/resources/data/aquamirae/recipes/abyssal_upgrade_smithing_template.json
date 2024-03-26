@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "202",
+    "212",
+    "222"
+  ],
+  "key": {
+    "0": { "item": "aquamirae:abyssal_upgrade_smithing_template" },
+    "1": { "item": "aquamirae:ship_graveyard_echo" },
+    "2": { "item": "aquamirae:abyssal_amethyst" }
+  },
+  "result": {
+    "item": "aquamirae:abyssal_upgrade_smithing_template",
+    "count": 2
+  }
+}

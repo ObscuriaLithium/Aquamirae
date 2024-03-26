@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("deprecation")
 public enum AquamiraeArmorMaterials implements ArmorMaterial {
-    TERRIBLE("terrible", 25, List.of(2, 3, 7, 5), 12,
+    TERRIBLE("terrible", 25, List.of(2, 5, 6, 2), 12,
             SoundEvents.ARMOR_EQUIP_IRON, 0, 0, () -> Ingredient.of(
             AquamiraeItems.SHIP_GRAVEYARD_ECHO.get().getDefaultInstance(),
             AquamiraeItems.ANGLERS_FANG.get().getDefaultInstance())),

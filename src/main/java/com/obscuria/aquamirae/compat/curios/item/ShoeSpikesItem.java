@@ -18,7 +18,7 @@ public class ShoeSpikesItem extends CurioItem {
 
         @Override
         public void curioTick(SlotContext context, ItemStack stack) {
-            CuriosCompat.EntityExtension.shoeSpikesTick(context.entity());
+            CuriosCompat.LivingEntityExtension.shoeSpikesTick(context.entity());
         }
     }
 }

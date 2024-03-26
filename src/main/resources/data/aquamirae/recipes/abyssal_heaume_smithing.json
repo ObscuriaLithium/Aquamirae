@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "aquamirae:abyssal_amethyst"
+  },
+  "base": {
+    "item": "minecraft:netherite_helmet"
+  },
+  "result": {
+    "item": "aquamirae:abyssal_heaume"
+  },
+  "template": {
+    "item": "aquamirae:abyssal_upgrade_smithing_template"
+  }
+}

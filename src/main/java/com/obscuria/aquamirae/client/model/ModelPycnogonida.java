@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.obscuria.aquamirae.common.entity.Pycnogonida;
 import com.obscuria.core.api.animation.ModelTools;
-import com.obscuria.core.api.animation.entity.IAnimatableModel;
+import com.obscuria.core.api.animation.tool.IAnimatableModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

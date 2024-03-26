@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 public interface AquamiraeMobEffects {
 	RegistryHandler<MobEffect> HANDLER = RegistryHandler.create(Registries.MOB_EFFECT, Aquamirae.MODID);
 
+	RegistrySupplier<MobEffect> DEPTHS_FURY = simple("depths_fury", DepthsFuryMobEffect::new);
 	RegistrySupplier<MobEffect> HYDROPHOBIA = simple("hydrophobia", HydrophobiaModEffect::new);
 	RegistrySupplier<MobEffect> CRYSTALLIZATION = simple("crystallization", CrystallizationMobEffect::new);
 	RegistrySupplier<MobEffect> TERRIBLE_ARMOR = simple("terrible_armor", TerribleArmorMobEffect::new);

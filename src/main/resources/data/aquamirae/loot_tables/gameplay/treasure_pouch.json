@@ -1,9 +1,98 @@
 {
   "type": "minecraft:generic",
-  "pools": [ { "rolls": { "min": 3, "max": 8 },
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
       "entries": [
-        { "type": "minecraft:item", "name": "minecraft:emerald", "weight": 10,
-          "functions": [ { "function": "set_count", "count": { "min": 1, "max": 1 } } ] },
+        {
+          "type": "aquamirae:pirate_armor",
+          "min_bonus": 12,
+          "max_bonus": 24,
+          "weight": 31
+        },
+        {
+          "type": "minecraft:item",
+          "name": "aquamirae:terrible_upgrade_smithing_template",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "aquamirae:ice_maze_ring",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "aquamirae:ship_graveyard_ring",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "aquamirae:shoe_spikes",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:map",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:exploration_map",
+              "destination": "aquamirae:ship",
+              "decoration": "red_x",
+              "skip_existing_chunks": false,
+              "zoom": 2
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "filled_map.aquamirae.ship"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:map",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:exploration_map",
+              "destination": "aquamirae:outpost",
+              "decoration": "red_x",
+              "skip_existing_chunks": false,
+              "zoom": 2
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "filled_map.aquamirae.outpost"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "min": 3,
+        "max": 8
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1,
+                "max": 1
+              }
+            }
+          ]
+        },
         {
           "type": "minecraft:item",
           "name": "minecraft:gold_ingot",

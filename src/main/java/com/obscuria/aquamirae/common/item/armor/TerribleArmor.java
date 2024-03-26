@@ -61,7 +61,7 @@ public abstract class TerribleArmor extends ArmorItem implements IAbilitable {
 		attacker.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * context.getVariable(1)));
 		if (context.getTier() == 2 && player.isInWater())
 			player.addEffect(new MobEffectInstance(AquamiraeMobEffects.TERRIBLE_ARMOR.get(), 20 * 10, 14));
-		context.forceCustomCooldown(20);
+		context.forceCooldown(20);
 	}
 
 	public TerribleArmor(ArmorItem.Type type, Item.Properties properties) {

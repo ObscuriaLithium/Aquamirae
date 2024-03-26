@@ -67,11 +67,10 @@ public final class DeadSeaCurse {
     }
 
     public static void makeSuppressed(ItemStack stack) {
-        if (isCursedByAnnotation(stack) && !isSuppressedByNBT(stack)) {
-            setSuppressedByNBT(stack, true);
-        } else if (isCursedByNBT(stack)) {
+        if (isCursedByNBT(stack))
             removeNBT(stack);
-        }
+        if (isCursedByAnnotation(stack) && !isSuppressedByNBT(stack))
+            setSuppressedByNBT(stack, true);
     }
 
     private static final String CURSE_TAG = "DeadSeaCurse";
