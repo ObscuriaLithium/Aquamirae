@@ -3,3 +3,4 @@
 build/
 run/
 gradlew*
+gradle/wrapper/gradle-wrapper.jar
