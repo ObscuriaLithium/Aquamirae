@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class OxygenTankItem extends Item implements OxygenHolder {
+public class OxygenTankItem extends Item implements OxygenContainer {
 
     public OxygenTankItem() {
         super(new Properties().stacksTo(1).rarity(Rarity.COMMON));
@@ -23,17 +23,17 @@ public class OxygenTankItem extends Item implements OxygenHolder {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal(OxygenHolder.getState(stack)));
+        tooltip.add(Component.literal(OxygenContainer.getState(stack)));
     }
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return OxygenHolder.getOxygen(stack) < getOxygenCapacity();
+        return OxygenContainer.getOxygen(stack) < getOxygenCapacity();
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13f * ((float) OxygenHolder.getOxygen(stack) / (float) getOxygenCapacity()));
+        return Math.round(13f * ((float) OxygenContainer.getOxygen(stack) / (float) getOxygenCapacity()));
     }
 
     @Override

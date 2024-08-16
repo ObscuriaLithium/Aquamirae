@@ -2,8 +2,8 @@ package com.obscuria.aquamirae.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.obscuria.aquamirae.common.entity.StormChakram;
-import com.obscuria.core.api.animation.ModelTools;
+import com.obscuria.aquamirae.common.entity.projectile.StormChakram;
+import com.obscuria.core.client.animation.ModelTools;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;

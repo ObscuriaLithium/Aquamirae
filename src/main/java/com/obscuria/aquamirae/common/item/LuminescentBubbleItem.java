@@ -2,7 +2,7 @@
 package com.obscuria.aquamirae.common.item;
 
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
-import com.obscuria.core.api.annotation.SimpleLore;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -17,8 +17,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 
-@SimpleLore("lore.aquamirae.luminescent_bubble")
+@Lore("lore.aquamirae.luminescent_bubble")
 public class LuminescentBubbleItem extends Item {
+
 	public LuminescentBubbleItem() {
 		super(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON));
 	}

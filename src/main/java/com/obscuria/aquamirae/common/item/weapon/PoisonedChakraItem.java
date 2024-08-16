@@ -36,7 +36,7 @@ public class PoisonedChakraItem extends TieredItem implements Vanishable {
 //
 //	public static boolean summonChakra(AbilityContext context, List<Integer> vars) {
 //		context.getStack().hurtAndBreak(3, context.getUser(), e -> {});
-//		CompoundProjectileEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), context.getUser(), context.getUser().level(),
+//		CompoundProjectileEntity.create(AquamiraeEntityTypes.POISONED_CHAKRA.get(), context.getUser(), context.getUser().level(),
 //				context.getStack(), vars.get(0), 0F, 20 * vars.get(1), 1000);
 //		return true;
 //	}

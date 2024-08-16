@@ -8,7 +8,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
-updateJSONURL="https://raw.githubusercontent.com/ObscuriaLithium/Home/main/aquamirae/versions.json"
+updateJSONURL="https://raw.githubusercontent.com/ObscuriaLithium/Minecraft/main/aquamirae/versions.json"
 issueTrackerURL="https://discord.gg/By29HCKgPx"
 logoFile="logo.png"
 

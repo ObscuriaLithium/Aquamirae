@@ -3,8 +3,8 @@ package com.obscuria.aquamirae.common.entity;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
-import com.obscuria.core.api.animation.entity.EntityAnimations;
-import com.obscuria.core.api.animation.entity.IAnimatedEntity;
+import com.obscuria.core.common.animation.EntityAnimations;
+import com.obscuria.core.common.animation.IAnimatedEntity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;

@@ -1,8 +1,10 @@
 {
+  "looped": true,
   "frames": [
     {
       "bones": [
-        { "name": "main", "rotation": {} },
+        { "name": "main", "rotation": { "pose": [0, 0, 0] } },
+        { "name": "head", "rotation": { "pose": [0, 0, 0] } },
         { "name": "head_upper", "rotation": { "swing": [10, 0, 0], "speed": 0.05 } },
         { "name": "body", "rotation": { "swing": [0, 0, 5], "speed": 0.1, "offset": 0.1 } },
         { "name": "body2", "rotation": { "pose": [-30, 0, 0], "swing": [0, 15, 0], "speed": 0.1 } },

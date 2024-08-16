@@ -50,7 +50,8 @@ public class CollectiblePaintingBlock extends Block implements SimpleWaterlogged
     @Override
     public void appendHoverText(@NotNull ItemStack stack, BlockGetter world, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, world, list, flag);
-        list.add(Component.literal(ChatFormatting.GRAY + Component.translatable(this.getDescriptionId() + "_desc").getString()));
+        list.add(Component.translatable(this.getDescriptionId() + "_name").withStyle(ChatFormatting.YELLOW));
+        list.add(Component.translatable(this.getDescriptionId() + "_author").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

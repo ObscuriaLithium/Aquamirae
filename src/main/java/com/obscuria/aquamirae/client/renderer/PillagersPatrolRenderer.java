@@ -7,10 +7,10 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.ApiStatus;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@ApiStatus.Internal
-@SuppressWarnings("all")
+@OnlyIn(Dist.CLIENT)
 public class PillagersPatrolRenderer extends MobRenderer<PillagersPatrol, SlimeModel<PillagersPatrol>> {
     public PillagersPatrolRenderer(EntityRendererProvider.Context context) {
         super(context, new SlimeModel<>(context.bakeLayer(ModelLayers.SLIME)), 0);

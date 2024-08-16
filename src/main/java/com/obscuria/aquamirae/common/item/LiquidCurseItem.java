@@ -2,7 +2,7 @@ package com.obscuria.aquamirae.common.item;
 
 import com.obscuria.aquamirae.common.DeadSeaCurse;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.core.api.annotation.SimpleLore;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 
-@SimpleLore("lore.aquamirae.liquid_curse")
+@Lore("lore.aquamirae.liquid_curse")
 public class LiquidCurseItem extends Item {
 
     public LiquidCurseItem() {

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " 0 ",
+    " 1 ",
+    " 2 "
+  ],
+  "key": {
+    "0": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "1": {
+      "item": "minecraft:bone"
+    },
+    "2": {
+      "item": "aquamirae:sharp_bones"
+    }
+  },
+  "result": {
+    "item": "aquamirae:spine_arrow",
+    "count": 12
+  }
+}

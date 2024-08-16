@@ -5,9 +5,9 @@ import com.mojang.math.Axis;
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.model.ModelStormChakram;
-import com.obscuria.aquamirae.common.entity.StormChakram;
+import com.obscuria.aquamirae.common.entity.projectile.StormChakram;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.core.api.graphic.world.Trail3DRenderer;
+import com.obscuria.core.client.graphic.world.Trail3DRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -18,7 +18,10 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class StormChakramRenderer extends EntityRenderer<StormChakram> {
     private final ModelStormChakram model;
     private final ItemRenderer itemRenderer;
@@ -54,7 +57,7 @@ public class StormChakramRenderer extends EntityRenderer<StormChakram> {
         this.model.setupAnim(entity, 0, 0, timer, yaw, pitch);
         this.model.renderToBuffer(pose, bufferSource.getBuffer(RenderType.entityCutout(getTextureLocation(entity))),
                 packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-        this.model.renderToBuffer(pose, bufferSource.getBuffer(RenderType.eyes(getOverlayTextureLocation(entity))),
+        this.model.renderToBuffer(pose, bufferSource.getBuffer(RenderType.eyes(getOverlayTextureLocation())),
                 packedLight, OverlayTexture.NO_OVERLAY, overlay, overlay, overlay, 0);
         pose.popPose();
         Trail3DRenderer.of(entity.trail).render(entity, pose, bufferSource, Minecraft.getInstance().getPartialTick());
@@ -66,8 +69,7 @@ public class StormChakramRenderer extends EntityRenderer<StormChakram> {
         return Aquamirae.key("textures/entity/rune_of_the_storm.png");
     }
 
-    @SuppressWarnings("unused")
-    public ResourceLocation getOverlayTextureLocation(StormChakram entity) {
+    public ResourceLocation getOverlayTextureLocation() {
         return Aquamirae.key("textures/entity/rune_of_the_storm_overlay.png");
     }
 }

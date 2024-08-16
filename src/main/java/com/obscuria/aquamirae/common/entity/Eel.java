@@ -3,9 +3,10 @@ package com.obscuria.aquamirae.common.entity;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
+import com.obscuria.aquamirae.common.AquamiraeTags;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.core.api.animation.entity.EntityAnimations;
-import com.obscuria.core.api.animation.entity.IAnimatedEntity;
+import com.obscuria.core.common.animation.EntityAnimations;
+import com.obscuria.core.common.animation.IAnimatedEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@IceMazeEntity
+@ShipGraveyardEntity
 public class Eel extends Monster implements IAnimatedEntity {
 	private static final EntityDataAccessor<Integer> MOVE_COOLDOWN = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Float> POS_X = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
@@ -231,11 +232,11 @@ public class Eel extends Monster implements IAnimatedEntity {
 	}
 
 	public boolean checkGround(int x, int y, int z) {
-		return this.level().getBlockState(new BlockPos(x, y, z)).is(Aquamirae.EEL_CAN_DIG)
-				&& this.level().getBlockState(new BlockPos(x + 1, y, z)).is(Aquamirae.EEL_CAN_DIG)
-				&& this.level().getBlockState(new BlockPos(x - 1, y, z)).is(Aquamirae.EEL_CAN_DIG)
-				&& this.level().getBlockState(new BlockPos(x, y, z + 1)).is(Aquamirae.EEL_CAN_DIG)
-				&& this.level().getBlockState(new BlockPos(x, y, z - 1)).is(Aquamirae.EEL_CAN_DIG);
+		return this.level().getBlockState(new BlockPos(x, y, z)).is(AquamiraeTags.EEL_CAN_DIG)
+				&& this.level().getBlockState(new BlockPos(x + 1, y, z)).is(AquamiraeTags.EEL_CAN_DIG)
+				&& this.level().getBlockState(new BlockPos(x - 1, y, z)).is(AquamiraeTags.EEL_CAN_DIG)
+				&& this.level().getBlockState(new BlockPos(x, y, z + 1)).is(AquamiraeTags.EEL_CAN_DIG)
+				&& this.level().getBlockState(new BlockPos(x, y, z - 1)).is(AquamiraeTags.EEL_CAN_DIG);
 	}
 
 	public boolean checkSpace(int x, int y, int z) {

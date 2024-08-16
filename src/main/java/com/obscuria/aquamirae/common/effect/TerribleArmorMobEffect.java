@@ -10,7 +10,7 @@ public class TerribleArmorMobEffect extends MobEffect {
 	public TerribleArmorMobEffect() {
 		super(MobEffectCategory.BENEFICIAL, -16737844);
 		addAttributeModifier(ForgeMod.SWIM_SPEED.get(), "5D6F0BA2-1186-46AC-B896-C61C5CAE99CC",
-				0.1D, AttributeModifier.Operation.MULTIPLY_BASE);
+				0.01D, AttributeModifier.Operation.MULTIPLY_BASE);
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class MazeRoseItem extends TieredItem implements Vanishable {
 
 //	public static boolean summonChakra(AbilityContext context, List<Integer> vars) {
 //		context.getStack().hurtAndBreak(3, context.getUser(), e -> {});
-//		CompoundProjectileEntity.create(AquamiraeEntities.MAZE_ROSE.get(), context.getUser(), context.getUser().level(),
+//		CompoundProjectileEntity.create(AquamiraeEntityTypes.MAZE_ROSE.get(), context.getUser(), context.getUser().level(),
 //				context.getStack(), vars.get(0), 0F, 20 * vars.get(1), 1000);
 //		return true;
 //	}

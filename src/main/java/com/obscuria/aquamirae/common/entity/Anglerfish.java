@@ -2,30 +2,30 @@ package com.obscuria.aquamirae.common.entity;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
+import com.obscuria.aquamirae.registry.AquamiraeEntityTypes;
+import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.core.api.animation.entity.EntityAnimations;
-import com.obscuria.core.api.animation.entity.IAnimatedEntity;
+import com.obscuria.core.common.animation.EntityAnimations;
+import com.obscuria.core.common.animation.IAnimatedEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
-import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
+import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -42,54 +42,64 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fluids.FluidType;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 @IceMazeEntity
-public class Anglerfish extends Monster implements IAnimatedEntity {
-	public final EntityAnimations<Anglerfish> animations = EntityAnimations.create(this);
-	public int attackTick = 0;
+public final class Anglerfish extends Monster implements IAnimatedEntity {
+	private static final String ANIMATION_BITE = "bite";
+	private final EntityAnimations<Anglerfish> animations = EntityAnimations.create(this)
+			.withAnimation(ANIMATION_BITE, 40);
+	private int attackCooldown = 0;
 	public float onGroundAnim = 0;
-	public float onGroundAnimPrev = 0;
+	public float onGroundAnimO = 0;
 
 	public Anglerfish(EntityType<Anglerfish> type, Level world) {
 		super(type, world);
-		xpReward = 12;
-		this.setPathfindingMalus(BlockPathTypes.WATER, 0);
-		this.moveControl = new MoveControl(this) {
-			@Override public void tick() {
-				if (Anglerfish.this.isInWater())
-					Anglerfish.this.setDeltaMovement(Anglerfish.this.getDeltaMovement().add(0, 0.005, 0));
-				if (this.operation == MoveControl.Operation.MOVE_TO && !Anglerfish.this.getNavigation().isDone()) {
-					double dx = this.wantedX - Anglerfish.this.getX();
-					double dy = this.wantedY - Anglerfish.this.getY();
-					double dz = this.wantedZ - Anglerfish.this.getZ();
-					float f = (float) (Mth.atan2(dz, dx) * (180 / Math.PI)) - 90;
-					float f1 = (float) (this.speedModifier * Objects.requireNonNull(Anglerfish.this.getAttribute(Attributes.MOVEMENT_SPEED)).getValue());
-					Anglerfish.this.setYRot(this.rotlerp(Anglerfish.this.getYRot(), f, 10));
-					Anglerfish.this.yBodyRot = Anglerfish.this.getYRot();
-					Anglerfish.this.yHeadRot = Anglerfish.this.getYRot();
-					if (Anglerfish.this.isInWater()) {
-						Anglerfish.this.setSpeed((float) Objects.requireNonNull(Anglerfish.this.getAttribute(Attributes.MOVEMENT_SPEED)).getValue());
-						float f2 = -(float) (Mth.atan2(dy, (float) Math.sqrt(dx * dx + dz * dz)) * (180 / Math.PI));
-						f2 = Mth.clamp(Mth.wrapDegrees(f2), -85, 85);
-						Anglerfish.this.setXRot(this.rotlerp(Anglerfish.this.getXRot(), f2, 5));
-						float f3 = Mth.cos(Anglerfish.this.getXRot() * (float) (Math.PI / 180.0));
-						Anglerfish.this.setZza(f3 * f1);
-						Anglerfish.this.setYya((float) (f1 * dy));
-					} else {
-						Anglerfish.this.setSpeed(f1 * 0.05F);
-					}
-				} else {
-					Anglerfish.this.setSpeed(0);
-					Anglerfish.this.setYya(0);
-					Anglerfish.this.setZza(0);
-				}
-			}
-		};
+		this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+		this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.3F, true);
+		this.lookControl = new SmoothSwimmingLookControl(this, 10);
+		this.xpReward = 12;
+	}
+
+	@Override
+	protected void registerGoals() {
+		this.goalSelector.addGoal(1, new AnglerfishAttackGoal(this, 3f, false));
+		this.goalSelector.addGoal(2, new AnglerfishCircleAroundGoal(this));
+		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1.0D, 80));
+		this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
+		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Animal.class, false, false));
+		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
+		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
+	}
+
+	@Override
+	protected PathNavigation createNavigation(Level level) {
+		return new WaterBoundPathNavigation(this, level);
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		this.updateOnGroundAnimation();
+		this.handleAttackState();
+	}
+
+	@Override
+	public void aiStep() {
+		this.attackCooldown--;
+		if (!this.isInWater() && this.onGround() && this.verticalCollision) {
+			this.setDeltaMovement(this.getDeltaMovement().add(
+					this.random.triangle(0, 0.2f), 0.4F,
+					this.random.triangle(0, 0.2f)));
+			this.setOnGround(false);
+			this.hasImpulse = true;
+			this.playSound(SoundEvents.GUARDIAN_FLOP, this.getSoundVolume(), this.getVoicePitch());
+		}
+		super.aiStep();
 	}
 
 	@Override
@@ -98,58 +108,31 @@ public class Anglerfish extends Monster implements IAnimatedEntity {
 	}
 
 	@Override
-	public boolean doHurtTarget(@NotNull Entity entity) {
+	public float getWalkAnimationPower() {
+		return 2f;
+	}
+
+	@Override
+	public boolean isWithinMeleeAttackRange(LivingEntity entity) {
+		return this.getAttackBoundingBox().inflate(3f).intersects(entity.getBoundingBox());
+	}
+
+	@Override
+	public boolean doHurtTarget(Entity entity) {
 		final boolean hurt = super.doHurtTarget(entity);
-		if (hurt && entity instanceof LivingEntity living)
-			living.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
+		if (hurt && entity instanceof LivingEntity living) {
+			final var effect = this.getRandom().nextInt(100);
+			if (effect <= 20) {
+				living.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
+			} else if (effect <= 40) {
+				living.addEffect(new MobEffectInstance(AquamiraeMobEffects.HYDROPHOBIA.get(), 200, 0));
+			}
+		}
 		return hurt;
 	}
 
 	@Override
-	protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
-		return new WaterBoundPathNavigation(this, world);
-	}
-
-	@Override
-	protected void registerGoals() {
-		super.registerGoals();
-		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 3f, false));
-		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
-		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Animal.class, false, false));
-		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
-		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
-		this.goalSelector.addGoal(5, new RandomSwimmingGoal(this, 1, 40) {
-			@Override protected Vec3 getPosition() {
-				return BehaviorUtils.getRandomSwimmablePos(this.mob, 32, 7);
-			}
-		});
-	}
-
-	@Override
-	public void baseTick() {
-		animations.playSound("attack", 6, AquamiraeSounds.ENTITY_EEL_BITE.get(), 2f, 1f);
-		this.onGroundAnimPrev = this.onGroundAnim;
-		if (this.isInWater()) {
-			this.setDeltaMovement(this.getDeltaMovement().add(0, -0.001F, 0));
-			this.onGroundAnim += (0f - this.onGroundAnim) * 0.2f;
-		} else this.onGroundAnim += (1f - this.onGroundAnim) * 0.2f;
-		if (animations.isPlaying("attack")) {
-			attackTick = 10;
-			if (this.getTarget() != null) this.lookControl.setLookAt(this.getTarget());
-			if (animations.getTick("attack") < 18) this.setDeltaMovement(this.getDeltaMovement().scale(0.9F));
-			if (animations.getTick("attack") == 18 && this.getTarget() != null) this.setDeltaMovement(this.getDeltaMovement()
-					.add(this.position().vectorTo(this.getTarget().position()).scale(0.4F)));
-			if (animations.getTick("attack") == 21 && this.getTarget() != null && this.getTarget().position().distanceTo(this.position()) <= 2.5D)
-				this.doHurtTarget(this.getTarget());
-		} else if (this.attackTick <= 0 && this.getTarget() != null && this.getTarget().position().distanceTo(this.position()) <= 5D) {
-			this.animations.play("attack");
-		} else this.attackTick--;
-		super.baseTick();
-	}
-
-	@Override
-	public @NotNull MobType getMobType() {
+	public MobType getMobType() {
 		return MobType.WATER;
 	}
 
@@ -159,7 +142,7 @@ public class Anglerfish extends Monster implements IAnimatedEntity {
 	}
 
 	@Override
-	public SoundEvent getHurtSound(@NotNull DamageSource source) {
+	public SoundEvent getHurtSound(DamageSource source) {
 		return AquamiraeSounds.ENTITY_DEEP_HURT.get();
 	}
 
@@ -169,28 +152,8 @@ public class Anglerfish extends Monster implements IAnimatedEntity {
 	}
 
 	@Override
-	public void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
+	public void playStepSound(BlockPos pos, BlockState state) {
 		this.playSound(SoundEvents.GUARDIAN_FLOP, 0.15f, 1);
-	}
-
-	@Override
-	@SuppressWarnings("all")
-	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
-		if (world instanceof ServerLevel server && spawnType == MobSpawnType.NATURAL && random.nextInt(1, 200) == 1) {
-			MazeMother mazeMother = new MazeMother(AquamiraeEntities.MAZE_MOTHER.get(), server);
-			mazeMother.moveTo(position());
-			mazeMother.finalizeSpawn(server, difficulty, spawnType, null, null);
-			world.addFreshEntity(mazeMother);
-		}
-		Aquamirae.setAttribute(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.anglerfishSwimSpeed.get());
-		Aquamirae.setAttribute(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.anglerfishMaxHealth.get());
-		Aquamirae.setAttribute(this, Attributes.ARMOR, AquamiraeConfig.Common.anglerfishArmor.get());
-		Aquamirae.setAttribute(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.anglerfishAttackDamage.get());
-		Aquamirae.setAttribute(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.anglerfishFollowRange.get());
-		Aquamirae.setAttribute(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.anglerfishAttackKnockback.get());
-		Aquamirae.setAttribute(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.anglerfishKnockbackResistance.get());
-		getAttribute(Attributes.FOLLOW_RANGE).addPermanentModifier(new AttributeModifier("Random spawn bonus", random.triangle(0.0, 0.2), AttributeModifier.Operation.MULTIPLY_BASE));
-		return spawnGroupData;
 	}
 
 	@Override
@@ -210,12 +173,68 @@ public class Anglerfish extends Monster implements IAnimatedEntity {
 		return super.isPushedByFluid(type);
 	}
 
-	public static SpawnPlacements.SpawnPredicate<Anglerfish> getSpawnRules() {
-		return (entityType, level, spawnType, pos, random) -> level.getFluidState(pos).is(FluidTags.WATER) &&
-				level.getDifficulty() != Difficulty.PEACEFUL;
+	private void updateOnGroundAnimation() {
+		this.onGroundAnimO = this.onGroundAnim;
+		if (!this.isUnderWater() && this.isInWater())
+			this.addDeltaMovement(new Vec3(0, -0.003F, 0));
+		if (this.isInWater()) {
+			this.onGroundAnim += (0f - this.onGroundAnim) * 0.2f;
+		} else {
+			this.onGroundAnim += (1f - this.onGroundAnim) * 0.2f;
+		}
 	}
 
-	public static AttributeSupplier.@NotNull Builder createAttributes() {
+	private void handleAttackState() {
+		if (this.isUnderWater() && this.animations.isPlaying(ANIMATION_BITE))
+			this.setDeltaMovement(this.getDeltaMovement().scale(0.75f));
+		this.animations.playSound(ANIMATION_BITE, 6, AquamiraeSounds.ENTITY_EEL_BITE.get(), 2f, 1f);
+		if (this.getTarget() == null) return;
+		if (this.attackCooldown <= 0) this.lookControl.setLookAt(this.getTarget().getEyePosition());
+		this.getAnimations().doInTick(ANIMATION_BITE, 17, () -> this.dashToTarget(this.getTarget()));
+		this.getAnimations().doInTick(ANIMATION_BITE, 21, () -> this.attackTarget(this.getTarget()));
+	}
+
+	private void dashToTarget(LivingEntity entity) {
+		this.addDeltaMovement(this.position().vectorTo(entity.getEyePosition()).scale(0.33f));
+	}
+
+	private void attackTarget(LivingEntity entity) {
+		if (entity.position().distanceTo(this.position()) <= 3f) {
+			this.doHurtTarget(entity);
+			if (entity.isInWater()) {
+				this.attackCooldown = this.random.nextInt(100, 300);
+				this.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 100, 0));
+			}
+		}
+	}
+
+	@SuppressWarnings("all")
+	@Override
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
+										MobSpawnType type, @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
+		Aquamirae.setAttribute(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.anglerfishSwimSpeed.get());
+		Aquamirae.setAttribute(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.anglerfishMaxHealth.get());
+		Aquamirae.setAttribute(this, Attributes.ARMOR, AquamiraeConfig.Common.anglerfishArmor.get());
+		Aquamirae.setAttribute(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.anglerfishAttackDamage.get());
+		Aquamirae.setAttribute(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.anglerfishFollowRange.get());
+		Aquamirae.setAttribute(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.anglerfishAttackKnockback.get());
+		Aquamirae.setAttribute(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.anglerfishKnockbackResistance.get());
+		if (level instanceof ServerLevel server && type == MobSpawnType.NATURAL && random.nextInt(1, 200) == 1) {
+			final var mother = new MazeMother(AquamiraeEntityTypes.MAZE_MOTHER.get(), server);
+			ForgeEventFactory.onFinalizeSpawn(mother, server, difficulty, type, null, null);
+			level.addFreshEntity(mother);
+			if (mother.isAddedToWorld())
+				mother.moveTo(position());
+		}
+		return super.finalizeSpawn(level, difficulty, type, data, tag);
+	}
+
+	public static SpawnPlacements.SpawnPredicate<Anglerfish> getSpawnRules() {
+		return (entityType, level, spawnType, pos, random) -> level.getFluidState(pos).is(FluidTags.WATER)
+				&& level.getDifficulty() != Difficulty.PEACEFUL;
+	}
+
+	public static AttributeSupplier.Builder createAttributes() {
 		return Mob.createMobAttributes()
 				.add(ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.DEFAULT_ANGLERFISH_SWIM_SPEED)
 				.add(Attributes.MAX_HEALTH, AquamiraeConfig.DEFAULT_ANGLERFISH_MAX_HEALTH)
@@ -224,5 +243,71 @@ public class Anglerfish extends Monster implements IAnimatedEntity {
 				.add(Attributes.FOLLOW_RANGE, AquamiraeConfig.DEFAULT_ANGLERFISH_FOLLOW_RANGE)
 				.add(Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.DEFAULT_ANGLERFISH_KNOCKBACK_RESISTANCE)
 				.add(Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.DEFAULT_ANGLERFISH_ATTACK_KNOCKBACK);
+	}
+
+	private static class AnglerfishAttackGoal extends MeleeAttackGoal {
+		private final Anglerfish anglerfish;
+
+		@Override
+		public boolean canUse() {
+			return this.anglerfish.attackCooldown <= 0 && this.anglerfish.isInWater() && super.canUse();
+		}
+
+		@Override
+		public boolean canContinueToUse() {
+			return this.anglerfish.attackCooldown <= 0 && this.anglerfish.isInWater() && super.canContinueToUse();
+		}
+
+		public AnglerfishAttackGoal(Anglerfish anglerfish, double speed, boolean alwaysFollow) {
+			super(anglerfish, speed, alwaysFollow);
+			this.anglerfish = anglerfish;
+		}
+
+		@Override
+		protected void checkAndPerformAttack(LivingEntity entity) {
+			if (this.anglerfish.getAnimations().isPlaying(ANIMATION_BITE)) return;
+			if (this.canPerformAttack(entity)) {
+				this.resetAttackCooldown();
+				this.anglerfish.getAnimations().play(ANIMATION_BITE);
+			}
+		}
+	}
+
+	private static class AnglerfishCircleAroundGoal extends Goal {
+		private final Anglerfish anglerfish;
+
+		public AnglerfishCircleAroundGoal(Anglerfish anglerfish) {
+			this.anglerfish = anglerfish;
+		}
+
+		@Override
+		public boolean canUse() {
+			return this.anglerfish.attackCooldown > 0
+					&& this.anglerfish.getTarget() != null;
+		}
+
+		@Override
+		public boolean canContinueToUse() {
+			return this.anglerfish.attackCooldown > 0
+					&& !this.anglerfish.getNavigation().isDone()
+					&& this.anglerfish.tickCount % 10 != 0;
+		}
+
+		@Override
+		public void start() {
+			final var target = this.anglerfish.getTarget();
+			if (target == null) return;
+			final var timer = this.anglerfish.tickCount * 0.025f;
+			this.anglerfish.getNavigation().moveTo(
+					target.getX() + Math.cos(timer) * 12,
+					target.getY() + 1,
+					target.getZ() + Math.sin(timer) * 12,
+					1f);
+		}
+
+		@Override
+		public void stop() {
+			this.anglerfish.getNavigation().stop();
+		}
 	}
 }

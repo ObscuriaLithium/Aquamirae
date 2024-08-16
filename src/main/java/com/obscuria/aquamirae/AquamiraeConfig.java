@@ -6,10 +6,73 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class AquamiraeConfig {
+
+	private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+
+	public static class TerribleArmor {
+		public static ForgeConfigSpec.IntValue poisonDurationTier1;
+		public static ForgeConfigSpec.IntValue poisonDurationTier2;
+		public static ForgeConfigSpec.IntValue boostStrength;
+		public static ForgeConfigSpec.IntValue boostDuration;
+	}
+
+	public static class AbyssalArmor {
+		public static ForgeConfigSpec.IntValue heaumeDebuffStrength;
+		public static ForgeConfigSpec.IntValue heaumeDebuffDuration;
+		public static ForgeConfigSpec.IntValue heaumeCooldown;
+	}
+
+	public static class TerribleSword {
+		public static ForgeConfigSpec.IntValue bonusChanceTier1;
+		public static ForgeConfigSpec.IntValue bonusChanceTier2;
+		public static ForgeConfigSpec.IntValue bonusChanceTier3;
+		public static ForgeConfigSpec.IntValue debuffChanceTier1;
+		public static ForgeConfigSpec.IntValue debuffChanceTier2;
+		public static ForgeConfigSpec.IntValue debuffChanceTier3;
+		public static ForgeConfigSpec.IntValue debuffDamageTier1;
+		public static ForgeConfigSpec.IntValue debuffDamageTier2;
+		public static ForgeConfigSpec.IntValue debuffDamageTier3;
+	}
+
+	public static class Divider {
+		public static ForgeConfigSpec.IntValue durationTier1;
+		public static ForgeConfigSpec.IntValue durationTier2;
+		public static ForgeConfigSpec.IntValue durationTier3;
+		public static ForgeConfigSpec.IntValue stackTier1;
+		public static ForgeConfigSpec.IntValue stackTier2;
+		public static ForgeConfigSpec.IntValue stackTier3;
+	}
+
+	public static class WhisperOfTheAbyss {
+		public static ForgeConfigSpec.IntValue durationTier1;
+		public static ForgeConfigSpec.IntValue durationTier2;
+		public static ForgeConfigSpec.IntValue durationTier3;
+		public static ForgeConfigSpec.IntValue stackTier1;
+		public static ForgeConfigSpec.IntValue stackTier2;
+		public static ForgeConfigSpec.IntValue stackTier3;
+	}
+
+	public static class RemnantsSaber {
+		public static ForgeConfigSpec.IntValue bonusTier1;
+		public static ForgeConfigSpec.IntValue bonusTier2;
+	}
+
+	public static class PoisonedBlade {
+		public static ForgeConfigSpec.IntValue durationTier1;
+		public static ForgeConfigSpec.IntValue durationTier2;
+		public static ForgeConfigSpec.IntValue cooldownTier1;
+		public static ForgeConfigSpec.IntValue cooldownTier2;
+	}
+
+	public static class DaggerOfGreed {
+		public static ForgeConfigSpec.IntValue chanceTier1;
+		public static ForgeConfigSpec.IntValue chanceTier2;
+		public static ForgeConfigSpec.IntValue countTier1;
+		public static ForgeConfigSpec.IntValue countTier2;
+	}
 
 	public static final double DEFAULT_CORNELIA_MAX_HEALTH = 200.0;
 	public static final double DEFAULT_CORNELIA_ARMOR = 16.0;
@@ -22,7 +85,7 @@ public class AquamiraeConfig {
 
 	public static final double DEFAULT_ANGLERFISH_MAX_HEALTH = 40.0;
 	public static final double DEFAULT_ANGLERFISH_ARMOR = 2.0;
-	public static final double DEFAULT_ANGLERFISH_ATTACK_DAMAGE = 6.0;
+	public static final double DEFAULT_ANGLERFISH_ATTACK_DAMAGE = 4.0;
 	public static final double DEFAULT_ANGLERFISH_ATTACK_KNOCKBACK = 1.0;
 	public static final double DEFAULT_ANGLERFISH_FOLLOW_RANGE = 48.0;
 	public static final double DEFAULT_ANGLERFISH_KNOCKBACK_RESISTANCE = 0.0;
@@ -61,7 +124,6 @@ public class AquamiraeConfig {
 	public static final double DEFAULT_EEL_FOLLOW_RANGE = 32.0;
 
 	public static class Common {
-		public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 		public static final ForgeConfigSpec COMMON_SPEC;
 		public static final ForgeConfigSpec.BooleanValue notifications;
 
@@ -121,7 +183,6 @@ public class AquamiraeConfig {
 			BUILDER.pop();
 
 			BUILDER.push("Mobs");
-
 			BUILDER.push("GhostOfCaptainCornelia");
 			corneliaMovementSpeed = BUILDER.worldRestart().defineInRange("movementSpeed", DEFAULT_CORNELIA_MOVEMENT_SPEED, 0.0, 10.0);
 			corneliaMaxHealth = BUILDER.worldRestart().defineInRange("maxHealth", DEFAULT_CORNELIA_MAX_HEALTH, 1.0, 100000.0);
@@ -183,7 +244,67 @@ public class AquamiraeConfig {
 			eelAttackKnockback = BUILDER.worldRestart().defineInRange("attackKnockback", DEFAULT_EEL_ATTACK_KNOCKBACK, 0.0, 10.0);
 			eelFollowRange = BUILDER.worldRestart().defineInRange("followRange", DEFAULT_EEL_FOLLOW_RANGE, 1.0, 256.0);
 			BUILDER.pop();
+
+			BUILDER.push("Armor");
+			BUILDER.push("TerribleArmor");
+			TerribleArmor.poisonDurationTier1 = BUILDER.worldRestart().defineInRange("poisonDurationTier1", AquamiraeDefaults.TerribleArmor.POISON_DURATION_TIER_1, 1, Integer.MAX_VALUE);
+			TerribleArmor.poisonDurationTier2 = BUILDER.worldRestart().defineInRange("poisonDurationTier2", AquamiraeDefaults.TerribleArmor.POISON_DURATION_TIER_2, 1, Integer.MAX_VALUE);
+			TerribleArmor.boostStrength = BUILDER.worldRestart().defineInRange("boostStrength", AquamiraeDefaults.TerribleArmor.BOOST_STRENGTH, 1, Integer.MAX_VALUE);
+			TerribleArmor.boostDuration = BUILDER.worldRestart().defineInRange("boostDuration", AquamiraeDefaults.TerribleArmor.BOOST_DURATION, 1, Integer.MAX_VALUE);
 			BUILDER.pop();
+			BUILDER.push("AbyssalArmor");
+			AbyssalArmor.heaumeDebuffStrength = BUILDER.worldRestart().defineInRange("heaumeDebuffStrength", AquamiraeDefaults.AbyssalArmor.HEAUME_DEBUFF_STRENGTH, 0, 100);
+			AbyssalArmor.heaumeDebuffDuration = BUILDER.worldRestart().defineInRange("heaumeDebuffDuration", AquamiraeDefaults.AbyssalArmor.HEAUME_DEBUFF_DURATION, 0, Integer.MAX_VALUE);
+			AbyssalArmor.heaumeCooldown = BUILDER.worldRestart().defineInRange("heaumeCooldown", AquamiraeDefaults.AbyssalArmor.HEAUME_COOLDOWN, 0, Integer.MAX_VALUE);
+			BUILDER.pop();
+			BUILDER.pop();
+
+			BUILDER.push("Items");
+			BUILDER.push("TerribleSword");
+			TerribleSword.bonusChanceTier1 = BUILDER.worldRestart().defineInRange("bonusChanceTier1", AquamiraeDefaults.TerribleSword.BONUS_CHANCE_TIER_1, 0, 100);
+			TerribleSword.bonusChanceTier2 = BUILDER.worldRestart().defineInRange("bonusChanceTier2", AquamiraeDefaults.TerribleSword.BONUS_CHANCE_TIER_2, 0, 100);
+			TerribleSword.bonusChanceTier3 = BUILDER.worldRestart().defineInRange("bonusChanceTier3", AquamiraeDefaults.TerribleSword.BONUS_CHANCE_TIER_3, 0, 100);
+			TerribleSword.debuffChanceTier1 = BUILDER.worldRestart().defineInRange("debuffChanceTier1", AquamiraeDefaults.TerribleSword.DEBUFF_CHANCE_TIER_1, 50, 100);
+			TerribleSword.debuffChanceTier2 = BUILDER.worldRestart().defineInRange("debuffChanceTier2", AquamiraeDefaults.TerribleSword.DEBUFF_CHANCE_TIER_2, 50, 100);
+			TerribleSword.debuffChanceTier3 = BUILDER.worldRestart().defineInRange("debuffChanceTier3", AquamiraeDefaults.TerribleSword.DEBUFF_CHANCE_TIER_3, 25, 100);
+			TerribleSword.debuffDamageTier1 = BUILDER.worldRestart().defineInRange("debuffDamageTier1", AquamiraeDefaults.TerribleSword.DEBUFF_DAMAGE_TIER_1, 0, Integer.MAX_VALUE);
+			TerribleSword.debuffDamageTier2 = BUILDER.worldRestart().defineInRange("debuffDamageTier2", AquamiraeDefaults.TerribleSword.DEBUFF_DAMAGE_TIER_2, 0, Integer.MAX_VALUE);
+			TerribleSword.debuffDamageTier3 = BUILDER.worldRestart().defineInRange("debuffDamageTier3", AquamiraeDefaults.TerribleSword.DEBUFF_DAMAGE_TIER_3, 0, Integer.MAX_VALUE);
+			BUILDER.pop();
+			BUILDER.push("Divider");
+			Divider.durationTier1 = BUILDER.worldRestart().defineInRange("durationTier1", AquamiraeDefaults.Divider.DURATION_TIER_1, 1, Integer.MAX_VALUE);
+			Divider.durationTier2 = BUILDER.worldRestart().defineInRange("durationTier2", AquamiraeDefaults.Divider.DURATION_TIER_2, 1, Integer.MAX_VALUE);
+			Divider.durationTier3 = BUILDER.worldRestart().defineInRange("durationTier3", AquamiraeDefaults.Divider.DURATION_TIER_3, 1, Integer.MAX_VALUE);
+			Divider.stackTier1 = BUILDER.worldRestart().defineInRange("stackTier1", AquamiraeDefaults.Divider.STACK_TIER_1, 1, Integer.MAX_VALUE);
+			Divider.stackTier2 = BUILDER.worldRestart().defineInRange("stackTier2", AquamiraeDefaults.Divider.STACK_TIER_2, 1, Integer.MAX_VALUE);
+			Divider.stackTier3 = BUILDER.worldRestart().defineInRange("stackTier3", AquamiraeDefaults.Divider.STACK_TIER_3, 1, Integer.MAX_VALUE);
+			BUILDER.pop();
+			BUILDER.push("WhisperOfTheAbyss");
+			WhisperOfTheAbyss.durationTier1 = BUILDER.worldRestart().defineInRange("durationTier1", AquamiraeDefaults.WhisperOfTheAbyss.DURATION_TIER_1, 1, Integer.MAX_VALUE);
+			WhisperOfTheAbyss.durationTier2 = BUILDER.worldRestart().defineInRange("durationTier2", AquamiraeDefaults.WhisperOfTheAbyss.DURATION_TIER_2, 1, Integer.MAX_VALUE);
+			WhisperOfTheAbyss.durationTier3 = BUILDER.worldRestart().defineInRange("durationTier3", AquamiraeDefaults.WhisperOfTheAbyss.DURATION_TIER_3, 1, Integer.MAX_VALUE);
+			WhisperOfTheAbyss.stackTier1 = BUILDER.worldRestart().defineInRange("stackTier1", AquamiraeDefaults.WhisperOfTheAbyss.STACK_TIER_1, 1, Integer.MAX_VALUE);
+			WhisperOfTheAbyss.stackTier2 = BUILDER.worldRestart().defineInRange("stackTier2", AquamiraeDefaults.WhisperOfTheAbyss.STACK_TIER_2, 1, Integer.MAX_VALUE);
+			WhisperOfTheAbyss.stackTier3 = BUILDER.worldRestart().defineInRange("stackTier3", AquamiraeDefaults.WhisperOfTheAbyss.STACK_TIER_3, 1, Integer.MAX_VALUE);
+			BUILDER.pop();
+			BUILDER.push("RemnantsSaber");
+			RemnantsSaber.bonusTier1 = BUILDER.worldRestart().defineInRange("bonusTier1", AquamiraeDefaults.RemnantsSaber.BONUS_TIER_1, 1, Integer.MAX_VALUE);
+			RemnantsSaber.bonusTier2 = BUILDER.worldRestart().defineInRange("bonusTier2", AquamiraeDefaults.RemnantsSaber.BONUS_TIER_2, 1, Integer.MAX_VALUE);
+			BUILDER.pop();
+			BUILDER.push("PoisonedBlade");
+			PoisonedBlade.durationTier1 = BUILDER.worldRestart().defineInRange("durationTier1", AquamiraeDefaults.PoisonedBlade.DURATION_TIER_1, 1, Integer.MAX_VALUE);
+			PoisonedBlade.durationTier2 = BUILDER.worldRestart().defineInRange("durationTier2", AquamiraeDefaults.PoisonedBlade.DURATION_TIER_2, 1, Integer.MAX_VALUE);
+			PoisonedBlade.cooldownTier1 = BUILDER.worldRestart().defineInRange("cooldownTier1", AquamiraeDefaults.PoisonedBlade.COOLDOWN_TIER_1, 1, Integer.MAX_VALUE);
+			PoisonedBlade.cooldownTier2 = BUILDER.worldRestart().defineInRange("cooldownTier2", AquamiraeDefaults.PoisonedBlade.COOLDOWN_TIER_2, 1, Integer.MAX_VALUE);
+			BUILDER.pop();
+			BUILDER.push("DaggerOfGreed");
+			DaggerOfGreed.chanceTier1 = BUILDER.worldRestart().defineInRange("chanceTier1", AquamiraeDefaults.DaggerOfGreed.CHANCE_TIER_1, 1, 100);
+			DaggerOfGreed.chanceTier2 = BUILDER.worldRestart().defineInRange("chanceTier2", AquamiraeDefaults.DaggerOfGreed.CHANCE_TIER_2, 1, 100);
+			DaggerOfGreed.countTier1 = BUILDER.worldRestart().defineInRange("countTier1", AquamiraeDefaults.DaggerOfGreed.COUNT_TIER_1, 1, 64);
+			DaggerOfGreed.countTier2 = BUILDER.worldRestart().defineInRange("countTier2", AquamiraeDefaults.DaggerOfGreed.COUNT_TIER_2, 1, 64);
+			BUILDER.pop();
+			BUILDER.pop();
+
 			COMMON_SPEC = BUILDER.build();
 		}
 	}
@@ -213,9 +334,8 @@ public class AquamiraeConfig {
 	}
 
 	public static void register() {
-		Path configPath = FMLPaths.CONFIGDIR.get();
-		Path modConfigPath = Paths.get(configPath.toAbsolutePath().toString(), "Obscuria");
-		try { Files.createDirectory(modConfigPath); }
+		final var configPath = Paths.get(FMLPaths.CONFIGDIR.get().toAbsolutePath().toString(), "Obscuria");
+		try { Files.createDirectory(configPath); }
 		catch (Exception ignored) {}
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Common.COMMON_SPEC, "Obscuria/aquamirae-common.toml");
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Client.CLIENT_SPEC, "Obscuria/aquamirae-client.toml");

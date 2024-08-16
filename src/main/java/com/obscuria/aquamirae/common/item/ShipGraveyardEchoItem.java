@@ -2,7 +2,7 @@
 package com.obscuria.aquamirae.common.item;
 
 import com.obscuria.aquamirae.AquamiraeClient;
-import com.obscuria.core.api.annotation.SimpleLore;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -13,8 +13,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@SimpleLore("lore.aquamirae.ship_graveyard_echo")
+@Lore("lore.aquamirae.ship_graveyard_echo")
 public class ShipGraveyardEchoItem extends Item {
+
 	public ShipGraveyardEchoItem() {
 		super(new Item.Properties().stacksTo(64).rarity(Rarity.UNCOMMON));
 	}

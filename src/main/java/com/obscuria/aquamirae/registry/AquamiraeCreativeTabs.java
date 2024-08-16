@@ -2,8 +2,8 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.core.api.registry.RegistryHandler;
-import com.obscuria.core.api.registry.RegistrySupplier;
+import com.obscuria.core.registry.RegistryHandler;
+import com.obscuria.core.registry.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -71,6 +71,8 @@ public interface AquamiraeCreativeTabs {
 						builder.accept(AquamiraeItems.EEL_SPAWN_EGG.get());
 						builder.accept(AquamiraeItems.SPINEFISH_SPAWN_EGG.get());
 						if (Aquamirae.isWinterEvent()) builder.accept(AquamiraeItems.SWEET_LANCE.get().getDefaultInstance());
+						builder.accept(AquamiraeItems.SPINE_ARROW.get());
+						builder.accept(AquamiraeItems.ABYSSAL_ARROW.get());
 						builder.accept(AquamiraeItems.TERRIBLE_UPGRADE_SMITHING_TEMPLATE.get());
 						builder.accept(AquamiraeItems.ABYSSAL_UPGRADE_SMITHING_TEMPLATE.get());
 						builder.accept(AquamiraeItems.SHOE_SPIKES.get());
@@ -81,7 +83,8 @@ public interface AquamiraeCreativeTabs {
 						builder.accept(AquamiraeItems.SHIP_GRAVEYARD_ECHO.get());
 						builder.accept(AquamiraeItems.DEAD_SEA_SCROLL.get());
 						builder.accept(AquamiraeItems.LIQUID_CURSE.get());
-						builder.accept(AquamiraeItems.PIRATE_DOUBLOON.get());
+						builder.accept(AquamiraeItems.BLESSED_POWDER.get());
+						builder.accept(AquamiraeItems.DOUBLOON.get().getDefaultInstance());
 
 						builder.accept(AquamiraeItems.MUSIC_DISC_HORIZON.get());
 						builder.accept(AquamiraeItems.MUSIC_DISC_FORSAKEN_DROWNAGE.get());

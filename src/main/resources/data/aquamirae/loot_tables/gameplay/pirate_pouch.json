@@ -9,7 +9,7 @@
           "type": "aquamirae:pirate_armor",
           "min_bonus": 6,
           "max_bonus": 12,
-          "weight": 38
+          "weight": 48
         },
         {
           "type": "minecraft:item",

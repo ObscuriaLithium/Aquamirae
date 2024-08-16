@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.obscuria.aquamirae.registry.AquamiraeAttributes;
 import com.obscuria.aquamirae.registry.AquamiraeLootPoolEntryTypes;
-import com.obscuria.core.api.graphic.Color;
+import com.obscuria.core.client.graphic.Color;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;

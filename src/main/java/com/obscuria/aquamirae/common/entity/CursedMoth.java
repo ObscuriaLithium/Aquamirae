@@ -6,34 +6,30 @@ import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.DeadSeaCurse;
 import com.obscuria.aquamirae.network.StackCursedPacket;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.core.api.graphic.world.Trail3D;
-import com.obscuria.core.api.util.easing.Easing;
+import com.obscuria.core.client.graphic.world.Trail3D;
+import com.obscuria.core.common.easing.Easing;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Comparator;
 
 @IceMazeEntity
 public class CursedMoth extends AbstractMoth {
-	protected @Nullable LivingEntity chasedEntity = null;
-
-	protected static final TargetingConditions TARGETING_CONDITIONS = TargetingConditions.forNonCombat()
-			.selector(entity -> entity instanceof Player player && !player.isCreative() && !player.isSpectator());
 
 	public CursedMoth(EntityType<CursedMoth> type, Level world) {
 		super(type, world);
 	}
 
 	@Override
-	protected void registerMothGoals() {
-		this.goalSelector.addGoal(1, new CursedMothStrollGoal(this, 1.2f, 14));
+	protected void registerGoals() {
+		this.goalSelector.addGoal(1, new CurseTargetGoal(this, 1.6f, false));
+		this.goalSelector.addGoal(1, new MothStrollGoal(this, 1.2f, 14));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, false));
 	}
 
 	@Override
@@ -44,70 +40,46 @@ public class CursedMoth extends AbstractMoth {
 	}
 
 	@Override
-	protected ItemStack getJar() {
-		return AquamiraeItems.CURSED_MOTH_IN_A_JAR.get().getDefaultInstance();
+	public void baseTick() {
+		super.baseTick();
+		if (this.getTarget() instanceof Player player)
+			this.lookControl.setLookAt(player);
 	}
 
 	@Override
-	public void baseTick() {
-		super.baseTick();
-		if (level().isClientSide) return;
-		if (isDeadOrDying()) return;
-
-		chasedEntity = null;
-		for (var player : level().getNearbyPlayers(TARGETING_CONDITIONS, this,
-						getBoundingBox().inflate(18)).stream()
-				.filter(this::hasLineOfSight)
-				.sorted(Comparator.comparingDouble(player -> position().distanceTo(player.getEyePosition())))
-				.toList()) {
-			final var playerPos = player.getEyePosition();
-			if (chasedEntity == null) {
-				addDeltaMovement(position().vectorTo(playerPos)
-						.normalize()
-						.scale(0.01f));
-				if (tickCount % 20 == 0)
-					navigation.moveTo(player, 1);
-				lookControl.setLookAt(player);
-				chasedEntity = player;
-			}
-			if (position().distanceTo(playerPos) <= 0.8 && curse(player))
-				discard();
-		}
+	protected ItemStack getJarItem() {
+		return AquamiraeItems.CURSED_MOTH_IN_A_JAR.get().getDefaultInstance();
 	}
 
-	protected boolean curse(Player player) {
-		final var inventory = player.getInventory();
-		final var items = Streams.concat(
-						inventory.items.stream(),
-						inventory.armor.stream(),
-						inventory.offhand.stream())
-				.filter(stack -> DeadSeaCurse.canBeCursed(stack) && !DeadSeaCurse.isCursed(stack))
-				.toList();
-		if (items.isEmpty()) return false;
-		final var stack = items.get(random.nextInt(0, items.size()));
-		DeadSeaCurse.makeCursed(stack);
-		if (player instanceof ServerPlayer serverPlayer)
-			Aquamirae.CHANNEL.send(new StackCursedPacket(stack.copy()),
-					PacketDistributor.PLAYER.with(serverPlayer));
-		return true;
-	}
+	private static class CurseTargetGoal extends MeleeAttackGoal {
+		private final CursedMoth moth;
 
-	protected static class CursedMothStrollGoal extends MothStrollGoal {
-		protected final CursedMoth moth;
-
-		public CursedMothStrollGoal(CursedMoth moth, double speed, int interval) {
-			super(moth, speed, interval);
+		public CurseTargetGoal(CursedMoth moth, float speed, boolean alwaysFollow) {
+			super(moth, speed, alwaysFollow);
 			this.moth = moth;
 		}
 
 		@Override
-		public boolean canUse() {
-			return moth.chasedEntity == null && super.canUse();
+		protected void checkAndPerformAttack(LivingEntity entity) {
+			if (this.canPerformAttack(entity)
+					&& entity instanceof Player player
+					&& DeadSeaCurse.canBeCursed(player)
+					&& curse(player))
+				moth.discard();
 		}
 
-		@Override
-		public boolean canContinueToUse() {
-			return moth.chasedEntity == null && super.canContinueToUse();
+		private boolean curse(Player player) {
+			final var inventory = player.getInventory();
+			final var items = Streams.concat(inventory.items.stream(), inventory.armor.stream(), inventory.offhand.stream())
+					.filter(stack -> DeadSeaCurse.canBeCursed(stack) && !DeadSeaCurse.isCursed(stack))
+					.toList();
+			if (items.isEmpty()) return false;
+			final var stack = items.get(moth.getRandom().nextInt(0, items.size()));
+			DeadSeaCurse.makeCursed(stack);
+			if (player instanceof ServerPlayer serverPlayer)
+				Aquamirae.CHANNEL.send(new StackCursedPacket(stack.copy()),
+						PacketDistributor.PLAYER.with(serverPlayer));
+			return true;
 		}
 	}
 }

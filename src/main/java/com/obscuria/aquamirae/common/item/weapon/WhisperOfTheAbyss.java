@@ -1,17 +1,16 @@
 
 package com.obscuria.aquamirae.common.item.weapon;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.obscuria.aquamirae.Aquamirae;
+import com.obscuria.aquamirae.AquamiraeConfig;
 import com.obscuria.aquamirae.common.DeadSeaCurse;
 import com.obscuria.aquamirae.registry.AquamiraeAttributes;
-import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
 import com.obscuria.aquamirae.registry.AquamiraeTiers;
-import com.obscuria.core.api.ability.AbilityHelper;
-import com.obscuria.core.api.ability.AbilityStyles;
-import com.obscuria.core.api.ability.*;
-import com.obscuria.core.api.util.bundle.ItemBundle;
+import com.obscuria.core.common.item.ability.*;
+import com.obscuria.core.common.bundle.ItemBundle;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,33 +28,15 @@ import java.util.UUID;
 
 @DeadSeaCurse.ByDefault
 public class WhisperOfTheAbyss extends SwordItem implements IAbilitable {
-	public static final Ability ABILITY = Ability.create(AbilityStyles.PURPLE_GEM)
-			.setRelatedItems(ItemBundle.direct(AquamiraeItems.WHISPER_OF_THE_ABYSS))
-			.addTier(AbilityTier.create()
-					.setDescription(Component.translatable("ability.aquamirae.whisper_of_the_abyss"))
-					.addVariable(Variable.create(8).withSuffix(Variable.PERCENT))
-					.addVariable(Variable.create(6).withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
-					.addVariable(Variable.create(3)))
-			.addTier(AbilityTier.create()
-					.setDescription(Component.translatable("ability.aquamirae.whisper_of_the_abyss"))
-					.addVariable(Variable.create(8).withSuffix(Variable.PERCENT))
-					.addVariable(Variable.create(9).withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
-					.addVariable(Variable.create(4))
-					.addGoal(AbilityGoal.custom("apply_effect", 300,
-							Component.translatable("ability_goal.aquamirae.apply_effect")))
-					.addGoal(AbilityGoal.appliedAstralDust(1)))
-			.addTier(AbilityTier.create()
-					.setDescription(Component.translatable("ability.aquamirae.whisper_of_the_abyss"))
-					.addVariable(Variable.create(8).withSuffix(Variable.PERCENT))
-					.addVariable(Variable.create(12).withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
-					.addVariable(Variable.create(5))
-					.addGoal(AbilityGoal.custom("apply_effect", 900,
-							Component.translatable("ability_goal.aquamirae.apply_effect")))
-					.addGoal(AbilityGoal.appliedAstralDust(2)))
-			.build();
+	public static final String STRENGTH;
+	public static final String DURATION;
+	public static final String STACK;
+	public static final String APPLY_EFFECT_GOAL;
+	public static final Ability ABILITY;
 
 	public WhisperOfTheAbyss() {
-		super(AquamiraeTiers.WHISPER_OF_tHE_ABYSS, 3, -3.2f, new Properties().fireResistant().rarity(Rarity.EPIC));
+		super(AquamiraeTiers.WHISPER_OF_tHE_ABYSS, 11, -3.2f,
+				new Properties().rarity(Rarity.EPIC).fireResistant());
 	}
 
 	@Override
@@ -67,23 +48,59 @@ public class WhisperOfTheAbyss extends SwordItem implements IAbilitable {
 	public boolean hurtEnemy(ItemStack stack, LivingEntity entity, LivingEntity user) {
 		if (user instanceof Player player && ABILITY.canBeUsedBy(player)) {
 			final var context = ABILITY.setupContext(stack, player);
-			final var duration = 20 * context.getVariable(2);
-			final var maxAmplifier = context.getVariable(3) - 1;
+			final var duration = 20 * context.get(DURATION);
+			final var maxAmplifier = context.get(STACK) - 1;
 			final var currentAmplifier = Optional.ofNullable(entity
 							.getEffect(AquamiraeMobEffects.WHISPER_OF_THE_ABYSS.get()))
 					.map(MobEffectInstance::getAmplifier).orElse(-1);
 			entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.WHISPER_OF_THE_ABYSS.get(),
 					duration, Math.min(currentAmplifier + 1, maxAmplifier)));
 			context.forceCooldown(20);
-			AbilityHelper.addCustomProgress(stack, "apply_effect", 1);
+			AbilityHelper.addCustomProgress(stack, APPLY_EFFECT_GOAL, 1);
 		}
 		return super.hurtEnemy(stack, entity, user);
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
-		return Aquamirae.addAttribute(super.getDefaultAttributeModifiers(slot), ForgeMod.ENTITY_REACH.get(),
-				UUID.fromString("AB3F54D3-645C-4F36-A497-9C11A33DB5CF"), AttributeModifier.Operation.MULTIPLY_TOTAL,
-				0.33, slot == EquipmentSlot.MAINHAND);
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+		if (slot == EquipmentSlot.MAINHAND)
+			return ImmutableMultimap.<Attribute, AttributeModifier>builder()
+					.putAll(super.getAttributeModifiers(slot, stack))
+					.put(ForgeMod.ENTITY_REACH.get(),
+							new AttributeModifier(UUID.fromString("AB3F54D3-645C-4F36-A497-9C11A33DB5CF"),
+									"Weapon modifier", 0.33, AttributeModifier.Operation.MULTIPLY_BASE))
+					.build();
+		return super.getAttributeModifiers(slot, stack);
+	}
+
+	static {
+		STRENGTH = "STRENGTH";
+		DURATION = "DURATION";
+		STACK = "STACK";
+		APPLY_EFFECT_GOAL = "apply_effect";
+		final var description = Component.translatable("ability.aquamirae.whisper_of_the_abyss");
+		final var applyEffectHint = Component.translatable("ability_goal.aquamirae.apply_effect");
+		ABILITY = Ability.create(AbilityStyles.PURPLE_GEM)
+				.setRelatedItems(ItemBundle.direct(AquamiraeItems.WHISPER_OF_THE_ABYSS))
+				.addTier(AbilityTier.create(description)
+						.with(STRENGTH, Variable.create(8).withSuffix(Variable.PERCENT))
+						.with(DURATION, Variable.create(AquamiraeConfig.WhisperOfTheAbyss.durationTier1)
+								.withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
+						.with(STACK, Variable.create(AquamiraeConfig.WhisperOfTheAbyss.stackTier1)))
+				.addTier(AbilityTier.create(description)
+						.with(STRENGTH, Variable.create(8).withSuffix(Variable.PERCENT))
+						.with(DURATION, Variable.create(AquamiraeConfig.WhisperOfTheAbyss.durationTier2)
+								.withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
+						.with(STACK, Variable.create(AquamiraeConfig.WhisperOfTheAbyss.stackTier2))
+						.requiring(APPLY_EFFECT_GOAL, AbilityGoal.custom(300, applyEffectHint))
+						.requiringDust(1))
+				.addTier(AbilityTier.create(description)
+						.with(STRENGTH, Variable.create(8).withSuffix(Variable.PERCENT))
+						.with(DURATION, Variable.create(AquamiraeConfig.WhisperOfTheAbyss.durationTier3)
+								.withTrackedAttribute(AquamiraeAttributes.DEPTHS_FURY).withSuffix(Variable.SECONDS))
+						.with(STACK, Variable.create(AquamiraeConfig.WhisperOfTheAbyss.stackTier3))
+						.requiring(APPLY_EFFECT_GOAL, AbilityGoal.custom(900, applyEffectHint))
+						.requiringDust(2))
+				.build();
 	}
 }

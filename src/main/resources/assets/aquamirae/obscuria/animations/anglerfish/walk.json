@@ -1,0 +1,27 @@
+{
+  "looped": true,
+  "frames": [
+    {
+      "bones": [
+        { "name": "main", "rotation": { "pose": [-15, 0, 0], "swing": [1, 0, 0], "speed": 0.7 } },
+        { "name": "head", "rotation": { "pose": [-35, 0, 0], "swing": [-1, -10, 0], "speed": 0.7 } },
+        { "name": "head_upper", "rotation": { "pose": [0, 0, 0] } },
+        { "name": "head_lower", "rotation": { "pose": [0, 0, 0] } },
+        { "name": "body", "rotation": { "swing": [0, 5, 0], "speed": 0.7 } },
+        { "name": "tail1", "rotation": { "swing": [0, 10, 0], "speed": 0.7, "offset": -0.05 } },
+        { "name": "tail2", "rotation": { "swing": [0, 12.5, 0], "speed": 0.7, "offset": -0.1 } },
+        { "name": "tail3", "rotation": { "swing": [0, 15, 0], "speed": 0.7, "offset": -0.15 } },
+        { "name": "tail4", "rotation": { "swing": [0, 20, 0], "speed": 0.7, "offset": -0.2 } },
+        { "name": "tail5", "rotation": { "swing": [0, 25, 0], "speed": 0.7, "offset": -0.25 } },
+        { "name": "tail6", "rotation": { "swing": [0, 30, 0], "speed": 0.7, "offset": -0.3 } },
+        { "name": "left_fin", "rotation": { "pose": [0, -40, -30], "swing": [0, 25, 0], "speed": 0.7, "offset": -0.1 } },
+        { "name": "right_fin", "rotation": { "pose": [0, 40, 30], "swing": [0, -25, 0], "speed": 0.7, "offset": -0.1 } },
+        { "name": "lamp1", "rotation": { "pose": [-5, 0, 0], "swing": [2, 0, 0], "speed": 0.7 } },
+        { "name": "lamp2", "rotation": { "pose": [-10, 0, 0], "swing": [4, 0, 0], "speed": 0.7, "offset": -0.05 } },
+        { "name": "lamp3", "rotation": { "pose": [-30, 0, 0], "swing": [6, 0, 0], "speed": 0.7, "offset": -0.1 } },
+        { "name": "lamp4", "rotation": { "pose": [-50, 0, 0], "swing": [8, 0, 0], "speed": 0.7, "offset": -0.15 } },
+        { "name": "lamp5", "rotation": { "pose": [-30, 0, 0], "swing": [10, 0, 0], "speed": 0.7, "offset": -0.2 } }
+      ]
+    }
+  ]
+}

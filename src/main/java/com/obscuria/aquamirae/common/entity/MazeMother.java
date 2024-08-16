@@ -3,6 +3,7 @@ package com.obscuria.aquamirae.common.entity;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
+import com.obscuria.aquamirae.common.AquamiraeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -41,7 +42,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-@IceMazeEntity
+@ShipGraveyardEntity
 public class MazeMother extends Monster {
 
 	public MazeMother(EntityType<MazeMother> type, Level world) {
@@ -180,7 +181,7 @@ public class MazeMother extends Monster {
 		for (int ix = -6; ix <= 6; ix++)
 			for (int iz = -6; iz <= 6; iz++) {
 				final BlockPos pos = new BlockPos(this.getBlockX() + ix, this.getBlockY() + offset, this.getBlockZ() + iz);
-				if (this.level().getBlockState(pos.above()).isAir() && this.level().getBlockState(pos).is(Aquamirae.MAZE_MOTHER_CAN_DESTROY)) {
+				if (this.level().getBlockState(pos.above()).isAir() && this.level().getBlockState(pos).is(AquamiraeTags.MAZE_MOTHER_CAN_DESTROY)) {
 					if (this.random.nextBoolean())
 						if (this.level().getBlockState(pos).is(Blocks.ICE) || this.level().getBlockState(pos).is(Blocks.FROSTED_ICE)) {
 							this.level().destroyBlock(pos, true);

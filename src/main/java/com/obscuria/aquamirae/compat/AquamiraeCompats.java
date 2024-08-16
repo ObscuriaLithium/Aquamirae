@@ -1,6 +1,6 @@
 package com.obscuria.aquamirae.compat;
 
-import com.obscuria.core.api.network.ModHook;
+import com.obscuria.core.network.ModHook;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.NonExtendable

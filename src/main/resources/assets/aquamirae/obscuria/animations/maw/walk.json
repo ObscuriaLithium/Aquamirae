@@ -1,9 +1,10 @@
 {
+  "looped": true,
   "frames": [
     {
-      "easing": "obscure_api:ceil",
       "bones": [
         { "name": "main", "rotation": { "swing": [0, 0, -5], "speed": 0.6 } },
+        { "name": "head", "rotation": { "pose": [0, 0, 0] } },
         { "name": "head_upper", "rotation": { "pose": [12, 0, 0], "swing": [-4, 0, 0], "speed": 0.6 } },
         { "name": "body", "rotation": { "swing": [0, -12, 0], "speed": 0.6 } },
         { "name": "body2", "rotation": { "swing": [0, -16, 0], "speed": 0.6, "offset": -0.1 } },

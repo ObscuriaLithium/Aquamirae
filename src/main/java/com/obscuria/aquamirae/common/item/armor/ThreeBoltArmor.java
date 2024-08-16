@@ -1,19 +1,23 @@
 
 package com.obscuria.aquamirae.common.item.armor;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.client.extension.ThreeBoltArmorExtension;
 import com.obscuria.aquamirae.common.DeadSeaCurse;
-import com.obscuria.aquamirae.common.item.OxygenHolder;
+import com.obscuria.aquamirae.common.item.OxygenContainer;
 import com.obscuria.aquamirae.registry.*;
-import com.obscuria.core.api.ability.AbilityStyles;
-import com.obscuria.core.api.ability.*;
-import com.obscuria.core.api.util.bundle.ItemBundle;
+import com.obscuria.core.common.item.ability.Ability;
+import com.obscuria.core.common.item.ability.AbilityStyles;
+import com.obscuria.core.common.item.ability.AbilityTier;
+import com.obscuria.core.common.item.ability.IAbilitable;
+import com.obscuria.core.common.bundle.ItemBundle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -43,24 +47,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class ThreeBoltArmor extends ArmorItem {
-	public static final TagKey<Item> ARMOR_PIECES = ItemTags.create(Aquamirae.key("armor/three_bolt_pieces"));
-	public static final ItemBundle ARMOR_BUNDLE = ItemBundle.fromTag(ARMOR_PIECES);
-	public static final Ability ABILITY = Ability.create(AbilityStyles.PURPLE_GEM)
-			.setRelatedItems(ARMOR_BUNDLE)
-			.addTier(AbilityTier.create()
-					.setDescription(Component.translatable("ability.aquamirae.three_bolt_armor_tier_1")))
-			.addTier(AbilityTier.create()
-					.setDescription(Component.translatable("ability.aquamirae.three_bolt_armor_tier_2"))
-					.addGoal(AbilityGoal.equippedArmor(4,
-							Component.translatable("ability_goal.aquamirae.three_bolt_armor"),
-							ARMOR_BUNDLE)))
-			.build();
-	private static final Map<Class<? extends ThreeBoltArmor>, String> TEXTURES = Util.make(Maps.newHashMap(), map -> {
-		map.put(ThreeBoltArmor.Helmet.class, "aquamirae:textures/entity/armor/three_bolt_helmet.png");
-		map.put(Suit.class, "aquamirae:textures/entity/armor/three_bolt_chestplate.png");
-		map.put(ThreeBoltArmor.Leggings.class, "aquamirae:textures/entity/armor/three_bolt_leggings.png");
-		map.put(ThreeBoltArmor.Boots.class, "aquamirae:textures/entity/armor/three_bolt_boots.png");
-	});
+	public static final TagKey<Item> TAG;
+	public static final ItemBundle PIECES;
+	private static final Map<Class<?>, String> TEXTURES;
 	private static final String TAG_TANKS = "Tanks";
 	private static final String TAG_FIRST = "first";
 	private static final String TAG_SECOND = "second";
@@ -86,20 +75,20 @@ public abstract class ThreeBoltArmor extends ArmorItem {
 
 	public static int getCapacity(ItemStack stack) {
 		final var tanks = getTanks(stack);
-		return OxygenHolder.getCapacity(tanks.getFirst())
-				+ OxygenHolder.getCapacity(tanks.getSecond());
+		return OxygenContainer.getCapacity(tanks.getFirst())
+				+ OxygenContainer.getCapacity(tanks.getSecond());
 	}
 
 	public static int getOxygen(ItemStack stack) {
 		final var tanks = getTanks(stack);
-		return OxygenHolder.getOxygen(tanks.getFirst())
-				+ OxygenHolder.getOxygen(tanks.getSecond());
+		return OxygenContainer.getOxygen(tanks.getFirst())
+				+ OxygenContainer.getOxygen(tanks.getSecond());
 	}
 
 	public static int takeOxygen(ItemStack stack, int amount) {
 		final var tanks = getTanks(stack);
-		var taken = OxygenHolder.takeOxygen(tanks.getFirst(), amount);
-		if (taken < amount) taken += OxygenHolder.takeOxygen(tanks.getSecond(), amount - taken);
+		var taken = OxygenContainer.takeOxygen(tanks.getFirst(), amount);
+		if (taken < amount) taken += OxygenContainer.takeOxygen(tanks.getSecond(), amount - taken);
 		setTanks(stack, tanks);
 		return taken;
 	}
@@ -108,6 +97,7 @@ public abstract class ThreeBoltArmor extends ArmorItem {
 		super(material, type, properties);
 	}
 
+	@Override
 	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		consumer.accept(new ThreeBoltArmorExtension());
 	}
@@ -119,79 +109,96 @@ public abstract class ThreeBoltArmor extends ArmorItem {
 
 	@DeadSeaCurse.ByDefault
 	public static class Helmet extends ThreeBoltArmor implements IAbilitable {
-
-		public static void onArmorBonusPressed(Player player) {
-			if (!ABILITY.canBeUsedBy(player) || !isEquippedBy(player) || !player.isInWater()) return;
-			final var stack = player.getItemBySlot(EquipmentSlot.HEAD);
-			final var context = ABILITY.setupContext(stack, player);
-			final var suit = player.getItemBySlot(EquipmentSlot.CHEST);
-			if (context.getTier() >= 2 && suit.is(AquamiraeItems.THREE_BOLT_SUIT.get()))
-				applyActiveEffects(suit, player);
-		}
-
-		public static void onPlayerTick(Player player) {
-			if (!ABILITY.canBeUsedBy(player) || !isEquippedBy(player)) return;
-			final var stack = player.getItemBySlot(EquipmentSlot.HEAD);
-			final var context = ABILITY.setupContext(stack, player);
-			if (context.getTier() >= 2) applyPassiveEffects(player);
-		}
-
-		private static void applyActiveEffects(ItemStack suit, Player player) {
-			if (getOxygen(suit) < 10) return;
-			takeOxygen(suit, 10);
-			player.removeEffect(AquamiraeMobEffects.THREE_BOLT_ARMOR.get());
-			player.addEffect(new MobEffectInstance(AquamiraeMobEffects.THREE_BOLT_ARMOR.get(), 200));
-			player.level().playSound(null, player,
-					SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE,
-					SoundSource.PLAYERS, 1f, (float) player.getRandom()
-							.triangle(1f, 0.1f));
-		}
-
-		private static void applyPassiveEffects(Player player) {
-			if (player.isInWater() && !player.getAbilities().flying) {
-				final var factor = getWeightFactor(player, player.level());
-				player.setDeltaMovement(player.getDeltaMovement()
-						.multiply(0.99, 1, 0.99)
-						.add(0, (player.isSwimming() ? -0.16 : -0.08) * factor, 0));
-			}
-			if (player.getAirSupply() <= 0 && !player.level().isClientSide) {
-				final var suit = player.getItemBySlot(EquipmentSlot.CHEST);
-				if (suit.is(AquamiraeItems.THREE_BOLT_SUIT.get())) {
-					final var amount = (float) takeOxygen(suit, 10);
-					if (amount > 0) {
-						player.setAirSupply(Math.round(amount / 10f * player.getMaxAirSupply()));
-						player.level().playSound(null, player,
-								AquamiraeSounds.ITEM_THREE_BOLT_OXYGEN.get(),
-								SoundSource.PLAYERS, 0.4f, (float) player.getRandom()
-										.triangle(1f, 0.1f));
-					}
-				}
-			}
-		}
-
-		@SuppressWarnings("all")
-		private static boolean isEquippedBy(Player player) {
-			return player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ThreeBoltArmor.Helmet;
-		}
-
-		private static float getWeightFactor(Player player, Level level) {
-			final var pos = player.blockPosition();
-			final var water1 = level.isWaterAt(pos);
-			final var water2 = level.isWaterAt(pos.below());
-			final var water3 = level.isWaterAt(pos.below(2));
-			final var water4 = level.isWaterAt(pos.below(3));
-			final float factor = Optional.ofNullable(player.getEffect(AquamiraeMobEffects.THREE_BOLT_ARMOR.get()))
-					.map(effect -> 1f - Mth.clamp(effect.getDuration() / 120f, 0f, 1f))
-					.orElse(1f);
-			if (water1 && water2 && water3 && water4) return 1.4f * factor;
-			if (water1 && water2 && water3) return 0.5f * factor;
-			if (water1 && water2) return 0.2f * factor;
-			return 0f;
-		}
+		public static final Ability ABILITY;
 
 		public Helmet() {
 			super(AquamiraeArmorMaterials.THREE_BOLT, Type.HELMET,
 					new Properties().rarity(Rarity.EPIC));
+		}
+
+		@SuppressWarnings("all")
+		public static boolean isEquipped(Player player) {
+			return player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ThreeBoltArmor.Helmet;
+		}
+
+		public static void onBonusRequest(Player player) {
+			if (!ABILITY.canBeUsedBy(player)
+					|| !isEquipped(player)
+					|| !player.isInWater()) return;
+			final var stack = player.getItemBySlot(EquipmentSlot.CHEST);
+			final var context = ABILITY.setupContext(stack, player);
+			if (context.tier() >= 2 && stack.is(AquamiraeItems.THREE_BOLT_SUIT.get())) {
+				tryUseDash(stack, player);
+				context.forceCooldown(60);
+			}
+		}
+
+		public static void onPlayerTick(Player player) {
+			if (!ABILITY.canBeUsedBy(player) || !isEquipped(player)) return;
+			final var stack = player.getItemBySlot(EquipmentSlot.HEAD);
+			final var context = ABILITY.setupContext(stack, player);
+			if (context.tier() >= 2) {
+				pullToBottom(player);
+				tryReplenishAirSupply(player);
+			}
+		}
+
+		private static void pullToBottom(Player player) {
+			if (!player.isInWater() || player.getAbilities().flying) return;
+			final var weight = getWeight(player, player.level());
+			player.setDeltaMovement(player.getDeltaMovement()
+					.multiply(0.99, 1, 0.99)
+					.add(0, (player.isSwimming() ? -0.16 : -0.08) * weight, 0));
+		}
+
+		private static void tryReplenishAirSupply(Player player) {
+			if (player.getAirSupply() > 0 || player.level().isClientSide) return;
+			final var suit = player.getItemBySlot(EquipmentSlot.CHEST);
+			if (suit.is(AquamiraeItems.THREE_BOLT_SUIT.get())) {
+				final var amount = (float) takeOxygen(suit, 10);
+				if (amount > 0) {
+					player.setAirSupply(Math.round(amount / 10f * player.getMaxAirSupply()));
+					player.level().playSound(null, player,
+							AquamiraeSounds.ITEM_THREE_BOLT_OXYGEN.get(),
+							SoundSource.PLAYERS, 0.4f, (float) player.getRandom()
+									.triangle(1f, 0.1f));
+				}
+			}
+		}
+
+		private static void tryUseDash(ItemStack suit, Player player) {
+			if (getOxygen(suit) < 10) return;
+			takeOxygen(suit, 10);
+			player.addDeltaMovement(player.getViewVector(1f).normalize().scale(2));
+			player.removeEffect(AquamiraeMobEffects.THREE_BOLT_ARMOR.get());
+			player.addEffect(new MobEffectInstance(AquamiraeMobEffects.THREE_BOLT_ARMOR.get(), 200));
+			player.level().playSound(null, player,
+					SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS,
+					1f, (float) player.getRandom().triangle(1f, 0.2f));
+			player.setSprinting(true);
+			player.hurtMarked = true;
+		}
+
+		private static float getWeight(Player player, Level level) {
+			final var pos = player.blockPosition();
+			final var factor = getWeightFactor(player);
+			if (isWater(level, pos, 4)) return 1.4f * factor;
+			if (isWater(level, pos, 3)) return 0.5f * factor;
+			if (isWater(level, pos, 2)) return 0.2f * factor;
+			return 0f;
+		}
+
+		private static float getWeightFactor(Player player) {
+			return Optional.ofNullable(player.getEffect(AquamiraeMobEffects.THREE_BOLT_ARMOR.get()))
+					.map(effect -> 1f - Mth.clamp(effect.getDuration() / 120f, 0f, 1f))
+					.orElse(1f);
+		}
+
+		private static boolean isWater(Level level, BlockPos pos, int depth) {
+			for (int i = 0; i < depth; i++)
+				if (!level.isWaterAt(pos.below(i)))
+					return false;
+			return true;
 		}
 
 		@Override
@@ -200,10 +207,27 @@ public abstract class ThreeBoltArmor extends ArmorItem {
 		}
 
 		@Override
-		public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
-			return Aquamirae.addAttribute(super.getDefaultAttributeModifiers(slot), AquamiraeAttributes.DEPTHS_FURY.get(),
-					UUID.fromString("AD4402DF-F088-42BA-9AD0-4FA2A379EF24"), AttributeModifier.Operation.MULTIPLY_BASE,
-					0.4, slot == this.type.getSlot());
+		public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+			if (slot == this.type.getSlot())
+				return ImmutableMultimap.<Attribute, AttributeModifier>builder()
+						.putAll(super.getAttributeModifiers(slot, stack))
+						.put(AquamiraeAttributes.DEPTHS_FURY.get(),
+								new AttributeModifier(UUID.fromString("AD4402DF-F088-42BA-9AD0-4FA2A379EF24"),
+										"Armor modifier", 0.4, AttributeModifier.Operation.MULTIPLY_BASE))
+						.build();
+			return super.getAttributeModifiers(slot, stack);
+		}
+
+		static {
+			final var descriptionTier1 = Component.translatable("ability.aquamirae.three_bolt_armor_tier_1");
+			final var descriptionTier2 = Component.translatable("ability.aquamirae.three_bolt_armor_tier_2");
+			final var armorPiecesHint = Component.translatable("ability_goal.aquamirae.three_bolt_armor");
+			ABILITY = Ability.create(AbilityStyles.PURPLE_GEM)
+					.setRelatedItems(PIECES)
+					.addTier(AbilityTier.create(descriptionTier1))
+					.addTier(AbilityTier.create(descriptionTier2)
+							.requiringArmor(4, armorPiecesHint, PIECES))
+					.build();
 		}
 	}
 
@@ -218,7 +242,7 @@ public abstract class ThreeBoltArmor extends ArmorItem {
 		public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack other, Slot slot, ClickAction action, Player player, SlotAccess access) {
 			if (!slot.allowModification(player) || action != ClickAction.SECONDARY) return false;
 			final var tanks = getTanks(stack);
-			if (OxygenHolder.is(other)) {
+			if (OxygenContainer.is(other)) {
 				if (tanks.getFirst().isEmpty()) {
 					setTanks(stack, Pair.of(other, tanks.getSecond()));
 					access.set(ItemStack.EMPTY);
@@ -253,12 +277,12 @@ public abstract class ThreeBoltArmor extends ArmorItem {
 					? Component.literal("§8 - Oxygen Tank Slot")
 					: Component.literal("§8 - §f%s §8(%s§8)".formatted(
 					tanks.getFirst().getHoverName().getString(),
-					OxygenHolder.getState(tanks.getFirst()))));
+					OxygenContainer.getState(tanks.getFirst()))));
 			tooltip.add(tanks.getSecond().isEmpty()
 					? Component.literal("§8 - Oxygen Tank Slot")
 					: Component.literal("§8 - §f%s §8(%s§8)".formatted(
 					tanks.getSecond().getHoverName().getString(),
-					OxygenHolder.getState(tanks.getSecond()))));
+					OxygenContainer.getState(tanks.getSecond()))));
 		}
 
 		@Override
@@ -290,6 +314,7 @@ public abstract class ThreeBoltArmor extends ArmorItem {
 	}
 
 	public static class Leggings extends ThreeBoltArmor {
+
 		public Leggings() {
 			super(AquamiraeArmorMaterials.THREE_BOLT, Type.LEGGINGS,
 					new Properties().rarity(Rarity.UNCOMMON));
@@ -297,9 +322,21 @@ public abstract class ThreeBoltArmor extends ArmorItem {
 	}
 
 	public static class Boots extends ThreeBoltArmor {
+
 		public Boots() {
 			super(AquamiraeArmorMaterials.THREE_BOLT, Type.BOOTS,
 					new Properties().rarity(Rarity.UNCOMMON));
 		}
+	}
+
+	static {
+		TAG = ItemTags.create(Aquamirae.key("armor/three_bolt_pieces"));
+		PIECES = ItemBundle.fromTag(TAG);
+		TEXTURES = Util.make(Maps.newHashMap(), map -> {
+			map.put(ThreeBoltArmor.Helmet.class, "aquamirae:textures/entity/armor/three_bolt_helmet.png");
+			map.put(Suit.class, "aquamirae:textures/entity/armor/three_bolt_chestplate.png");
+			map.put(ThreeBoltArmor.Leggings.class, "aquamirae:textures/entity/armor/three_bolt_leggings.png");
+			map.put(ThreeBoltArmor.Boots.class, "aquamirae:textures/entity/armor/three_bolt_boots.png");
+		});
 	}
 }

@@ -1,0 +1,40 @@
+{
+  "looped": true,
+  "frames": [
+    {
+      "bones": [
+        { "name": "main", "position": { "pose": [0, -20.5, 0], "swing": [0, 0.4, 0], "speed": 0.1 } },
+        { "name": "left_jaw", "rotation": { "pose": [20, 0, 10], "swing": [10, 0, 0], "speed": 0.4 } },
+        { "name": "right_jaw", "rotation": { "pose": [20, 0, -10], "swing": [-10, 0, 0], "speed": 0.4 } },
+        { "name": "leg1_1", "rotation": { "pose": [0, 0, -15], "swing": [0, 0, 4], "speed": 0.2 } },
+        { "name": "leg1_2", "rotation": { "pose": [0, 0, 40], "swing": [0, 0, 6], "speed": 0.2, "offset": -0.3 } },
+        { "name": "leg1_3", "rotation": { "pose": [0, 0, 40], "swing": [0, 0, 8], "speed": 0.2, "offset": -0.6 } },
+        { "name": "leg2_1", "rotation": { "pose": [0, 0, 0], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg2_2", "rotation": { "pose": [0, 0, 74], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "leg2_3", "rotation": { "pose": [0, 0, 74], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg3_1", "rotation": { "pose": [0, 0, 0], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg3_2", "rotation": { "pose": [0, 0, 74], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "leg3_3", "rotation": { "pose": [0, 0, 74], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg4_1", "rotation": { "pose": [0, 0, 0], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg4_2", "rotation": { "pose": [0, 0, 74], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "leg4_3", "rotation": { "pose": [0, 0, 74], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg5_1", "rotation": { "pose": [0, 0, 15], "swing": [0, 0, 4], "speed": 0.2 } },
+        { "name": "leg5_2", "rotation": { "pose": [0, 0, -40], "swing": [0, 0, 6], "speed": 0.2, "offset": -0.3 } },
+        { "name": "leg5_3", "rotation": { "pose": [0, 0, -40], "swing": [0, 0, 8], "speed": 0.2, "offset": -0.6 } },
+        { "name": "leg6_1", "rotation": { "pose": [0, 0, 0], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "leg6_2", "rotation": { "pose": [0, 0, -74], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg6_3", "rotation": { "pose": [0, 0, -74], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "leg7_1", "rotation": { "pose": [0, 0, 0], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "leg7_2", "rotation": { "pose": [0, 0, -74], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg7_3", "rotation": { "pose": [0, 0, -74], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "leg8_1", "rotation": { "pose": [0, 0, 0], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "leg8_2", "rotation": { "pose": [0, 0, -74], "swing": [0, 0, -4], "speed": 0.1 } },
+        { "name": "leg8_3", "rotation": { "pose": [0, 0, -74], "swing": [0, 0, 4], "speed": 0.1 } },
+        { "name": "butt",
+          "rotation": { "pose": [15, 0, 0], "swing": [5, 0, 0], "speed": 0.1 },
+          "scale": { "pose": [1, 1, 1], "swing": [0.08, 0.08, 0.01], "speed": 0.2 }
+        }
+      ]
+    }
+  ]
+}

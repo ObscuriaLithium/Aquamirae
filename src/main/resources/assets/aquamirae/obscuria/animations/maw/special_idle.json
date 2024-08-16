@@ -7,6 +7,7 @@
       "easing": "obscure_api:ease_in_out_cubic",
       "bones": [
         { "name": "main", "rotation": {} },
+        { "name": "head", "rotation": { "pose": [0, 0, 0] } },
         { "name": "head_upper", "rotation": { "pose": [30, 0, 0] } },
         { "name": "body", "rotation": { "swing": [0, 0, 5], "speed": 0.75, "offset": 0.1 } },
         { "name": "body2", "rotation": { "pose": [-30, 0, 0], "swing": [0, 15, 0], "speed": 0.75 } },

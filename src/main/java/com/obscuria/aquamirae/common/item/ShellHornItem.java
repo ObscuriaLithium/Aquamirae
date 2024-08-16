@@ -3,11 +3,11 @@ package com.obscuria.aquamirae.common.item;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.entity.CaptainCornelia;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
+import com.obscuria.aquamirae.registry.AquamiraeEntityTypes;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.core.api.graphic.Icons;
-import com.obscuria.core.api.util.signal.RuntimeSignals;
+import com.obscuria.core.client.graphic.Icons;
+import com.obscuria.core.common.signal.RuntimeSignals;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShellHornItem extends Item {
+
 	public ShellHornItem() {
 		super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 	}
@@ -106,11 +107,11 @@ public class ShellHornItem extends Item {
 			if (this.ticks.addAndGet(1) >= DELAY) {
 				if (pos == BlockPos.ZERO) {
 					player.sendSystemMessage(Component.empty().withStyle(ChatFormatting.RED)
-							.append(Icons.INFO.toComponent())
+							.append(Icons.INFO.component())
 							.append(Component.literal(" "))
 							.append(Component.translatable("info.aquamirae.nothing_happened")));
 				} else {
-					final var cornelia = new CaptainCornelia(AquamiraeEntities.CAPTAIN_CORNELIA.get(), level);
+					final var cornelia = new CaptainCornelia(AquamiraeEntityTypes.CAPTAIN_CORNELIA.get(), level);
 					cornelia.moveTo(pos.getX() + 0.5, pos.getY() - 4, pos.getZ() + 0.5,
 							level.getRandom().nextFloat() * 360F, 0);
 					cornelia.finalizeSpawn(level, level.getCurrentDifficultyAt(cornelia.blockPosition()),
@@ -118,7 +119,7 @@ public class ShellHornItem extends Item {
 					level.addFreshEntity(cornelia);
 					for (var player : level.getEntitiesOfClass(Player.class, new AABB(pos).inflate(64)))
 						player.sendSystemMessage(Component.empty().withStyle(ChatFormatting.LIGHT_PURPLE)
-								.append(Icons.SKULL.toComponent())
+								.append(Icons.SKULL.component())
 								.append(Component.literal(" "))
 								.append(Component.translatable("info.aquamirae.cornelia_awakened")));
 				}

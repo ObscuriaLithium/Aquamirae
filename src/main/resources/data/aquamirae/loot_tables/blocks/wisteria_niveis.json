@@ -2,46 +2,59 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": { "min": 0, "max": 3 },
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        },
+        {
+          "block": "aquamirae:wisteria_niveis",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "half": "lower"
+          }
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:stick",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "set_count",
-              "count": 1
-            }
-          ]
+          "name": "aquamirae:wisteria_niveis"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        },
+        {
+          "block": "aquamirae:wisteria_niveis",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "half": "lower",
+            "natural": "true"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:stick"
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:snowball",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "set_count",
-              "count": 1
-            }
-          ]
+          "weight": 2
         }
-      ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "aquamirae:wisteria_niveis",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": 1
-            }
-          ]
-        }
-      ]
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 3.0,
+        "min": 1.0
+      }
     }
-  ]
+  ],
+  "random_sequence": "aquamirae:blocks/wisteria_niveis"
 }

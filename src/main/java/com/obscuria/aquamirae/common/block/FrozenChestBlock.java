@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.common.block;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.aquamirae.registry.AquamiraeParticles;
+import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -142,7 +142,7 @@ public class FrozenChestBlock extends Block implements SimpleWaterloggedBlock {
 				double d0 = pos.getX() - 0.2D + 1.4D * player.getRandom().nextDouble();
 				double d1 = pos.getY() - 0.2D + 1.4D * player.getRandom().nextDouble();
 				double d2 = pos.getZ() - 0.2D + 1.4D * player.getRandom().nextDouble();
-				world.addParticle(AquamiraeParticles.SHINE.get(), d0, d1, d2, 0, 0.05, 0);
+				world.addParticle(AquamiraeParticleTypes.SHINE.get(), d0, d1, d2, 0, 0.05, 0);
 			}
 			return InteractionResult.SUCCESS;
 		}

@@ -2,7 +2,7 @@ package com.obscuria.aquamirae.compat.curios.item;
 
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.registry.AquamiraeAttributes;
-import com.obscuria.core.api.annotation.SimpleLore;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -13,8 +13,8 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.UUID;
 
-@SimpleLore("lore.aquamirae.dead_sea_ring")
-public class DeadSeaRingItem extends CurioItem {
+@Lore("lore.aquamirae.dead_sea_ring")
+public class DeadSeaRingItem extends CurioCompatItem {
 
     public DeadSeaRingItem() {
         super(new Properties().stacksTo(1).rarity(Rarity.EPIC));

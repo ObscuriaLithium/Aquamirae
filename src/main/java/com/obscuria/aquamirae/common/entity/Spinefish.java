@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-@IceMazeEntity
+@ShipGraveyardEntity
 public class Spinefish extends AbstractSchoolingFish {
 
     public Spinefish(EntityType<? extends Spinefish> type, Level level) {

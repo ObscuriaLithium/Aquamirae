@@ -8,14 +8,14 @@ import com.obscuria.aquamirae.common.item.weapon.Divider;
 import com.obscuria.aquamirae.common.item.weapon.PoisonedBlade;
 import com.obscuria.aquamirae.common.item.weapon.RemnantsSaber;
 import com.obscuria.aquamirae.common.item.weapon.WhisperOfTheAbyss;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
+import com.obscuria.aquamirae.registry.AquamiraeEntityTypes;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
-import com.obscuria.aquamirae.registry.AquamiraeParticles;
+import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.core.api.animation.entity.EntityAnimations;
-import com.obscuria.core.api.animation.entity.IAnimatedEntity;
-import com.obscuria.core.api.extension.screen.StyledBossEvent;
-import com.obscuria.core.api.util.EntityUtil;
+import com.obscuria.core.common.animation.EntityAnimations;
+import com.obscuria.core.common.animation.IAnimatedEntity;
+import com.obscuria.core.common.extension.screen.StyledBossEvent;
+import com.obscuria.core.util.EntityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -230,7 +230,7 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 				this.particle1++;
 				if (this.level() instanceof ServerLevel server && this.particle1 > 1) {
 					this.particle1 = 0;
-					server.sendParticles(AquamiraeParticles.GHOST.get(), this.getX(), this.getY() - 0.2, this.getZ(), 1,
+					server.sendParticles(AquamiraeParticleTypes.GHOST.get(), this.getX(), this.getY() - 0.2, this.getZ(), 1,
 							0.3, 0.1, 0.3, 0.1);
 				}
 				if (this.isInWater()) this.setDeltaMovement(new Vec3(0F, 0.4F, 0F));
@@ -239,7 +239,7 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 		this.particle2++;
 		if (this.level() instanceof ServerLevel server && this.particle2 > 9) {
 			this.particle2 = 0;
-			server.sendParticles(AquamiraeParticles.GHOST_SHINE.get(), this.getX(), this.getY() + 1.7, this.getZ(), 1,
+			server.sendParticles(AquamiraeParticleTypes.GHOST_SHINE.get(), this.getX(), this.getY() + 1.7, this.getZ(), 1,
 					0.15, 0.1, 0.15, 0.1);
 		}
 
@@ -294,7 +294,7 @@ public class CaptainCornelia extends Monster implements IAnimatedEntity {
 			serverLevel.addFreshEntity(entityToSpawn);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 			serverLevel.playSound(null, pos, AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_RAGE.get(), SoundSource.HOSTILE, 4, 1);
-			final var type = this.random.nextBoolean() ? AquamiraeEntities.POISONED_CHAKRA.get() : AquamiraeEntities.MAZE_ROSE.get();
+			final var type = this.random.nextBoolean() ? AquamiraeEntityTypes.POISONED_CHAKRA.get() : AquamiraeEntityTypes.MAZE_ROSE.get();
 //			CompoundProjectileEntity.create(type, this, this.level(), null, 5, 0F, 600, 1000);
 //			CompoundProjectileEntity.create(type, this, this.level(), null, 5, 0.33F, 600, 1000);
 //			CompoundProjectileEntity.create(type, this, this.level(), null, 5, 0.66F, 600, 1000);

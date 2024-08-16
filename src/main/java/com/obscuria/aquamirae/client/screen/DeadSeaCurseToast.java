@@ -9,7 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public final class DeadSeaCurseToast implements Toast {
     private static final ResourceLocation BACKGROUND_SPRITE = new ResourceLocation("toast/advancement");
     private static final Component TITLE_TEXT = Component.translatable("toast.aquamirae.curse.title").withStyle(ChatFormatting.RED);

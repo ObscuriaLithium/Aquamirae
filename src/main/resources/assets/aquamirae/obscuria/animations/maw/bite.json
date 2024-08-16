@@ -1,0 +1,22 @@
+{
+  "length": 20,
+  "out_easing": "obscure_api:ease_in_out_cubic",
+  "frames": [
+    {
+      "timestamp": 1,
+      "easing": "obscure_api:ease_out_cubic",
+      "bones": [
+        { "name": "head", "rotation": { "pose": [-10, 0, 0] } },
+        { "name": "head_upper", "rotation": { "pose": [50, 0, 0] } }
+      ]
+    },
+    {
+      "timestamp": 4,
+      "easing": "obscure_api:ease_in_quart",
+      "bones": [
+        { "name": "head", "rotation": { "pose": [10, 0, 0] } },
+        { "name": "head_upper", "rotation": { "pose": [-22, 0, 0] } }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ package com.obscuria.aquamirae.compat.curios.item;
 
 import com.google.common.collect.Multimap;
 import com.obscuria.aquamirae.registry.AquamiraeAttributes;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -11,7 +12,8 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.UUID;
 
-public class IceMazeRingItem extends CurioItem {
+@Lore("lore.aquamirae.ice_maze_ring")
+public class IceMazeRingItem extends CurioCompatItem {
 
     public IceMazeRingItem() {
         super(new Properties().stacksTo(1).rarity(Rarity.UNCOMMON));

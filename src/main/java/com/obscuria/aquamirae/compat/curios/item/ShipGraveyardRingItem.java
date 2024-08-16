@@ -1,7 +1,7 @@
 package com.obscuria.aquamirae.compat.curios.item;
 
 import com.google.common.collect.Multimap;
-import com.obscuria.core.api.annotation.SimpleLore;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -12,8 +12,8 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.UUID;
 
-@SimpleLore("lore.aquamirae.ship_graveyard_ring")
-public class ShipGraveyardRingItem extends CurioItem {
+@Lore("lore.aquamirae.ship_graveyard_ring")
+public class ShipGraveyardRingItem extends CurioCompatItem {
 
     public ShipGraveyardRingItem() {
         super(new Properties().stacksTo(1).rarity(Rarity.UNCOMMON));

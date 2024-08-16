@@ -1,30 +1,36 @@
 package com.obscuria.aquamirae.client.model;
 
+import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.obscuria.aquamirae.client.animation.MawAnimations;
 import com.obscuria.aquamirae.common.entity.Maw;
-import com.obscuria.core.api.animation.tool.IAnimatableModel;
-import net.minecraft.client.Minecraft;
+import com.obscuria.core.client.animation.tool.IAnimatableModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+
+import java.util.Map;
 
 public class ModelMaw extends EntityModel<Maw> implements IAnimatableModel {
+	private final Map<String, ModelPart> partsMap = Maps.newHashMap();
 	public final ModelPart root, main, head, headUpper, headLower, body, body2, body3, rightFin, leftFin;
 
 	public ModelMaw(ModelPart root) {
-		this.root = root;
-		this.main = root.getChild("main");
-		this.head = main.getChild("head");
-		this.headUpper = head.getChild("head_upper");
-		this.headLower = head.getChild("head_lower");
-		this.body = main.getChild("body");
-		this.body2 = body.getChild("body2");
-		this.body3 = body2.getChild("body3");
-		this.rightFin = body.getChild("right_fin");
-		this.leftFin = body.getChild("left_fin");
+		this.root = this.definePart(root, "root");
+		this.main = this.definePartChild(root, "main");
+		this.head = this.definePartChild(main, "head");
+		this.headUpper = this.definePartChild(head, "head_upper");
+		this.headLower = this.definePartChild(head, "head_lower");
+		this.body = this.definePartChild(main, "body");
+		this.body2 = this.definePartChild(body, "body2");
+		this.body3 = this.definePartChild(body2, "body3");
+		this.rightFin = this.definePartChild(body, "right_fin");
+		this.leftFin = this.definePartChild(body, "left_fin");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -49,7 +55,7 @@ public class ModelMaw extends EntityModel<Maw> implements IAnimatableModel {
 		return LayerDefinition.create(meshDefinition, 256, 256);
 	}
 
-	public void translate(PoseStack pose) {
+	public void translateToMouth(PoseStack pose) {
 		this.main.translateAndRotate(pose);
 		this.head.translateAndRotate(pose);
 		this.headLower.translateAndRotate(pose);
@@ -61,50 +67,21 @@ public class ModelMaw extends EntityModel<Maw> implements IAnimatableModel {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public Map<String, ModelPart> getPartsMap() {
+		return this.partsMap;
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack pose, VertexConsumer consumer, int light, int overlay,
+							   float red, float green, float blue, float alpha) {
+		main.render(pose, consumer, light, overlay, red, green, blue, alpha);
 	}
 
 	public void setupAnim(Maw entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		final float delta = Minecraft.getInstance().getPartialTick();
-		MawAnimations.IDLE.animate(this, entity, limbSwing, limbSwingAmount, delta);
-		MawAnimations.SPECIAL_IDLE.animate(this, entity, limbSwing, limbSwingAmount, delta);
-		MawAnimations.WALK.animate(this, entity, limbSwing, limbSwingAmount, delta);
-//		HekateLib.reset(main, head, headUpper, headLower, body, body2, body3, rightFin, leftFin);
-//		HekateLib.push(ageInTicks, 0.06f, HekateLib.mod.idle(limbSwingAmount, 10), HekateLib.Mode.DEFINITION)
-//				.keyframe(headUpper, k -> k.rotation(-5, 0, 0, 0, 0, 0, 2, 0))
-//				.keyframe(body2, k -> k.xRot(-8, -8).yRot(-10, 0, 2, 0).zRot(4, 0))
-//				.keyframe(body3, k -> k.xRot(-8, -8, -0.1f).yRot(-10, 0, 2, -0.1f).zRot(4, 0, -0.1f));
-//		HekateLib.push(limbSwing, 0.6f, HekateLib.mod.move(limbSwingAmount, 10), HekateLib.Mode.ADDITION)
-//				.keyframe(main, k -> k.zRot(-4, 0))
-//				.keyframe(headUpper, k -> k.xRot(-4, 12))
-//				.keyframe(body, k -> k.yRot(-12, 0))
-//				.keyframe(body2, k -> k.yRot(-12, 0, -0.1f))
-//				.keyframe(body3, k -> k.yRot(-12, 0, -0.2f))
-//				.keyframe(rightFin, k -> k.yRot(40, 0).zRot(-12, 10, -0.3f))
-//				.keyframe(leftFin, k -> k.yRot(40, 0).zRot(-12, -10, -0.3f));
-
-//		HekateLib.push(1, 13, Easing.EASE_IN_CUBIC, Easing.EASE_OUT_CUBIC)
-//				.pose(0, 2, Easing.EASE_OUT_CUBIC, ageInTicks, 1F, builder -> builder
-//						.keyframe(head, k -> k.xRot(0, -10))
-//						.keyframe(headUpper, k -> k.xRot(0, 50)))
-//				.pose(2, 20, Easing.EASE_IN_QUART.scale(0.15f), ageInTicks, 1F, builder -> builder
-//						.keyframe(head, k -> k.xRot(0, 10))
-//						.keyframe(headUpper, k -> k.xRot(0, -22)))
-//				.animate(maw.ATTACK);
-//		HekateLib.push(6, 0, Easing.EASE_OUT_CIRCLE, Easing.CEIL)
-//				.pose(0, 6, Easing.CEIL, ageInTicks, 1F, builder -> builder
-//						.keyframe(main, k -> k.xRot(8))
-//						.keyframe(head, k -> k.xRot(0, -50))
-//						.keyframe(body2, k -> k.xRot(20))
-//						.keyframe(body3, k -> k.xRot(40))
-//						.keyframe(headUpper, k -> k.xRot(0, 50)))
-//				.pose(6, 40, Easing.EASE_OUT_BOUNCE.scale(0.6f), ageInTicks, 1F, builder -> builder
-//						.keyframe(main, k -> k.xRot(0))
-//						.keyframe(head, k -> k.xRot(0, 10))
-//						.keyframe(body2, k -> k.xRot(0))
-//						.keyframe(body3, k -> k.xRot(0))
-//						.keyframe(headUpper, k -> k.xRot(0, -22)))
-//				.animate(maw.DEATH);
+		MawAnimations.IDLE.animate(this, entity, limbSwing, limbSwingAmount);
+		MawAnimations.SPECIAL_IDLE.animate(this, entity, limbSwing, limbSwingAmount);
+		MawAnimations.WALK.animate(this, entity, limbSwing, limbSwingAmount);
+		MawAnimations.BITE.animate(this, entity, limbSwing, limbSwingAmount);
+		this.head.yRot += Math.toRadians(netHeadYaw * 0.5f);
 	}
 }

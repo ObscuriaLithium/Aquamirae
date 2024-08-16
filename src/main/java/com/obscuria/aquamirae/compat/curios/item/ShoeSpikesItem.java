@@ -1,14 +1,14 @@
 package com.obscuria.aquamirae.compat.curios.item;
 
 import com.obscuria.aquamirae.compat.curios.CuriosCompat;
-import com.obscuria.core.api.annotation.SimpleLore;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-@SimpleLore("lore.aquamirae.shoe_spikes")
-public class ShoeSpikesItem extends CurioItem {
+@Lore("lore.aquamirae.shoe_spikes")
+public class ShoeSpikesItem extends CurioCompatItem {
 
     public ShoeSpikesItem() {
         super(new Properties().stacksTo(1).rarity(Rarity.COMMON));

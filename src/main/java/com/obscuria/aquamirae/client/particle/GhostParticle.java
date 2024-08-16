@@ -1,43 +1,22 @@
 
 package com.obscuria.aquamirae.client.particle;
 
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
-
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.multiplayer.ClientLevel;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.particle.*;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GhostParticle extends TextureSheetParticle {
-	public static GhostParticleProvider provider(SpriteSet spriteSet) {
-		return new GhostParticleProvider(spriteSet);
-	}
+	private final SpriteSet sprites;
 
-	public static class GhostParticleProvider implements ParticleProvider<SimpleParticleType> {
-		private final SpriteSet spriteSet;
-
-		public GhostParticleProvider(SpriteSet spriteSet) {
-			this.spriteSet = spriteSet;
-		}
-
-		public Particle createParticle(@NotNull SimpleParticleType typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed,
-									   double zSpeed) {
-			return new GhostParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
-		}
-	}
-
-	private final SpriteSet spriteSet;
-
-	protected GhostParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
+	protected GhostParticle(ClientLevel world,
+							double x, double y, double z,
+							double vx, double vy, double vz,
+							SpriteSet sprites) {
 		super(world, x, y, z);
-		this.spriteSet = spriteSet;
-		this.setSize(0.2f, 0.2f);
+		this.sprites = sprites;
 		this.quadSize *= 1.3f;
 		this.lifetime = 40;
 		this.gravity = -0.3f;
@@ -45,22 +24,40 @@ public class GhostParticle extends TextureSheetParticle {
 		this.xd = vx * 0.1;
 		this.yd = vy * 0.1;
 		this.zd = vz * 0.1;
-		this.setSpriteFromAge(spriteSet);
+		this.setSize(0.2f, 0.2f);
+		this.setSpriteFromAge(sprites);
 	}
 
 	@Override
-	public int getLightColor(float partialTick) {
-		return 15728880;
-	}
-
-	@Override
-	public @NotNull ParticleRenderType getRenderType() {
+	public ParticleRenderType getRenderType() {
 		return ParticleRenderType.PARTICLE_SHEET_LIT;
+	}
+
+	@Override
+	public int getLightColor(float delta) {
+		return 15728880;
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (!this.removed) this.setSprite(this.spriteSet.get((this.age / 3) % 12 + 1, 12));
+		if (this.removed) return;
+		this.setSprite(this.sprites.get((this.age / 3) % 12 + 1, 12));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static class Provider implements ParticleProvider<SimpleParticleType> {
+		private final SpriteSet sprites;
+
+		public Provider(SpriteSet sprites) {
+			this.sprites = sprites;
+		}
+
+		@Override
+		public GhostParticle createParticle(SimpleParticleType type, ClientLevel level,
+									   double x, double y, double z,
+									   double vx, double vy, double vz) {
+			return new GhostParticle(level, x, y, z, vx, vy, vz, this.sprites);
+		}
 	}
 }

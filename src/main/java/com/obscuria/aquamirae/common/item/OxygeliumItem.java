@@ -3,7 +3,7 @@ package com.obscuria.aquamirae.common.item;
 
 import com.obscuria.aquamirae.common.block.OxygeliumBlock;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
-import com.obscuria.core.api.annotation.SimpleLore;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -13,8 +13,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 
-@SimpleLore("lore.aquamirae.oxygelium")
+@Lore("lore.aquamirae.oxygelium")
 public class OxygeliumItem extends Item {
+
 	public OxygeliumItem() {
 		super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
 	}

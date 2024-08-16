@@ -1,7 +1,7 @@
 
 package com.obscuria.aquamirae.common.block;
 
-import com.obscuria.aquamirae.registry.AquamiraeParticles;
+import com.obscuria.aquamirae.registry.AquamiraeParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -87,7 +87,7 @@ public class LuminescentLampBlock extends Block implements SimpleWaterloggedBloc
 	@Override
 	public void animateTick(@NotNull BlockState blockstate, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource random) {
 		super.animateTick(blockstate, world, pos, random);
-		if (random.nextFloat() < 0.2) world.addParticle(AquamiraeParticles.GHOST_SHINE.get(),
+		if (random.nextFloat() < 0.2) world.addParticle(AquamiraeParticleTypes.GHOST_SHINE.get(),
 					pos.getX() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, pos.getY() + 1.6 + (random.nextFloat() - 0.5) * 0.05D,
 					pos.getZ() + 0.5 + (random.nextFloat() - 0.5) * 0.05D, 0, 0, 0);
 	}

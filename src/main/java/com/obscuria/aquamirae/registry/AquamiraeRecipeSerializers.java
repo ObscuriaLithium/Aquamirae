@@ -2,8 +2,8 @@ package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.recipe.OxygenTankFillingRecipe;
-import com.obscuria.core.api.registry.RegistryHandler;
-import com.obscuria.core.api.registry.RegistrySupplier;
+import com.obscuria.core.registry.RegistryHandler;
+import com.obscuria.core.registry.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;

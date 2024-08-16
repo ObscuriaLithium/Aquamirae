@@ -3,8 +3,7 @@ package com.obscuria.aquamirae.common.item;
 
 import com.obscuria.aquamirae.common.block.WisteriaNiveisBlock;
 import com.obscuria.aquamirae.registry.AquamiraeBlocks;
-import com.obscuria.core.api.annotation.SimpleLore;
-import net.minecraft.core.BlockPos;
+import com.obscuria.core.common.item.Lore;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,11 +11,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-@SimpleLore("lore.aquamirae.wisteria_niveis")
+@Lore("lore.aquamirae.wisteria_niveis")
 public class WisteriaNiveisItem extends Item {
 	public WisteriaNiveisItem() {
 		super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
@@ -24,15 +23,18 @@ public class WisteriaNiveisItem extends Item {
 
 	@Override
 	public @NotNull InteractionResult useOn(UseOnContext context) {
-		final BlockPos pos = context.getClickedPos();
-		if (context.getClickedFace() == Direction.UP && AquamiraeBlocks.WISTERIA_NIVEIS.get() instanceof WisteriaNiveisBlock wisteriaBlock &&
-				wisteriaBlock.canBePlacedOn(context.getLevel(), pos)) {
-			context.getLevel().playSound(context.getPlayer(), context.getClickedPos(), SoundEvents.WEEPING_VINES_PLACE, SoundSource.BLOCKS, 1F, 1F);
-			context.getLevel().setBlock(pos.above(), AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState()
-					.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER).setValue(WisteriaNiveisBlock.LOOT, false), 3);
-			context.getItemInHand().shrink(1);
-			return InteractionResult.SUCCESS;
-		}
-		return InteractionResult.FAIL;
+		if (context.getClickedFace() != Direction.UP) return InteractionResult.FAIL;
+		final var level = context.getLevel();
+		final var pos = context.getClickedPos();
+		if (!WisteriaNiveisBlock.canBePlacedOn(level, pos)) return InteractionResult.FAIL;
+		level.playSound(context.getPlayer(), pos, SoundEvents.WEEPING_VINES_PLACE, SoundSource.BLOCKS, 1f, 1f);
+		WisteriaNiveisBlock.placeAt(level, this.wisteria(), pos.above(), Block.UPDATE_ALL);
+		context.getItemInHand().shrink(1);
+		return InteractionResult.SUCCESS;
+	}
+
+	private BlockState wisteria() {
+		return AquamiraeBlocks.WISTERIA_NIVEIS.get().defaultBlockState()
+				.setValue(WisteriaNiveisBlock.NATURAL, false);
 	}
 }

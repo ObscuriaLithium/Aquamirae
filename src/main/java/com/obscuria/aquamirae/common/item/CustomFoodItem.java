@@ -1,8 +1,8 @@
 package com.obscuria.aquamirae.common.item;
 
 import com.machinezoo.noexception.optional.OptionalSupplier;
-import com.obscuria.core.api.util.PlayerUtil;
 import com.obscuria.core.common.item.BuffedFoodItem;
+import com.obscuria.core.util.PlayerUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -37,7 +37,7 @@ public class CustomFoodItem extends BuffedFoodItem {
         if (entity instanceof Player player && !player.getAbilities().instabuild)
             this.resultItem.get().ifPresent(item -> {
                 final var result = item.getDefaultInstance();
-                PlayerUtil.giveItem(player, result);
+                PlayerUtil.giveOrDrop(player, result);
             });
         return stack;
     }

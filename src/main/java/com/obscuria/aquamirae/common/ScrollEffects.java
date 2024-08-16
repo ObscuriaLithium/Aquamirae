@@ -65,7 +65,7 @@ public class ScrollEffects {
             for (int iy = 1; iy >= -10; iy--)
                 for (int iz = -1; iz <= 1; iz++) {
                     final BlockPos pos = new BlockPos(PLAYER.getBlockX() + ix, PLAYER.getBlockY() + iy, PLAYER.getBlockZ() + iz);
-                    if (PLAYER.level().getBlockState(pos).is(Aquamirae.SCROLL_CAN_DESTROY)) PLAYER.level().destroyBlock(pos, true);
+                    if (PLAYER.level().getBlockState(pos).is(AquamiraeTags.SCROLL_CAN_DESTROY)) PLAYER.level().destroyBlock(pos, true);
                 }
 
     }
@@ -106,7 +106,7 @@ public class ScrollEffects {
     }
 
     private void chakras() {
-        for (float i = 0f; i < 1f; i += 0.1F) {} //CompoundProjectileEntity.create(AquamiraeEntities.POISONED_CHAKRA.get(), PLAYER, PLAYER.level(), null, 20, i, 6000, 1);
+        for (float i = 0f; i < 1f; i += 0.1F) {} //CompoundProjectileEntity.create(AquamiraeEntityTypes.POISONED_CHAKRA.get(), PLAYER, PLAYER.level(), null, 20, i, 6000, 1);
     }
 
     public static class MoveUp {

@@ -48,6 +48,6 @@ public class ModelMoth<T extends AbstractMoth> extends EntityModel<T> {
 			this.main.y = 23.5f + (float) (Math.cos(ageInTicks) * -0.4f);
 		}
 		this.rightWing.zRot = -this.leftWing.zRot;
-		this.main.yRot = (float) Math.toRadians(netHeadYaw);
+		//this.main.yRot = (float) Math.toRadians(netHeadYaw);
 	}
 }

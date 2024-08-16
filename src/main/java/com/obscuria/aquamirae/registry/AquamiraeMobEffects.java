@@ -3,8 +3,8 @@ package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.common.effect.*;
-import com.obscuria.core.api.registry.RegistryHandler;
-import com.obscuria.core.api.registry.RegistrySupplier;
+import com.obscuria.core.registry.RegistryHandler;
+import com.obscuria.core.registry.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import org.jetbrains.annotations.ApiStatus;

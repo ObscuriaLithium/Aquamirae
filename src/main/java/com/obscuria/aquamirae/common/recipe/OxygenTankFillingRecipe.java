@@ -1,6 +1,6 @@
 package com.obscuria.aquamirae.common.recipe;
 
-import com.obscuria.aquamirae.common.item.OxygenHolder;
+import com.obscuria.aquamirae.common.item.OxygenContainer;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeRecipeSerializers;
 import net.minecraft.core.RegistryAccess;
@@ -23,7 +23,7 @@ public class OxygenTankFillingRecipe extends CustomRecipe {
         final var holders = Lists.<ItemStack>newArrayList();
         final var oxygelium = Lists.<ItemStack>newArrayList();
         for (var stack : container.getItems())
-            if (OxygenHolder.is(stack)) {
+            if (OxygenContainer.is(stack)) {
                 holders.add(stack);
             } else if (stack.is(AquamiraeItems.OXYGELIUM.get())) {
                 oxygelium.add(stack);
@@ -32,7 +32,7 @@ public class OxygenTankFillingRecipe extends CustomRecipe {
             }
         if (holders.size() != 1) return false;
         if (oxygelium.size() == 0) return false;
-        return !OxygenHolder.isFull(holders.get(0));
+        return !OxygenContainer.isFull(holders.get(0));
     }
 
     @Override
@@ -40,13 +40,13 @@ public class OxygenTankFillingRecipe extends CustomRecipe {
         var holder = ItemStack.EMPTY;
         final var oxygelium = Lists.<ItemStack>newArrayList();
         for (var stack : container.getItems())
-            if (OxygenHolder.is(stack)) {
+            if (OxygenContainer.is(stack)) {
                 holder = stack.copy();
             } else if (stack.is(AquamiraeItems.OXYGELIUM.get())) {
                 oxygelium.add(stack);
             }
         for (var ignored : oxygelium)
-            OxygenHolder.addOxygen(holder, 20);
+            OxygenContainer.addOxygen(holder, 20);
         return holder;
     }
 

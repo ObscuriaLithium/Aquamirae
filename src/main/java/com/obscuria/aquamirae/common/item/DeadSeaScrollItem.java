@@ -4,7 +4,7 @@ package com.obscuria.aquamirae.common.item;
 import com.obscuria.aquamirae.common.ScrollEffects;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.core.api.graphic.Icons;
+import com.obscuria.core.client.graphic.Icons;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -32,7 +32,7 @@ public class DeadSeaScrollItem extends Item {
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
 		tooltip.add(Component.empty().withStyle(ChatFormatting.LIGHT_PURPLE)
-				.append(Icons.SKULL.toComponent())
+				.append(Icons.SKULL.component())
 				.append(Component.literal(" "))
 				.append(Component.translatable("lore.aquamirae.dead_sea_scroll")));
 	}

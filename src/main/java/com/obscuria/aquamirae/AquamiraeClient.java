@@ -3,48 +3,28 @@ package com.obscuria.aquamirae;
 import com.obscuria.aquamirae.client.AquamiraeBossBars;
 import com.obscuria.aquamirae.client.AquamiraeLayers;
 import com.obscuria.aquamirae.client.AquamiraeRenderers;
-import com.obscuria.aquamirae.client.screen.ConfigScreen;
 import com.obscuria.aquamirae.client.screen.DeadSeaCurseToast;
 import com.obscuria.aquamirae.common.entity.CaptainCornelia;
 import com.obscuria.aquamirae.registry.AquamiraeItems;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
-import com.obscuria.core.api.util.signal.RuntimeSignals;
-import com.obscuria.core.api.ObscureAPIClient;
+import com.obscuria.core.ObscureAPIClient;
+import com.obscuria.core.common.signal.RuntimeSignals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public final class AquamiraeClient {
 
-    @ApiStatus.Internal
-    public static void setup(IEventBus bus) {
-        bus.addListener(AquamiraeClient::onClientSetup);
-        bus.addListener(AquamiraeLayers::register);
-        bus.addListener(AquamiraeRenderers::registerEntityRenderers);
-        bus.addListener(AquamiraeRenderers::registerParticles);
-
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, getConfig());
-        ObscureAPIClient.BOSS_BAR_STYLES.register(Aquamirae.key("captain_cornelia"), new AquamiraeBossBars.CaptainCornelia());
-        ObscureAPIClient.CREATIVE_TAB_STYLES.register(Aquamirae.key("aquamirae"),
-                () -> Optional.of(Aquamirae.key("textures/gui/creative/background.png")),
-                () -> Optional.of(Aquamirae.key("textures/gui/creative/tabs.png")));
-
-        RuntimeSignals.ON_CLIENT_TICK.connect(AquamiraeClient::onClientTick);
-    }
-
-    public static Supplier<ConfigScreenHandler.ConfigScreenFactory> getConfig() {
-        return () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new ConfigScreen(screen));
+    public static @Nullable Player getLocalPlayer() {
+        return Minecraft.getInstance().player;
     }
 
     public static boolean isLocalPlayer(Player player) {
@@ -81,7 +61,21 @@ public final class AquamiraeClient {
         final var player = Minecraft.getInstance().player;
         if (player == null) return;
         if (player.position().distanceTo(entity.position()) > 128) return;
-        ObscureAPIClient.GAME_MUSICS.suggest(200, () -> AquamiraeSounds.GAME_MUSIC_FORSAKEN_DROWNAGE);
+        ObscureAPIClient.MUSIC_EXTENSION.suggest(200, () -> AquamiraeSounds.GAME_MUSIC_FORSAKEN_DROWNAGE);
+    }
+
+    static void setup(IEventBus bus) {
+        bus.addListener(AquamiraeClient::onClientSetup);
+        bus.addListener(AquamiraeLayers::register);
+        bus.addListener(AquamiraeRenderers::registerEntityRenderers);
+        bus.addListener(AquamiraeRenderers::registerParticles);
+
+        ObscureAPIClient.BOSS_BAR_EXTENSION.register(Aquamirae.key("captain_cornelia"), new AquamiraeBossBars.CaptainCornelia());
+        ObscureAPIClient.CREATIVE_TAB_EXTENSION.register(Aquamirae.key("aquamirae"),
+                () -> Optional.of(Aquamirae.key("textures/gui/creative/background.png")),
+                () -> Optional.of(Aquamirae.key("textures/gui/creative/tabs.png")));
+
+        RuntimeSignals.ON_CLIENT_TICK.connect(AquamiraeClient::onClientTick);
     }
 
     private static void onClientSetup(FMLClientSetupEvent event) {
@@ -93,13 +87,13 @@ public final class AquamiraeClient {
         final var player = Minecraft.getInstance().player;
         if (player == null) return;
         if (Aquamirae.isInIceMaze(player)) {
-            ObscureAPIClient.GAME_MUSICS.suggest(() -> player.isUnderWater()
+            ObscureAPIClient.MUSIC_EXTENSION.suggest(() -> player.isUnderWater()
                     ? AquamiraeSounds.GAME_MUSIC_SHIP_GRAVEYARD
                     : AquamiraeSounds.GAME_MUSIC_ICE_MAZE);
             if (Minecraft.getInstance().isPaused()) return;
             spawnBiomeParticles(player);
             if (AquamiraeConfig.Client.ambientSounds.get() &&
-                    player.getRandom().nextInt(1200) <= 1)
+                    player.getRandom().nextInt(2000) <= 1)
                 playShipHornSound(player);
         }
     }

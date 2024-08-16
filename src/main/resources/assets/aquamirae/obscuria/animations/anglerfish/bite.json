@@ -1,0 +1,28 @@
+{
+  "length": 40,
+  "out_easing": "obscure_api:ease_out_cubic",
+  "frames": [
+    {
+      "timestamp": 20,
+      "easing": "obscure_api:ease_out_cubic",
+      "bones": [
+        { "name": "head_upper", "rotation": { "pose": [20, 0, 0], "swing": [2, 0, 0], "speed": 3.2 } },
+        { "name": "head_lower", "rotation": { "pose": [-20, 0, 0], "swing": [-2, 0, 0], "speed": 3.2 } },
+        { "name": "tail1", "rotation": { "swing": [0, 10, 0], "speed": 1.2, "offset": -0.05 } },
+        { "name": "tail2", "rotation": { "swing": [0, 12.5, 0], "speed": 1.2, "offset": -0.1 } },
+        { "name": "tail3", "rotation": { "swing": [0, 15, 0], "speed": 1.2, "offset": -0.15 } },
+        { "name": "tail4", "rotation": { "swing": [0, 20, 0], "speed": 1.2, "offset": -0.2 } },
+        { "name": "tail5", "rotation": { "swing": [0, 25, 0], "speed": 1.2, "offset": -0.25 } },
+        { "name": "tail6", "rotation": { "swing": [0, 30, 0], "speed": 1.2, "offset": -0.3 } }
+      ]
+    },
+    {
+      "timestamp": 22,
+      "easing": "obscure_api:ease_out_cubic",
+      "bones": [
+        { "name": "head_upper", "rotation": { "pose": [-25, 0, 0] } },
+        { "name": "head_lower", "rotation": { "pose": [25, 0, 0] } }
+      ]
+    }
+  ]
+}

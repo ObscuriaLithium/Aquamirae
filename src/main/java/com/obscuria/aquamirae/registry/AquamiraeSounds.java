@@ -2,8 +2,8 @@
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.core.api.registry.RegistryHandler;
-import com.obscuria.core.api.registry.RegistrySupplier;
+import com.obscuria.core.registry.RegistryHandler;
+import com.obscuria.core.registry.RegistrySupplier;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.Music;
@@ -45,7 +45,7 @@ public interface AquamiraeSounds {
 	RegistrySupplier<SoundEvent> MUSIC_SHIP_GRAVEYARD = variable("music.ship_graveyard");
 
 	Music GAME_MUSIC_ICE_MAZE = music(MUSIC_ICE_MAZE, 6000, 12000, false);
-	Music GAME_MUSIC_SHIP_GRAVEYARD = music(MUSIC_SHIP_GRAVEYARD, 1200, 2400, false);
+	Music GAME_MUSIC_SHIP_GRAVEYARD = music(MUSIC_SHIP_GRAVEYARD, 0, 400, false);
 	Music GAME_MUSIC_FORSAKEN_DROWNAGE = music(MUSIC_FORSAKEN_DROWNAGE, 0, 0, true);
 
 	private static RegistrySupplier<SoundEvent> variable(String key) {

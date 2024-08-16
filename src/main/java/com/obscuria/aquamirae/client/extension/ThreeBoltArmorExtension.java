@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
+
 @OnlyIn(Dist.CLIENT)
 public class ThreeBoltArmorExtension implements IClientItemExtensions {
     @NotNull
@@ -59,14 +61,15 @@ public class ThreeBoltArmorExtension implements IClientItemExtensions {
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Aquamirae.key("textures/gui/three_bolt_overlay.png"));
+        RenderSystem.setShaderTexture(0, Aquamirae.key("textures/gui/three_bolt_overlay_new.png"));
         final var tesselator = Tesselator.getInstance();
         final var builder = tesselator.getBuilder();
+        final var offset = (Math.pow(Mth.lerp(partialTick, player.xRotO, player.getXRot()) / 90.0, 3) * 90 + 90) * 0.93;
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        builder.vertex(0.0D, height, -90.0D).uv(0.0F, 1.0F).endVertex();
-        builder.vertex(width, height, -90.0D).uv(1.0F, 1.0F).endVertex();
-        builder.vertex(width, 0.0D, -90.0D).uv(1.0F, 0.0F).endVertex();
-        builder.vertex(0.0D, 0.0D, -90.0D).uv(0.0F, 0.0F).endVertex();
+        builder.vertex(0.0D, (int) (height * 1.5) - offset, -90.0D).uv(0.0F, 1.0F).endVertex();
+        builder.vertex(width, (int) (height * 1.5) - offset, -90.0D).uv(1.0F, 1.0F).endVertex();
+        builder.vertex(width, 0.0D - offset, -90.0D).uv(1.0F, 0.0F).endVertex();
+        builder.vertex(0.0D, 0.0D - offset, -90.0D).uv(0.0F, 0.0F).endVertex();
         tesselator.end();
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();

@@ -2,7 +2,9 @@ package com.obscuria.aquamirae.common;
 
 import com.google.common.collect.Maps;
 import com.obscuria.aquamirae.Aquamirae;
-import com.obscuria.core.api.ObscureAPI;
+import com.obscuria.aquamirae.compat.AquamiraeCompats;
+import com.obscuria.aquamirae.registry.AquamiraeItems;
+import com.obscuria.core.ObscureAPI;
 import net.minecraft.Util;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Vanishable;
 import org.jetbrains.annotations.ApiStatus;
+import top.theillusivec4.curios.api.CuriosApi;
 
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -30,18 +33,20 @@ public final class DeadSeaCurse {
     @Inherited
     @Target(value = TYPE)
     @Retention(value = RUNTIME)
-    public @interface ByDefault {
-    }
+    public @interface ByDefault {}
 
     public static boolean canBeCursed(Player player) {
-        return true;
+        return AquamiraeCompats.CURIOS_API
+                .safeGet(() -> () -> CuriosApi.getCuriosInventory(player).resolve()
+                        .flatMap(handler -> handler.findFirstCurio(AquamiraeItems.DEAD_SEA_RING.get()))
+                        .isEmpty()).orElse(true);
     }
 
     public static boolean canBeCursed(ItemStack stack) {
         return stack.getItem() instanceof Vanishable || stack.isEdible();
     }
 
-    public static float getDamageFactorOf(LivingEntity entity) {
+    public static float getDamageModifier(LivingEntity entity) {
         var result = 1f;
         for (var slot : EquipmentSlot.values())
             if (isCursed(entity.getItemBySlot(slot)))
@@ -127,20 +132,21 @@ public final class DeadSeaCurse {
     }
 
     private static void registerWeaponModifier(EquipmentSlot slot) {
-        ObscureAPI.DYNAMIC_ATTRIBUTES.register(Aquamirae.key("dead_sea_curse/weapon"),
-                stack -> stack.getItem() instanceof SwordItem item
-                        && DeadSeaCurse.isCursed(stack),
+        ObscureAPI.ATTRIBUTE_EXTENSION.register(Aquamirae.key("dead_sea_curse/weapon"),
+                stack -> stack.getItem() instanceof SwordItem,
+                (first, second) -> isCursed(first) != isCursed(second),
                 collector -> collector.append(EquipmentSlot.MAINHAND, Attributes.ATTACK_DAMAGE,
+                        context -> isCursed(context.stack()),
                         context -> new AttributeModifier(UUID_BY_SLOT.get(slot), "Dead Sea Curse",
                                 -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL)));
     }
 
     private static void registerArmorModifier(EquipmentSlot slot) {
-        ObscureAPI.DYNAMIC_ATTRIBUTES.register(Aquamirae.key("dead_sea_curse/" + slot.getName()),
-                stack -> stack.getItem() instanceof ArmorItem item
-                        && item.getEquipmentSlot() == slot
-                        && DeadSeaCurse.isCursed(stack),
+        ObscureAPI.ATTRIBUTE_EXTENSION.register(Aquamirae.key("dead_sea_curse/" + slot.getName()),
+                stack -> stack.getItem() instanceof ArmorItem item && item.getEquipmentSlot() == slot,
+                (first, second) -> isCursed(first) != isCursed(second),
                 collector -> collector.append(slot, Attributes.ARMOR,
+                        context -> isCursed(context.stack()),
                         context -> new AttributeModifier(UUID_BY_SLOT.get(slot), "Dead Sea Curse",
                                 -0.25, AttributeModifier.Operation.MULTIPLY_BASE)));
     }
