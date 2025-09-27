@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "three_bolt_leggings",
+  "category": "equipment",
+  "pattern": [
+    "121",
+    "2 2",
+    "2 2"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:iron_block"
+    },
+    "2": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "aquamirae:three_bolt_leggings",
+    "count": 1
+  }
+}

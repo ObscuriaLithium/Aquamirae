@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "terrible_sword",
+  "category": "equipment",
+  "pattern": [
+    " 12",
+    "345",
+    "67 "
+  ],
+  "key": {
+    "1": {
+      "item": "aquamirae:ship_graveyard_echo"
+    },
+    "2": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "3": {
+      "item": "minecraft:iron_ingot"
+    },
+    "4": {
+      "item": "minecraft:ender_eye"
+    },
+    "5": {
+      "item": "aquamirae:ship_graveyard_echo"
+    },
+    "6": {
+      "item": "minecraft:stick"
+    },
+    "7": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "aquamirae:terrible_sword",
+    "count": 1
+  }
+}

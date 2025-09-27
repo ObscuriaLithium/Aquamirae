@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "terrible_chestplate",
+  "category": "equipment",
+  "pattern": [
+    "0 2",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "2": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "3": {
+      "item": "aquamirae:fin"
+    },
+    "4": {
+      "item": "minecraft:iron_ingot"
+    },
+    "5": {
+      "item": "aquamirae:fin"
+    },
+    "6": {
+      "item": "minecraft:iron_ingot"
+    },
+    "7": {
+      "item": "aquamirae:ship_graveyard_echo"
+    },
+    "8": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "aquamirae:terrible_chestplate",
+    "count": 1
+  }
+}

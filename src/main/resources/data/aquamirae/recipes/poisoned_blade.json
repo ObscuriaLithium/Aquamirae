@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "poisoned_blade",
+  "category": "equipment",
+  "pattern": [
+    " 12",
+    "345",
+    "67 "
+  ],
+  "key": {
+    "1": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "2": {
+      "item": "minecraft:iron_ingot"
+    },
+    "3": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "4": {
+      "item": "minecraft:iron_ingot"
+    },
+    "5": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "6": {
+      "item": "minecraft:stick"
+    },
+    "7": {
+      "item": "aquamirae:anglers_fang"
+    }
+  },
+  "result": {
+    "item": "aquamirae:poisoned_blade",
+    "count": 1
+  }
+}

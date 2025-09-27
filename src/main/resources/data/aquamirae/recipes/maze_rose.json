@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "maze_rose",
+  "category": "equipment",
+  "pattern": [
+    "012",
+    "3 5",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "3": {
+      "item": "minecraft:diamond"
+    },
+    "5": {
+      "item": "minecraft:diamond"
+    },
+    "6": {
+      "item": "aquamirae:abyssal_amethyst"
+    },
+    "7": {
+      "item": "minecraft:diamond"
+    },
+    "8": {
+      "item": "aquamirae:abyssal_amethyst"
+    }
+  },
+  "result": {
+    "item": "aquamirae:maze_rose",
+    "count": 1
+  }
+}

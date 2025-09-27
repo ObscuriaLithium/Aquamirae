@@ -1,0 +1,9 @@
+{
+  "parent": "aquamirae:block/custom/collectible_painting",
+  "textures": {
+    "all": "aquamirae:block/painting_oxygelium",
+    "particle": "aquamirae:block/painting_anglerfish",
+    "texture": "aquamirae:block/painting_oxygelium"
+  },
+  "render_type": "solid"
+}

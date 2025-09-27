@@ -1,0 +1,23 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "aquamirae:gui/perk.png",
+            "ascent": 10,
+            "height": 13,
+            "chars": [ "@" ]
+        },
+        {
+            "type": "reference",
+            "id": "minecraft:include/space"
+        },
+        {
+            "type": "reference",
+            "id": "minecraft:include/default"
+        },
+        {
+            "type": "reference",
+            "id": "minecraft:include/unifont"
+        }
+    ]
+}

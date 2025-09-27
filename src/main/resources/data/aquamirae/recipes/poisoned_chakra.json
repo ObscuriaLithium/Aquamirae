@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "poisoned_chakra",
+  "category": "equipment",
+  "pattern": [
+    "012",
+    "3 5",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "3": {
+      "item": "minecraft:diamond"
+    },
+    "5": {
+      "item": "minecraft:diamond"
+    },
+    "6": {
+      "item": "aquamirae:anglers_fang"
+    },
+    "7": {
+      "item": "minecraft:diamond"
+    },
+    "8": {
+      "item": "aquamirae:anglers_fang"
+    }
+  },
+  "result": {
+    "item": "aquamirae:poisoned_chakra",
+    "count": 1
+  }
+}

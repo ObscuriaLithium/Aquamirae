@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:abyssal_amethyst"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "aquamirae:abyssal_tiara",
+      "aquamirae:abyssal_heaume",
+      "aquamirae:abyssal_brigantine",
+      "aquamirae:abyssal_leggings",
+      "aquamirae:abyssal_boots",
+      "aquamirae:maze_rose",
+      "aquamirae:divider",
+      "aquamirae:whisper_of_the_abyss"
+    ]
+  }
+}

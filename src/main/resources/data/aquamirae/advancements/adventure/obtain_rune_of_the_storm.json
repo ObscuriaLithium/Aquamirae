@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "aquamirae:rune_of_the_storm"
+    },
+    "title": {
+      "translate": "advancements.aquamirae.obtain_rune_of_the_storm.title"
+    },
+    "description": {
+      "translate": "advancements.aquamirae.obtain_rune_of_the_storm.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "rune_of_the_storm": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:rune_of_the_storm"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 30
+  },
+  "parent": "aquamirae:adventure/obtain_frozen_key"
+}

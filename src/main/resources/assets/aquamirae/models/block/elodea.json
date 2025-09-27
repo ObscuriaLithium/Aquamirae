@@ -1,0 +1,9 @@
+{
+  "parent": "aquamirae:block/custom/elodea",
+  "textures": {
+    "all": "aquamirae:block/elodea",
+    "particle": "aquamirae:block/elodea",
+    "texture": "aquamirae:block/elodea"
+  },
+  "render_type": "cutout_mipped"
+}

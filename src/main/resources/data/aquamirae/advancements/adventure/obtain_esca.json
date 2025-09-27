@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "aquamirae:esca"
+    },
+    "title": {
+      "translate": "advancements.aquamirae.obtain_esca.title"
+    },
+    "description": {
+      "translate": "advancements.aquamirae.obtain_esca.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "esca": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:esca"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 5
+  },
+  "parent": "aquamirae:adventure/obtain_fin"
+}

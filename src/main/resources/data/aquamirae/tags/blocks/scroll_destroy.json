@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:snow_block",
+    "minecraft:packed_ice",
+    "minecraft:ice",
+    "minecraft:frosted_ice",
+    "minecraft:blue_ice",
+    "minecraft:snow",
+    "minecraft:snow_block",
+    "minecraft:grass_block",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:coarse_dirt",
+    "minecraft:rooted_dirt",
+    "minecraft:stone",
+    "minecraft:cobblestone",
+    "minecraft:andesite",
+    "minecraft:diorite",
+    "minecraft:gravel",
+    "minecraft:sand"
+  ]
+}

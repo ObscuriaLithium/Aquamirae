@@ -1,0 +1,50 @@
+{
+  "display": {
+    "icon": {
+      "item": "aquamirae:terrible_chestplate"
+    },
+    "title": {
+      "translate": "advancements.aquamirae.terrible_armor.title"
+    },
+    "description": {
+      "translate": "advancements.aquamirae.terrible_armor.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "terrible_armor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:terrible_helmet"
+            ]
+          },
+          {
+            "items": [
+              "aquamirae:terrible_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "aquamirae:terrible_leggings"
+            ]
+          },
+          {
+            "items": [
+              "aquamirae:terrible_boots"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 10
+  },
+  "parent": "aquamirae:adventure/obtain_anglers_fang"
+}

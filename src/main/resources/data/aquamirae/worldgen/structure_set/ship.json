@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "aquamirae:ship",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 9391766081,
+    "spacing": 25,
+    "separation": 10
+  }
+}

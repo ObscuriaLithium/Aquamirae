@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "aquamirae:spinefish",
+          "weight": 1,
+          "functions": [
+            { "function": "set_count", "count": { "min": 1, "max": 1 } }
+          ]
+        }
+      ]
+    }
+  ]
+}

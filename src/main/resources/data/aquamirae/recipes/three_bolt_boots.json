@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "three_bolt_boots",
+  "category": "equipment",
+  "pattern": [
+    "   ",
+    "2 2",
+    "1 1"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:iron_block"
+    },
+    "2": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "aquamirae:three_bolt_boots",
+    "count": 1
+  }
+}

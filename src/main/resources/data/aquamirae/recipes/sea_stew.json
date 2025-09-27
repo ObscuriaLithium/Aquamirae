@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "sea_stew",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:baked_potato"
+    },
+    {
+      "item": "aquamirae:esca"
+    },
+    {
+      "item": "aquamirae:cooked_spinefish"
+    },
+    {
+      "item": "aquamirae:oxygelium"
+    },
+    {
+      "item": "aquamirae:fin"
+    },
+    {
+      "item": "minecraft:pufferfish"
+    },
+    {
+      "item": "minecraft:bowl"
+    }
+  ],
+  "result": {
+    "item": "aquamirae:sea_stew",
+    "count": 1
+  }
+}

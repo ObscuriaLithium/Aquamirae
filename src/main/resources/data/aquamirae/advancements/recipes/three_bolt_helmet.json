@@ -1,0 +1,24 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aquamirae:three_bolt_helmet"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "aquamirae:three_bolt_suit",
+      "aquamirae:three_bolt_leggings",
+      "aquamirae:three_bolt_boots"
+    ]
+  }
+}
