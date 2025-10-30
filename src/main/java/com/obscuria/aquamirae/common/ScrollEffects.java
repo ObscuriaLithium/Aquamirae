@@ -19,6 +19,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -54,17 +55,16 @@ public class ScrollEffects {
         if (player instanceof ServerPlayer player) {
             Aquamirae.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ScrollMessage(type));
         }
-        mimic();
-//        switch (type) {
-//            default -> PLAYER.drop(Items.DIAMOND.getDefaultInstance(), false);
-//            case 1 -> abyss();
-//            case 2 -> mimic();
-//            case 3 -> MoveUp.create(PLAYER);
-//            case 4 -> MoveSide.create(PLAYER);
-//            case 5 -> { if (!shelter()) MoveUp.create(PLAYER); }
-//            case 6 -> chakras();
-//            case 7 -> Bones.create(PLAYER);
-//        }
+        switch (type) {
+            case 1 -> abyss();
+            case 2 -> mimic();
+            case 3 -> MoveUp.create(player);
+            case 4 -> MoveSide.create(player);
+            case 5 -> { if (!shelter()) MoveUp.create(player); }
+            case 6 -> chakras();
+            case 7 -> Bones.create(player);
+            default -> player.drop(Items.DIAMOND.getDefaultInstance(), false);
+        }
     }
 
     private void abyss() {
@@ -85,6 +85,7 @@ public class ScrollEffects {
 
             serverLevel.addFreshEntity(drowned);
             drowned.moveTo(player.position());
+            drowned.setPersistenceRequired();
             drowned.finalizeSpawn(serverLevel, player.level().getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.EVENT, null, null);
             if (!drowned.isAddedToWorld()) return;
 
