@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.obscuria.aquamirae.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "Aquamirae.refmap.json",
+  "refmap": "aquamirae.refmap.json",
   "mixins": [
     "MixinStructureTemplate"
   ],
