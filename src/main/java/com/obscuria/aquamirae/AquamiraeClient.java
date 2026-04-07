@@ -18,6 +18,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +29,12 @@ public final class AquamiraeClient {
 
     private static int biomeMusic = 0;
     private static int corneliaMusic = 0;
+
+    public static void init() {
+        ModLoadingContext.get().registerExtensionPoint(
+                ConfigScreenHandler.ConfigScreenFactory.class,
+                AquamiraeClient.getConfig());
+    }
 
     public static Supplier<ConfigScreenHandler.ConfigScreenFactory> getConfig() {
         return () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new ConfigScreen(screen));

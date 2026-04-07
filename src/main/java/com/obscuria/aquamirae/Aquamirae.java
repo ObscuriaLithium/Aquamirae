@@ -6,7 +6,8 @@ import com.obscuria.aquamirae.common.items.armor.ThreeBoltArmorItem;
 import com.obscuria.aquamirae.common.items.weapon.CoralLanceItem;
 import com.obscuria.aquamirae.common.items.weapon.FinCutterItem;
 import com.obscuria.aquamirae.common.items.weapon.RemnantsSaberItem;
-import com.obscuria.aquamirae.registry.*;
+import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
+import com.obscuria.aquamirae.registry.AquamiraeRegistries;
 import com.obscuria.obscureapi.api.ClassManager;
 import com.obscuria.obscureapi.api.common.classes.ObscureClass;
 import com.obscuria.obscureapi.event.ObscureAPIEnchantmentsEvent;
@@ -40,7 +41,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Pillager;
 import net.minecraft.world.entity.monster.Vindicator;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -48,19 +52,15 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -92,9 +92,9 @@ public class Aquamirae {
     public static final TagKey<Block> EEL_MOVE = BlockTags.create(new ResourceLocation(MODID, "eel_move"));
     public static final TagKey<Block> MAZE_MOTHER_DESTROY = BlockTags.create(new ResourceLocation(MODID, "maze_mother_destroy"));
     public static final TagKey<Block> SCROLL_DESTROY = BlockTags.create(new ResourceLocation(MODID, "scroll_destroy"));
-    public static final ResourceKey<DamageType> CRYSTALLIZATION = ResourceKey.create(Registries.DAMAGE_TYPE, key("crystallization"));
+    public static final ResourceKey<DamageType> CRYSTALLIZATION = ResourceKey.create(Registries.DAMAGE_TYPE, identifier("crystallization"));
 
-    public static ResourceLocation key(String name) {
+    public static ResourceLocation identifier(String name) {
         return new ResourceLocation(MODID, name);
     }
 
@@ -105,7 +105,7 @@ public class Aquamirae {
         AquamiraeConfig.register();
 
         eventBus.addListener(this::commonSetup);
-        eventBus.addListener(EventPriority.HIGHEST, this::registerEnchantments);
+        eventBus.addListener(this::registerEnchantments);
 
         MinecraftForge.EVENT_BUS.addListener(this::onEntitySpawn);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerTick);
@@ -113,11 +113,10 @@ public class Aquamirae {
         MinecraftForge.EVENT_BUS.addListener(this::onEntityHurt);
         MinecraftForge.EVENT_BUS.addListener(this::onEntityDeath);
 
-        if (FMLEnvironment.dist == Dist.CLIENT)
-            ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, AquamiraeClient.getConfig());
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AquamiraeClient::init);
     }
 
-    private void registerEnchantments(final @NotNull ObscureAPIEnchantmentsEvent event) {
+    private void registerEnchantments(final ObscureAPIEnchantmentsEvent event) {
         event.registerMirror(true);
         event.registerDistance(true);
         event.registerFastSpin(true);
@@ -141,13 +140,13 @@ public class Aquamirae {
         ItemUtils.addLore("aquamirae:oxygelium");
     }
 
-    public static void loadFromConfig(@NotNull LivingEntity entity, Attribute attribute, double amount) {
+    public static void setBaseValue(@NotNull LivingEntity entity, Attribute attribute, double amount) {
         final AttributeInstance attributeInstance = entity.getAttribute(attribute);
         if (attributeInstance != null) attributeInstance.setBaseValue(amount);
         if (attribute == Attributes.MAX_HEALTH) entity.setHealth(entity.getMaxHealth());
     }
 
-    public static ItemStack getStructureMap(TagKey<Structure> tag, @NotNull ServerLevel server, @NotNull Entity source) {
+    public static ItemStack createStructureMap(TagKey<Structure> tag, @NotNull ServerLevel server, @NotNull Entity source) {
         BlockPos pos = server.findNearestMapStructure(tag, source.blockPosition(), 100, false);
         if (pos != null) {
             final Component name = tag == SHIP ? Component.translatable("filled_map.aquamirae.ship")
@@ -169,8 +168,9 @@ public class Aquamirae {
         return ItemStack.EMPTY;
     }
 
-    public static boolean winterEvent() {
-        return Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER || Calendar.getInstance().get(Calendar.MONTH) == Calendar.JANUARY;
+    public static boolean isWinterEvent() {
+        return Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER
+                || Calendar.getInstance().get(Calendar.MONTH) == Calendar.JANUARY;
     }
 
     private void onEntitySpawn(@NotNull MobSpawnEvent event) {
@@ -185,12 +185,16 @@ public class Aquamirae {
     }
 
     private void onPlayerTick(final TickEvent.@NotNull PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide || event.player.isCreative() || event.player.isSpectator())
-            return;
-        if (AquamiraeUtils.isInIceMaze(event.player))
-            if (event.player.isInWaterOrBubble() && event.player.getTicksFrozen() <= event.player.getTicksRequiredToFreeze() * 3)
-                if (ItemUtils.getArmorPieces(event.player, ThreeBoltArmorItem.class) < 4)
-                    event.player.setTicksFrozen(event.player.getTicksFrozen() + 4);
+        if (event.phase != TickEvent.Phase.END
+                || event.player.level().isClientSide
+                || event.player.isCreative()
+                || event.player.isSpectator()) return;
+        if (!AquamiraeUtils.isInIceMaze(event.player)) return;
+        if (event.player.getVehicle() != null) return;
+        if (!event.player.isInWaterOrBubble()) return;
+        if (event.player.getTicksFrozen() > event.player.getTicksRequiredToFreeze() * 3) return;
+        if (ItemUtils.getArmorPieces(event.player, ThreeBoltArmorItem.class) >= 4) return;
+        event.player.setTicksFrozen(event.player.getTicksFrozen() + 4);
     }
 
     private void onEntityAttacked(final @NotNull LivingHurtEvent event) {
@@ -204,12 +208,12 @@ public class Aquamirae {
         if (event.getEntity() instanceof Player player) {
             final int TOTAL = ItemUtils.getArmorPieces(player, TerribleArmorItem.class);
             if (TOTAL >= 2) {
-                final ItemStack piece = getArmor(player, TerribleArmorItem.class);
+                final ItemStack piece = findEquipmentOfType(player, TerribleArmorItem.class);
                 if (player.isInWater() && !player.getCooldowns().isOnCooldown(piece.getItem()) && piece.getItem() instanceof TerribleArmorItem item) {
                     player.addEffect(new MobEffectInstance(AquamiraeMobEffects.SWIM_SPEED.get(), 20 * item.ABILITY_HALFSET.getVariable(player, 2),
                             Math.min(19, item.ABILITY_HALFSET.getVariable(player, 1) / 10 - 1), false, false));
                     final int cooldown = 20 * item.ABILITY_HALFSET.getCost(player);
-                    cooldown(player, TerribleArmorItem.class, cooldown);
+                    cooldownEquipmentOfType(player, TerribleArmorItem.class, cooldown);
                 }
                 if (TOTAL >= 4 && event.getSource().getEntity() instanceof LivingEntity source && piece.getItem() instanceof TerribleArmorItem item) {
                     source.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * item.ABILITY_FULLSET.getVariable(player, 1), 1, false, false));
@@ -238,7 +242,7 @@ public class Aquamirae {
         final int armorPieces = ItemUtils.getArmorPieces(entity, AbyssalArmorItem.class);
         if (armorPieces < 4 || entity.hasEffect(AquamiraeMobEffects.CRYSTALLIZATION.get())) return;
 
-        final var item = (AbyssalArmorItem) getArmor(entity, AbyssalArmorItem.class).getItem();
+        final var item = (AbyssalArmorItem) findEquipmentOfType(entity, AbyssalArmorItem.class).getItem();
 
         entity.addEffect(new MobEffectInstance(AquamiraeMobEffects.CRYSTALLIZATION.get(), 20 * item.ABILITY_FULLSET_1.getVariable(entity, 1), 0, true, true));
         entity.setHealth(entity.getMaxHealth());
@@ -255,25 +259,25 @@ public class Aquamirae {
         event.setCanceled(true);
     }
 
-    private ItemStack getArmor(@NotNull LivingEntity entity, @NotNull Class<?> armor) {
-        return armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.HEAD).getItem().getClass()) ?
+    private ItemStack findEquipmentOfType(@NotNull LivingEntity entity, @NotNull Class<?> type) {
+        return type.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.HEAD).getItem().getClass()) ?
                 entity.getItemBySlot(EquipmentSlot.HEAD) :
-                armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.CHEST).getItem().getClass()) ?
+                type.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.CHEST).getItem().getClass()) ?
                         entity.getItemBySlot(EquipmentSlot.CHEST) :
-                        armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.LEGS).getItem().getClass()) ?
+                        type.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.LEGS).getItem().getClass()) ?
                                 entity.getItemBySlot(EquipmentSlot.LEGS) :
-                                armor.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.FEET).getItem().getClass()) ?
+                                type.isAssignableFrom(entity.getItemBySlot(EquipmentSlot.FEET).getItem().getClass()) ?
                                         entity.getItemBySlot(EquipmentSlot.FEET) : ItemStack.EMPTY;
     }
 
-    private void cooldown(@NotNull Player player, @NotNull Class<?> armor, int cooldown) {
-        if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlot.HEAD).getItem().getClass()))
+    private void cooldownEquipmentOfType(@NotNull Player player, @NotNull Class<?> type, int cooldown) {
+        if (type.isAssignableFrom(player.getItemBySlot(EquipmentSlot.HEAD).getItem().getClass()))
             player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlot.HEAD).getItem(), cooldown);
-        if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlot.CHEST).getItem().getClass()))
+        if (type.isAssignableFrom(player.getItemBySlot(EquipmentSlot.CHEST).getItem().getClass()))
             player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlot.CHEST).getItem(), cooldown);
-        if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlot.LEGS).getItem().getClass()))
+        if (type.isAssignableFrom(player.getItemBySlot(EquipmentSlot.LEGS).getItem().getClass()))
             player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlot.LEGS).getItem(), cooldown);
-        if (armor.isAssignableFrom(player.getItemBySlot(EquipmentSlot.FEET).getItem().getClass()))
+        if (type.isAssignableFrom(player.getItemBySlot(EquipmentSlot.FEET).getItem().getClass()))
             player.getCooldowns().addCooldown(player.getItemBySlot(EquipmentSlot.FEET).getItem(), cooldown);
     }
 

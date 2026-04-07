@@ -8,10 +8,10 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
 
-public class ModelPoisonedChakra<T extends Entity> extends EntityModel<T> {
+public class ModelPoisonedChakram<T extends Entity> extends EntityModel<T> {
 	public final ModelPart main;
 
-	public ModelPoisonedChakra(ModelPart root) {
+	public ModelPoisonedChakram(ModelPart root) {
 		this.main = root.getChild("chakram");
 	}
 

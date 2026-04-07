@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        },
+        {
+          "condition": "minecraft:random_chance_with_looting",
+          "looting_multiplier": 0.1,
+          "chance": 0.2
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "aquamirae:abyssal_amethyst"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "aquamirae:ship_graveyard_echo"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "weight": 1,
+          "type": "minecraft:item",
+          "name": "minecraft:slime_ball"
+        },
+        {
+          "weight": 4,
+          "type": "minecraft:empty"
+        }
+      ]
+    }
+  ]
+}

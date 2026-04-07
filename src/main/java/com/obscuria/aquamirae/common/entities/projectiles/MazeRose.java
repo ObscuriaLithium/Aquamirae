@@ -1,18 +1,12 @@
 
 package com.obscuria.aquamirae.common.entities.projectiles;
 
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.api.common.DynamicProjectile;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PlayMessages;
 
 public class MazeRose extends DynamicProjectile {
-
-	public MazeRose(PlayMessages.SpawnEntity packet, Level world) {
-		this(AquamiraeEntities.MAZE_ROSE.get(), world);
-	}
 
 	public MazeRose(EntityType<MazeRose> type, Level world) {
 		super(type, world);

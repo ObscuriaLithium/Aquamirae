@@ -3,7 +3,6 @@ package com.obscuria.aquamirae.common.entities;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.obscureapi.api.utils.Icons;
 import com.obscuria.obscureapi.util.PlayerUtils;
 import com.obscuria.obscureapi.util.TextUtils;
@@ -38,7 +37,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -48,9 +46,6 @@ import java.util.Objects;
 
 @ShipGraveyardEntity
 public class MazeMother extends Monster {
-	public MazeMother(PlayMessages.SpawnEntity packet, Level world) {
-		this(AquamiraeEntities.MAZE_MOTHER.get(), world);
-	}
 
 	public MazeMother(EntityType<MazeMother> type, Level world) {
 		super(type, world);
@@ -153,13 +148,13 @@ public class MazeMother extends Monster {
 
 	@Override
 	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-		Aquamirae.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.motherSwimSpeed.get());
-		Aquamirae.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.motherMaxHealth.get());
-		Aquamirae.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.motherArmor.get());
-		Aquamirae.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.motherAttackDamage.get());
-		Aquamirae.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.motherFollowRange.get());
-		Aquamirae.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
-		Aquamirae.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
+		Aquamirae.setBaseValue(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.motherSwimSpeed.get());
+		Aquamirae.setBaseValue(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.motherMaxHealth.get());
+		Aquamirae.setBaseValue(this, Attributes.ARMOR, AquamiraeConfig.Common.motherArmor.get());
+		Aquamirae.setBaseValue(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.motherAttackDamage.get());
+		Aquamirae.setBaseValue(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.motherFollowRange.get());
+		Aquamirae.setBaseValue(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.motherAttackKnockback.get());
+		Aquamirae.setBaseValue(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.motherKnockbackResistance.get());
 		final Vec3 center = this.position();
 		List<Player> players = this.level().getEntitiesOfClass(Player.class, new AABB(center, center).inflate(100), e -> true).stream()
 				.sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center))).toList();

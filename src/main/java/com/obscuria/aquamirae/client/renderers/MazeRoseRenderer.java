@@ -8,20 +8,23 @@ import com.obscuria.aquamirae.common.entities.projectiles.MazeRose;
 import com.obscuria.obscureapi.client.renderer.DynamicProjectileRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 public class MazeRoseRenderer extends DynamicProjectileRenderer<MazeRose> {
+
+    public static final ResourceLocation TEXTURE = Aquamirae.identifier("textures/entity/maze_rose.png");
+    public static final ResourceLocation OVERLAY_TEXTURE = Aquamirae.identifier("textures/entity/maze_rose_overlay.png");
+
 	public MazeRoseRenderer(EntityRendererProvider.Context context) {
 		super(context, new ModelMazeRose<>(context.bakeLayer(AquamiraeLayers.MAZE_ROSE)));
 	}
 
 	@Override
-	public @NotNull ResourceLocation getTextureLocation(@NotNull MazeRose mazeRose) {
-		return new ResourceLocation(Aquamirae.MODID,"textures/entity/maze_rose.png");
+	public ResourceLocation getTextureLocation(MazeRose mazeRose) {
+		return TEXTURE;
 	}
 
 	@Override
 	public ResourceLocation getGlowingTextureLocation(MazeRose mazeRose) {
-		return new ResourceLocation(Aquamirae.MODID,"textures/entity/maze_rose_overlay.png");
+		return OVERLAY_TEXTURE;
 	}
 }

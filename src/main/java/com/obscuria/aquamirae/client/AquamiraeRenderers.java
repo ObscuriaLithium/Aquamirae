@@ -30,9 +30,9 @@ public class AquamiraeRenderers {
 		event.registerEntityRenderer(AquamiraeEntities.TORTURED_SOUL.get(), TorturedSoulRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.EEL.get(), EelRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.MAZE_ROSE.get(), MazeRoseRenderer::new);
-		event.registerEntityRenderer(AquamiraeEntities.POISONED_CHAKRA.get(), PoisonedChakraRenderer::new);
+		event.registerEntityRenderer(AquamiraeEntities.POISONED_CHAKRA.get(), PoisonedChakramRenderer::new);
 		event.registerEntityRenderer(AquamiraeEntities.SPINEFISH.get(), SpinefishRenderer::new);
-		event.registerEntityRenderer(AquamiraeEntities.LUMINOUS_JELLY.get(), LuminousJellyRenderer::new);
+		event.registerEntityRenderer(AquamiraeEntities.ABYSSAL_SCYPHOID.get(), AbyssalScyphoidRenderer::new);
 
 		event.registerEntityRenderer(AquamiraeEntities.PILLAGERS_PATROL.get(),
 				provider -> new MobRenderer<>(provider, new SlimeModel<>(provider.bakeLayer(ModelLayers.SLIME)) {

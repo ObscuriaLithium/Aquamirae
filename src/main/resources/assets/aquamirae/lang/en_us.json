@@ -81,6 +81,7 @@
   "item.aquamirae.anglerfish_spawn_egg": "Anglerfish Spawn Egg",
   "item.aquamirae.anglers_fang": "Angler's Fang",
   "item.aquamirae.captain_cornelia_spawn_egg": "Captain Cornelia Spawn Egg",
+  "item.aquamirae.abyssal_scyphoid_spawn_egg": "Abyssal Scyphoid Spawn Egg",
   "item.aquamirae.cooked_spinefish": "Cooked Spinefish",
   "item.aquamirae.coral_lance": "Coral Lance",
   "item.aquamirae.dagger_of_greed": "Dagger of Greed",
@@ -192,6 +193,7 @@
   "entity.aquamirae.poisoned_chakra": "Poisoned Chakra",
   "entity.aquamirae.tortured_soul": "Tortured Soul",
   "entity.aquamirae.spinefish": "Spinefish",
+  "entity.aquamirae.abyssal_scyphoid": "Abyssal Scyphoid",
 
   "effect.aquamirae.abyss_blindness": "Blindness",
   "effect.aquamirae.abyss_blindness.description": "Blinding Abyss armor effect. Decreases movement speed.",

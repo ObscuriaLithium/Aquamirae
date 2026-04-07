@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public final class AquamiraeBossBars {
+
     private static final ResourceLocation CORNELIA = new ResourceLocation(Aquamirae.MODID, "textures/gui/bossbars/cornelia.png");
 
     public static void cornelia(Minecraft minecraft, GuiGraphics context, int x, int y, LerpingBossEvent bossEvent, Component name) {

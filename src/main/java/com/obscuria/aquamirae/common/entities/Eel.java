@@ -3,7 +3,6 @@ package com.obscuria.aquamirae.common.entities;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.api.common.FlatVFX;
 import com.obscuria.obscureapi.api.hekate.Animation;
@@ -40,7 +39,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -59,10 +57,6 @@ public class Eel extends Monster implements IAnimated {
 	public final Animation DEATH = new Animation(4);
 	public final Animation MOVE = new Animation(5);
 	private int rareIdle;
-
-	public Eel(PlayMessages.SpawnEntity packet, Level world) {
-		this(AquamiraeEntities.EEL.get(), world);
-	}
 
 	public Eel(EntityType<Eel> type, Level world) {
 		super(type, world);
@@ -266,11 +260,11 @@ public class Eel extends Monster implements IAnimated {
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason,
 										@Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-		Aquamirae.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.eelMaxHealth.get());
-		Aquamirae.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.eelArmor.get());
-		Aquamirae.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.eelAttackDamage.get());
-		Aquamirae.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.eelFollowRange.get());
-		Aquamirae.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.eelAttackKnockback.get());
+		Aquamirae.setBaseValue(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.eelMaxHealth.get());
+		Aquamirae.setBaseValue(this, Attributes.ARMOR, AquamiraeConfig.Common.eelArmor.get());
+		Aquamirae.setBaseValue(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.eelAttackDamage.get());
+		Aquamirae.setBaseValue(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.eelFollowRange.get());
+		Aquamirae.setBaseValue(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.eelAttackKnockback.get());
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 

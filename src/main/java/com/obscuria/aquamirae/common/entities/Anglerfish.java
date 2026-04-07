@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,6 +33,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -44,7 +46,6 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -57,10 +58,6 @@ public class Anglerfish extends Monster implements IAnimated {
 	public int attackTick = 0;
 	public float groundMod = 0;
 	public float groundModLerp = 0;
-
-	public Anglerfish(PlayMessages.SpawnEntity packet, Level world) {
-		this(AquamiraeEntities.ANGLERFISH.get(), world);
-	}
 
 	public Anglerfish(EntityType<Anglerfish> type, Level world) {
 		super(type, world);
@@ -191,13 +188,13 @@ public class Anglerfish extends Monster implements IAnimated {
 			mazeMother.finalizeSpawn(server, difficulty, spawnType, null, null);
 			world.addFreshEntity(mazeMother);
 		}
-		Aquamirae.loadFromConfig(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.anglerfishSwimSpeed.get());
-		Aquamirae.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.anglerfishMaxHealth.get());
-		Aquamirae.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.anglerfishArmor.get());
-		Aquamirae.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.anglerfishAttackDamage.get());
-		Aquamirae.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.anglerfishFollowRange.get());
-		Aquamirae.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.anglerfishAttackKnockback.get());
-		Aquamirae.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.anglerfishKnockbackResistance.get());
+		Aquamirae.setBaseValue(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.anglerfishSwimSpeed.get());
+		Aquamirae.setBaseValue(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.anglerfishMaxHealth.get());
+		Aquamirae.setBaseValue(this, Attributes.ARMOR, AquamiraeConfig.Common.anglerfishArmor.get());
+		Aquamirae.setBaseValue(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.anglerfishAttackDamage.get());
+		Aquamirae.setBaseValue(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.anglerfishFollowRange.get());
+		Aquamirae.setBaseValue(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.anglerfishAttackKnockback.get());
+		Aquamirae.setBaseValue(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.anglerfishKnockbackResistance.get());
 		return super.finalizeSpawn(world, difficulty, spawnType, spawnGroupData, tag);
 	}
 
@@ -218,12 +215,14 @@ public class Anglerfish extends Monster implements IAnimated {
 		return super.isPushedByFluid(type);
 	}
 
-	public static SpawnPlacements.SpawnPredicate<Anglerfish> getSpawnRules() {
-		return (entityType, level, spawnType, pos, random) -> level.getFluidState(pos).is(FluidTags.WATER) &&
-				level.getDifficulty() != Difficulty.PEACEFUL;
-	}
+    public static boolean checkSpawnRules(
+            EntityType<Anglerfish> type, ServerLevelAccessor levelAccessor,
+            MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+        return levelAccessor.getFluidState(pos).is(FluidTags.WATER)
+                && levelAccessor.getDifficulty() != Difficulty.PEACEFUL;
+    }
 
-	public static AttributeSupplier.@NotNull Builder createAttributes() {
+	public static AttributeSupplier.Builder createAttributes() {
 		return Mob.createMobAttributes()
 				.add(ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.DEFAULT_ANGLERFISH_SWIM_SPEED)
 				.add(Attributes.MAX_HEALTH, AquamiraeConfig.DEFAULT_ANGLERFISH_MAX_HEALTH)

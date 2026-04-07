@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.common.worldgen.easing;
+package com.obscuria.aquamirae.common.easing;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;

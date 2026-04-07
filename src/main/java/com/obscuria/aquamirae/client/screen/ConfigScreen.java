@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ConfigScreen extends Screen {
 
-    private final Screen PARENT;
+    private final Screen parent;
     private CycleButton<Boolean> overlay;
     private CycleButton<Boolean> particles;
     private CycleButton<Boolean> ambientSounds;
@@ -23,7 +23,7 @@ public class ConfigScreen extends Screen {
 
     public ConfigScreen(Screen parent) {
         super(Component.literal("Aquamirae Settings"));
-        this.PARENT = parent;
+        this.parent = parent;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ConfigScreen extends Screen {
         }).pos(this.width / 2 - 155, this.height / 6 + 24 * 7 - 6).size(100, 20).build());
         this.addRenderableWidget(new Button.Builder(CommonComponents.GUI_DONE, b -> {
             this.save();
-            Minecraft.getInstance().setScreen(this.PARENT);
+            Minecraft.getInstance().setScreen(this.parent);
         }).pos(this.width / 2 - 45, this.height / 6 + 24 * 7 - 6).size(200, 20).build());
     }
 
@@ -100,7 +100,7 @@ public class ConfigScreen extends Screen {
     @Override
     public void onClose() {
         this.save();
-        if (this.minecraft != null && this.PARENT != null) this.minecraft.setScreen(this.PARENT);
+        if (this.minecraft != null && this.parent != null) this.minecraft.setScreen(this.parent);
         else super.onClose();
     }
 }

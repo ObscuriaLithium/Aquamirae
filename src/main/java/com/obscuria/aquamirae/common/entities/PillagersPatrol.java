@@ -1,8 +1,9 @@
 
 package com.obscuria.aquamirae.common.entities;
 
-import com.obscuria.aquamirae.registry.AquamiraeEntities;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
@@ -12,18 +13,16 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Pillager;
 import net.minecraft.world.entity.monster.Vindicator;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PlayMessages;
+import net.minecraft.world.level.ServerLevelAccessor;
 
 public class PillagersPatrol extends Monster {
-	public PillagersPatrol(PlayMessages.SpawnEntity packet, Level world) {
-		this(AquamiraeEntities.PILLAGERS_PATROL.get(), world);
-	}
 
 	public PillagersPatrol(EntityType<PillagersPatrol> type, Level world) {
 		super(type, world);
 	}
 
-	@Override public void baseTick() {
+	@Override
+    public void baseTick() {
 		if (this.level() instanceof ServerLevel server) {
 			Mob entity1 = new Pillager(EntityType.PILLAGER, server);
 			Mob entity2 = new Pillager(EntityType.PILLAGER, server);
@@ -42,9 +41,11 @@ public class PillagersPatrol extends Monster {
 		super.baseTick();
 	}
 
-	public static SpawnPlacements.SpawnPredicate<PillagersPatrol> getSpawnRules() {
-		return Monster::checkAnyLightMonsterSpawnRules;
-	}
+    public static boolean checkSpawnRules(
+            EntityType<PillagersPatrol> type, ServerLevelAccessor levelAccessor,
+            MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+        return Monster.checkAnyLightMonsterSpawnRules(type, levelAccessor, spawnType, pos, random);
+    }
 
 	public static AttributeSupplier.Builder createAttributes() {
 		return Mob.createMobAttributes();

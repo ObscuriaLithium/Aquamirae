@@ -8,15 +8,17 @@ import com.obscuria.aquamirae.common.entities.Spinefish;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 public class SpinefishRenderer extends MobRenderer<Spinefish, ModelSpinefish<Spinefish>> {
+
+    public static final ResourceLocation TEXTURE = Aquamirae.identifier("textures/entity/spinefish.png");
+
 	public SpinefishRenderer(EntityRendererProvider.Context context) {
 		super(context, new ModelSpinefish<>(context.bakeLayer(AquamiraeLayers.SPINEFISH)), 0.3f);
 	}
 
 	@Override
-	public @NotNull ResourceLocation getTextureLocation(@NotNull Spinefish entity) {
-		return new ResourceLocation(Aquamirae.MODID,"textures/entity/spinefish.png");
+	public ResourceLocation getTextureLocation(Spinefish entity) {
+		return TEXTURE;
 	}
 }

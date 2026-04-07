@@ -15,6 +15,12 @@
       "maxCount": 9
     },
     {
+      "type": "aquamirae:abyssal_scyphoid",
+      "weight": 30,
+      "minCount": 6,
+      "maxCount": 16
+    },
+    {
       "type": "aquamirae:anglerfish",
       "weight": 20,
       "minCount": 1,

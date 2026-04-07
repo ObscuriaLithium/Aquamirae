@@ -17,10 +17,8 @@ public abstract class MixinStructureTemplate {
     @Unique private static final String TAG_IGNORE_LIQUIDS = "IgnoreLiquids";
     @Unique private boolean aquamirae$ignoreLiquids = false;
 
-    @ModifyExpressionValue(method = "placeInWorld", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;shouldKeepLiquids()Z"))
-    private boolean wrapShouldKeepLiquids(boolean original) {
+    @ModifyExpressionValue(method = "placeInWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;shouldKeepLiquids()Z"))
+    private boolean shouldKeepLiquids(boolean original) {
         return original && !aquamirae$ignoreLiquids;
     }
 

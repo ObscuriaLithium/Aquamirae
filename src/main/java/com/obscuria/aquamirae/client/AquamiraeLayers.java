@@ -26,7 +26,7 @@ public class AquamiraeLayers {
 	public static final ModelLayerLocation ANGLERFISH = register("anglerfish");
 	public static final ModelLayerLocation MAW = register("maw");
 	public static final ModelLayerLocation SPINEFISH = register("spinefish");
-	public static final ModelLayerLocation LUMINOUS_JELLY = register("luminous_jelly");
+	public static final ModelLayerLocation ABYSSAL_SCYPHOID = register("abyssal_scyphoid");
 
 	public static final ModelLayerLocation MAZE_ROSE = register("maze_rose");
 	public static final ModelLayerLocation POISONED_CHAKRA = register("poisoned_chakra");
@@ -43,14 +43,14 @@ public class AquamiraeLayers {
 		event.registerLayerDefinition(TERRIBLE_ARMOR, ModelTerribleArmor::createBodyLayer);
 		event.registerLayerDefinition(MAZE_MOTHER, ModelMazeMother::createBodyLayer);
 		event.registerLayerDefinition(MAZE_ROSE, ModelMazeRose::createBodyLayer);
-		event.registerLayerDefinition(POISONED_CHAKRA, ModelPoisonedChakra::createBodyLayer);
+		event.registerLayerDefinition(POISONED_CHAKRA, ModelPoisonedChakram::createBodyLayer);
 		event.registerLayerDefinition(CAPTAIN_CORNELIA, ModelCaptainCornelia::createBodyLayer);
 		event.registerLayerDefinition(ABYSSAL_ARMOR, ModelAbyssalArmor::createBodyLayer);
 		event.registerLayerDefinition(ANGLERFISH, ModelAnglerfish::createBodyLayer);
 		event.registerLayerDefinition(MAW, ModelMaw::createBodyLayer);
 		event.registerLayerDefinition(THREE_BOLT_ARMOR, ModelThreeBoltArmor::createBodyLayer);
 		event.registerLayerDefinition(SPINEFISH, ModelSpinefish::createBodyLayer);
-		event.registerLayerDefinition(LUMINOUS_JELLY, ModelLuminousJelly::createBodyLayer);
+		event.registerLayerDefinition(ABYSSAL_SCYPHOID, ModelAbyssalScyphoid::createBodyLayer);
 	}
 
 	@Contract("_ -> new")

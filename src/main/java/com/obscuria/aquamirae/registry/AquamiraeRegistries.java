@@ -11,7 +11,7 @@ public final class AquamiraeRegistries {
 
     public interface Keys {
 
-        ResourceKey<Registry<PackedNoise>> NOISE = ResourceKey.createRegistryKey(Aquamirae.key("noise"));
+        ResourceKey<Registry<PackedNoise>> NOISE = ResourceKey.createRegistryKey(Aquamirae.identifier("noise"));
     }
 
     public static void init(IEventBus eventBus) {

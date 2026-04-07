@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.common.worldgen.easing;
+package com.obscuria.aquamirae.common.easing;
 
 @SuppressWarnings("unused")
 @FunctionalInterface

@@ -81,10 +81,6 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	private int particle1;
 	private int particle2;
 
-	public CaptainCornelia(PlayMessages.SpawnEntity packet, Level world) {
-		this(AquamiraeEntities.CAPTAIN_CORNELIA.get(), world);
-	}
-
 	public CaptainCornelia(EntityType<CaptainCornelia> type, Level world) {
 		super(type, world);
 		xpReward = 100;
@@ -267,7 +263,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	}
 
 	public Item getMainWeapon() {
-		return Aquamirae.winterEvent() ? AquamiraeItems.SWEET_LANCE.get() : AquamiraeItems.CORAL_LANCE.get();
+		return Aquamirae.isWinterEvent() ? AquamiraeItems.SWEET_LANCE.get() : AquamiraeItems.CORAL_LANCE.get();
 	}
 
 	public void switchWeapon() {
@@ -358,7 +354,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 				item.moveTo(this.position());
 				server.addFreshEntity(item);
 			}
-			final ItemStack map = Aquamirae.getStructureMap(Aquamirae.SHELTER, server, this);
+			final ItemStack map = Aquamirae.createStructureMap(Aquamirae.SHELTER, server, this);
 			if (!map.isEmpty()) {
 				final ItemEntity item = new ItemEntity(EntityType.ITEM, server);
 				item.setItem(map);
@@ -410,13 +406,13 @@ public class CaptainCornelia extends Monster implements IAnimated {
 		if (this.level() instanceof ServerLevel serverLevel) serverLevel.playSound(null, this.blockPosition(),
 					AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 		this.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 120, 0, false, false));
-		Aquamirae.loadFromConfig(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.corneliaMovementSpeed.get());
-		Aquamirae.loadFromConfig(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.corneliaMaxHealth.get());
-		Aquamirae.loadFromConfig(this, Attributes.ARMOR, AquamiraeConfig.Common.corneliaArmor.get());
-		Aquamirae.loadFromConfig(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.corneliaAttackDamage.get());
-		Aquamirae.loadFromConfig(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.corneliaFollowRange.get());
-		Aquamirae.loadFromConfig(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.corneliaAttackKnockback.get());
-		Aquamirae.loadFromConfig(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.corneliaKnockbackResistance.get());
+		Aquamirae.setBaseValue(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.corneliaMovementSpeed.get());
+		Aquamirae.setBaseValue(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.corneliaMaxHealth.get());
+		Aquamirae.setBaseValue(this, Attributes.ARMOR, AquamiraeConfig.Common.corneliaArmor.get());
+		Aquamirae.setBaseValue(this, Attributes.ATTACK_DAMAGE, AquamiraeConfig.Common.corneliaAttackDamage.get());
+		Aquamirae.setBaseValue(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.corneliaFollowRange.get());
+		Aquamirae.setBaseValue(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.corneliaAttackKnockback.get());
+		Aquamirae.setBaseValue(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.corneliaKnockbackResistance.get());
 		return super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
 	}
 

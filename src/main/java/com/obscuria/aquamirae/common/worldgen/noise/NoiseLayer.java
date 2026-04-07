@@ -2,7 +2,7 @@ package com.obscuria.aquamirae.common.worldgen.noise;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.obscuria.aquamirae.common.worldgen.easing.Easing;
+import com.obscuria.aquamirae.common.easing.Easing;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 

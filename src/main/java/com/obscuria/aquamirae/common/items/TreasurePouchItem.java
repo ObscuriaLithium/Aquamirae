@@ -46,7 +46,7 @@ public class TreasurePouchItem extends Item {
 				LootTable treasure = minecraftServer.getLootData().getLootTable(new ResourceLocation(Aquamirae.MODID, "gameplay/treasure_pouch"));
 				treasure.getRandomItems(lootContext).forEach(player::addItem);
 				if (Math.random() <= 0.1f)
-					player.addItem(Aquamirae.getStructureMap(player.getRandom().nextBoolean() ? Aquamirae.SHIP : Aquamirae.OUTPOST, server, player));
+					player.addItem(Aquamirae.createStructureMap(player.getRandom().nextBoolean() ? Aquamirae.SHIP : Aquamirae.OUTPOST, server, player));
 			}
 		}
 		stack.shrink(1);

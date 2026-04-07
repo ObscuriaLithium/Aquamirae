@@ -1,4 +1,4 @@
-package com.obscuria.aquamirae.common.worldgen.easing;
+package com.obscuria.aquamirae.common.easing;
 
 import static java.lang.Math.*;
 

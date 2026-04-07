@@ -65,7 +65,7 @@ public final class AquamiraeCreativeTab {
 			event.accept(AquamiraeItems.THREE_BOLT_BOOTS.get());
 			event.accept(AquamiraeItems.DEAD_SEA_SCROLL.get());
 
-			event.accept(AquamiraeItems.PILLAGERS_PATROL_SPAWN_EGG.get());
+			event.accept(AquamiraeItems.ABYSSAL_SCYPHOID_SPAWN_EGG.get());
 			event.accept(AquamiraeItems.TORTURED_SOUL_SPAWN_EGG.get());
 			event.accept(AquamiraeItems.CORAL_LANCE.get().getDefaultInstance());
 			event.accept(AquamiraeItems.DAGGER_OF_GREED.get());
@@ -77,7 +77,7 @@ public final class AquamiraeCreativeTab {
 
 			event.accept(AquamiraeItems.EEL_SPAWN_EGG.get());
 			event.accept(AquamiraeItems.SPINEFISH_SPAWN_EGG.get());
-			if (Aquamirae.winterEvent()) event.accept(AquamiraeItems.SWEET_LANCE.get().getDefaultInstance());
+			if (Aquamirae.isWinterEvent()) event.accept(AquamiraeItems.SWEET_LANCE.get().getDefaultInstance());
 			poisonedChakra().forEach(event::accept);
 			mazeRose().forEach(event::accept);
 
