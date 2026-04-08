@@ -1,8 +1,5 @@
-- Added **Abyssal Scyphoid**, a new underwater creature – a venomous jellyfish that serves as an additional source of Abyssal Amethyst and Echo of the Ship Graveyard, though a dangerous one
-- Added built-in **Better Combat** compatibility
-- Added logbook translation support
-- Updated Italian, German, Turkish, and Russian translations
-- Fixed Maw spawning in lit areas
-- Fixed freezing in the Ice Maze when inside modded submarines
-- Improved rendering performance for all creatures
-- Updated minimum required Forge version to 47.2.0
+- Added a squish sound for jellyfish animations
+- Jellyfish no longer poison each other
+- Jellyfish health now scales with their size
+- Fixed jellyfish size desync
+- Doubled the drop rate of Abyssal Amethyst from the Mother of the Maze

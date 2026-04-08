@@ -10,20 +10,20 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
+import java.util.Objects;
 
 @ShipGraveyardEntity
 public class AbyssalScyphoid extends WaterAnimal {
@@ -43,9 +43,28 @@ public class AbyssalScyphoid extends WaterAnimal {
         this.entityData.set(DATA_VARIANT_ID, variant);
     }
 
+    public boolean isSquishTick() {
+        var variant = getVariant();
+        var cycle = 20 + 60 * variant;
+        var offset = cycle * 0.05f;
+        return (int) ((tickCount + 1000 * variant) % cycle) == (int) offset;
+    }
+
     @Override
     public void travel(Vec3 motion) {
         // No movement
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        System.out.println(isSquishTick());
+        if (level().isClientSide && isSquishTick()) {
+            level().playLocalSound(this.blockPosition(),
+                    SoundEvents.BUBBLE_COLUMN_BUBBLE_POP,
+                    SoundSource.HOSTILE,
+                    3, 2f - getVariant(), false);
+        }
     }
 
     @Override
@@ -73,7 +92,7 @@ public class AbyssalScyphoid extends WaterAnimal {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_VARIANT_ID, randomizeVariant());
+        this.entityData.define(DATA_VARIANT_ID, 1f);
     }
 
     @Override
@@ -98,13 +117,12 @@ public class AbyssalScyphoid extends WaterAnimal {
 
     private void doPoison(@Nullable Entity entity) {
         if (!(entity instanceof LivingEntity living)) return;
+        if (living instanceof AbyssalScyphoid) return;
         if (living instanceof Player player && (player.isCreative() || player.isSpectator())) return;
         if (living.hasEffect(MobEffects.POISON)) return;
         living.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 2));
         living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0));
-        living.level().playSound(null,
-                this.blockPosition(), SoundEvents.SQUID_SQUIRT,
-                SoundSource.HOSTILE, 1, 1);
+        living.level().playSound(null, this, SoundEvents.SQUID_SQUIRT, SoundSource.HOSTILE, 0.5f, 1);
     }
 
     private float randomizeVariant() {
@@ -115,6 +133,16 @@ public class AbyssalScyphoid extends WaterAnimal {
             EntityType<AbyssalScyphoid> type, ServerLevelAccessor levelAccessor,
             MobSpawnType spawnType, BlockPos pos, RandomSource random) {
         return WaterAnimal.checkSurfaceWaterAnimalSpawnRules(type, levelAccessor, spawnType, pos, random);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public @Nullable SpawnGroupData finalizeSpawn(
+            ServerLevelAccessor levelAccessor, DifficultyInstance difficulty, MobSpawnType type,
+            @Nullable SpawnGroupData groupData, @Nullable CompoundTag tag) {
+        this.setVariant(randomizeVariant());
+        Objects.requireNonNull(getAttribute(Attributes.MAX_HEALTH)).setBaseValue(Math.round(16 * getVariant()));
+        return super.finalizeSpawn(levelAccessor, difficulty, type, groupData, tag);
     }
 
     static {

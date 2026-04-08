@@ -57,7 +57,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -113,7 +112,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	}
 
 	@Override
-	public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+	public void addAdditionalSaveData(CompoundTag tag) {
 		super.addAdditionalSaveData(tag);
 		CompoundTag data = new CompoundTag();
 		data.putInt("Regeneration", this.getEntityData().get(REGENERATION));
@@ -121,7 +120,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	}
 
 	@Override
-	public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+	public void readAdditionalSaveData(CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
 		CompoundTag data = (CompoundTag) tag.get("CorneliaData");
 		if (data == null) return;
@@ -365,7 +364,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	}
 
 	@Override
-	public @NotNull MobType getMobType() {
+	public MobType getMobType() {
 		return MobType.UNDEAD;
 	}
 
@@ -380,7 +379,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	}
 
 	@Override
-	public SoundEvent getHurtSound(@NotNull DamageSource source) {
+	public SoundEvent getHurtSound(DamageSource source) {
 		return AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HURT.get();
 	}
 
@@ -402,7 +401,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
 		if (this.level() instanceof ServerLevel serverLevel) serverLevel.playSound(null, this.blockPosition(),
 					AquamiraeSounds.ENTITY_CAPTAIN_CORNELIA_HORN.get(), SoundSource.HOSTILE, 3, 1);
 		this.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 120, 0, false, false));
@@ -422,13 +421,13 @@ public class CaptainCornelia extends Monster implements IAnimated {
 	}
 
 	@Override
-	public void startSeenByPlayer(@NotNull ServerPlayer player) {
+	public void startSeenByPlayer(ServerPlayer player) {
 		super.startSeenByPlayer(player);
 		this.bossInfo.addPlayer(player);
 	}
 
 	@Override
-	public void stopSeenByPlayer(@NotNull ServerPlayer player) {
+	public void stopSeenByPlayer(ServerPlayer player) {
 		super.stopSeenByPlayer(player);
 		this.bossInfo.removePlayer(player);
 	}
@@ -439,7 +438,7 @@ public class CaptainCornelia extends Monster implements IAnimated {
 		this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
 	}
 
-	public static AttributeSupplier.@NotNull Builder createAttributes() {
+	public static AttributeSupplier.Builder createAttributes() {
 		return Mob.createMobAttributes()
 				.add(ForgeMod.STEP_HEIGHT_ADDITION.get(), 1.1)
 				.add(Attributes.MOVEMENT_SPEED, AquamiraeConfig.DEFAULT_CORNELIA_MOVEMENT_SPEED)
