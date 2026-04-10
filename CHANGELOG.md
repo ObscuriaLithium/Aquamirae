@@ -1,5 +1,1 @@
-- Added a squish sound for jellyfish animations
-- Jellyfish no longer poison each other
-- Jellyfish health now scales with their size
-- Fixed jellyfish size desync
-- Doubled the drop rate of Abyssal Amethyst from the Mother of the Maze
+- Removed leftover STDOUT debug output

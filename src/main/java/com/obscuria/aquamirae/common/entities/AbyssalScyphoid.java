@@ -58,7 +58,6 @@ public class AbyssalScyphoid extends WaterAnimal {
     @Override
     public void tick() {
         super.tick();
-        System.out.println(isSquishTick());
         if (level().isClientSide && isSquishTick()) {
             level().playLocalSound(this.blockPosition(),
                     SoundEvents.BUBBLE_COLUMN_BUBBLE_POP,
