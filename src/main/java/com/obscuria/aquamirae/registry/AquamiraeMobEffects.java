@@ -9,8 +9,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class AquamiraeMobEffects {
-	public static final DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Aquamirae.MODID);
-	public static final RegistryObject<MobEffect> CRYSTALLIZATION = REGISTRY.register("crystallization", CrystallizationMobEffect::new);
+
+    public static final DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Aquamirae.MODID);
+
+    public static final RegistryObject<MobEffect> POISON_IMMUNITY = REGISTRY.register("poison_immunity", PoisonImmunityMobEffect::new);
+    public static final RegistryObject<MobEffect> CRYSTALLIZATION = REGISTRY.register("crystallization", CrystallizationMobEffect::new);
 	public static final RegistryObject<MobEffect> HEALTH_DECREASE = REGISTRY.register("health_decrease", HealthDecreaseMobEffect::new);
 	public static final RegistryObject<MobEffect> ARMOR_DECREASE = REGISTRY.register("armor_decrease", ArmorDecreaseMobEffect::new);
 	public static final RegistryObject<MobEffect> SWIM_SPEED = REGISTRY.register("swim_speed", SwimSpeedMobEffect::new);

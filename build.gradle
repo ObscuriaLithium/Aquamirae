@@ -96,6 +96,18 @@ repositories {
     maven {
         url "https://cursemaven.com"
     }
+    maven {
+        name = "Progwml6's maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
 }
 
 dependencies {
@@ -107,10 +119,12 @@ dependencies {
     }
 
     implementation fg.deobf('obscuria:obscure_api:15dev')
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
 
     runtimeOnly fg.deobf("curse.maven:cloth-config-348521:5729105")
     runtimeOnly fg.deobf("curse.maven:playeranimator-658587:4587214")
     runtimeOnly fg.deobf("curse.maven:better-combat-by-daedelus-639842:7287334")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 }
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']

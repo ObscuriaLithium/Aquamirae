@@ -25,7 +25,7 @@ public class AquamiraeConfig {
 
 	public static final double DEFAULT_ANGLERFISH_MAX_HEALTH = 40.0;
 	public static final double DEFAULT_ANGLERFISH_ARMOR = 2.0;
-	public static final double DEFAULT_ANGLERFISH_ATTACK_DAMAGE = 6.0;
+	public static final double DEFAULT_ANGLERFISH_ATTACK_DAMAGE = 5.0;
 	public static final double DEFAULT_ANGLERFISH_ATTACK_KNOCKBACK = 1.0;
 	public static final double DEFAULT_ANGLERFISH_FOLLOW_RANGE = 48.0;
 	public static final double DEFAULT_ANGLERFISH_KNOCKBACK_RESISTANCE = 0.0;

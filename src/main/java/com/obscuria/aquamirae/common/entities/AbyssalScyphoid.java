@@ -1,5 +1,6 @@
 package com.obscuria.aquamirae.common.entities;
 
+import com.obscuria.aquamirae.AquamiraeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -17,7 +18,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.WaterAnimal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -117,11 +117,9 @@ public class AbyssalScyphoid extends WaterAnimal {
     private void doPoison(@Nullable Entity entity) {
         if (!(entity instanceof LivingEntity living)) return;
         if (living instanceof AbyssalScyphoid) return;
-        if (living instanceof Player player && (player.isCreative() || player.isSpectator())) return;
-        if (living.hasEffect(MobEffects.POISON)) return;
-        living.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 2));
+        if (!AquamiraeUtils.doPoison(this, living, 60, 2)) return;
         living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0));
-        living.level().playSound(null, this, SoundEvents.SQUID_SQUIRT, SoundSource.HOSTILE, 0.5f, 1);
+        level().playSound(null, living, SoundEvents.SQUID_SQUIRT, SoundSource.HOSTILE, 0.5f, 1);
     }
 
     private float randomizeVariant() {

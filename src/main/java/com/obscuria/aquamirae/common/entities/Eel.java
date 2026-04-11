@@ -3,6 +3,7 @@ package com.obscuria.aquamirae.common.entities;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
+import com.obscuria.aquamirae.AquamiraeUtils;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.api.common.FlatVFX;
 import com.obscuria.obscureapi.api.hekate.Animation;
@@ -22,6 +23,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -46,6 +49,7 @@ import java.util.Optional;
 
 @ShipGraveyardEntity
 public class Eel extends Monster implements IAnimated {
+
 	private static final EntityDataAccessor<Integer> MOVE_COOLDOWN = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Float> POS_X = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Float> POS_Y = SynchedEntityData.defineId(Eel.class, EntityDataSerializers.FLOAT);
@@ -63,6 +67,13 @@ public class Eel extends Monster implements IAnimated {
 		xpReward = 120;
 		setPersistenceRequired();
 	}
+
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        if (!super.doHurtTarget(entity)) return false;
+        AquamiraeUtils.doPoison(this, entity, 100, 2);
+        return true;
+    }
 
 	@Override
 	public AABB getBoundingBoxForCulling() {
@@ -150,8 +161,8 @@ public class Eel extends Monster implements IAnimated {
 				final double distance = this.distanceToSqr(target);
 				this.lookControl.setLookAt(target);
 				//ATTACK
-				if (this.getEntityData().get(HIT_SERIES) <= 0 && distance <= 30 && random.nextInt(60) == 1) {
-					this.getEntityData().set(HIT_SERIES, random.nextInt(1, 3));
+				if (this.getEntityData().get(HIT_SERIES) <= 0 && distance <= 30 && random.nextInt(40) == 1) {
+					this.getEntityData().set(HIT_SERIES, random.nextInt(1, 5));
 				} else if (this.getEntityData().get(HIT_SERIES) > 0 && !this.ATTACK.isPlaying() && !this.ROAR.isPlaying()) {
 					this.getEntityData().set(HIT_SERIES, hitSeries - 1);
 					this.ATTACK.play(this, 30);
@@ -183,8 +194,10 @@ public class Eel extends Monster implements IAnimated {
 						final Vec3 targetDelta = target.getDeltaMovement();
 						final Vec3 roarVec = thisVec.vectorTo(targetVec).scale(0.07).scale(Math.max(0, 1.0 - distance / 150.0));
 						target.setDeltaMovement(targetDelta.x + roarVec.x, targetDelta.y, targetDelta.z + roarVec.z);
-						if (target instanceof Player player)
-							player.hurtMarked = true;
+                        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
+                        target.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 200, 1));
+                        target.setTicksFrozen(target.getTicksFrozen() + 1);
+                        if (target instanceof Player player) player.hurtMarked = true;
 					}
 					if (target instanceof Mob mob) mob.setTarget(this);
 				}

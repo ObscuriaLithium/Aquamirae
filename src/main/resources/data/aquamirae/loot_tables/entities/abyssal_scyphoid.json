@@ -4,39 +4,40 @@
     {
       "rolls": 1,
       "bonus_rolls": 0,
-      "conditions": [
-        {
-          "condition": "minecraft:killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_looting",
-          "looting_multiplier": 0.1,
-          "chance": 0.2
-        }
-      ],
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "aquamirae:abyssal_amethyst"
-        },
-        {
+          "weight": 5,
           "type": "minecraft:item",
           "name": "aquamirae:ship_graveyard_echo"
+        },
+        {
+          "weight": 25,
+          "type": "minecraft:item",
+          "name": "aquamirae:jellyfish_jelly"
+        },
+        {
+          "weight": 70,
+          "type": "minecraft:empty"
         }
       ]
     },
     {
       "rolls": 1,
       "bonus_rolls": 0,
-      "entries": [
+      "conditions": [
         {
-          "weight": 1,
-          "type": "minecraft:item",
-          "name": "minecraft:slime_ball"
+          "condition": "minecraft:killed_by_player"
         },
         {
-          "weight": 4,
-          "type": "minecraft:empty"
+          "condition": "minecraft:random_chance_with_looting",
+          "looting_multiplier": 0.15,
+          "chance": 0.0
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "aquamirae:jellyfish_jelly"
         }
       ]
     }

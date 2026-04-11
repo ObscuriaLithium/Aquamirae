@@ -6,6 +6,8 @@ import com.obscuria.aquamirae.common.items.armor.ThreeBoltArmorItem;
 import com.obscuria.aquamirae.common.items.weapon.CoralLanceItem;
 import com.obscuria.aquamirae.common.items.weapon.FinCutterItem;
 import com.obscuria.aquamirae.common.items.weapon.RemnantsSaberItem;
+import com.obscuria.aquamirae.common.recipes.LongPoisonImmunityBrewingRecipe;
+import com.obscuria.aquamirae.common.recipes.PoisonImmunityBrewingRecipe;
 import com.obscuria.aquamirae.registry.AquamiraeMobEffects;
 import com.obscuria.aquamirae.registry.AquamiraeRegistries;
 import com.obscuria.obscureapi.api.ClassManager;
@@ -53,6 +55,7 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -105,6 +108,7 @@ public class Aquamirae {
         AquamiraeConfig.register();
 
         eventBus.addListener(this::commonSetup);
+        eventBus.addListener(this::registerBrewingRecipes);
         eventBus.addListener(this::registerEnchantments);
 
         MinecraftForge.EVENT_BUS.addListener(this::onEntitySpawn);
@@ -114,12 +118,6 @@ public class Aquamirae {
         MinecraftForge.EVENT_BUS.addListener(this::onEntityDeath);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AquamiraeClient::init);
-    }
-
-    private void registerEnchantments(final ObscureAPIEnchantmentsEvent event) {
-        event.registerMirror(true);
-        event.registerDistance(true);
-        event.registerFastSpin(true);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -138,6 +136,17 @@ public class Aquamirae {
         ItemUtils.addLore("aquamirae:golden_moth_in_a_jar");
         ItemUtils.addLore("aquamirae:rune_of_the_storm");
         ItemUtils.addLore("aquamirae:oxygelium");
+    }
+
+    private void registerBrewingRecipes(final FMLCommonSetupEvent event) {
+        BrewingRecipeRegistry.addRecipe(new PoisonImmunityBrewingRecipe());
+        BrewingRecipeRegistry.addRecipe(new LongPoisonImmunityBrewingRecipe());
+    }
+
+    private void registerEnchantments(final ObscureAPIEnchantmentsEvent event) {
+        event.registerMirror(true);
+        event.registerDistance(true);
+        event.registerFastSpin(true);
     }
 
     public static void setBaseValue(@NotNull LivingEntity entity, Attribute attribute, double amount) {

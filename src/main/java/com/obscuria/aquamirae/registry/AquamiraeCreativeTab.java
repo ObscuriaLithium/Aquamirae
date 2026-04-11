@@ -88,6 +88,7 @@ public final class AquamiraeCreativeTab {
 			event.accept(AquamiraeItems.FIN.get());
 			event.accept(AquamiraeItems.ESCA.get());
 			event.accept(AquamiraeItems.ANGLERS_FANG.get());
+            event.accept(AquamiraeItems.JELLYFISH_JELLY.get());
 			event.accept(AquamiraeItems.ABYSSAL_AMETHYST.get());
 			event.accept(AquamiraeItems.SHARP_BONES.get());
 			event.accept(AquamiraeItems.PAINTING_ANGLERFISH.get());

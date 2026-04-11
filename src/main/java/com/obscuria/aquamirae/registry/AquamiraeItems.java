@@ -1,4 +1,3 @@
-
 package com.obscuria.aquamirae.registry;
 
 import com.obscuria.aquamirae.Aquamirae;
@@ -17,13 +16,12 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class AquamiraeItems {
 
@@ -72,33 +70,36 @@ public class AquamiraeItems {
     public static final RegistryObject<Item> TREASURE_POUCH = REGISTRY.register("treasure_pouch", TreasurePouchItem::new);
     public static final RegistryObject<Item> MUSIC_DISC_HORIZON = REGISTRY.register("music_disc_horizon", () -> new RecordItem(0, AquamiraeSounds.RECORD_HORIZON, new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 74 * 20));
     public static final RegistryObject<Item> MUSIC_DISC_FORSAKEN_DROWNAGE = REGISTRY.register("music_disc_forsaken_drownage", () -> new RecordItem(0, AquamiraeSounds.RECORD_FORSAKEN_DROWNAGE, new Item.Properties().stacksTo(1).rarity(ObscureRarity.MYTHIC), 150 * 20));
-    public static final RegistryObject<Item> FIN = REGISTRY.register("fin", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(1).saturationMod(0f).meat().build())));
-    public static final RegistryObject<Item> ESCA = REGISTRY.register("esca", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.2f).effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1).build())));
     public static final RegistryObject<Item> ANGLERS_FANG = REGISTRY.register("anglers_fang", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> ABYSSAL_AMETHYST = REGISTRY.register("abyssal_amethyst", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> SHARP_BONES = REGISTRY.register("sharp_bones", SharpBonesItem::new);
-    public static final RegistryObject<Item> PAINTING_ANGLERFISH = block(AquamiraeBlocks.PAINTING_ANGLERFISH, new Item.Properties().rarity(Rarity.UNCOMMON));
-    public static final RegistryObject<Item> PAINTING_OXYGELIUM = block(AquamiraeBlocks.PAINTING_OXYGELIUM, new Item.Properties().rarity(Rarity.UNCOMMON));
-    public static final RegistryObject<Item> PAINTING_TORTURED_SOUL = block(AquamiraeBlocks.PAINTING_TORTURED_SOUL, new Item.Properties().rarity(Rarity.UNCOMMON));
-    public static final RegistryObject<Item> PAINTING_AURORA = block(AquamiraeBlocks.PAINTING_AURORA, new Item.Properties().rarity(Rarity.UNCOMMON));
-    public static final RegistryObject<Item> GOLDEN_MOTH_IN_A_JAR = block(AquamiraeBlocks.GOLDEN_MOTH_IN_A_JAR, new Item.Properties());
+    public static final RegistryObject<Item> SPINEFISH_BUCKET = REGISTRY.register("spinefish_bucket", () -> new MobBucketItem(AquamiraeEntities.SPINEFISH, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> OXYGEN_TANK = REGISTRY.register("oxygen_tank", () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> LUMINESCENT_BUBBLE = REGISTRY.register("luminescent_bubble", LuminescentBubbleItem::new);
     public static final RegistryObject<Item> OXYGELIUM = REGISTRY.register("oxygelium", OxygeliumItem::new);
     public static final RegistryObject<Item> WISTERIA_NIVEIS = REGISTRY.register("wisteria_niveis", WisteriaNiveisItem::new);
-    public static final RegistryObject<Item> OXYGEN_TANK = REGISTRY.register("oxygen_tank", () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON)));
-    public static final RegistryObject<Item> FROZEN_CHEST = block(AquamiraeBlocks.FROZEN_CHEST, new Item.Properties().rarity(Rarity.UNCOMMON));
-    public static final RegistryObject<Item> LUMINESCENT_BUBBLE = REGISTRY.register("luminescent_bubble", LuminescentBubbleItem::new);
-    public static final RegistryObject<Item> LUMINESCENT_LAMP = block(AquamiraeBlocks.LUMINESCENT_LAMP, new Item.Properties());
-    public static final RegistryObject<Item> SEA_CASSEROLE = REGISTRY.register("sea_casserole", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).alwaysEat().effect(() -> new MobEffectInstance(ObscureAPIMobEffects.RUSH.get(), 1800, 1), 1).effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 0), 1).build())));
-    public static final RegistryObject<Item> SPINEFISH_BUCKET = REGISTRY.register("spinefish_bucket", () -> new MobBucketItem(AquamiraeEntities.SPINEFISH, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH, new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> SPINEFISH = REGISTRY.register("spinefish", () -> new SpinefishItem(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(2).saturationMod(0f).meat().build())));
-    public static final RegistryObject<Item> COOKED_SPINEFISH = REGISTRY.register("cooked_spinefish", () -> new SpinefishItem(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.4f).meat().build())));
-    public static final RegistryObject<Item> SEA_STEW = REGISTRY.register("sea_stew", () -> new StewItem(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).food((new FoodProperties.Builder()).nutrition(12).saturationMod(0.8f).alwaysEat().effect(() -> new MobEffectInstance(ObscureAPIMobEffects.FURY.get(), 2400, 2), 1).effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 0), 1).build())));
-    public static final RegistryObject<Item> POSEIDONS_BREAKFAST = REGISTRY.register("poseidons_breakfast", () -> new StewItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).food((new FoodProperties.Builder()).nutrition(20).saturationMod(1f).alwaysEat().effect(() -> new MobEffectInstance(ObscureAPIMobEffects.FURY.get(), 3600, 9), 1).effect(() -> new MobEffectInstance(ObscureAPIMobEffects.RUSH.get(), 3600, 4), 1).build())) {
-        @Override @OnlyIn(Dist.CLIENT) public boolean isFoil(@NotNull ItemStack itemstack) {return true;}
-    });
-    public static final RegistryObject<Item> ELODEA = REGISTRY.register(AquamiraeBlocks.ELODEA.getId().getPath(), () -> new BlockItem(AquamiraeBlocks.ELODEA.get(), new Item.Properties()));
 
-    private static RegistryObject<Item> block(RegistryObject<Block> block, Item.Properties properties) {
-        return REGISTRY.register(block.getId().getPath(), () -> new BlockItem(block.get(), properties));
+    public static final RegistryObject<Item> SHARP_BONES = REGISTRY.register("sharp_bones", SharpBonesItem::new);
+    public static final RegistryObject<Item> FIN = REGISTRY.register("fin", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food(new FoodProperties.Builder().nutrition(1).saturationMod(0f).meat().build())));
+    public static final RegistryObject<Item> ESCA = REGISTRY.register("esca", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food(new FoodProperties.Builder().nutrition(2).saturationMod(1.2f).effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1).build())));
+    public static final RegistryObject<Item> SPINEFISH = REGISTRY.register("spinefish", () -> new FoodItem(SHARP_BONES, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food(new FoodProperties.Builder().nutrition(3).saturationMod(0f).meat().build())));
+    public static final RegistryObject<Item> COOKED_SPINEFISH = REGISTRY.register("cooked_spinefish", () -> new FoodItem(SHARP_BONES, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food(new FoodProperties.Builder().nutrition(8).saturationMod(0.8f).meat().build())));
+    public static final RegistryObject<Item> JELLYFISH_JELLY = REGISTRY.register("jellyfish_jelly", () -> new Item(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON).food(new FoodProperties.Builder().nutrition(1).saturationMod(2f).effect(() -> new MobEffectInstance(MobEffects.POISON, 60, 2), 0.1f).build())));
+    public static final RegistryObject<Item> SEA_CASSEROLE = REGISTRY.register("sea_casserole", () -> new FoodItem(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).alwaysEat().effect(() -> new MobEffectInstance(AquamiraeMobEffects.POISON_IMMUNITY.get(), 6000, 0), 1).effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 0), 1).build())));
+    public static final RegistryObject<Item> SEA_STEW = REGISTRY.register("sea_stew", () -> new FoodItem(() -> Items.BOWL, new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).food(new FoodProperties.Builder().effect(() -> new MobEffectInstance(ObscureAPIMobEffects.FURY.get(), 2400, 2), 1).effect(() -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 0), 1).nutrition(12).saturationMod(1.2f).alwaysEat().build())));
+    public static final RegistryObject<Item> POSEIDONS_BREAKFAST = REGISTRY.register("poseidons_breakfast", () -> new FoodItem(() -> Items.BOWL, true, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).food(new FoodProperties.Builder().nutrition(20).saturationMod(1.6f).alwaysEat().effect(() -> new MobEffectInstance(ObscureAPIMobEffects.FURY.get(), 3600, 9), 1).effect(() -> new MobEffectInstance(ObscureAPIMobEffects.RUSH.get(), 3600, 4), 1).build())));
+
+    public static final RegistryObject<Item> PAINTING_ANGLERFISH = blockItem(AquamiraeBlocks.PAINTING_ANGLERFISH, new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final RegistryObject<Item> PAINTING_OXYGELIUM = blockItem(AquamiraeBlocks.PAINTING_OXYGELIUM, new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final RegistryObject<Item> PAINTING_TORTURED_SOUL = blockItem(AquamiraeBlocks.PAINTING_TORTURED_SOUL, new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final RegistryObject<Item> PAINTING_AURORA = blockItem(AquamiraeBlocks.PAINTING_AURORA, new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final RegistryObject<Item> FROZEN_CHEST = blockItem(AquamiraeBlocks.FROZEN_CHEST, new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final RegistryObject<Item> LUMINESCENT_LAMP = blockItem(AquamiraeBlocks.LUMINESCENT_LAMP, new Item.Properties());
+    public static final RegistryObject<Item> ELODEA = blockItem(AquamiraeBlocks.ELODEA, new Item.Properties());
+    public static final RegistryObject<Item> GOLDEN_MOTH_IN_A_JAR = blockItem(AquamiraeBlocks.GOLDEN_MOTH_IN_A_JAR, new Item.Properties());
+
+    private static RegistryObject<Item> blockItem(RegistryObject<Block> block, Item.Properties properties) {
+        return REGISTRY.register(
+                Objects.requireNonNull(block.getId()).getPath(),
+                () -> new BlockItem(block.get(), properties));
     }
 }

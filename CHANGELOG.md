@@ -1,1 +1,9 @@
-- Removed leftover STDOUT debug output
+- Added **Jellyfish Jelly**, dropped from Abyssal Scyphoid. Used as an ingredient for the **Poison Immunity** potion. Its duration can be extended with Wisteria Niveis.
+- Added a chance for **Poison Immunity** potions to generate in Pillager Ship chests.
+- Removed Potion of Tenacity and Spectral Potion due to lack of meaningful use.
+- Reworked Sea Casserole – now crafted using Jellyfish Jelly and grants Poison Immunity.
+- Significantly increased Angler's poison strength and improved its loot table.
+- Increased Eel aggression, added a stronger poison effect to its bites, applied a debuff to its roar, and improved its loot table.
+- Improved the stats of most food items to make them more meaningful.
+- Added JEI integration for potion effects.
+- General improvements to food-related code.

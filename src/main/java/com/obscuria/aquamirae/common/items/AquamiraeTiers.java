@@ -8,6 +8,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 public final class AquamiraeTiers {
+
     public static final Tier REMNANTS_SABER = new Tier() {
         public int getUses() {
             return 100;
