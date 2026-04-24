@@ -20,7 +20,7 @@ public class MawItemLayer extends RenderLayer<Maw, ModelMaw> {
             PoseStack pose, MultiBufferSource source, int i1, Maw maw,
             float f1, float f2, float f3, float f4, float f5, float f6) {
 
-        if (maw.getItemInMouth().isEmpty()) return;
+        if (maw.getMouthItem().isEmpty()) return;
         pose.pushPose();
         this.getParentModel().translate(pose);
         pose.mulPose(Axis.XP.rotationDegrees(100.0F));
@@ -28,7 +28,7 @@ public class MawItemLayer extends RenderLayer<Maw, ModelMaw> {
         pose.translate(0.0D, -0.8D, 0.02D);
         pose.scale(0.7f, 0.7f, 0.7f);
         Minecraft.getInstance().gameRenderer.itemInHandRenderer.renderItem(
-                maw, maw.getItemInMouth(), ItemDisplayContext.FIXED,
+                maw, maw.getMouthItem(), ItemDisplayContext.FIXED,
                 false, pose, source, i1);
         pose.popPose();
     }

@@ -100,7 +100,7 @@ public class ModelMaw extends EntityModel<Maw> {
 				.pose(2, 20, Interpolations.EASE_IN_QUART.scale(0.15f), ageInTicks, 1F, builder -> builder
 						.keyframe(head, k -> k.xRot(0, 10))
 						.keyframe(headUpper, k -> k.xRot(0, -22)))
-				.animate(maw.ATTACK);
+				.animate(maw.attackAnimation);
 		HekateLib.push(6, 0, Interpolations.EASE_OUT_CIRCLE, Interpolations.CEIL)
 				.pose(0, 6, Interpolations.CEIL, ageInTicks, 1F, builder -> builder
 						.keyframe(main, k -> k.xRot(8))
@@ -114,6 +114,6 @@ public class ModelMaw extends EntityModel<Maw> {
 						.keyframe(body2, k -> k.xRot(0))
 						.keyframe(body3, k -> k.xRot(0))
 						.keyframe(headUpper, k -> k.xRot(0, -22)))
-				.animate(maw.DEATH);
+				.animate(maw.deathAnimation);
 	}
 }

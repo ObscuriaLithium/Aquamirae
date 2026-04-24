@@ -7,14 +7,12 @@ import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.api.hekate.Animation;
 import com.obscuria.obscureapi.api.hekate.AnimationHelper;
 import com.obscuria.obscureapi.api.hekate.IAnimated;
-import com.obscuria.obscureapi.api.utils.ExceptionFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -32,7 +30,6 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -43,7 +40,6 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.common.ForgeMod;
@@ -55,81 +51,53 @@ import java.util.Optional;
 @ShipGraveyardEntity
 public class Maw extends Monster implements IAnimated {
 
-    private static final EntityDataAccessor<ItemStack> ITEM_IN_MOUTH = SynchedEntityData.defineId(Maw.class, EntityDataSerializers.ITEM_STACK);
-    public final Animation ATTACK = new Animation(1);
-    public final Animation DEATH = new Animation(2);
+    private static final ResourceLocation RANDOM_ITEM_TABLE = Aquamirae.identifier("entities/maw_random_item");
+    private static final EntityDataAccessor<ItemStack> MOUTH_ITEM = SynchedEntityData.defineId(Maw.class, EntityDataSerializers.ITEM_STACK);
+    private static final String MOUTH_ITEM_TAG = "MouthItem";
+
+    public final Animation attackAnimation = new Animation(1);
+    public final Animation deathAnimation = new Animation(2);
 
     public Maw(EntityType<Maw> type, Level world) {
         super(type, world);
-        xpReward = 10;
-        this.randomMawItem();
+        this.xpReward = 10;
+    }
+
+    public void setMouthItem(ItemStack stack) {
+        this.getEntityData().set(MOUTH_ITEM, stack);
+    }
+
+    public ItemStack getMouthItem() {
+        return this.getEntityData().get(MOUTH_ITEM);
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.getEntityData().define(ITEM_IN_MOUTH, ItemStack.EMPTY);
-        super.defineSynchedData();
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag data) {
-        data.put("ItemInMouth", this.getItemInMouth().save(new CompoundTag()));
-        super.addAdditionalSaveData(data);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag data) {
-        if (data.contains("ItemInMouth")) this.setItemInMouth(ItemStack.of(data.getCompound("ItemInMouth")));
-        super.readAdditionalSaveData(data);
-    }
-
-    public void randomMawItem() {
-        if (this.level().isClientSide) return;
-        final MinecraftServer minecraftServer = this.level().getServer();
-        if (minecraftServer != null && this.level() instanceof ServerLevel server) {
-            LootParams lootContext = new LootParams.Builder(server)
-                    .withParameter(LootContextParams.THIS_ENTITY, this)
-                    .withParameter(LootContextParams.ORIGIN, this.position())
-                    .create(LootContextParamSets.GIFT);
-            LootTable treasure = minecraftServer.getLootData().getLootTable(new ResourceLocation(Aquamirae.MODID, "entities/maw_random_item"));
-            ExceptionFilter.of(() -> this.setItemInMouth(treasure.getRandomItems(lootContext).get(0)));
-        }
-    }
-
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(1, new LeapAtTargetGoal(this, (float) 0.4));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false) {
-            @Override protected double getAttackReachSqr(@NotNull LivingEntity entity) {
-                return 4.0 + entity.getBbWidth() * entity.getBbWidth();
-            }
-        });
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.8));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
-        this.goalSelector.addGoal(7, new FloatGoal(this));
-    }
-
     public Optional<Animation> getAnimation(byte id) {
-        return id == 1 ? Optional.of(ATTACK) : id == 2 ? Optional.of(DEATH) : Optional.empty();
+        return switch (id) {
+            case 1 -> Optional.of(attackAnimation);
+            case 2 -> Optional.of(deathAnimation);
+            default -> Optional.empty();
+        };
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        tag.put(MOUTH_ITEM_TAG, this.getMouthItem().save(new CompoundTag()));
+        super.addAdditionalSaveData(tag);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        if (tag.contains(MOUTH_ITEM_TAG, CompoundTag.TAG_COMPOUND))
+            this.setMouthItem(ItemStack.of(tag.getCompound(MOUTH_ITEM_TAG)));
+        super.readAdditionalSaveData(tag);
     }
 
     @Override
     public void tick() {
-        AnimationHelper.handleDeath(this, DEATH, 40);
-        AnimationHelper.handle(ATTACK, DEATH);
+        AnimationHelper.handleDeath(this, deathAnimation, 40);
+        AnimationHelper.handle(attackAnimation, deathAnimation);
         super.tick();
-    }
-
-    public void setItemInMouth(ItemStack stack) {
-        this.getEntityData().set(ITEM_IN_MOUTH, stack);
-    }
-
-    public ItemStack getItemInMouth() {
-        return this.getEntityData().get(ITEM_IN_MOUTH);
     }
 
     @Override
@@ -153,19 +121,6 @@ public class Maw extends Monster implements IAnimated {
     }
 
     @Override
-    protected void dropEquipment() {
-        if (this.level() instanceof ServerLevel server && !this.getItemInMouth().isEmpty()) {
-            final ItemEntity item = new ItemEntity(EntityType.ITEM, server);
-            item.setItem(this.getItemInMouth());
-            item.moveTo(this.position());
-            item.setDeltaMovement(this.getDeltaMovement().scale(0.25).add(0, 0.2, 0));
-            item.hurtMarked = true;
-            server.addFreshEntity(item);
-            this.setItemInMouth(ItemStack.EMPTY);
-        }
-    }
-
-    @Override
     public boolean hurt(DamageSource source, float amount) {
         if (source.is(DamageTypes.DROWN)) return false;
         return super.hurt(source, amount);
@@ -173,15 +128,16 @@ public class Maw extends Monster implements IAnimated {
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        this.ATTACK.play(this, 20);
+        this.attackAnimation.play(this, 20);
         return super.doHurtTarget(entity);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public @Nullable SpawnGroupData finalizeSpawn(
-            ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason,
-            @Nullable SpawnGroupData data, @Nullable CompoundTag tag) {
+            ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
+            @Nullable SpawnGroupData data, @Nullable CompoundTag tag
+    ) {
         Aquamirae.setBaseValue(this, ForgeMod.SWIM_SPEED.get(), AquamiraeConfig.Common.mawSwimSpeed.get());
         Aquamirae.setBaseValue(this, Attributes.MOVEMENT_SPEED, AquamiraeConfig.Common.mawSpeed.get());
         Aquamirae.setBaseValue(this, Attributes.MAX_HEALTH, AquamiraeConfig.Common.mawMaxHealth.get());
@@ -190,13 +146,58 @@ public class Maw extends Monster implements IAnimated {
         Aquamirae.setBaseValue(this, Attributes.FOLLOW_RANGE, AquamiraeConfig.Common.mawFollowRange.get());
         Aquamirae.setBaseValue(this, Attributes.ATTACK_KNOCKBACK, AquamiraeConfig.Common.mawAttackKnockback.get());
         Aquamirae.setBaseValue(this, Attributes.KNOCKBACK_RESISTANCE, AquamiraeConfig.Common.mawKnockbackResistance.get());
-        return super.finalizeSpawn(world, difficulty, reason, data, tag);
+        this.randomizeItemInMouth(level);
+        return super.finalizeSpawn(level, difficulty, reason, data, tag);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        this.getEntityData().define(MOUTH_ITEM, ItemStack.EMPTY);
+        super.defineSynchedData();
+    }
+
+    @Override
+    protected void dropEquipment() {
+        super.dropEquipment();
+        if (getMouthItem().isEmpty()) return;
+        this.spawnAtLocation(getMouthItem());
+        this.setMouthItem(ItemStack.EMPTY);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new LeapAtTargetGoal(this, (float) 0.4));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false) {
+            @Override protected double getAttackReachSqr(@NotNull LivingEntity entity) {
+                return 4.0 + entity.getBbWidth() * entity.getBbWidth();
+            }
+        });
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.8));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
+        this.goalSelector.addGoal(7, new FloatGoal(this));
+    }
+
+    private void randomizeItemInMouth(ServerLevelAccessor accessor) {
+        if (!(accessor instanceof ServerLevel level)) return;
+        var lootContext = new LootParams.Builder(level)
+                .withParameter(LootContextParams.THIS_ENTITY, this)
+                .withParameter(LootContextParams.ORIGIN, this.position())
+                .create(LootContextParamSets.GIFT);
+        var lootTable = level.getServer().getLootData().getLootTable(RANDOM_ITEM_TABLE);
+        var items = lootTable.getRandomItems(lootContext);
+        if (items.isEmpty()) return;
+        this.setMouthItem(items.get(0));
     }
 
     @SuppressWarnings("deprecation")
     public static boolean checkSpawnRules(
             EntityType<Maw> type, ServerLevelAccessor levelAccessor,
-            MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+            MobSpawnType spawnType, BlockPos pos, RandomSource random
+    ) {
         return levelAccessor.getDifficulty() != Difficulty.PEACEFUL
                 && pos.getY() < levelAccessor.getSeaLevel() + 4
                 && levelAccessor.getBrightness(LightLayer.BLOCK, pos) <= 4;
