@@ -1,1 +1,2 @@
-* Fixed incorrect generation of Maw's mouth item (which was affecting performance) and improved Maw's overall code
+* Further optimized Maw by reducing loot table generation frequency (the item chance is determined first, and the table is only generated if needed)
+* Fixed Maw's AI and goal priorities (no longer forgets how to swim when aggressive, along with other inconsistencies)

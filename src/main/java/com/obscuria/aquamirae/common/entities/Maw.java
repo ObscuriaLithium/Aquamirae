@@ -3,6 +3,7 @@ package com.obscuria.aquamirae.common.entities;
 
 import com.obscuria.aquamirae.Aquamirae;
 import com.obscuria.aquamirae.AquamiraeConfig;
+import com.obscuria.aquamirae.common.entities.goals.CustomMeleeAttackGoal;
 import com.obscuria.aquamirae.registry.AquamiraeSounds;
 import com.obscuria.obscureapi.api.hekate.Animation;
 import com.obscuria.obscureapi.api.hekate.AnimationHelper;
@@ -26,7 +27,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -43,7 +43,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.common.ForgeMod;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -54,6 +53,7 @@ public class Maw extends Monster implements IAnimated {
     private static final ResourceLocation RANDOM_ITEM_TABLE = Aquamirae.identifier("entities/maw_random_item");
     private static final EntityDataAccessor<ItemStack> MOUTH_ITEM = SynchedEntityData.defineId(Maw.class, EntityDataSerializers.ITEM_STACK);
     private static final String MOUTH_ITEM_TAG = "MouthItem";
+    private static final double MOUTH_ITEM_CHANCE = 0.1;
 
     public final Animation attackAnimation = new Animation(1);
     public final Animation deathAnimation = new Animation(2);
@@ -69,6 +69,18 @@ public class Maw extends Monster implements IAnimated {
 
     public ItemStack getMouthItem() {
         return this.getEntityData().get(MOUTH_ITEM);
+    }
+
+    @Override
+    public void registerGoals() {
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new LeapAtTargetGoal(this, 0.4f));
+        this.goalSelector.addGoal(2, new CustomMeleeAttackGoal(this, 4.0, 1.2, false));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 0.8));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
     }
 
     @Override
@@ -164,25 +176,9 @@ public class Maw extends Monster implements IAnimated {
         this.setMouthItem(ItemStack.EMPTY);
     }
 
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(1, new LeapAtTargetGoal(this, (float) 0.4));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, false) {
-            @Override protected double getAttackReachSqr(@NotNull LivingEntity entity) {
-                return 4.0 + entity.getBbWidth() * entity.getBbWidth();
-            }
-        });
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.8));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractIllager.class, false, false));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, false));
-        this.goalSelector.addGoal(7, new FloatGoal(this));
-    }
-
     private void randomizeItemInMouth(ServerLevelAccessor accessor) {
         if (!(accessor instanceof ServerLevel level)) return;
+        if (random.nextDouble() > MOUTH_ITEM_CHANCE) return;
         var lootContext = new LootParams.Builder(level)
                 .withParameter(LootContextParams.THIS_ENTITY, this)
                 .withParameter(LootContextParams.ORIGIN, this.position())
