@@ -47,7 +47,11 @@ body:
 
   - type: markdown
     attributes:
-      value: "<br><br>### 🔧 Environment"
+      value: |
+        
+        -----
+        
+        ### 🔧 Environment
 
   - type: input
     id: mod_version
