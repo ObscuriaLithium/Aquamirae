@@ -51,7 +51,7 @@ body:
         
         
         
-        ### 🔧 Environment
+        # 🔧 Environment
 
   - type: input
     id: mod_version
