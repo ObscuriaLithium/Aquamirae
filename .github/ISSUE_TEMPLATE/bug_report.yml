@@ -47,8 +47,8 @@ body:
 
   - type: markdown
     attributes:
-      value: |
-          
+      value: |-
+        
         # 🔧 Environment
 
   - type: input
