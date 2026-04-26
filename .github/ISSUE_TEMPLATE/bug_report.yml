@@ -105,7 +105,11 @@ body:
 
   - type: markdown
     attributes:
-      value: "### 📋 Logs"
+      value: |
+        
+        &nbsp;
+        
+        # 📋 Logs
 
   - type: textarea
     id: logs

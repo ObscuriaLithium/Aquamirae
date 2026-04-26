@@ -1,6 +1,6 @@
 name: 💥 Crash Report
 description: The game crashed — to title screen, desktop, or won't launch at all
-labels: ["crash", "needs triage"]
+labels: ["bug"]
 body:
   - type: markdown
     attributes:
@@ -40,7 +40,11 @@ body:
 
   - type: markdown
     attributes:
-      value: "### 🔧 Environment"
+      value: |
+        
+        &nbsp;
+        
+        # 🔧 Environment
 
   - type: input
     id: mod_version
@@ -81,7 +85,11 @@ body:
 
   - type: markdown
     attributes:
-      value: "### 📋 Crash Logs *(required)*"
+      value: |
+        
+        &nbsp;
+        
+        # 📋 Crash Logs *(required)*
 
   - type: textarea
     id: crash_report

@@ -1,6 +1,6 @@
 name: ⚙️ Compatibility Issue
 description: This mod conflicts with another mod, library, or modpack
-labels: ["compatibility", "needs triage"]
+labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
@@ -47,7 +47,11 @@ body:
 
   - type: markdown
     attributes:
-      value: "### 🔧 Environment"
+      value: |
+        
+        &nbsp;
+        
+        # 🔧 Environment
 
   - type: input
     id: mod_version
@@ -88,7 +92,11 @@ body:
 
   - type: markdown
     attributes:
-      value: "### 📋 Logs"
+      value: |
+        
+        &nbsp;
+        
+        # 📋 Logs
 
   - type: textarea
     id: logs
