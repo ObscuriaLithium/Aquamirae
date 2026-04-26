@@ -48,9 +48,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        <br>
-        <br>
-        <br>
+        \n
+        \n
+        \n
         # 🔧 Environment
 
   - type: input
