@@ -1,2 +1,1 @@
-* Further optimized Maw by reducing loot table generation frequency (the item chance is determined first, and the table is only generated if needed)
-* Fixed Maw's AI and goal priorities (no longer forgets how to swim when aggressive, along with other inconsistencies)
+* Added an experimental world generation type, **Endless Ice Maze** (available alongside vanilla presets like Superflat). Many players were trying to create a world with an infinite Ice Maze as a **challenge**, so this is now supported out of the box
